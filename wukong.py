@@ -16,8 +16,8 @@ logger.setLevel(logging.INFO)
 def audioRecorderCallback(fp):
     snowboydecoder.play_audio_file(snowboydecoder.DETECT_DONG)
     print("converting audio to text")
-    stt = asr.BaiduSTT('qg4haN8b2bGvFtCbBGqhrmZy', '585d4eccb50d306c401d7df138bb02e7')
-    print(stt.transcribe(fp))
+    asr = asr.BaiduASR('qg4haN8b2bGvFtCbBGqhrmZy', '585d4eccb50d306c401d7df138bb02e7')
+    print(asr.transcribe(fp))
     if os.path.exists(fp):
         os.remove(fp)
     

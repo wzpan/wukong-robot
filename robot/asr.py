@@ -11,7 +11,7 @@ import sys
 import urllib
 
 
-class BaiduSTT():
+class BaiduASR():
     """
     百度的语音识别API.
     要使用本模块, 首先到 yuyin.baidu.com 注册一个开发者账号,
