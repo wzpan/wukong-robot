@@ -1,0 +1,3 @@
+PyAudio==0.2.9
+pyyaml==3.13
+requests==2.21.0
