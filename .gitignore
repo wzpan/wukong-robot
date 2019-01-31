@@ -1,0 +1,90 @@
+# Generic files to ignore
+*~
+*.lock
+*.DS_Store
+*.swp
+*.out
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff/Logfiles
+*.log
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Coverage reports for a specific version
+.coverage
+
+# SublimeLinter config file
+.sublimelinterrc
+
+# temp folder
+temp
+
+# temp file
+#*.*#
+#*#
+\#*#
+*~
+.#*.*
+
+# NetEase music account info
+userInfo
+
+# wget log
+wget-log*
+
+# some thirdparty libs
+client/mic_array
+login/wxqr.png
+.idea/
+sftp-config.json
+__pycache__
