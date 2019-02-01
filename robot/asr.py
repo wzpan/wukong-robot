@@ -1,5 +1,5 @@
 from aip import AipSpeech
-from .sdk import TencentSpeech
+from .sdk import TencentSpeech, RASRsdk
 from . import utils
 import logging
 import requests
@@ -42,10 +42,10 @@ class BaiduASR():
         })
         if res['err_no'] == 0:
             logger.info(('百度语音识别到了', res['result']))
-            return res['result']
+            return ''.join(res['result'])
         else:
             logger.info('百度语音识别出错了：' + res['err_msg'])
-            return []
+            return ''
 
 
 class TencentASR():
@@ -64,4 +64,28 @@ class TencentASR():
         r = self.engine.ASR(fp, 'wav', '1')
         res = json.loads(r)
         if 'Response' in res and 'Result' in res['Response']:
-            return [res['Response']['Result']]
+            logger.info('腾讯云语音识别到了：' + res['Response']['Result'])
+            return res['Response']['Result']
+        else:
+            logger.info('腾讯云语音识别出错了')
+
+
+class TencentRealTimeASR():
+    """
+    腾讯的实时语音识别API.
+    """
+
+    SLUG = "tencent-realtime-asr"
+
+    def __init__(self, appid, secretid, secret_key, **args):
+        super(self.__class__, self).__init__()
+        self.appid = appid
+        self.secretid = secretid
+        self.secret_key = secret_key
+                
+
+    def transcribe(self, fp):
+        res = RASRsdk.sendVoice(self.secret_key, self.secretid, self.appid, '16k_0', 0, 0, 1, fp, 64000)
+        logger.info('腾讯云实时语音识别到了：' + res)
+        return res
+

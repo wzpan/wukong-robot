@@ -9,6 +9,7 @@ import os
 import logging
 from ctypes import *
 from contextlib import contextmanager
+from robot.sdk import RASRsdk as asr
 
 logging.basicConfig()
 logger = logging.getLogger("snowboy")
@@ -239,13 +240,14 @@ class HotwordDetector(object):
                 if stopRecording == True:
                     fname = self.saveMessage()
                     audio_recorder_callback(fname)
-                    state = "PASSIVE"
+                    state = "PASSIVE"                    
                     continue
 
                 recordingCount = recordingCount + 1
-                self.recordedData.append(data)
+                self.recordedData.append(data)                
 
         logger.debug("finished.")
+
 
     def saveMessage(self):
         """

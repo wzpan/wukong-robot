@@ -12,9 +12,8 @@ logger.setLevel(logging.INFO)
 class SoxPlayer(threading.Thread):
     SLUG = 'play'
 
-    def __init__(self, detected_check, **kwargs):
+    def __init__(self, **kwargs):
         super(SoxPlayer, self).__init__(**kwargs)
-        self.detected_check = detected_check
         self.playing = False
         self.pipe = None
 
