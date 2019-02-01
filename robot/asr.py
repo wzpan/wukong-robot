@@ -1,5 +1,14 @@
 from aip import AipSpeech
+from .sdk import TencentSpeech
+from . import utils
 import logging
+import requests
+import base64
+import urllib
+import hmac
+import hashlib
+import time
+import json
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -20,20 +29,15 @@ class BaiduASR():
         ...
     """
 
-    SLUG = "baidu-stt"
+    SLUG = "baidu-asr"
 
     def __init__(self, appid, api_key, secret_key, **args):
         super(self.__class__, self).__init__()
-        self.client = AipSpeech(appid, api_key, secret_key)
+        self.client = AipSpeech(appid, api_key, secret_key)    
 
-    # 读取文件
-    def get_file_content(self, filePath):
-        with open(filePath, 'rb') as fp:
-            return fp.read()
-
-    def transcribe(self, fp, frameRate=16000):
+    def transcribe(self, fp):
         # 识别本地文件
-        res = self.client.asr(self.get_file_content(fp), 'wav', frameRate, {
+        res = self.client.asr(utils.get_file_content(fp), 'wav', 16000, {
             'dev_pid': 1936,
         })
         if res['err_no'] == 0:
@@ -42,4 +46,22 @@ class BaiduASR():
         else:
             logger.info('百度语音识别出错了：' + res['err_msg'])
             return []
-        
+
+
+class TencentASR():
+    """
+    腾讯的语音识别API.
+    """
+
+    SLUG = "tencent-asr"
+
+    def __init__(self, appid, secretid, secret_key, **args):
+        super(self.__class__, self).__init__()
+        self.engine = TencentSpeech.tencentSpeech(secret_key, secretid)        
+                
+
+    def transcribe(self, fp):
+        r = self.engine.ASR(fp, 'wav', '1')
+        res = json.loads(r)
+        if 'Response' in res and 'Result' in res['Response']:
+            return [res['Response']['Result']]
