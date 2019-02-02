@@ -143,8 +143,8 @@ class tencentSpeech(object):
         #有些音频utf8解码失败，存在编码错误
         s = request.content.decode("utf8","ignore")
         return json.loads(s)
-    def ASR(self, URL, voiceformat, sourcetype):
-        self.url, self.voiceformat, self.source_type = URL, voiceformat, sourcetype
+    def ASR(self, URL, voiceformat, sourcetype, region):
+        self.url, self.voiceformat, self.source_type, self.region = URL, voiceformat, sourcetype, region
         return self.oneSentenceRecognition()
     def oneSentenceRecognition(self):
         #生成body
@@ -158,6 +158,7 @@ class tencentSpeech(object):
         config_dict= {
                         'Action'         : 'SentenceRecognition',
                         'Version'        : '2018-05-22',
+                        'Region'         : self.Region,
                         'ProjectId'      : 0,
                         'SubServiceType' : 2,
                         'EngSerViceType' : '16k',

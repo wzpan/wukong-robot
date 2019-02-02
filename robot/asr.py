@@ -64,14 +64,15 @@ class TencentASR():
 
     SLUG = "tencent-asr"
 
-    def __init__(self, appid, secretid, secret_key, **args):
+    def __init__(self, appid, secretid, secret_key, region='ap-guangzhou', **args):
         super(self.__class__, self).__init__()
-        self.engine = TencentSpeech.tencentSpeech(secret_key, secretid)        
+        self.engine = TencentSpeech.tencentSpeech(secret_key, secretid)
+        self.region = region
                 
 
     def transcribe(self, fp):
         mp3_path = utils.convert_wav_to_mp3(fp)
-        r = self.engine.ASR(mp3_path, 'mp3', '1')
+        r = self.engine.ASR(mp3_path, 'mp3', '1', self.region)
         utils.check_and_delete(mp3_path)
         res = json.loads(r)
         if 'Response' in res and 'Result' in res['Response']:
