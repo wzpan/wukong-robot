@@ -40,3 +40,4 @@ class BaiduTTS():
                 return tmpfile
         else:
             logger.critical('合成失败！')
+
