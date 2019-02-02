@@ -1,5 +1,7 @@
 import os
 import tempfile
+import wave
+import struct
 
 def get_file_content(filePath):
     """ 读取文件 """
@@ -12,7 +14,9 @@ def check_and_delete(fp):
         os.remove(fp)
 
 def write_temp_file(data, suffix):
+    """ 二进制形式写入临时文件 """
     with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as f:
         f.write(data)
         tmpfile = f.name
     return tmpfile
+

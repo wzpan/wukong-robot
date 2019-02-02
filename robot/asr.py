@@ -1,5 +1,5 @@
 from aip import AipSpeech
-from .sdk import TencentSpeech
+from .sdk import TencentSpeech, AliSpeech
 from . import utils
 import logging
 import requests
@@ -18,6 +18,13 @@ logger.setLevel(logging.INFO)
 class BaiduASR():
     """
     百度的语音识别API.
+    dev_pid:
+        - 1936: 普通话远场
+        - 1536：普通话(支持简单的英文识别)
+        - 1537：普通话(纯中文识别)
+        - 1737：英语
+        - 1637：粤语
+        - 1837：四川话
     要使用本模块, 首先到 yuyin.baidu.com 注册一个开发者账号,
     之后创建一个新应用, 然后在应用管理的"查看key"中获得 API Key 和 Secret Key
     填入 config.xml 中.
@@ -31,7 +38,7 @@ class BaiduASR():
 
     SLUG = "baidu-asr"
 
-    def __init__(self, appid, api_key, secret_key, dev_pid, **args):
+    def __init__(self, appid, api_key, secret_key, dev_pid=1936, **args):
         super(self.__class__, self).__init__()
         self.client = AipSpeech(appid, api_key, secret_key)
         self.dev_pid = dev_pid
@@ -69,6 +76,7 @@ class TencentASR():
             return res['Response']['Result']
         else:
             logger.info('{} 语音识别出错了'.format(self.SLUG))
+            return ''
 
 
 class XunfeiASR():
@@ -117,6 +125,27 @@ class XunfeiASR():
         if 'code' in res and res['code'] == '0':
             logger.info('{} 语音识别到了：{}'.format(self.SLUG, res['data']))
             return res['data']
+        else:
+            logger.info('{} 语音识别出错了'.format(self.SLUG))
+            return ''
+
+
+class AliASR():
+    """
+    阿里的语音识别API.
+    """
+
+    SLUG = "ali-asr"
+
+    def __init__(self, appKey, token, **args):
+        super(self.__class__, self).__init__()
+        self.appKey, self.token = appKey, token        
+
+    def transcribe(self, fp):
+        result = AliSpeech.asr(self.appKey, self.token, fp)
+        if result is not None:
+            logger.info('{} 语音识别到了：{}'.format(self.SLUG, result))
+            return result
         else:
             logger.info('{} 语音识别出错了'.format(self.SLUG))
             return ''

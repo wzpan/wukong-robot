@@ -1,5 +1,5 @@
 from aip import AipSpeech
-from .sdk import TencentSpeech
+from .sdk import TencentSpeech, AliSpeech
 from . import utils
 import logging
 import tempfile
@@ -23,6 +23,7 @@ class BaiduTTS():
             appid: '9670645'
             api_key: 'qg4haN8b2bGvFtCbBGqhrmZy'
             secret_key: '585d4eccb50d306c401d7df138bb02e7'
+            dev_pid: 1936
             per: 1
             lan: 'zh'
         ...
@@ -30,7 +31,7 @@ class BaiduTTS():
 
     SLUG = "baidu-tts"
 
-    def __init__(self, appid, api_key, secret_key, per, lan, **args):
+    def __init__(self, appid, api_key, secret_key, per=1, lan='zh', **args):
         super(self.__class__, self).__init__()
         self.client = AipSpeech(appid, api_key, secret_key)
         self.per, self.lan = per, lan
@@ -62,7 +63,7 @@ class TencentTTS():
 
     SLUG = "tencent-tts"
 
-    def __init__(self, appid, secretid, secret_key, region, voiceType, language, **args):
+    def __init__(self, appid, secretid, secret_key, region='ap-guangzhou', voiceType=0, language=1, **args):
         super(self.__class__, self).__init__()
         self.engine = TencentSpeech.tencentSpeech(secret_key, secretid)
         self.region, self.voiceType, self.language = region, voiceType, language
@@ -88,7 +89,7 @@ class XunfeiTTS():
 
     SLUG = "xunfei-tts"
 
-    def __init__(self, appid, api_key, voice_name):
+    def __init__(self, appid, api_key, voice_name='xiaoyan'):
         super(self.__class__, self).__init__()
         self.appid, self.api_key, self.voice_name = appid, api_key, voice_name
 
@@ -128,3 +129,24 @@ class XunfeiTTS():
             return tmpfile
         else :
             logger.critical('{} 合成失败！{}'.format(self.SLUG, r.text))
+
+
+class AliTTS():
+    """
+    阿里的TTS
+    voice: 发音人，默认是 xiaoyun
+        全部发音人列表：https://help.aliyun.com/document_detail/84435.html?spm=a2c4g.11186623.2.24.67ce5275q2RGsT
+    """
+    SLUG = "ali-tts"
+
+    def __init__(self, appKey, token, voice='xiaoyun', **args):
+        super(self.__class__, self).__init__()
+        self.appKey, self.token, self.voice = appKey, token, voice
+                
+    def get_speech(self, phrase):
+        tmpfile = AliSpeech.tts(self.appKey, self.token, self.voice, phrase)
+        if tmpfile is not None:
+            logger.info('{} 语音合成成功，合成路径：{}'.format(self.SLUG, tmpfile))
+            return tmpfile
+        else:
+            logger.critical('{} 合成失败！'.format(self.SLUG))
