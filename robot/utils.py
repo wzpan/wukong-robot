@@ -2,6 +2,7 @@ import os
 import tempfile
 import wave
 import struct
+from pydub import AudioSegment
 
 def get_file_content(filePath):
     """ 读取文件 """
@@ -20,3 +21,13 @@ def write_temp_file(data, suffix):
         tmpfile = f.name
     return tmpfile
 
+def get_pcm_from_wav(wav_path):
+    """ 从 wav 文件中读取 pcm """
+    wav = wave.open(wav_path, 'rb')
+    return wav.readframes(wav.getnframes())
+
+def convert_wav_to_mp3(wav_path):
+    """ 将 wav 文件转成 mp3 """
+    mp3_path = wav_path.replace('.wav', '.mp3')
+    AudioSegment.from_wav(wav_path).export(mp3_path, format="mp3")
+    return mp3_path

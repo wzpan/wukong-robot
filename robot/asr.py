@@ -45,7 +45,8 @@ class BaiduASR():
 
     def transcribe(self, fp):
         # 识别本地文件
-        res = self.client.asr(utils.get_file_content(fp), 'wav', 16000, {
+        pcm = utils.get_pcm_from_wav(fp)
+        res = self.client.asr(pcm, 'pcm', 16000, {
             'dev_pid': self.dev_pid,
         })
         if res['err_no'] == 0:
@@ -69,7 +70,9 @@ class TencentASR():
                 
 
     def transcribe(self, fp):
-        r = self.engine.ASR(fp, 'wav', '1')
+        mp3_path = utils.convert_wav_to_mp3(fp)
+        r = self.engine.ASR(mp3_path, 'mp3', '1')
+        utils.check_and_delete(mp3_path)
         res = json.loads(r)
         if 'Response' in res and 'Result' in res['Response']:
             logger.info('{} 语音识别到了：{}'.format(self.SLUG, res['Response']['Result']))

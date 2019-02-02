@@ -122,8 +122,7 @@ def tts(appKey, token, voice, text):
 def asr(appKey, token, wave_file):
     # 服务请求地址
     url = 'http://nls-gateway.cn-shanghai.aliyuncs.com/stream/v1/asr'
-    wav = wave.open(wave_file, 'rb')
-    pcm = wav.readframes(wav.getnframes())
+    pcm = utils.get_pcm_from_wav(wave_file)
     # 音频文件
     format = 'pcm'
     sampleRate = 16000
