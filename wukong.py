@@ -38,7 +38,6 @@ def conversation(fp):
     snowboydecoder.play_audio_file(snowboydecoder.DETECT_DONG)
     print("converting audio to text")
     asr_engine = asr.BaiduASR('9670645', 'qg4haN8b2bGvFtCbBGqhrmZy', '585d4eccb50d306c401d7df138bb02e7')
-    #asr_engine = asr.TencentRealTimeASR('1253537070', 'AKID7C7JK9QomcWJUjcsKbK8iLQjhju8fC3z', '2vhKRVSn4mXQ9PiT7eOtBqQhR5Z6IvPn')
     query = asr_engine.transcribe(fp)
     utils.check_and_delete(fp)
     ai_engine = ai.TulingRobot('4d6eec9d9a9148bca73236bac6f35824')

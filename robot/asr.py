@@ -70,22 +70,3 @@ class TencentASR():
             logger.info('腾讯云语音识别出错了')
 
 
-class TencentRealTimeASR():
-    """
-    腾讯的实时语音识别API.
-    """
-
-    SLUG = "tencent-realtime-asr"
-
-    def __init__(self, appid, secretid, secret_key, **args):
-        super(self.__class__, self).__init__()
-        self.appid = appid
-        self.secretid = secretid
-        self.secret_key = secret_key
-                
-
-    def transcribe(self, fp):
-        res = RASRsdk.sendVoice(self.secret_key, self.secretid, self.appid, '16k_0', 0, 0, 1, fp, 64000)
-        logger.info('腾讯云实时语音识别到了：' + res)
-        return res
-
