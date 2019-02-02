@@ -31,14 +31,15 @@ class BaiduASR():
 
     SLUG = "baidu-asr"
 
-    def __init__(self, appid, api_key, secret_key, **args):
+    def __init__(self, appid, api_key, secret_key, dev_pid, **args):
         super(self.__class__, self).__init__()
-        self.client = AipSpeech(appid, api_key, secret_key)    
+        self.client = AipSpeech(appid, api_key, secret_key)
+        self.dev_pid = dev_pid
 
     def transcribe(self, fp):
         # 识别本地文件
         res = self.client.asr(utils.get_file_content(fp), 'wav', 16000, {
-            'dev_pid': 1936,
+            'dev_pid': self.dev_pid,
         })
         if res['err_no'] == 0:
             logger.info('{} 语音识别到了：{}'.format(self.SLUG, res['result']))
