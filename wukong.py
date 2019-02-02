@@ -1,5 +1,5 @@
 from snowboy import snowboydecoder
-from robot import asr, tts, ai, player, utils
+from robot import ASR, TTS, AI, Player, utils
 import sys
 import signal
 import yaml
@@ -14,7 +14,7 @@ logging.basicConfig()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-mp3_player = None
+player = None
 
 def signal_handler(signal, frame):
     global interrupted
@@ -22,32 +22,32 @@ def signal_handler(signal, frame):
 
 def detected_callback():
     snowboydecoder.play_audio_file()
-    global detected, mp3_player
+    global detected, player
     detected = True
-    if mp3_player is not None and mp3_player.is_playing():
-        mp3_player.stop()
-        mp3_player = None
+    if player is not None and player.is_playing():
+        player.stop()
+        player = None
 
 def interrupt_callback():
     global interrupted
     return interrupted
 
 def conversation(fp):
-    global detected, mp3_player
+    global detected, player
     detected = False
     snowboydecoder.play_audio_file(snowboydecoder.DETECT_DONG)
     print("converting audio to text")
-    #asr_engine = asr.BaiduASR('9670645', 'qg4haN8b2bGvFtCbBGqhrmZy', '585d4eccb50d306c401d7df138bb02e7')
-    #asr_engine = asr.TencentASR('1253537070', 'AKID7C7JK9QomcWJUjcsKbK8iLQjhju8fC3z', '2vhKRVSn4mXQ9PiT7eOtBqQhR5Z6IvPn')
-    asr_engine = asr.XunfeiASR('5c540c39', '859bc21e90c64d97fae77695579eb05e')
-    query = asr_engine.transcribe(fp)
+    #asr = ASR.BaiduASR('9670645', 'qg4haN8b2bGvFtCbBGqhrmZy', '585d4eccb50d306c401d7df138bb02e7')
+    asr = ASR.TencentASR('1253537070', 'AKID7C7JK9QomcWJUjcsKbK8iLQjhju8fC3z', '2vhKRVSn4mXQ9PiT7eOtBqQhR5Z6IvPn')
+    #asr = asr.XunfeiASR('5c540c39', '859bc21e90c64d97fae77695579eb05e')
+    query = asr.transcribe(fp)
     utils.check_and_delete(fp)
-    ai_engine = ai.TulingRobot('4d6eec9d9a9148bca73236bac6f35824')
-    msg = ai_engine.chat(query)
-    tts_engine = tts.BaiduTTS('9670645', 'qg4haN8b2bGvFtCbBGqhrmZy', '585d4eccb50d306c401d7df138bb02e7')
-    voice = tts_engine.get_speech(msg)
-    mp3_player = player.SoxPlayer()
-    mp3_player.play(voice)
+    ai = AI.TulingRobot('4d6eec9d9a9148bca73236bac6f35824')
+    msg = ai.chat(query)
+    #tts = TTS.BaiduTTS('9670645', 'qg4haN8b2bGvFtCbBGqhrmZy', '585d4eccb50d306c401d7df138bb02e7')
+    tts = TTS.TencentTTS('1253537070', 'AKID7C7JK9QomcWJUjcsKbK8iLQjhju8fC3z', '2vhKRVSn4mXQ9PiT7eOtBqQhR5Z6IvPn')
+    voice_fname = tts.get_speech(msg)
+    Player.play(voice_fname)    
     
 
 model = "wukong.pmdl"

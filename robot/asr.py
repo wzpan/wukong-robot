@@ -1,5 +1,5 @@
 from aip import AipSpeech
-from .sdk import TencentSpeech, RASRsdk
+from .sdk import TencentSpeech
 from . import utils
 import logging
 import requests
@@ -41,10 +41,10 @@ class BaiduASR():
             'dev_pid': 1936,
         })
         if res['err_no'] == 0:
-            logger.info(('百度语音识别到了', res['result']))
+            logger.info('{} 语音识别到了：{}'.format(self.SLUG, res['result']))
             return ''.join(res['result'])
         else:
-            logger.info('百度语音识别出错了：' + res['err_msg'])
+            logger.info('{} 语音识别出错了: {}'.format(self.SLUG, res['err_msg']))
             return ''
 
 
@@ -64,10 +64,10 @@ class TencentASR():
         r = self.engine.ASR(fp, 'wav', '1')
         res = json.loads(r)
         if 'Response' in res and 'Result' in res['Response']:
-            logger.info('腾讯云语音识别到了：' + res['Response']['Result'])
+            logger.info('{} 语音识别到了：{}'.format(self.SLUG, res['Response']['Result']))
             return res['Response']['Result']
         else:
-            logger.info('腾讯云语音识别出错了')
+            logger.info('{} 语音识别出错了'.format(self.SLUG))
 
 
 class XunfeiASR():
@@ -112,8 +112,10 @@ class XunfeiASR():
         URL = "http://api.xfyun.cn/v1/service/v1/iat"
         r = requests.post(URL, headers=self.getHeader('raw', 'sms16k'), data=self.getBody(fp))
         res = json.loads(r.content.decode('utf-8'))
+        logger.info(res)
         if 'code' in res and res['code'] == '0':
-            logger.info('讯飞ASR识别到了：' + res['data'])
+            logger.info('{} 语音识别到了：{}'.format(self.SLUG, res['data']))
             return res['data']
         else:
+            logger.info('{} 语音识别出错了'.format(self.SLUG))
             return ''

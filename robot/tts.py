@@ -1,7 +1,9 @@
 from aip import AipSpeech
+from .sdk import TencentSpeech
+from . import utils
 import logging
 import tempfile
-
+import base64
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -32,12 +34,32 @@ class BaiduTTS():
         });
         # 识别正确返回语音二进制 错误则返回dict 参照下面错误码
         if not isinstance(result, dict):
-            logger.info('语音合成成功')
-            with tempfile.NamedTemporaryFile(suffix='.mp3', delete=False) as f:
-                f.write(result)
-                tmpfile = f.name
-                logger.info('合成路径：' + tmpfile)
-                return tmpfile
+            tmpfile = utils.write_temp_file(data, '.mp3')
+            logger.info('{} 语音合成成功，合成路径：{}'.format(self.SLUG, tmpfile))
+            return tmpfile
         else:
-            logger.critical('合成失败！')
+            logger.critical('{} 合成失败！'.format(self.SLUG))
 
+
+class TencentTTS():
+    """
+    腾讯的语音合成
+    region: https://cloud.tencent.com/document/api/441/17365#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8
+    """
+
+    SLUG = "tencent-tts"
+
+    def __init__(self, appid, secretid, secret_key, **args):
+        super(self.__class__, self).__init__()
+        self.engine = TencentSpeech.tencentSpeech(secret_key, secretid)
+                
+    def get_speech(self, phrase):
+        result = self.engine.TTS(phrase, 0, 1, 'ap-guangzhou')
+        if 'Response' in result and 'Audio' in result['Response']:
+            audio = result['Response']['Audio']
+            data = base64.b64decode(audio)
+            tmpfile = utils.write_temp_file(data, '.wav')
+            logger.info('{} 语音合成成功，合成路径：{}'.format(self.SLUG, tmpfile))
+            return tmpfile
+        else:
+            logger.critical('{} 合成失败！'.format(self.SLUG))
