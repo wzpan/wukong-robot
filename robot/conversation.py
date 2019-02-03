@@ -1,36 +1,38 @@
 # -*- coding: utf-8-*-
 from robot import ASR, TTS, AI, Player, config, constants, utils
 from snowboy import snowboydecoder
+import logging
 
-player, asr, ai, tts = None, None, None, None
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
-def init():
-    global asr, ai, tts    
-    asr = ASR.get_engine_by_slug(config.get('asr_engine', 'tencent-asr'))
-    ai = AI.get_robot_by_slug(config.get('robot', 'tuling'))
-    tts = TTS.get_engine_by_slug(config.get('tts_engine', 'baidu-tts'))
+class Conversation(object):
 
-def converse(fp):
-    global player, asr, ai, tts
-    try:
-        snowboydecoder.play_audio_file(constants.getData('beep_lo.wav'))
-        print("converting audio to text")        
-        query = asr.transcribe(fp)
-        utils.check_and_delete(fp)        
-        msg = ai.chat(query)        
-        voice = tts.get_speech(msg)
-        player = Player.getPlayerByFileName(voice)
-        player.play(voice, True)
-    except ValueError as e:
-        logger.critical(e)
-        utils.clean()
+    def __init__(self):
+        self.player = None
+        self.asr = ASR.get_engine_by_slug(config.get('asr_engine', 'tencent-asr'))
+        self.ai = AI.get_robot_by_slug(config.get('robot', 'tuling'))
+        self.tts = TTS.get_engine_by_slug(config.get('tts_engine', 'baidu-tts'))
 
-def play(voice):
-    player = Player.getPlayerByFileName(voice)
-    player.play(voice)
+    def converse(self, fp):
+        try:
+            self.interrupt()
+            snowboydecoder.play_audio_file(constants.getData('beep_lo.wav'))
+            query = self.asr.transcribe(fp)
+            utils.check_and_delete(fp)
+            msg = self.ai.chat(query)        
+            self.say(msg)
+        except ValueError as e:
+            logger.critical(e)
+            utils.clean()
 
-def stop():
-    global player
-    if player is not None and player.is_playing():
-        player.stop()
-        player = None
+    def say(self, msg):
+        voice = self.tts.get_speech(msg)
+        self.player = Player.SoxPlayer()
+        self.player.play(voice, True)
+
+    def interrupt(self):
+        if self.player is not None and self.player.is_playing():
+            self.player.stop()
+            self.player = None

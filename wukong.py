@@ -1,6 +1,7 @@
 # -*- coding: utf-8-*-
 from snowboy import snowboydecoder
-from robot import config, conversation, utils, constants
+from robot import config, utils, constants
+from robot.Conversation import Conversation
 import sys
 import signal
 import yaml
@@ -14,9 +15,13 @@ logging.basicConfig()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+conversation = None
+
 def init():
+    global conversation
     config.init()
-    conversation.init()
+    conversation = Conversation()
+    #conversation.say('{} 你好！'.format(config.get('first_name', '主人')))
 
 def signal_handler(signal, frame):
     global interrupted
@@ -24,10 +29,11 @@ def signal_handler(signal, frame):
     utils.clean()
 
 def detected_callback():
+    global conversation
     if not utils.is_proper_time():
         return
     snowboydecoder.play_audio_file(constants.getData('beep_hi.wav'))
-    conversation.stop()    
+    conversation.interrupt()    
 
 def do_not_bother_callback():    
     utils.do_not_bother = not utils.do_not_bother
@@ -43,8 +49,8 @@ def interrupt_callback():
     return interrupted
 
 def main():
+    global conversation
     init()
-    logger.debug('config: {}'.format(config.getConfig()))
     models = [
         constants.getHotwordModel(config.get('hotword', 'wukong.pmdl')),
         constants.getHotwordModel(utils.get_do_not_bother_hotword())        
