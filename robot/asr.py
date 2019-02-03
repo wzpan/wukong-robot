@@ -1,6 +1,6 @@
 from aip import AipSpeech
 from .sdk import TencentSpeech, AliSpeech
-from . import utils
+from . import utils, config
 import logging
 import requests
 import base64
@@ -9,13 +9,36 @@ import hmac
 import hashlib
 import time
 import json
+from abc import ABCMeta, abstractmethod
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-class BaiduASR():
+class AbstractASR(object):
+    """
+    Generic parent class for all ASR engines
+    """
+
+    __metaclass__ = ABCMeta
+
+    @classmethod
+    def get_config(cls):
+        return {}
+
+    @classmethod
+    def get_instance(cls):
+        profile = cls.get_config()
+        instance = cls(**profile)
+        return instance
+
+    @abstractmethod
+    def transcribe(self, fp):
+        pass
+
+
+class BaiduASR(AbstractASR):
     """
     百度的语音识别API.
     dev_pid:
@@ -43,6 +66,11 @@ class BaiduASR():
         self.client = AipSpeech(appid, api_key, secret_key)
         self.dev_pid = dev_pid
 
+    @classmethod
+    def get_config(cls):
+        # Try to get baidu_yuyin config from config
+        return config.get('baidu_yuyin', {})
+
     def transcribe(self, fp):
         # 识别本地文件
         pcm = utils.get_pcm_from_wav(fp)
@@ -57,7 +85,7 @@ class BaiduASR():
             return ''
 
 
-class TencentASR():
+class TencentASR(AbstractASR):
     """
     腾讯的语音识别API.
     """
@@ -68,7 +96,11 @@ class TencentASR():
         super(self.__class__, self).__init__()
         self.engine = TencentSpeech.tencentSpeech(secret_key, secretid)
         self.region = region
-                
+
+    @classmethod
+    def get_config(cls):
+        # Try to get tencent_yuyin config from config
+        return config.get('tencent_yuyin', {})
 
     def transcribe(self, fp):
         mp3_path = utils.convert_wav_to_mp3(fp)
@@ -83,7 +115,7 @@ class TencentASR():
             return ''
 
 
-class XunfeiASR():
+class XunfeiASR(AbstractASR):
     """
     科大讯飞的语音识别API.
     外网ip查询：https://ip.51240.com/
@@ -95,6 +127,11 @@ class XunfeiASR():
         super(self.__class__, self).__init__()
         self.appid = appid
         self.api_key = api_key
+
+    @classmethod
+    def get_config(cls):
+        # Try to get xunfei_yuyin config from config
+        return config.get('xunfei_yuyin', {})     
 
     def getHeader(self, aue, engineType):
         curTime = str(int(time.time()))
@@ -134,7 +171,7 @@ class XunfeiASR():
             return ''
 
 
-class AliASR():
+class AliASR(AbstractASR):
     """
     阿里的语音识别API.
     """
@@ -143,7 +180,12 @@ class AliASR():
 
     def __init__(self, appKey, token, **args):
         super(self.__class__, self).__init__()
-        self.appKey, self.token = appKey, token        
+        self.appKey, self.token = appKey, token
+
+    @classmethod
+    def get_config(cls):
+        # Try to get ali_yuyin config from config
+        return config.get('ali_yuyin', {})
 
     def transcribe(self, fp):
         result = AliSpeech.asr(self.appKey, self.token, fp)
@@ -153,3 +195,39 @@ class AliASR():
         else:
             logger.info('{} 语音识别出错了'.format(self.SLUG))
             return ''
+
+
+def get_engine_by_slug(slug=None):
+    """
+    Returns:
+        An ASR Engine implementation available on the current platform
+
+    Raises:
+        ValueError if no speaker implementation is supported on this platform
+    """
+
+    if not slug or type(slug) is not str:
+        raise TypeError("Invalid slug '%s'", slug)
+
+    selected_engines = list(filter(lambda engine: hasattr(engine, "SLUG") and
+                              engine.SLUG == slug, get_engines()))
+
+    if len(selected_engines) == 0:
+        raise ValueError("错误：找不到名为 {} 的 ASR 引擎".format(slug))
+    else:
+        if len(selected_engines) > 1:
+            print("注意: 有多个 ASR 名称与指定的引擎名 {} 匹配").format(slug)
+        engine = selected_engines[0]
+        return engine.get_instance()
+
+
+def get_engines():
+    def get_subclasses(cls):
+        subclasses = set()
+        for subclass in cls.__subclasses__():
+            subclasses.add(subclass)
+            subclasses.update(get_subclasses(subclass))
+        return subclasses
+    return [engine for engine in
+            list(get_subclasses(AbstractASR))
+            if hasattr(engine, 'SLUG') and engine.SLUG]

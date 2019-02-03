@@ -2,6 +2,9 @@ import os
 import tempfile
 import wave
 import struct
+import shutil
+import re
+from . import constants
 from pydub import AudioSegment
 
 def get_file_content(filePath):
@@ -31,3 +34,10 @@ def convert_wav_to_mp3(wav_path):
     mp3_path = wav_path.replace('.wav', '.mp3')
     AudioSegment.from_wav(wav_path).export(mp3_path, format="mp3")
     return mp3_path
+
+def clean():
+    """ 清理垃圾数据 """
+    temp_files = os.listdir(constants.TEMP_PATH)
+    for f in temp_files:
+        if os.path.isfile(f) and re.match(r'output[\d]*\.wav', os.path.basename(f)):
+            os.remove(f)

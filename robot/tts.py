@@ -1,18 +1,40 @@
 from aip import AipSpeech
 from .sdk import TencentSpeech, AliSpeech
-from . import utils
+from . import utils, config
 import logging
 import tempfile
 import base64
 import time
 import requests
 import hashlib
+from abc import ABCMeta, abstractmethod
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-class BaiduTTS():
+class AbstractTTS(object):
+    """
+    Generic parent class for all TTS engines
+    """
+
+    __metaclass__ = ABCMeta
+
+    @classmethod
+    def get_config(cls):
+        return {}
+
+    @classmethod
+    def get_instance(cls):
+        profile = cls.get_config()
+        instance = cls(**profile)
+        return instance
+
+    @abstractmethod
+    def get_speech(self, phrase):
+        pass
+
+class BaiduTTS(AbstractTTS):
     """
     使用百度语音合成技术
     要使用本模块, 首先到 yuyin.baidu.com 注册一个开发者账号,
@@ -34,10 +56,15 @@ class BaiduTTS():
     def __init__(self, appid, api_key, secret_key, per=1, lan='zh', **args):
         super(self.__class__, self).__init__()
         self.client = AipSpeech(appid, api_key, secret_key)
-        self.per, self.lan = per, lan
+        self.per, self.lan = str(per), lan
+
+    @classmethod
+    def get_config(cls):
+        # Try to get baidu_yuyin config from config
+        return config.get('baidu_yuyin', {})
 
     def get_speech(self, phrase):
-        result  = self.client.synthesis(phrase, self.lan, self.per);
+        result  = self.client.synthesis(phrase, self.lan, 1, {'per': self.per});
         # 识别正确返回语音二进制 错误则返回dict 参照下面错误码
         if not isinstance(result, dict):
             tmpfile = utils.write_temp_file(result, '.mp3')
@@ -47,7 +74,7 @@ class BaiduTTS():
             logger.critical('{} 合成失败！'.format(self.SLUG))
 
 
-class TencentTTS():
+class TencentTTS(AbstractTTS):
     """
     腾讯的语音合成
     region: 服务地域，挑个离自己最近的区域有助于提升速度。
@@ -67,6 +94,11 @@ class TencentTTS():
         super(self.__class__, self).__init__()
         self.engine = TencentSpeech.tencentSpeech(secret_key, secretid)
         self.region, self.voiceType, self.language = region, voiceType, language
+
+    @classmethod
+    def get_config(cls):
+        # Try to get tencent_yuyin config from config
+        return config.get('tencent_yuyin', {})
                 
     def get_speech(self, phrase):
         result = self.engine.TTS(phrase, self.voiceType, self.language, self.region)
@@ -80,7 +112,7 @@ class TencentTTS():
             logger.critical('{} 合成失败！'.format(self.SLUG))
 
 
-class XunfeiTTS():
+class XunfeiTTS(AbstractTTS):
     """
     科大讯飞的语音识别API.
     外网ip查询：https://ip.51240.com/
@@ -92,6 +124,11 @@ class XunfeiTTS():
     def __init__(self, appid, api_key, voice_name='xiaoyan'):
         super(self.__class__, self).__init__()
         self.appid, self.api_key, self.voice_name = appid, api_key, voice_name
+
+    @classmethod
+    def get_config(cls):
+        # Try to get xunfei_yuyin config from config
+        return config.get('xunfei_yuyin', {})     
 
     def getHeader(self, aue):
         curTime = str(int(time.time()))
@@ -131,7 +168,7 @@ class XunfeiTTS():
             logger.critical('{} 合成失败！{}'.format(self.SLUG, r.text))
 
 
-class AliTTS():
+class AliTTS(AbstractTTS):
     """
     阿里的TTS
     voice: 发音人，默认是 xiaoyun
@@ -142,6 +179,11 @@ class AliTTS():
     def __init__(self, appKey, token, voice='xiaoyun', **args):
         super(self.__class__, self).__init__()
         self.appKey, self.token, self.voice = appKey, token, voice
+
+    @classmethod
+    def get_config(cls):
+        # Try to get ali_yuyin config from config
+        return config.get('ali_yuyin', {})
                 
     def get_speech(self, phrase):
         tmpfile = AliSpeech.tts(self.appKey, self.token, self.voice, phrase)
@@ -150,3 +192,40 @@ class AliTTS():
             return tmpfile
         else:
             logger.critical('{} 合成失败！'.format(self.SLUG))
+
+def get_engine_by_slug(slug=None):
+    """
+    Returns:
+        A TTS Engine implementation available on the current platform
+
+    Raises:
+        ValueError if no speaker implementation is supported on this platform
+    """
+
+    if not slug or type(slug) is not str:
+        raise TypeError("Invalid slug '%s'", slug)
+
+    logger.info('engine num: {}'.format(len(get_engines())))
+
+    selected_engines = list(filter(lambda engine: hasattr(engine, "SLUG") and
+                              engine.SLUG == slug, get_engines()))
+
+    if len(selected_engines) == 0:
+        raise ValueError("错误：找不到名为 {} 的 TTS 引擎".format(slug))
+    else:
+        if len(selected_engines) > 1:
+            print("注意: 有多个 TTS 名称与指定的引擎名 {} 匹配").format(slug)
+        engine = selected_engines[0]
+        return engine.get_instance()
+
+
+def get_engines():
+    def get_subclasses(cls):
+        subclasses = set()
+        for subclass in cls.__subclasses__():
+            subclasses.add(subclass)
+            subclasses.update(get_subclasses(subclass))
+        return subclasses
+    return [engine for engine in
+            list(get_subclasses(AbstractTTS))
+            if hasattr(engine, 'SLUG') and engine.SLUG]

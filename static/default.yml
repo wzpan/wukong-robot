@@ -6,7 +6,7 @@ location: '深圳'
 
 # snowboy 离线唤醒
 # https://snowboy.kitt.ai/dashboard
-hotword: '$HOME/wukong/static/wukong.pmdl'  # 唤醒词模型
+hotword: 'wukong.pmdl'  # 唤醒词模型，如要自定义请放到 $HOME/.wukong 目录中
 sensitivity: 0.5  # 灵敏度
 
 # 勿扰模式，该时间段内进入睡眠
@@ -23,7 +23,7 @@ do_not_bother:
 # tencent-tts   - 腾讯云语音合成（推荐）
 tts_engine: baidu-tts
 
-# STT 服务配置
+# 语音识别服务配置
 # 可选值：
 # baidu-asr     - 百度在线语音识别
 # xunfei-asr    - 讯飞语音识别
@@ -58,21 +58,34 @@ xunfei_yuyin:
 # https://ai.aliyun.com/nls
 # 注册获取
 ali_yuyin:
-    ak_id: 'x04ujKJ7oRvDgt6h'
-    ak_secret: '7237029b69f146e89bac004bb61c09ee'
-    voice: 'xiaoyun' #xiaoyun为女生，xiaogang为男生, 全部可选：http://suo.im/4x8RzQ
-    url: 'http://api.musiiot.top/stt.php' # 白名单ip中转服务器（可选）
+    appKey: 'x04ujKJ7oRvDgt6h'
+    token: '7237029b69f146e89bac004bb61c09ee'
+    voice: 'xiaogang' #xiaoyun为女生，xiaogang为男生, 全部可选：http://suo.im/4x8RzQ
+
+# 腾讯云语音
+# 先前往 https://cloud.tencent.com
+# 注册语音识别和语音合成服务，获得 appid ，然后在访问管理
+# https://console.cloud.tencent.com/cam
+# 创建子用户，访问API密钥获得 secretid 和 secret_key
+# 注册获取
+tencent_yuyin:
+    appid: '1253537070'
+    secretid: 'AKID7C7JK9QomcWJUjcsKbK8iLQjhju8fC3z'
+    secret_key: '2vhKRVSn4mXQ9PiT7eOtBqQhR5Z6IvPn'
+    region: 'ap-guangzhou'  # 服务地区，有效值：http://suo.im/4EEQYD
+    voiceType: 0            # 0: 女声1；1：男生1；2：男生2
+    language: 1             # 1: 中文；2：英文
 
 # 聊天机器人
 # 可选值：
 # tuling    - 图灵机器人
 # emotibot  - 小影机器人
-robot: emotibot
+robot: tuling
 
 # 图灵机器人	
 # http://www.tuling123.com
 tuling:
-    tuling_key: '4d6eec9d9a9148bca73236bac6f35824'  # 建议使用自己的图灵机器人API Key
+    tuling_key: '98f95153fb5c4684a5602b909949ba61'  # 建议使用自己的图灵机器人API Key
 
 # 小影机器人
 # http://botfactory.emotibot.com/

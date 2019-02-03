@@ -26,6 +26,9 @@ CUSTOM_PATH = os.path.expanduser(
 def getConfigPath():
     return os.path.join(CONFIG_PATH, CUSTOM_CONFIG_NAME)
 
+def getConfigData(*fname):
+    return os.path.join(CONFIG_PATH, *fname)
+
 def getData(*fname):
     return os.path.join(DATA_PATH, *fname)
 
@@ -34,3 +37,9 @@ def getDefaultConfigPath():
 
 def newConfig():
     shutil.copyfile(getDefaultConfigPath(), getConfigPath())
+
+def getHotwordModel(fname):
+    if os.path.exists(getData(fname)):
+        return getData(fname)
+    else:
+        return getConfigData(fname)
