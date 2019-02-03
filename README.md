@@ -19,7 +19,6 @@ wukong-robot 支持运行在以下的设备和系统中：
 1. 克隆本仓库：
 
 ``` bash
-cd $HOME
 git clone https://github.com/wzpan/wukong-robot.git
 ```
 
