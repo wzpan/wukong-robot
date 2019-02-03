@@ -65,16 +65,8 @@ def is_proper_time():
         return not (current in range(since, 25) or
                     current in range(-1, till))
 
-def get_do_not_bother_on_hotword():
+def get_do_not_bother_hotword():
     """ 打开勿扰模式唤醒词 """
-    default_hotword = 'zhimaguanmen.pmdl'
-    if not config.has('do_not_bother'):
-        return default_hotword
-    bother_profile = config.get('do_not_bother')
-    return bother_profile.get('hotword', default_hotword)
-
-def get_do_not_bother_off_hotword():
-    """ 结束勿扰模式唤醒词 """
     default_hotword = 'zhimakaimen.pmdl'
     if not config.has('do_not_bother'):
         return default_hotword

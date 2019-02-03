@@ -16,10 +16,7 @@ do_not_bother:
     enable: true # 开启勿扰模式
     since: 23    # 开始时间
     till: 9      # 结束时间，如果比 since 小表示第二天
-    on_hotword: 'zhimaguanmen.pmdl'  # 通过这个唤醒词可直接进入勿扰模式。默认是“芝麻关门”
-                                 # 训练准确度：https://snowboy.kitt.ai/hotword/3247
-    off_hotword: 'zhimakaimen.pmdl'  # 通过这个唤醒词可结束勿扰模式。默认是“芝麻开门”
-                                 # 训练准确度：https://snowboy.kitt.ai/hotword/3247                         
+    hotword: 'zhimakaimen.pmdl'  # 通过这个唤醒词可切换勿扰模式。默认是“芝麻关门”
 
 # 语音合成服务配置
 # 可选值：
