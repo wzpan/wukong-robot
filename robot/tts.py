@@ -1,3 +1,4 @@
+# -*- coding: utf-8-*-
 from aip import AipSpeech
 from .sdk import TencentSpeech, AliSpeech
 from . import utils, config
@@ -204,8 +205,6 @@ def get_engine_by_slug(slug=None):
 
     if not slug or type(slug) is not str:
         raise TypeError("Invalid slug '%s'", slug)
-
-    logger.info('engine num: {}'.format(len(get_engines())))
 
     selected_engines = list(filter(lambda engine: hasattr(engine, "SLUG") and
                               engine.SLUG == slug, get_engines()))

@@ -86,11 +86,13 @@ class SoxPlayer(AbstractSoundPlayer):
             output = f.read()
             if output:
                 logger.debug("play Output was: '%s'", output)
-        utils.check_and_delete(self.src)
+        if self.delete:
+            utils.check_and_delete(self.src)
 
-    def play(self, src):
+    def play(self, src, delete=False):
         self.src = src
         self.start()
+        self.delete = delete
 
     def play_block(self):
         self.run()

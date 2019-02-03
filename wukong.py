@@ -1,5 +1,6 @@
+# -*- coding: utf-8-*-
 from snowboy import snowboydecoder
-from robot import ASR, TTS, AI, Player, config, utils, constants
+from robot import config, conversation, utils, constants
 import sys
 import signal
 import yaml
@@ -13,14 +14,9 @@ logging.basicConfig()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-player, asr, ai, tts = None, None, None, None
-
 def init():
-    global asr, ai, tts
     config.init()
-    asr = ASR.get_engine_by_slug(config.get('asr_engine', 'tencent-asr'))
-    ai = AI.get_robot_by_slug(config.get('robot', 'tuling'))
-    tts = TTS.get_engine_by_slug(config.get('tts_engine', 'baidu-tts'))
+    conversation.init()
 
 def signal_handler(signal, frame):
     global interrupted
@@ -31,10 +27,7 @@ def detected_callback():
     if not utils.is_proper_time():
         return
     snowboydecoder.play_audio_file(constants.getData('beep_hi.wav'))
-    global player
-    if player is not None and player.is_playing():
-        player.stop()
-        player = None
+    conversation.stop()    
 
 def do_not_bother_callback():    
     utils.do_not_bother = not utils.do_not_bother
@@ -48,21 +41,6 @@ def do_not_bother_callback():
 def interrupt_callback():
     global interrupted
     return interrupted
-
-def conversation(fp):
-    global player, asr, ai, tts
-    try:
-        snowboydecoder.play_audio_file(constants.getData('beep_lo.wav'))
-        print("converting audio to text")        
-        query = asr.transcribe(fp)
-        utils.check_and_delete(fp)        
-        msg = ai.chat(query)        
-        voice = tts.get_speech(msg)
-        player = Player.getPlayerByFileName(voice)
-        player.play(voice)
-    except ValueError as e:
-        logger.critical(e)
-        utils.clean()
 
 def main():
     init()
@@ -79,7 +57,7 @@ def main():
     # main loop
     detector.start(detected_callback=[detected_callback,
                                       do_not_bother_callback],
-                   audio_recorder_callback=conversation,
+                   audio_recorder_callback=conversation.converse,
                    interrupt_check=interrupt_callback,
                    silent_count_threshold=5,
                    sleep_time=0.03)

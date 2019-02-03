@@ -1,3 +1,4 @@
+# -*- coding: utf-8-*-
 from aip import AipSpeech
 from .sdk import TencentSpeech, AliSpeech
 from . import utils, config
