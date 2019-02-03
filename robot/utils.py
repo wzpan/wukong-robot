@@ -4,8 +4,11 @@ import wave
 import struct
 import shutil
 import re
-from . import constants
+import time
+from . import constants, config
 from pydub import AudioSegment
+
+do_not_bother = False
 
 def get_file_content(filePath):
     """ 读取文件 """
@@ -41,3 +44,31 @@ def clean():
     for f in temp_files:
         if os.path.isfile(f) and re.match(r'output[\d]*\.wav', os.path.basename(f)):
             os.remove(f)
+
+def is_proper_time():
+    """ 是否合适时间 """
+    if do_not_bother:
+        return False
+    if not config.has('do_not_bother'):
+        return True
+    bother_profile = config.get('do_not_bother')
+    if not bother_profile['enable']:
+        return True
+    if 'since' not in bother_profile or 'till' not in bother_profile:
+        return True
+    since = bother_profile['since']
+    till = bother_profile['till']
+    current = time.localtime(time.time()).tm_hour
+    if till > since:
+        return current not in range(since, till)
+    else:
+        return not (current in range(since, 25) or
+                    current in range(-1, till))
+
+def get_do_not_bother_hotword():
+    """ 是否合适时间 """
+    default_hotword = 'zhimakaimen.pmdl'
+    if not config.has('do_not_bother'):
+        return default_hotword
+    bother_profile = config.get('do_not_bother')
+    return bother_profile.get('hotword', default_hotword)

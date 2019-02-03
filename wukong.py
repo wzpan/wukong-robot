@@ -28,11 +28,17 @@ def signal_handler(signal, frame):
     utils.clean()
 
 def detected_callback():
+    if not utils.is_proper_time():
+        return
     snowboydecoder.play_audio_file(constants.getData('beep_hi.wav'))
     global player
     if player is not None and player.is_playing():
         player.stop()
         player = None
+
+def do_not_bother_callback():    
+    utils.do_not_bother = not utils.do_not_bother
+    logger.info('勿扰模式: {}'.format(utils.do_not_bother))
 
 def interrupt_callback():
     global interrupted
@@ -56,15 +62,17 @@ def conversation(fp):
 def main():
     init()
     logger.debug('config: {}'.format(config.getConfig()))
-    model = constants.getHotwordModel(config.get('hotword', 'wukong.pmdl'))
-
+    models = [
+        constants.getHotwordModel(config.get('hotword', 'wukong.pmdl')),
+        constants.getHotwordModel(utils.get_do_not_bother_hotword())
+    ]
     # capture SIGINT signal, e.g., Ctrl+C
     signal.signal(signal.SIGINT, signal_handler)
-    detector = snowboydecoder.HotwordDetector(model, sensitivity=config.get('sensitivity', 0.5))
+    detector = snowboydecoder.HotwordDetector(models, sensitivity=config.get('sensitivity', 0.5))
     print('Listening... Press Ctrl+C to exit')
 
     # main loop
-    detector.start(detected_callback=detected_callback,
+    detector.start(detected_callback=[detected_callback, do_not_bother_callback],
                    audio_recorder_callback=conversation,
                    interrupt_check=interrupt_callback,
                    silent_count_threshold=5,

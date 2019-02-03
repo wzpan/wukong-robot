@@ -9,11 +9,12 @@ location: '深圳'
 hotword: 'wukong.pmdl'  # 唤醒词模型，如要自定义请放到 $HOME/.wukong 目录中
 sensitivity: 0.5  # 灵敏度
 
-# 勿扰模式，该时间段内进入睡眠
+# 勿扰模式，该时间段内自动进入睡眠，避免监听
 do_not_bother:
     enable: true # 开启勿扰模式
     since: 23    # 开始时间
     till: 9      # 结束时间，如果比 since 小表示第二天
+    hotword: 'zhimakaimen.pmdl'  # 通过这个唤醒词可切换对默认唤醒词的监听开关。默认是“芝麻开门”
 
 # 语音合成服务配置
 # 可选值：

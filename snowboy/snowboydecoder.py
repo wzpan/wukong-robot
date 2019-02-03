@@ -3,6 +3,7 @@
 import collections
 import pyaudio
 from . import snowboydetect
+from robot import utils
 import time
 import wave
 import os
@@ -10,12 +11,11 @@ import logging
 from ctypes import *
 from contextlib import contextmanager
 from robot import constants
-from robot.sdk import RASRsdk as asr
 
 
 logging.basicConfig()
 logger = logging.getLogger("snowboy")
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 TOP_DIR = os.path.dirname(os.path.abspath(__file__))
 
 RESOURCE_FILE = os.path.join(TOP_DIR, "resources/common.res")
@@ -195,7 +195,7 @@ class HotwordDetector(object):
         logger.debug("detecting...")
 
         state = "PASSIVE"
-        while self._running is True:
+        while self._running is True:            
             if interrupt_check():
                 logger.debug("detect voice break")
                 break
@@ -219,11 +219,11 @@ class HotwordDetector(object):
                     message += time.strftime("%Y-%m-%d %H:%M:%S",
                                          time.localtime(time.time()))
                     logger.info(message)
-                    callback = detected_callback[status-1]
+                    callback = detected_callback[status-1]                    
                     if callback is not None:
                         callback()
 
-                    if audio_recorder_callback is not None:
+                    if audio_recorder_callback is not None and status == 1 and utils.is_proper_time():
                         state = "ACTIVE"
                     continue
 
