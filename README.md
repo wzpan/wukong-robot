@@ -45,6 +45,12 @@ cd wukong-robot
 pip install -r requirements.txt
 ```
 
+## 获取 _snowboydetect.so ##
+
+snowboy 为不同平台提供了 so 包，[到官网下载你的平台适用的版本](https://snowboy.kitt.ai)，解压后将 _snowboydetect.so 拷贝到 snowboy 目录中。
+
+你也可以 [手动编译](https://github.com/wzpan/snowboy) ，以支持更多的平台。
+
 ## 运行 ##
 
 ``` bash
@@ -55,7 +61,7 @@ python wukong.py
 
 ## 配置 ##
 
-参考[配置文件的注释](https://github.com/wzpan/wukong-robot/blob/master/static/default.yml)进行配置即可。
+参考[配置文件的注释](https://github.com/wzpan/wukong-robot/blob/master/static/default.yml)进行配置即可。注意不建议直接修改 default.yml 里的内容，否则会给后续通过 `git pull` 更新带来麻烦。你应该拷贝一份放到 `$HOME/.wukong/config.yml` 中，或者在运行的时候按照提示让 wukong 为你完成这件事。
 
 几个 tips：
 
