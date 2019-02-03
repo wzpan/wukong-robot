@@ -31,6 +31,7 @@ def signal_handler(signal, frame):
 def detected_callback():
     global conversation
     if not utils.is_proper_time():
+        logger.warning('勿扰模式开启中')
         return
     snowboydecoder.play_audio_file(constants.getData('beep_hi.wav'))
     conversation.interrupt()    
