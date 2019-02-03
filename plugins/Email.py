@@ -150,7 +150,7 @@ def fetchUnreadEmails(profile, since=None, markRead=False, limit=None):
         return None
 
     if retcode == 'OK' and messages != ['']:
-        numUnread = len(messages[0].split(' '))
+        numUnread = len(str(messages[0]).split(' '))
         if limit and numUnread > limit:
             return numUnread
 
