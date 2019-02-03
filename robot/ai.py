@@ -20,7 +20,7 @@ class AbstractRobot(object):
         return instance
 
     def __init__(self, **kwargs):
-        self._logger = logging.getLogger(__name__)
+        logger = logging.getLogger(__name__)
 
     @abstractmethod
     def chat(self, texts):
@@ -70,11 +70,94 @@ class TulingRobot(AbstractRobot):
             else:
                 result = respond['text'].replace('<br>', '  ')
                 result = result.replace(u'\xa0', u' ')
-            logger.info('图灵回答：' + result)
+            logger.info('{} 回答：{}'.format(self.SLUG, result))
             return result
         except Exception:
             logger.critical("Tuling robot failed to responsed for %r",
                                   msg, exc_info=True)            
+            return "抱歉, 我的大脑短路了，请稍后再试试."
+
+
+class Emotibot(AbstractRobot):
+
+    SLUG = "emotibot"
+
+    def __init__(self, appid, location, more):
+        """
+        Emotibot机器人
+        """
+        super(self.__class__, self).__init__()        
+        self.appid, self.location, self.more = appid, location, more
+
+    @classmethod
+    def get_config(self):
+        emotibot_profile = config.get('emotibot', {})
+        appid, location, more = '', '深圳', True
+        if 'appid' in emotibot_profile:
+            appid = \
+                emotibot_profile['appid']
+        if 'location' in emotibot_profile:
+            location = \
+                emotibot_profile['location']
+        else:
+            location = None
+        if 'active_mode' in emotibot_profile:
+            more = \
+                emotibot_profile['active_mode']
+        else:
+            more = False
+        return {
+            'appid': appid,
+            'location': location,
+            'more': more
+        }
+
+    def chat(self, texts):
+        """
+        使用Emotibot机器人聊天
+
+        Arguments:
+        texts -- user input, typically speech, to be parsed by a module
+        """
+        logger.info({
+            'appid': self.appid,
+            'location': self.location,
+            'more': self.more
+        })
+        
+        msg = ''.join(texts)
+        try:
+            url = "http://idc.emotibot.com/api/ApiKey/openapi.php"
+            userid = str(get_mac())[:32]
+            register_data = {
+                "cmd": "chat",
+                "appid": self.appid,
+                "userid": userid,
+                "text": msg,
+                "location": self.location
+            }
+            r = requests.post(url, params=register_data)
+            jsondata = json.loads(r.text)
+            result = ''
+            responds = []
+            if jsondata['return'] == 0:
+                if self.more:
+                    datas = jsondata.get('data')
+                    for data in datas:
+                        if data.get('type') == 'text':
+                            responds.append(data.get('value'))
+                else:
+                    responds.append(jsondata.get('data')[0].get('value'))
+                result = '\n'.join(responds)
+            else:
+                result = "抱歉, 我的大脑短路了，请稍后再试试."
+            logger.info('{} 回答：{}'.format(self.SLUG, result))
+            return result
+        except Exception:
+            logger.critical("Emotibot failed to responsed for %r",
+                                  msg, exc_info=True)
+            return "抱歉, 我的大脑短路了，请稍后再试试."
+
 
 
 

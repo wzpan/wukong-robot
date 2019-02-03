@@ -97,3 +97,4 @@ def get(item='', default=None):
     
 def getConfig():
     return _config
+

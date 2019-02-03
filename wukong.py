@@ -36,9 +36,15 @@ def detected_callback():
         player.stop()
         player = None
 
-def do_not_bother_callback():    
-    utils.do_not_bother = not utils.do_not_bother
-    logger.info('勿扰模式: {}'.format(utils.do_not_bother))
+def do_not_bother_on_callback():    
+    utils.do_not_bother = True
+    snowboydecoder.play_audio_file(constants.getData('off.wav'))
+    logger.info('勿扰模式打开')
+
+def do_not_bother_off_callback():    
+    utils.do_not_bother = False
+    snowboydecoder.play_audio_file(constants.getData('on.wav'))
+    logger.info('勿扰模式关闭')
 
 def interrupt_callback():
     global interrupted
@@ -64,7 +70,8 @@ def main():
     logger.debug('config: {}'.format(config.getConfig()))
     models = [
         constants.getHotwordModel(config.get('hotword', 'wukong.pmdl')),
-        constants.getHotwordModel(utils.get_do_not_bother_hotword())
+        constants.getHotwordModel(utils.get_do_not_bother_on_hotword()),
+        constants.getHotwordModel(utils.get_do_not_bother_off_hotword())
     ]
     # capture SIGINT signal, e.g., Ctrl+C
     signal.signal(signal.SIGINT, signal_handler)
@@ -72,7 +79,9 @@ def main():
     print('Listening... Press Ctrl+C to exit')
 
     # main loop
-    detector.start(detected_callback=[detected_callback, do_not_bother_callback],
+    detector.start(detected_callback=[detected_callback,
+                                      do_not_bother_on_callback,
+                                      do_not_bother_off_callback],
                    audio_recorder_callback=conversation,
                    interrupt_check=interrupt_callback,
                    silent_count_threshold=5,
@@ -81,3 +90,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
