@@ -45,7 +45,7 @@ cd wukong-robot
 pip install -r requirements.txt
 ```
 
-## 获取 _snowboydetect.so ##
+4. 获取 _snowboydetect.so
 
 snowboy 为不同平台提供了 so 包，[到官网下载你的平台适用的版本](https://snowboy.kitt.ai)，解压后将 _snowboydetect.so 拷贝到 snowboy 目录中。
 
