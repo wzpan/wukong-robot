@@ -1,5 +1,5 @@
 from snowboy import snowboydecoder
-from robot import ASR, TTS, AI, Player, utils
+from robot import ASR, TTS, AI, Player, config, utils, constants
 import sys
 import signal
 import yaml
@@ -8,7 +8,6 @@ import logging
 import os
 
 interrupted = False
-detected = False
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -21,9 +20,8 @@ def signal_handler(signal, frame):
     interrupted = True
 
 def detected_callback():
-    snowboydecoder.play_audio_file()
-    global detected, player
-    detected = True
+    snowboydecoder.play_audio_file(constants.getData('beep_hi.wav'))
+    global player
     if player is not None and player.is_playing():
         player.stop()
         player = None
@@ -33,9 +31,8 @@ def interrupt_callback():
     return interrupted
 
 def conversation(fp):
-    global detected, player
-    detected = False
-    snowboydecoder.play_audio_file(snowboydecoder.DETECT_DONG)
+    global player
+    snowboydecoder.play_audio_file(constants.getData('beep_lo.wav'))
     print("converting audio to text")
     #asr = ASR.BaiduASR('9670645', 'qg4haN8b2bGvFtCbBGqhrmZy', '585d4eccb50d306c401d7df138bb02e7', 1936)
     asr = ASR.TencentASR('1253537070', 'AKID7C7JK9QomcWJUjcsKbK8iLQjhju8fC3z', '2vhKRVSn4mXQ9PiT7eOtBqQhR5Z6IvPn')
@@ -53,19 +50,23 @@ def conversation(fp):
     Player.play(voice_fname)    
     
 
-model = "wukong.pmdl"
+def main():
+    logger.info('config: {}'.format(config.getConfig()))
+    model = constants.getData("wukong.pmdl")
 
-# capture SIGINT signal, e.g., Ctrl+C
-signal.signal(signal.SIGINT, signal_handler)
+    # capture SIGINT signal, e.g., Ctrl+C
+    signal.signal(signal.SIGINT, signal_handler)
+    detector = snowboydecoder.HotwordDetector(model, sensitivity=0.5)
+    print('Listening... Press Ctrl+C to exit')
 
-detector = snowboydecoder.HotwordDetector(model, sensitivity=0.5)
-print('Listening... Press Ctrl+C to exit')
+    # main loop
+    detector.start(detected_callback=detected_callback,
+                   audio_recorder_callback=conversation,
+                   interrupt_check=interrupt_callback,
+                   silent_count_threshold=5,
+                   sleep_time=0.03)
+    detector.terminate()
 
-# main loop
-detector.start(detected_callback=detected_callback,
-               audio_recorder_callback=conversation,
-               interrupt_check=interrupt_callback,
-               silent_count_threshold=5,
-               sleep_time=0.03)
-
-detector.terminate()
+if __name__ == '__main__':
+    config.init()
+    main()

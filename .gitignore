@@ -67,7 +67,7 @@ target/
 .sublimelinterrc
 
 # temp folder
-temp
+temp/*
 
 # temp file
 #*.*#

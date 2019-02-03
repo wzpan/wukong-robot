@@ -1,0 +1,117 @@
+robot_name_cn: '孙悟空'
+first_name: '伟洲'
+last_name: '潘'
+timezone: HKT
+location: '深圳'
+
+# snowboy 离线唤醒
+# https://snowboy.kitt.ai/dashboard
+hotword: '$HOME/wukong/static/wukong.pmdl'  # 唤醒词模型
+sensitivity: 0.5  # 灵敏度
+
+# 勿扰模式，该时间段内进入睡眠
+do_not_bother:
+    enable: true # 开启勿扰模式
+    since: 23    # 开始时间
+    till: 9      # 结束时间，如果比 since 小表示第二天
+
+# 语音合成服务配置
+# 可选值：
+# baidu-tts     - 百度语音合成（推荐）
+# xunfei-tts    - 讯飞语音合成
+# ali-tts       - 阿里语音合成（推荐）
+# tencent-tts   - 腾讯云语音合成（推荐）
+tts_engine: baidu-tts
+
+# STT 服务配置
+# 可选值：
+# baidu-asr     - 百度在线语音识别
+# xunfei-asr    - 讯飞语音识别
+# ali-asr       - 阿里语音识别
+# tencent-asr   - 腾讯云语音识别（推荐）
+asr_engine: tencent-asr
+
+# 百度语音服务
+# http://yuyin.baidu.com/
+baidu_yuyin:
+    appid: '9670645'
+    api_key: 'qg4haN8b2bGvFtCbBGqhrmZy'   # 建议使用自己的百度语音APP的API Key
+    secret_key: '585d4eccb50d306c401d7df138bb02e7'
+    per: 1  # 发音人选择 0：女生；1：男生；3：度逍遥；4：度丫丫
+    lan: 'zh'
+
+# 讯飞语音服务
+# appid 及 api_key 需前往
+# https://xfyun.cn/
+# 注册创建是WebAPI应用，并赋予语音听写及在线语音合成两项能力
+# 然后将外网ip地址添加进ip白名单（外网ip查询：https://ip.51240.com/），
+# 或者使用白名单ip中转服务器
+xunfei_yuyin:
+    appid: '5c540c39'
+    asr_api_key: '859bc21e90c64d97fae77695579eb05e'  # 语音听写
+    tts_api_key: '680c0eba7c1752503fa0a6ac971ce2cd'  # 在线语音合成
+    voice: 'xiaoyan'  # 全部可选：http://suo.im/51dhCS
+    url: 'http://api.musiiot.top/stt.php' # 白名单ip中转服务器（可选）
+
+# 阿里云语音
+# appKey及token需前往
+# https://ai.aliyun.com/nls
+# 注册获取
+ali_yuyin:
+    ak_id: 'x04ujKJ7oRvDgt6h'
+    ak_secret: '7237029b69f146e89bac004bb61c09ee'
+    voice: 'xiaoyun' #xiaoyun为女生，xiaogang为男生, 全部可选：http://suo.im/4x8RzQ
+    url: 'http://api.musiiot.top/stt.php' # 白名单ip中转服务器（可选）
+
+# 聊天机器人
+# 可选值：
+# tuling    - 图灵机器人
+# emotibot  - 小影机器人
+robot: emotibot
+
+# 图灵机器人	
+# http://www.tuling123.com
+tuling:
+    tuling_key: '4d6eec9d9a9148bca73236bac6f35824'  # 建议使用自己的图灵机器人API Key
+
+# 小影机器人
+# http://botfactory.emotibot.com/
+emotibot:
+    appid: '32ee80dddb36f1dc5356517503b3f55e'
+    active_mode: true  # 是否主动说更多点话
+
+# 拍照
+# 需接入摄像头才能使用
+camera:
+    enable: false
+    dest_path: "/home/pi/camera" # 保存目录
+    quality: 5            # 成像质量（0~100）
+    vertical_flip: true     # 竖直翻转
+    horizontal_flip: false  # 水平翻转
+    count_down: 3           # 倒计时（秒），仅当开启倒计时时有效
+    sendToUser: true        # 拍完照是否发送到邮箱/微信    
+    sound: true             # 是否有拍照音效
+    usb_camera: false       # 是否是 USB 摄像头
+
+
+#######################
+# 第三方插件的配置
+#######################
+
+# 在这里放第三方插件的配置
+# https://github.com/wzpan/dingdang-contrib
+
+# 网易音乐
+netease_music:
+    account: '您的账号' # 只支持手机账户
+    password: '您的密码'
+    report: true    # 是否播报即将播放的音乐
+
+
+# 天气
+# 使用心知天气的接口
+# https://www.seniverse.com/
+weather:
+    key: '心知天气 API Key'
+    location: '深圳'
+
