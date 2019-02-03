@@ -42,10 +42,11 @@ def convert_wav_to_mp3(wav_path):
 
 def clean():
     """ 清理垃圾数据 """
-    temp_files = os.listdir(constants.TEMP_PATH)
+    temp = constants.TEMP_PATH
+    temp_files = os.listdir(temp)
     for f in temp_files:
-        if os.path.isfile(f) and re.match(r'output[\d]*\.wav', os.path.basename(f)):
-            os.remove(f)
+        if os.path.isfile(os.path.join(temp, f)) and re.match(r'output[\d]*\.wav', os.path.basename(f)):
+            os.remove(os.path.join(temp, f))
 
 def is_proper_time():
     """ 是否合适时间 """
@@ -74,3 +75,7 @@ def get_do_not_bother_hotword():
         return default_hotword
     bother_profile = config.get('do_not_bother')
     return bother_profile.get('hotword', default_hotword)
+
+def getTimezone():
+    """ 获取时区 """
+    return config.get('timezone', 'HKT')

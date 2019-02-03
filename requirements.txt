@@ -3,3 +3,5 @@ pyyaml>=4.2b1
 requests==2.21.0
 baidu-aip==2.0.0.1
 pydub==0.23.1
+semantic==1.0.3
+python-dateutil==2.7.5
