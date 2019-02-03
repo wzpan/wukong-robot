@@ -47,7 +47,7 @@ pip install -r requirements.txt
 
 4. 获取 _snowboydetect.so
 
-snowboy 为不同平台提供了 so 包，[到官网下载你的平台适用的版本](https://snowboy.kitt.ai)，解压后将 _snowboydetect.so 拷贝到 snowboy 目录中。
+snowboy 为不同平台提供了 so 包，[到官网下载你的平台适用的版本](http://docs.kitt.ai/snowboy/)，解压后将 _snowboydetect.so 拷贝到 snowboy 目录中。
 
 你也可以 [手动编译](https://github.com/wzpan/snowboy) ，以支持更多的平台。
 
