@@ -32,13 +32,20 @@ class Conversation(object):
             if not self.brain.query(query):
                 # 没命中技能，使用机器人回复
                 msg = self.ai.chat(query)
-                self.say(msg)
+                self.say(msg, True)
         except Exception as e:
             logger.critical(e)
             utils.clean()
 
     def say(self, msg, cache=False):
-        voice = self.tts.get_speech(msg)
+        voice = ''
+        if utils.getCache(msg):
+            logger.info("命中缓存，播放缓存语音")
+            voice = utils.getCache(msg)
+        else:
+            voice = self.tts.get_speech(msg)
+            if cache:
+                utils.saveCache(voice, msg)
         self.player = Player.SoxPlayer()
         self.player.play(voice, True)
 

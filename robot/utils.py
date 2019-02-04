@@ -8,6 +8,7 @@ import shutil
 import re
 import time
 import logging
+import hashlib
 from . import constants, config
 from pydub import AudioSegment
 from pytz import timezone
@@ -178,3 +179,20 @@ def get_do_not_bother_off_hotword():
 def getTimezone():
     """ 获取时区 """
     return timezone(config.get('timezone', 'HKT'))
+
+def getCache(msg):
+    """ 获取缓存的语音 """
+    md5 = hashlib.md5(msg.encode('utf-8')).hexdigest()
+    mp3_cache = os.path.join(constants.TEMP_PATH, md5 + '.mp3')
+    wav_cache = os.path.join(constants.TEMP_PATH, md5 + '.wav')
+    if os.path.exists(mp3_cache):
+        return mp3_cache
+    elif os.path.exists(wav_cache):
+        return wav_cache
+    return None
+
+def saveCache(voice, msg):
+    """ 获取缓存的语音 """
+    foo, ext = os.path.splitext(voice)
+    md5 = hashlib.md5(msg.encode('utf-8')).hexdigest()
+    os.rename(voice, os.path.join(constants.TEMP_PATH, md5+ext))
