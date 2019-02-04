@@ -13,9 +13,15 @@ class Conversation(object):
     def __init__(self):
         self.player = None
         self.brain = Brain(self)
-        self.asr = ASR.get_engine_by_slug(config.get('asr_engine', 'tencent-asr'))
-        self.ai = AI.get_robot_by_slug(config.get('robot', 'tuling'))
-        self.tts = TTS.get_engine_by_slug(config.get('tts_engine', 'baidu-tts'))
+        self.reload()
+
+    def reload(self):
+        try:
+            self.asr = ASR.get_engine_by_slug(config.get('asr_engine', 'tencent-asr'))
+            self.ai = AI.get_robot_by_slug(config.get('robot', 'tuling'))
+            self.tts = TTS.get_engine_by_slug(config.get('tts_engine', 'baidu-tts'))
+        except Exception as e:
+            logger.critical("对话初始化失败：{}".format(e))
 
     def converse(self, fp):
         try:

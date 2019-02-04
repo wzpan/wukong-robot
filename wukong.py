@@ -29,12 +29,13 @@ class ConfigEventHandler(FileSystemEventHandler):
     def on_modified(self, event):
         if not event.is_directory:
             config.reload()
+            conversation.reload()
     
 def init():
     global conversation, observer
     config.init()
     conversation = Conversation()
-    conversation.say('{} 你好！'.format(config.get('first_name', '主人')))
+    conversation.say('{} 你好！试试对我喊唤醒词叫醒我吧'.format(config.get('first_name', '主人')))
     observer = Observer()
     event_handler = ConfigEventHandler()
     observer.schedule(event_handler, constants.CONFIG_PATH, False)

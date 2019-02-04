@@ -170,9 +170,10 @@ def get_robot_by_slug(slug):
         raise ValueError("No robot found for slug '%s'" % slug)
     else:
         if len(selected_robots) > 1:
-            print("WARNING: Multiple robots found for slug '%s'. " +
-                  "This is most certainly a bug." % slug)
+            logger.warning("WARNING: Multiple robots found for slug '%s'. " +
+                  "This is most certainly a bug." % slug)        
         robot = selected_robots[0]
+        logger.info("使用 {} 对话机器人".format(robot.SLUG))
         return robot.get_instance()
 
 
