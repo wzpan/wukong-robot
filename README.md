@@ -77,7 +77,7 @@ python wukong.py
 
 | 支付宝 | 微信支付 |
 | ------ | --------- |
-| <img src="https://camo.githubusercontent.com/02137cc531856c56345624f0d97b8588ff333a07/687474703a2f2f37786a3839692e636f6d312e7a302e676c622e636c6f7564646e2e636f6d2f616c695f7061795f30312e6a7067" height="248px" width="164px" title="支付宝" style="display:inherit;"/> | <img src="https://camo.githubusercontent.com/8d283b5d11d87fed1760405b468ebb28b991d14b/687474703a2f2f37786a3839692e636f6d312e7a302e676c622e636c6f7564646e2e636f6d2f7765636861745f7061795f30322e706e67" height="248px" width="164px" title="微信支付" style="display:inherit;"/> |
+| <img src="http://hahack.com/images/misc/alipay.png" height="248px" width="164px" title="支付宝" style="display:inherit;"/> | <img src="http://hahack.com/images/misc/wechatpay.jpeg" height="248px" width="164px" title="微信支付" style="display:inherit;"/> |
 
 
 ## 联系
