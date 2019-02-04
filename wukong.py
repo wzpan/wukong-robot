@@ -2,6 +2,8 @@
 from snowboy import snowboydecoder
 from robot import config, utils, constants
 from robot.Conversation import Conversation
+from watchdog.observers import Observer
+from watchdog.events import *
 import sys
 import signal
 import yaml
@@ -11,22 +13,39 @@ import os
 
 interrupted = False
 
-logging.basicConfig()
+logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s - %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S')
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 conversation = None
+observer = None
 
+class ConfigEventHandler(FileSystemEventHandler):
+    def __init__(self):
+        FileSystemEventHandler.__init__(self)
+
+    # 文件修改
+    def on_modified(self, event):
+        if not event.is_directory:
+            config.reload()
+    
 def init():
-    global conversation
+    global conversation, observer
     config.init()
     conversation = Conversation()
     conversation.say('{} 你好！'.format(config.get('first_name', '主人')))
+    observer = Observer()
+    event_handler = ConfigEventHandler()
+    observer.schedule(event_handler, constants.CONFIG_PATH, False)
+    observer.schedule(event_handler, constants.DATA_PATH, False)
+    observer.start()
 
 def signal_handler(signal, frame):
     global interrupted
     interrupted = True
     utils.clean()
+    observer.stop()
 
 def detected_callback():
     global conversation

@@ -5,8 +5,15 @@ import os
 from . import constants
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s - %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S')
 
 _config = {}
+
+def reload():
+    logger.info('配置文件发生变更，重新加载配置文件')
+    init()    
 
 def init():
     if os.path.isfile(constants.CONFIG_PATH):

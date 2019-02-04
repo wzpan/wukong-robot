@@ -95,7 +95,7 @@ tencent_yuyin:
 # 可选值：
 # tuling    - 图灵机器人
 # emotibot  - 小影机器人
-robot: tuling
+robot: emotibot
 
 # 图灵机器人	
 # http://www.tuling123.com
