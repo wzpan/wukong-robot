@@ -29,7 +29,7 @@ class Conversation(object):
             snowboydecoder.play_audio_file(constants.getData('beep_lo.wav'))
             query = self.asr.transcribe(fp)
             utils.check_and_delete(fp)
-            if not self.brain.query([query]):
+            if not self.brain.query(query):
                 # 没命中技能，使用机器人回复
                 msg = self.ai.chat(query)
                 self.say(msg)

@@ -23,40 +23,47 @@ class Brain(object):
         self.handling = False
         self.conversation = conversation
 
-    def query(self, texts):
+    def query(self, text, wxBot=None):
         """
         Passes user input to the appropriate plugin, testing it against
         each candidate plugin's isValid function.
 
         Arguments:
-        texts -- user input, typically speech, to be parsed by a plugin
+        text -- user input, typically speech, to be parsed by a plugin
         """
 
         for plugin in self.plugins:
-            for text in texts:
-                if not plugin.isValid(text):
-                    continue
+            if not plugin.isValid(text):
+                continue
 
-                logger.debug("'%s' is a valid phrase for plugin " +
-                                   "'%s'", text, plugin.__name__)
-                continueHandle = False
-                try:
-                    self.handling = True
-                    continueHandle = plugin.handle(text, self.conversation, config.getConfig())
-                    self.handling = False
-                except Exception:
-                    logger.critical('Failed to execute plugin',
-                                       exc_info=True)
-                    reply = u"抱歉，插件{}出故障了，晚点再试试吧".format(plugin.SLUG)
-                    self.conversation.say(reply)
-                else:
-                    logger.debug("Handling of phrase '%s' by " +
-                                       "plugin '%s' completed", text,
-                                       plugin.__name__)                    
-                finally:
-                    if not continueHandle:
-                        return True
+            logger.debug("'%s' is a valid phrase for plugin " +
+                               "'%s'", text, plugin.__name__)
+            continueHandle = False
+            try:
+                self.handling = True
+                continueHandle = plugin.handle(text, self.conversation, config.getConfig(), wxBot)
+                self.handling = False
+            except Exception:
+                logger.critical('Failed to execute plugin',
+                                   exc_info=True)
+                reply = u"抱歉，插件{}出故障了，晚点再试试吧".format(plugin.SLUG)
+                self.conversation.say(reply)
+            else:
+                logger.debug("Handling of phrase '%s' by " +
+                                   "plugin '%s' completed", text,
+                                   plugin.__name__)                    
+            finally:
+                if not continueHandle:
+                    return True
 
-        logger.debug("No plugin was able to handle any of these " +
-                     "phrases: %r", texts)
+        logger.debug("No plugin was able to handle phrase {} ".format(text))
         return False
+
+    def understand(fp):
+        if self.conversation and self.conversation.asr:
+            return self.conversation.asr.transcribe(fp)
+        return None
+
+    def say(msg, cache=False):
+        if self.conversation and self.conversation.tts:
+            self.conversation.tts.say(msg, cache)

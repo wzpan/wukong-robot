@@ -115,9 +115,21 @@ def get_pcm_from_wav(wav_path):
 
 def convert_wav_to_mp3(wav_path):
     """ 将 wav 文件转成 mp3 """
+    if not os.path.exists(wav_path):
+        logger.critical("文件错误 {}".format(wav_path))
+        return None
     mp3_path = wav_path.replace('.wav', '.mp3')
     AudioSegment.from_wav(wav_path).export(mp3_path, format="mp3")
     return mp3_path
+
+def convert_mp3_to_wav(mp3_path):
+    """ 将 mp3 文件转成 wav """
+    target = mp3_path.replace(".mp3", ".wav")
+    if not os.path.exists(mp3_path):
+        logger.critical("文件错误 {}".format(mp3_path))
+        return None
+    voice = AudioSegment.from_mp3(mp3_path).export(target, format="wav")
+    return target        
 
 def clean():
     """ 清理垃圾数据 """
@@ -129,7 +141,7 @@ def clean():
 
 def is_proper_time():
     """ 是否合适时间 """
-    if do_not_bother:
+    if do_not_bother == True:
         return False
     if not config.has('do_not_bother'):
         return True
