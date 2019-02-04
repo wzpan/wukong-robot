@@ -1,6 +1,6 @@
 # wukong-robot
 
-> 注意：本项目目前还在开发阶段。开发进度见 [这里]() 。
+> 注意：本项目目前还在开发阶段。开发进度见 [这里](https://github.com/wzpan/wukong-robot/wiki/roadmap) 。
 
 wukong-robot 是一个简单灵活的中文语音对话机器人。
 
