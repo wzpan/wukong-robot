@@ -5,6 +5,7 @@ from robot.ConfigMonitor import ConfigMonitor
 from robot.Conversation import Conversation
 from server import server
 from watchdog.observers import Observer
+from subprocess import call
 import sys
 import signal
 import yaml
@@ -88,6 +89,19 @@ class Wukong(object):
 
     def md5(self, password):
         return hashlib.md5(password.encode('utf-8')).hexdigest()
+
+    def _pull(self):
+        return call(['git', 'pull'], cwd=constants.APP_PATH, shell=False) == 0
+
+    def _pip(self):
+        return call(['pip', 'install', '-r', 'requirements.txt'], cwd=constants.APP_PATH, shell=False) == 0
+
+    def update(self):
+        if self._pull() and self._pip():
+            logger.info('wukong-robot 更新成功！')
+        else:
+            logger.info('wukong-robot 更新失败！')
+            
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:

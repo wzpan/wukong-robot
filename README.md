@@ -45,10 +45,15 @@ wukong-robot 支持运行在以下的设备和系统中：
 
 ## 升级
 
+``` bash
+python wukong.py update
+```
+
+如果提示升级失败，可以尝试在 wukong-robot 的根目录手动执行以下命令，看看问题出在哪。
+
 ``` sh
-cd wukong-robot的根目录
 git pull
-pip install --upgrade -r requirements.txt
+pip install -r requirements.txt
 ```
 
 ## 运行 ##
