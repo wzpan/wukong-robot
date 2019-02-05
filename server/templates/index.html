@@ -1,8 +1,8 @@
-% extends "layout.html" %}
+{% extends "layout.html" %}
 {% block body %}
 <link rel="stylesheet" href="./static/starter-template.css" crossorigin="anonymous">
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-  <a class="navbar-brand" href="/">ABC</a>
+  <a class="navbar-brand" href="/">wukong-robot</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -18,16 +18,14 @@
   </div>
 </nav>
 <div class="jumbotron">
-  <h1 class="display-4"><i class="fas fa-cog"></i> <span class="A">A</span><span class="B">B</span><span class="C">C</span>mouse <span class="B">B</span>uilding <span class="C">C</span>og</h1>
-  <p class="lead">This is an active building site for ABCmouse.</p>
-  <hr class="my-4">
-  <p><strong><i class="fas fa-info-circle"></i> Tips</strong>: This site will be automatically refreshed for each 1 minute. You don't have to manually refresh the page.</p>
-  <p><strong><i class="fas fa-exclamation-triangle"></i> Warning</strong>: If you're not a member of aofl or Tencent staffs, leave ASAP! Any actions in this site will be recorded!</p>
+  <h1 class="display-4"><i class="fas fa-robot"></i> wukong-robot</h1>
+  <p class="lead">wukong-robot 是一个简单灵活的中文语音对话机器人。</p>
 </div>
 
 <br/>
-<span class="mt-5 mb-3 text-muted">wukong-robot &copy; 2019 </span>
-<script src="./static/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
-<script src="{{url_for('static', filename='main.js')}}" crossorigin="anonymous"></script>
+<center>
+  <span class="mt-5 mb-3 text-muted">wukong-robot &copy; 2019 </span>
+</center>
 
+<script src="./static/main.js" crossorigin="anonymous"></script>
 {% end %}
