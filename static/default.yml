@@ -4,6 +4,16 @@ last_name: '潘'
 timezone: HKT
 location: '深圳'
 
+# 后台管理端
+server:
+    enable: true
+    host: '0.0.0.0'  # ip 地址
+    port: '5000'     # 端口号    
+    username: 'wukong'  # 用户名
+    # 密码的 md5，可以用 python wukong.py md5 "密码" 获得
+    # 初始密码为 wukong@2019
+    validate: 'f4bde2a342c7c75aa276f78b26cfbd8a'
+
 # snowboy 离线唤醒
 # https://snowboy.kitt.ai/dashboard
 # 建议到 https://snowboy.kitt.ai/hotword/32768

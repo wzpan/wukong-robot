@@ -92,21 +92,9 @@ class Emotibot(AbstractRobot):
 
     @classmethod
     def get_config(self):
-        emotibot_profile = config.get('emotibot', {})
-        appid, location, more = '', '深圳', True
-        if 'appid' in emotibot_profile:
-            appid = \
-                emotibot_profile['appid']
-        if 'location' in emotibot_profile:
-            location = \
-                emotibot_profile['location']
-        else:
-            location = None
-        if 'active_mode' in emotibot_profile:
-            more = \
-                emotibot_profile['active_mode']
-        else:
-            more = False
+        appid = config.get('/emotibot/appid', '')
+        location = config.get('location', '深圳')
+        more = config.get('/emotibot/active_mode', False)        
         return {
             'appid': appid,
             'location': location,

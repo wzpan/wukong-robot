@@ -195,4 +195,4 @@ def saveCache(voice, msg):
     """ 获取缓存的语音 """
     foo, ext = os.path.splitext(voice)
     md5 = hashlib.md5(msg.encode('utf-8')).hexdigest()
-    os.rename(voice, os.path.join(constants.TEMP_PATH, md5+ext))
+    shutil.copyfile(voice, os.path.join(constants.TEMP_PATH, md5+ext))

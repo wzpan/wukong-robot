@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block body %}
+<link href="/static/signin.css" rel="stylesheet">
+  <form action="" class="form-signin" method=post>
+    <center>
+      <h1 class="h3 mb-3 font-weight-normal">Please login</h1>
+      <label for="username" class="sr-only">User Name</label>
+      <input type=text name=username class="form-control" placeholder="User Name" required autofocus>
+      <label for="password" class="sr-only">Password</label>
+      <input type=password name=password class="form-control" placeholder="Password" required>
+      <p><input class="btn btn-lg btn-primary btn-block" type=submit value=Login></p>          
+          <span class="mt-5 mb-3 text-muted">wukong-robot &copy; 2019 </span>
+    </center>
+  </form>
+{% end %}

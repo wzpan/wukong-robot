@@ -47,7 +47,7 @@ class Conversation(object):
             if cache:
                 utils.saveCache(voice, msg)
         self.player = Player.SoxPlayer()
-        self.player.play(voice, True)
+        self.player.play(voice, not cache)
 
     def interrupt(self):
         if self.player is not None and self.player.is_playing():
