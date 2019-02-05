@@ -9,16 +9,13 @@ SLUG = "cleancache"
 PRIORITY = 0
 
 
-def handle(text, mic, profile, wxbot=None):
+def handle(text, mic):
     """
         Reports the current time based on the user's timezone.
 
         Arguments:
         text -- user-input, typically transcribed speech
-        mic -- used to interact with the user (for both input and output)
-        profile -- contains information related to the user (e.g., phone
-                   number)
-        wxBot -- wechat robot
+        mic -- used to interact with the user (for both input and output)        
     """
     temp = constants.TEMP_PATH
     for f in os.listdir(temp):
@@ -26,7 +23,7 @@ def handle(text, mic, profile, wxbot=None):
             os.remove(os.path.join(temp, f))
         else:
             shutil.rmtree(os.path.join(temp, f))
-    mic.say(u'缓存目录已清空', cache=True)
+    mic.say(u'缓存目录已清空', cache=True, plugin=__name__)
 
 
 def isValid(text):

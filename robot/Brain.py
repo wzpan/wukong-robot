@@ -36,18 +36,18 @@ class Brain(object):
             if not plugin.isValid(text):
                 continue
 
-            logger.debug("'%s' is a valid phrase for plugin " +
-                               "'%s'", text, plugin.__name__)
+            logger.info("'{}' 命中技能 {}".format(text, plugin.__name__))            
+
             continueHandle = False
             try:
                 self.handling = True
-                continueHandle = plugin.handle(text, self.conversation, config.getConfig(), wxBot)
-                self.handling = False
+                continueHandle = plugin.handle(text, self.conversation)
+                self.handling = False                
             except Exception:
                 logger.critical('Failed to execute plugin',
                                    exc_info=True)
-                reply = u"抱歉，插件{}出故障了，晚点再试试吧".format(plugin.SLUG)
-                self.conversation.say(reply)
+                reply = u"抱歉，插件{}出故障了，晚点再试试吧".format(plugin.__name__)
+                self.conversation.say(reply, plugin=plugin.__name__)
             else:
                 logger.debug("Handling of phrase '%s' by " +
                                    "plugin '%s' completed", text,

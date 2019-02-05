@@ -134,7 +134,7 @@ class Emotibot(AbstractRobot):
                 result = '\n'.join(responds)
             else:
                 result = "抱歉, 我的大脑短路了，请稍后再试试."
-            logger.info('{} 回答：{}'.format(self.SLUG, result))
+            logger.info('{} 回答：{}'.format(self.SLUG, result))            
             return result
         except Exception:
             logger.critical("Emotibot failed to responsed for %r",

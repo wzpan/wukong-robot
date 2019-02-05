@@ -55,37 +55,31 @@ def sendEmail(SUBJECT, BODY, ATTACH_LIST, TO, FROM, SENDER,
         return False
 
 
-def emailUser(profile, SUBJECT="", BODY="", ATTACH_LIST=[]):
+def emailUser(SUBJECT="", BODY="", ATTACH_LIST=[]):
     """
     sends an email.
 
     Arguments:
-        profile -- contains information related to the user (e.g., email
-                   address)
         SUBJECT -- subject line of the email
         BODY -- body text of the email
     """
     # add footer
     if BODY:
-        BODY = u"%s，<br><br>这是您要的内容：<br>%s<br>" % (profile['first_name'], BODY)
+        BODY = u"%s，<br><br>这是您要的内容：<br>%s<br>" % (config['first_name'], BODY)
 
-    recipient = profile['email']['address']
-    robot_name = u'叮当'
-    if profile['robot_name_cn']:
-        robot_name = profile['robot_name_cn']
+    recipient = config.get('/email/address', '')
+    robot_name = config.get('robot_name_cn', 'wukong-robot')
     recipient = robot_name + " <%s>" % recipient
+    user = config.get('/email/address', '')
+    password = config.get('/email/password', '')
+    server = config.get('/email/server', '')
+    port = config.get('/email/smtp_port', '')
 
-    if not recipient:
+    if not recipient or not user or not password or not server or not port:
         return False
-
     try:
-        user = profile['email']['address']
-        password = profile['email']['password']
-        server = profile['email']['smtp_server']
-        port = profile['email']['smtp_port']
         sendEmail(SUBJECT, BODY, ATTACH_LIST, user, user,
                   recipient, password, server, port)
-
         return True
     except Exception as e:
         logger.error(e)
@@ -162,19 +156,11 @@ def is_proper_time():
 
 def get_do_not_bother_on_hotword():
     """ 打开勿扰模式唤醒词 """
-    default_hotword = '悟空别吵.pmdl'
-    if not config.has('do_not_bother'):
-        return default_hotword
-    bother_profile = config.get('do_not_bother')
-    return bother_profile.get('on_hotword', default_hotword)
+    return config.get('/do_not_bother/on_hotword', '悟空别吵.pmdl')
 
 def get_do_not_bother_off_hotword():
     """ 关闭勿扰模式唤醒词 """
-    default_hotword = '悟空醒醒.pmdl'
-    if not config.has('do_not_bother'):
-        return default_hotword
-    bother_profile = config.get('do_not_bother')
-    return bother_profile.get('off_hotword', default_hotword)
+    return config.get('/do_not_bother/off_hotword', '悟空醒醒.pmdl')
 
 def getTimezone():
     """ 获取时区 """

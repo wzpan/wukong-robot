@@ -33,12 +33,12 @@ def no_alsa_error():
         yield
         pass
 
-def play(fname):
+def play(fname, onCompleted=None):
     # WavPlayer does not work well on my Macbook,
     # henceforce I choose SoxPlayer
     #player = getPlayerByFileName(fname)
     player = SoxPlayer()
-    player.play(fname)
+    player.play(fname, onCompleted)
 
 def getPlayerByFileName(fname):
     foo, ext = os.path.splitext(fname)
@@ -88,11 +88,14 @@ class SoxPlayer(AbstractSoundPlayer):
                 logger.debug("play Output was: '%s'", output)
         if self.delete:
             utils.check_and_delete(self.src)
+        if self.onCompleted:
+            self.onCompleted()
 
-    def play(self, src, delete=False):
+    def play(self, src, delete=False, onCompleted=None):
         self.src = src
         self.start()
         self.delete = delete
+        self.onCompleted = onCompleted
 
     def play_block(self):
         self.run()
@@ -143,9 +146,12 @@ class WavPlayer(AbstractSoundPlayer):
         stream.stop_stream()
         stream.close()
         audio.terminate()
+        if self.onCompleted:
+            self.onCompleted()
 
-    def play(self, src):
+    def play(self, src, onCompleted=None):
         self.src = src
+        self.onCompleted = onCompleted
         self.start()
 
     def play_block(self):
