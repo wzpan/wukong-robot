@@ -1,7 +1,5 @@
 # wukong-robot
 
-> 注意：本项目目前还在开发阶段。开发进度见 [这里](https://github.com/wzpan/wukong-robot/wiki/roadmap) 。
-
 wukong-robot 是一个简单灵活的中文语音对话机器人。
 
 ## Table of Contents
@@ -28,6 +26,7 @@ wukong-robot 是一个简单灵活的中文语音对话机器人。
 * 全局监听，离线唤醒。支持无接触地离线语音指令唤醒。
 * 灵活可配置。支持定制机器人名字，支持选择语音识别和合成的插件。
 * 智能家居。支持和 mqtt、HomeAssistant 等智能家居协议联动，支持语音控制智能家电。
+* 后台配套支持。提供配套后台，可实现远程操控和修改配置（开发中，进度见[这里](https://github.com/wzpan/wukong-robot/wiki/roadmap)）。
 * 安装简单，支持更多平台。相比 dingdang-robot ，舍弃了 PocketSphinx 的离线唤醒方案，安装变得更加简单，代码量更少，更易于维护并且能在 Mac 以及更多 Linux 系统中运行。
 
 ## 硬件要求 ##
