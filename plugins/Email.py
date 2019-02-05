@@ -64,8 +64,8 @@ def getSubject(msg, profile):
     to_read = False
     if sub.strip() == '':
         return ''
-    if 'read_email_title' in profile:
-        to_read = profile['read_email_title']
+    if 'email' in profile and 'read_email_title' in profile['email']:
+        to_read = profile['email']['read_email_title']
     if '[echo]' in sub or '[control]' in sub:
         return sub
     if to_read:

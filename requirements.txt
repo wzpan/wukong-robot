@@ -7,3 +7,4 @@ semantic==1.0.3
 python-dateutil==2.7.5
 watchdog==0.9.0
 pytz==2018.9
+flask==1.0.2

@@ -11,17 +11,6 @@ location: '深圳'
 hotword: 'wukong.pmdl'  # 唤醒词模型，如要自定义请放到 $HOME/.wukong 目录中
 sensitivity: 0.5  # 灵敏度
 
-# 当有邮件时，是否朗读邮件标题
-read_email_title: true
-
-# 当内容过长（> 200个字）时，是否继续朗读
-# true：读
-# false：改为发送内容
-read_long_content: false
-
-# 最长朗读内容（仅当 read_long_content 为 false 时有效）
-max_length: 200
-
 # 勿扰模式，该时间段内自动进入睡眠，避免监听
 do_not_bother:
     enable: false # 开启勿扰模式
@@ -112,12 +101,13 @@ emotibot:
 # 如果使用网易邮箱，还需设置允许第三方客户端收发邮件
 email:
     enable: true
-    address: 'mail.163.com'
+    address: '你的邮箱地址'
     password: '你的邮箱密码'  # 如果是网易邮箱，须填写应用授权密码而不是登录密码！
     smtp_server: 'smtp.163.com'
     smtp_port: '25'  # 这里填写非SSL协议端口号
     imap_server: 'imap.163.com'
-    imap_port: '143'  # 这里填写非SSL协议端口号
+    imap_port: '143'  # 这里填写非SSL协议端口号    
+    read_email_title: true  # 当有邮件时，是否朗读邮件标题
 
 # 拍照
 # 需接入摄像头才能使用
