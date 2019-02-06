@@ -1,10 +1,10 @@
 # wukong-robot
 
 [![Python3](https://img.shields.io/pypi/pyversions/Django.svg?style=flat)](#)
-[![GitHub issues](https://img.shields.io/github/issues/dingdang-robot/dingdang-robot.svg)](https://github.com/wzpan/wukong-robot/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/dingdang-robot/dingdang-robot.svg)](https://github.com/wzpan/wukong-robot/pulls)
+[![GitHub issues](https://img.shields.io/github/issues/wzpan/wukong-robot.svg)](https://github.com/wzpan/wukong-robot/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/wzpan/wukong-robot.svg)](https://github.com/wzpan/wukong-robot/pulls)
 [![Licence](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/wzpan/wukong-robot/blob/master/LICENSE)
-[![QQ群](https://img.shields.io/badge/QQ%E7%BE%A4-580447290-red.svg)](http://onmw7y6f4.bkt.clouddn.com/dingdang-group.png)
+[![QQ群](https://img.shields.io/badge/QQ%E7%BE%A4-580447290-red.svg)](http://hahack-1253537070.file.myqcloud.com/images/A10EA78A01ED46D5BD0FF83D459E2748.png)
 
 wukong-robot 是一个简单灵活的中文语音对话机器人。
 
