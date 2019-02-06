@@ -43,7 +43,7 @@ tts_engine: baidu-tts
 # xunfei-asr    - 讯飞语音识别
 # ali-asr       - 阿里语音识别
 # tencent-asr   - 腾讯云语音识别（推荐）
-asr_engine: tencent-asr
+asr_engine: baidu-asr
 
 # 百度语音服务
 # http://yuyin.baidu.com/
