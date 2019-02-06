@@ -38,7 +38,7 @@ wukong-robot 是一个简单灵活的中文语音对话机器人。
 
 ### Python 版本 ###
 
-Python 3
+wukong-robot 只支持 Python 3.x，不支持 Python 2.x 。
 
 ### 设备要求 ###
 
@@ -111,7 +111,7 @@ python wukong.py
 ## 联系
 
 * wukong-robot 的主要开发者是 [潘伟洲](http://hahack.com) 。
-* QQ 群：580447290（人数将满，为控制人数，需付费20元入群）
+* QQ 群：580447290（人数将满，为控制人数，需付费20元入群，群收入达到一万时将无偿捐赠给壹基金）
 * 论坛：[bbs.hahack.com](http://bbs.hahack.com)
 
 ## 感谢

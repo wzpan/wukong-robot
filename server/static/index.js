@@ -1,7 +1,34 @@
+function appendHistory(type, query, uuid) {
+    if (type == 0) {
+        // 用户消息
+        $('.history').append(`
+              <div class="right">
+                 <div class="bubble-green">
+                   <div class="bubble-avatar"><i class="fas fa-user"></i></div>
+                   <p style="text-align: left" id="${uuid}">${query}</p>
+                 </div>
+              </div>
+`);
+    } else {
+        $('.history').append(`
+              <div class="left">
+                 <div class="bubble-white">
+                   <div class="bubble-avatar"><i class="fas fa-robot"></i></div>
+                   <p style="text-align: left" id="${uuid}">${query}</p>
+                 </div>
+              </div>
+`);
+    }
+    $("#"+uuid).fadeIn(1000);
+    var scrollHeight = $('.history').prop("scrollHeight");
+    $('.history').scrollTop(scrollHeight, 200);
+}
+
 function getHistory () {
     $.ajax({
         url: '/history',
         type: "GET",
+        data: {'validate': getCookie('validation')},
         success: function(res) {
             res = JSON.parse(res);
             if (res.code == 0) {
@@ -10,29 +37,7 @@ function getHistory () {
                     h = historyList[i];
                     // 是否已绘制
                     if (!$('.history').find('#'+h['uuid']).length>0) {
-                        if (h['type'] == 0) {
-                            // 用户消息
-                            $('.history').append(`
-              <div class="right">
-                 <div class="bubble-green">
-                   <div class="bubble-avatar"><i class="fas fa-user"></i></div>
-                   <p style="text-align: left" id="${h['uuid']}">${h['text']}</p>
-                 </div>
-              </div>
-`);
-                        } else {
-                            $('.history').append(`
-              <div class="left">
-                 <div class="bubble-white">
-                   <div class="bubble-avatar"><i class="fas fa-user"></i></div>
-                   <p style="text-align: left" id="${h['uuid']}">${h['text']}</p>
-                 </div>
-              </div>
-`);
-                        }
-                        $("#"+h['uuid']).fadeIn(1000);
-                        var scrollHeight = $('.history').prop("scrollHeight");
-                        $('.history').scrollTop(scrollHeight, 200);
+                        appendHistory(h['type'], h['text'], h['uuid']);
                     }
                 }
             } else {
@@ -49,6 +54,38 @@ function autoRefresh( t ) {
     setInterval("getHistory();", t);
 }
 
+//用于生成uuid
+function S4() {
+    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+}
+function guid() {
+    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+}
+
 $(function() {
     autoRefresh(5000);  // 每5秒轮询一次历史消息
+
+    $('.CHAT').on('click', function(e) {
+        e.preventDefault();
+        var uuid = 'chat' + guid();        
+        var query = $("input#query")[0].value;
+        appendHistory(0, query, uuid);
+        $.ajax({
+            url: '/chat',
+            type: "POST",
+            data: {"query": query, "validate": getCookie("validation"), "uuid": uuid},
+            success: function(res) {
+                var data = JSON.parse(res);
+                if (data.code == 0) {
+                    toastr.success('指令发送成功');
+                } else {
+                    toastr.error(data.message, '指令发送失败');
+                }
+            },
+            error: function() {
+                toastr.error('服务器异常', '指令发送失败');
+            }
+        });
+    });
 });
+

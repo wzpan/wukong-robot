@@ -22,8 +22,10 @@ logger = logging.getLogger(__name__)
 conversation = None
 
 class BaseHandler(tornado.web.RequestHandler):
-    def get_current_user(self):
-        return self.get_secure_cookie("username")
+    def isValidated(self):
+        return self.get_cookie("validation") == config.get('/server/validate', '')
+    def validate(self, validation):
+        return validation == config.get('/server/validate', '')
 
 
 class MainHandler(BaseHandler):
@@ -32,13 +34,30 @@ class MainHandler(BaseHandler):
     @gen.coroutine
     def get(self):
         global conversation
-        if not self.current_user:
+        if not self.isValidated():
             self.redirect("/login")
             return
         if conversation:
             self.render('index.html', history=conversation.getHistory())
         else:
             self.render('index.html', history=[])
+
+class ChatHandler(BaseHandler):
+
+    @tornado.web.asynchronous
+    @gen.coroutine
+    def post(self):
+        global conversation        
+        if self.validate(self.get_argument('validate')):
+            query = self.get_argument('query')
+            uuid = self.get_argument('uuid')
+            conversation.doResponse(query, uuid)
+            res = {'code': 0}
+            self.write(json.dumps(res));
+        else:
+            res = {'code': 1, 'message': 'illegal visit'};
+            self.write(json.dumps(res))
+        self.finish()
         
 class HistoryHandler(BaseHandler):
 
@@ -46,7 +65,7 @@ class HistoryHandler(BaseHandler):
     @gen.coroutine
     def get(self):
         global conversation
-        if not self.current_user:
+        if not self.validate(self.get_argument('validate')):
             res = {'code': 1, 'message': 'illegal visit'};
             self.write(json.dumps(res))
         else:
@@ -62,11 +81,13 @@ class LoginHandler(BaseHandler):
     def get(self):
         self.render('login.html', error=None)
 
+    @tornado.web.asynchronous
+    @gen.coroutine
     def post(self):
         if self.get_argument('username') == config.get('/server/username') and \
            hashlib.md5(self.get_argument('password').encode('utf-8')).hexdigest() \
            == config.get('/server/validate'):
-            self.set_secure_cookie("username", self.get_argument("username"))
+            self.set_cookie("validation", config.get('/server/validate'))
             self.redirect("/")
         else:
             self.render('login.html', error="登录失败")
@@ -77,7 +98,7 @@ class LogoutHandler(BaseHandler):
     @tornado.web.asynchronous
     @gen.coroutine
     def get(self):
-        self.set_secure_cookie("username", '')
+        self.set_cookie("validation", '')
         self.redirect("/login")
 
 
@@ -92,6 +113,7 @@ application = tornado.web.Application([
     (r"/", MainHandler),
     (r"/login", LoginHandler),
     (r"/history", HistoryHandler),
+    (r"/chat", ChatHandler),
     (r"/logout", LogoutHandler),
 ], **settings)
 
