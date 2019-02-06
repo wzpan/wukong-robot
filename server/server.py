@@ -34,19 +34,16 @@ class LoginHandler(BaseHandler):
     @tornado.web.asynchronous
     @gen.coroutine
     def get(self):
-        self.render('login.html')
+        self.render('login.html', error=None)
 
     def post(self):
         if self.get_argument('username') == config.get('/server/username') and \
            hashlib.md5(self.get_argument('password').encode('utf-8')).hexdigest() \
            == config.get('/server/validate'):
             self.set_secure_cookie("username", self.get_argument("username"))
-            ret = {'code': 0, 'msg': '登录成功'}
-            self.write(json.dumps(ret))
+            self.redirect("/")
         else:
-            ret = {'code': 1, 'msg': '账户密码错误'}
-            self.write(json.dumps(ret))
-        self.finish()
+            self.render('login.html', error="登录失败")
 
 
 class LogoutHandler(BaseHandler):

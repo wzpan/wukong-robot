@@ -8,8 +8,12 @@
       <input type="text" name="username" class="form-control" placeholder="User Name" required autofocus>
       <label for="password" class="sr-only">Password</label>
       <input type="password" name="password" class="form-control" placeholder="Password" required>
-      <p><input class="btn btn-lg btn-primary btn-block" type=submit value=Login></p>          
-          <span class="mt-5 mb-3 text-muted">wukong-robot &copy; 2019 </span>
+      <p><input class="btn btn-lg btn-primary btn-block" type=submit value=Login></p>
+      {% if error %}
+      <p style="color:#ff0000">{{ error }}</p>
+      {% end %}
+      <br/>
+      <span class="mt-5 mb-3 text-muted">wukong-robot &copy; 2019 </span>
     </center>
   </form>
 {% end %}
