@@ -41,7 +41,22 @@ class LoginHandler(BaseHandler):
            hashlib.md5(self.get_argument('password').encode('utf-8')).hexdigest() \
            == config.get('/server/validate'):
             self.set_secure_cookie("username", self.get_argument("username"))
-            self.redirect("/")
+            ret = {'code': 0, 'msg': '登录成功'}
+            self.write(json.dumps(ret))
+        else:
+            ret = {'code': 1, 'msg': '账户密码错误'}
+            self.write(json.dumps(ret))
+        self.finish()
+
+
+class LogoutHandler(BaseHandler):
+    
+    @tornado.web.asynchronous
+    @gen.coroutine
+    def get(self):
+        self.set_secure_cookie("username", '')
+        self.redirect("/login")
+
 
 settings = {
     "cookie_secret" : b'*\xc4bZv0\xd7\xf9\xb2\x8e\xff\xbcL\x1c\xfa\xfeh\xe1\xb8\xdb\xd1y_\x1a',
@@ -53,6 +68,7 @@ settings = {
 application = tornado.web.Application([
     (r"/", MainHandler),
     (r"/login", LoginHandler),
+    (r"/logout", LogoutHandler),
 ], **settings)
 
 

@@ -26,6 +26,16 @@ class Wukong(object):
     def init(self):
         global conversation
         self._interrupted = False
+        print('''
+********************************************************
+*          wukong-robot - 中文语音对话机器人           *
+*          (c) 2019 潘伟洲 <m@hahack.com>              *
+*     https://github.com/wzpan/wukong-robot.git        *
+********************************************************
+
+            如需退出，可以按 Ctrl-4 组合键。
+
+''')
         config.init()
         self._conversation = Conversation()
         self._conversation.say('{} 你好！试试对我喊唤醒词叫醒我吧'.format(config.get('first_name', '主人')), True)
@@ -71,8 +81,7 @@ class Wukong(object):
         # capture SIGINT signal, e.g., Ctrl+C
         signal.signal(signal.SIGINT, self._signal_handler)
         detector = snowboydecoder.HotwordDetector(models, sensitivity=config.get('sensitivity', 0.5))
-        print('Listening... Press Ctrl+C to exit')
-
+        
         # site
         server.run()
 
@@ -90,17 +99,30 @@ class Wukong(object):
     def md5(self, password):
         return hashlib.md5(password.encode('utf-8')).hexdigest()
 
-    def _pull(self):
-        return call(['git', 'pull'], cwd=constants.APP_PATH, shell=False) == 0
+    def _pull(self, cwd):
+        if os.path.exists(cwd):
+            return call(['git', 'pull'], cwd=cwd, shell=False) == 0
+        else:
+            logger.error("目录 {} 不存在".format(cwd))
+            return False
 
-    def _pip(self):
-        return call(['pip', 'install', '-r', 'requirements.txt'], cwd=constants.APP_PATH, shell=False) == 0
+    def _pip(self, cwd):
+        if os.path.exists(cwd):
+            return call(['pip', 'install', '-r', 'requirements.txt'], cwd=cwd, shell=False) == 0
+        else:
+            logger.error("目录 {} 不存在".format(cwd))
+            return False
 
     def update(self):
-        if self._pull() and self._pip():
+        if self._pull(constants.APP_PATH) and self._pip(constants.APP_PATH):
             logger.info('wukong-robot 更新成功！')
         else:
             logger.info('wukong-robot 更新失败！')
+        if self._pull(constants.CONTRIB_PATH) and self._pip(constants.CONTRIB_PATH):
+            logger.info('wukong-contrib 更新成功！')
+        else:
+            logger.info('wukong-contrib 更新失败！')
+        
             
 
 if __name__ == '__main__':
