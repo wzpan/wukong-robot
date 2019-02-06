@@ -67,13 +67,13 @@ $(function() {
 
     $('.CHAT').on('click', function(e) {
         e.preventDefault();
-        var uuid = 'chat' + guid();        
+        var uuid = 'chat' + guid();
         var query = $("input#query")[0].value;
         appendHistory(0, query, uuid);
         $.ajax({
             url: '/chat',
             type: "POST",
-            data: {"query": query, "validate": getCookie("validation"), "uuid": uuid},
+            data: {"type": "text", "query": query, "validate": getCookie("validation"), "uuid": uuid},
             success: function(res) {
                 var data = JSON.parse(res);
                 if (data.code == 0) {

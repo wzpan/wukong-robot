@@ -76,11 +76,11 @@
 </center>
 
 
-<ul id="menu" class="mfb-component--br mfb-zoomin" data-mfb-toggle="hover">
+<ul id="recorder" class="mfb-component--br mfb-zoomin" data-mfb-toggle="hover">
       <li class="mfb-component__wrap">
-        <a href="#" class="mfb-component__button--main">
+        <a href="#" id="record" class="mfb-component__button--main">
           <i class="mfb-component__main-icon--resting fa fa-microphone"></i>
-          <i class="mfb-component__main-icon--active fa fa-times"></i>
+          <i class="mfb-component__main-icon--active fa fa-stop"></i>
         </a>
         <ul class="mfb-component__list">
           <!-- <\!-- <li> -\-> -->
@@ -88,21 +88,15 @@
           <!--   <\!-- <a href="#" data-mfb-label="麦克风静音" class="mfb-component__button--child"> -\-> -->
           <!--   <\!--   <i class="mfb-component__child-icon fa fa-microphone-slash" aria-hidden="true"></i> -\-> -->
           <!--   <\!-- </a> -\-> -->
-          </li>
+          <!--</li> -->
           <li>
-            <a href="#" data-mfb-label="说一段15秒的命令" class="mfb-component__button--child">
-              <span class="mfb-component__child-icon">15s</span>
+            <a href="#" id="stop-record" data-mfb-label="停止录制语音指令" class="mfb-component__button--child">
+              <i class="mfb-component__child-icon fas fa-stop"></i>
             </a>
           </li>
           <li>
-            <a href="#" data-mfb-label="说一段10秒的命令" class="mfb-component__button--child">
-              <span class="mfb-component__child-icon">10s</span>
-            </a>
-          </li>
-
-          <li>
-            <a href="#" data-mfb-label="说一段5秒的命令" class="mfb-component__button--child">
-              <span class="mfb-component__child-icon">5s</span>
+            <a href="#" id="start-record" data-mfb-label="开始录制语音指令" class="mfb-component__button--child ">
+              <i class="mfb-component__child-icon fas fa-circle"></i>
             </a>
           </li>
         </ul>
@@ -112,4 +106,5 @@
 
 <script src="{{static_url('main.js')}}" crossorigin="anonymous"></script>
 <script src="{{static_url('index.js')}}" crossorigin="anonymous"></script>
+<script src="./static/recorder.min.js"></script>
 {% end %}

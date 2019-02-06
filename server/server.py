@@ -1,6 +1,7 @@
 import json
 from datetime import timedelta
-from robot import config
+from robot import config, utils
+import base64
 import tornado.web
 import tornado.ioloop
 from tornado import gen
@@ -10,6 +11,8 @@ import hashlib
 import threading
 import logging
 import asyncio
+import subprocess
+import os
 
 from tornado.websocket import WebSocketHandler
 
@@ -49,15 +52,34 @@ class ChatHandler(BaseHandler):
     def post(self):
         global conversation        
         if self.validate(self.get_argument('validate')):
-            query = self.get_argument('query')
-            uuid = self.get_argument('uuid')
-            conversation.doResponse(query, uuid)
-            res = {'code': 0}
-            self.write(json.dumps(res));
+            if self.get_argument('type') == 'text':
+                query = self.get_argument('query')
+                uuid = self.get_argument('uuid')
+                conversation.doResponse(query, uuid)
+                res = {'code': 0}
+                self.write(json.dumps(res));
+            elif self.get_argument('type') == 'voice':
+                voice_data = self.get_argument('voice')
+                tmpfile = utils.write_temp_file(base64.b64decode(voice_data), '.wav')
+                fname, suffix = os.path.splitext(tmpfile)
+                nfile = fname + '-16k' + suffix
+                # downsampling
+                soxCall = 'sox ' + tmpfile + \
+                          ' ' + nfile + ' rate 16k'
+                p = subprocess.call([soxCall], shell=True, close_fds=True)
+                utils.check_and_delete(tmpfile)
+                print(tmpfile)
+                conversation.converse(nfile)
+                res = {'code': 0};
+                self.write(json.dumps(res))
+            else:
+                res = {'code': 1, 'message': 'illegal type'};
+                self.write(json.dumps(res))
         else:
             res = {'code': 1, 'message': 'illegal visit'};
             self.write(json.dumps(res))
-        self.finish()
+        self.finish()        
+        
         
 class HistoryHandler(BaseHandler):
 
