@@ -4,30 +4,56 @@ from robot import config
 import tornado.web
 import tornado.ioloop
 from tornado import gen
+import tornado.httpserver
+import tornado.options
 import hashlib
 import threading
 import logging
 import asyncio
+
+from tornado.websocket import WebSocketHandler
+
 
 logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
 logger = logging.getLogger(__name__)
 
+conversation = None
+
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         return self.get_secure_cookie("username")
+
 
 class MainHandler(BaseHandler):
 
     @tornado.web.asynchronous
     @gen.coroutine
     def get(self):
+        global conversation
         if not self.current_user:
             self.redirect("/login")
             return
-        self.render('index.html', history=[])
+        if conversation:
+            self.render('index.html', history=conversation.getHistory())
+        else:
+            self.render('index.html', history=[])
         
+class HistoryHandler(BaseHandler):
+
+    @tornado.web.asynchronous
+    @gen.coroutine
+    def get(self):
+        global conversation
+        if not self.current_user:
+            res = {'code': 1, 'message': 'illegal visit'};
+            self.write(json.dumps(res))
+        else:
+            res = {'code': 0, 'message': json.dumps(conversation.getHistory())}
+            self.write(json.dumps(res));
+        self.finish()
+
         
 class LoginHandler(BaseHandler):
     
@@ -65,11 +91,14 @@ settings = {
 application = tornado.web.Application([
     (r"/", MainHandler),
     (r"/login", LoginHandler),
+    (r"/history", HistoryHandler),
     (r"/logout", LogoutHandler),
 ], **settings)
 
 
-def start_server():
+def start_server(con):
+    global conversation
+    conversation = con
     if config.get('/server/enable', False):
         host = config.get('/server/host', '0.0.0.0')
         port = config.get('/server/port', '5000')
@@ -81,6 +110,6 @@ def start_server():
             logger.critical('服务器启动失败: {}'.format(e))
         
 
-def run():
-    t = threading.Thread(target=start_server)
+def run(conversation):
+    t = threading.Thread(target=lambda: start_server(conversation))
     t.start()

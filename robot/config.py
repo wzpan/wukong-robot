@@ -13,7 +13,7 @@ _config = {}
 
 def reload():
     logger.info('配置文件发生变更，重新加载配置文件')
-    init()    
+    init()
 
 def init():
     if os.path.isfile(constants.CONFIG_PATH):
@@ -53,8 +53,8 @@ def doInit(config_file=constants.getDefaultConfigPath()):
     try:
         with open(config_file, "r") as f:
             _config = yaml.safe_load(f)
-    except OSError:
-        logger.error("Can't open config file: '%s'", config_file)
+    except Exception as e:
+        logger.error("配置文件 {} 读取失败: {}".format(config_file, e))
         raise
 
 

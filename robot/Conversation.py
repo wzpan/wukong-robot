@@ -2,8 +2,9 @@
 from robot import ASR, TTS, AI, Player, config, constants, utils
 from robot.Brain import Brain
 from snowboy import snowboydecoder
+import time 
 import logging
-
+import uuid
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -15,6 +16,9 @@ class Conversation(object):
         self.brain = Brain(self)
         self.reload()
         self.history = []
+
+    def getHistory(self):
+        return self.history
 
     def interrupt(self):
         if self.player is not None and self.player.is_playing():
@@ -52,7 +56,9 @@ class Conversation(object):
     def appendHistory(self, t, text):
         """ 将会话历史加进历史记录 """
         if t in (0, 1) and text != '':
-            self.history.append({'type': t, 'text': text})
+            if text.endswith(',') or text.endswith('，'):
+                text = text[:-1]
+            self.history.append({'type': t, 'text': text, 'time': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), 'uuid': str(uuid.uuid1())})
 
     def _onCompleted(self, msg):
         if msg.endswith('?') or msg.endswith(u'？') or \

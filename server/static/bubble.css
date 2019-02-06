@@ -1,0 +1,450 @@
+/* ------------------------------------------
+   PURE CSS SPEECH BUBBLES
+   by Nicolas Gallagher
+   - http://nicolasgallagher.com/pure-css-speech-bubbles/
+
+http://nicolasgallagher.com
+http://twitter.com/necolas
+
+Created: 02 March 2010
+Version: 1.2 (03 March 2011)
+
+Dual licensed under MIT and GNU GPLv2 © Nicolas Gallagher 
+------------------------------------------ */
+
+/* NOTE: Some declarations use longhand notation so that it can be clearly
+   explained what specific properties or values do and what their relationship
+   is to other properties or values in creating the effect */
+
+.right { float:right; width:100%; }
+.left { float:left; width:100%; /*ie6 hack*/_background:none; _border:none;}
+
+/* ============================================================================================================================
+   == BUBBLE ORANGE
+   ** ============================================================================================================================ */
+
+/* THE SPEECH BUBBLE
+   ------------------------------------------------------------------------------------------------------------------------------- */
+
+.bubble-orange {
+  width:auto;
+  max-width:40%;
+  position:relative;
+  padding:15px 15px 20px;
+  margin:0.5em 0 0.5em;
+  background: #f3961c;
+  color:#fff;
+  /* css3 */
+  -webkit-border-radius:10px;
+  -moz-border-radius:10px;
+  border-radius:10px;
+}
+
+/* Variant : for left positioned triangle
+   ------------------------------------------ */
+
+.left .bubble-orange {
+  margin-left:100px;
+  float:left;
+}
+
+/* Variant : for right positioned triangle
+   ------------------------------------------ */
+
+.right .bubble-orange {
+  margin-right:100px;
+  float:right;
+}
+
+.bubble-orange:hover{
+  background:#f9d835;
+  color:#000;
+}
+
+
+/* THE TRIANGLE
+   ------------------------------------------------------------------------------------------------------------------------------- */
+
+.bubble-orange:after {
+  content:"";
+  position:absolute;
+  bottom:-20px; /* value = - border-top-width - border-bottom-width */
+  left:50px; /* controls horizontal position */
+  border-width:15px 15px 0; /* vary these values to change the angle of the vertex */
+  border-style:solid;
+  border-color:#f3961c transparent;
+  /* reduce the damage in FF3.0 */
+  display:block; 
+  width:0;
+}
+
+/* Variant : left
+   ------------------------------------------ */
+
+/* creates the smaller  triangle */
+.left .bubble-orange:after {
+  top:16px; /* value = (:before top) + (:before border-top) - (:after border-top) */
+  bottom:auto;
+  left:-21px; /* value = - border-left-width - border-right-width */
+  border-width:9px 21px 9px 0;
+  border-color:transparent #f3961c;
+}
+
+/* Variant : right
+   ------------------------------------------ */
+
+/* creates the smaller  triangle */
+.right .bubble-orange:after {
+  top:16px; /* value = (:before top) + (:before border-top) - (:after border-top) */
+  bottom:auto;
+  left:auto;
+  right:-21px; /* value = - border-left-width - border-right-width */
+  border-width:9px 0 9px 21px;
+  border-color:transparent #f3961c;
+}
+
+
+/* ============================================================================================================================
+   == BUBBLE WHITE
+   ** ============================================================================================================================ */
+
+/* THE SPEECH BUBBLE
+   ------------------------------------------------------------------------------------------------------------------------------- */
+
+.bubble-white {
+  width:auto;
+  max-width:40%;
+  position:relative;
+  padding:15px 15px 5px;
+  margin:0.5em 0 0.5em;
+  background: #fcfcfc;
+  color:#000;
+  /* css3 */
+  -webkit-border-radius:10px;
+  -moz-border-radius:10px;
+  border-radius:10px;
+}
+
+/* Variant : for left positioned triangle
+   ------------------------------------------ */
+
+.left .bubble-white {
+  margin-left:100px;
+  float:left;
+}
+
+/* Variant : for right positioned triangle
+   ------------------------------------------ */
+
+.right .bubble-white {
+  margin-right:100px;
+  float:right;
+}
+
+
+/* THE TRIANGLE
+   ------------------------------------------------------------------------------------------------------------------------------- */
+
+.bubble-white:after {
+  content:"";
+  position:absolute;
+  bottom:-20px; /* value = - border-top-width - border-bottom-width */
+  left:50px; /* controls horizontal position */
+  border-width:15px 15px 0; /* vary these values to change the angle of the vertex */
+  border-style:solid;
+  border-color:#ccc transparent;
+  /* reduce the damage in FF3.0 */
+  display:block; 
+  width:0;
+}
+
+/* Variant : left
+   ------------------------------------------ */
+
+/* creates the smaller  triangle */
+.left .bubble-white:after {
+  top:16px; /* value = (:before top) + (:before border-top) - (:after border-top) */
+  bottom:auto;
+  left:-21px; /* value = - border-left-width - border-right-width */
+  border-width:9px 21px 9px 0;
+  border-color:transparent #fcfcfc;
+}
+
+/* Variant : right
+   ------------------------------------------ */
+
+/* creates the smaller  triangle */
+.right .bubble-white:after {
+  top:16px; /* value = (:before top) + (:before border-top) - (:after border-top) */
+  bottom:auto;
+  left:auto;
+  right:-21px; /* value = - border-left-width - border-right-width */
+  border-width:9px 0 9px 21px;
+  border-color:transparent #fcfcfc;
+}
+
+
+
+
+/* ============================================================================================================================
+   == BUBBLE BLUE
+   ** ============================================================================================================================ */
+
+/* THE SPEECH BUBBLE
+   ------------------------------------------------------------------------------------------------------------------------------- */
+
+.bubble-blue {
+  width:auto;
+  max-width:50%;
+  position:relative;
+  padding:15px;
+  margin:0.5em 0 0.5em;
+  color:#fff;
+  background:#075698; /* default background for browsers without gradient support */
+  /* css3 */
+  -webkit-border-radius:10px;
+  -moz-border-radius:10px;
+  border-radius:10px;
+}
+
+/* Variant : for left positioned triangle
+   ------------------------------------------ */
+
+.left .bubble-blue {
+  margin-left:100px;
+  float:left;
+}
+
+/* Variant : for right positioned triangle
+   ------------------------------------------ */
+
+.right .bubble-blue {
+  margin-right:100px;
+  float:right;
+}
+
+.bubble-blue:hover{
+  background:#2e88c4;
+  color:#000;
+}
+
+
+/* THE TRIANGLE
+   ------------------------------------------------------------------------------------------------------------------------------- */
+
+.bubble-blue:after {
+  content:"";
+  position:absolute;
+  bottom:-20px; /* value = - border-top-width - border-bottom-width */
+  left:50px; /* controls horizontal position */
+  border-width:20px 0 0 20px; /* vary these values to change the angle of the vertex */
+  border-style:solid;
+  border-color:#075698 transparent; 
+  /* reduce the damage in FF3.0 */
+  display:block; 
+  width:0;
+}
+
+/* Variant : left
+   ------------------------------------------ */
+
+.left .bubble-blue:after {
+  top:16px; 
+  left:-40px; /* value = - border-left-width - border-right-width */
+  bottom:auto;
+  border-width:15px 40px 0 0; /* vary these values to change the angle of the vertex */
+  border-color:transparent #075698; 
+}
+
+/* Variant : right
+   ------------------------------------------ */
+
+.right .bubble-blue:after {
+  top:16px; 
+  right:-40px; /* value = - border-left-width - border-right-width */
+  bottom:auto;
+  left:auto;
+  border-width:15px 0 0 40px; /* vary these values to change the angle of the vertex */
+  border-color:transparent #075698 ; 
+}
+
+
+/* ============================================================================================================================
+   == BUBBLE RED
+   ** ============================================================================================================================ */
+
+/* THE SPEECH BUBBLE
+   ------------------------------------------------------------------------------------------------------------------------------- */
+
+.bubble-red {
+  width:auto;
+  max-width:30%;
+  position:relative;
+  padding:15px;
+  margin:0.5em 0 0.5em;
+  color:#fff;
+  background:#c81e2b; /* default background for browsers without gradient support */
+  /* css3 */
+  -webkit-border-radius:10px;
+  -moz-border-radius:10px;
+  border-radius:10px;
+}
+
+/* Variant : for left positioned triangle
+   ------------------------------------------ */
+
+.left .bubble-red {
+  margin-left:100px;
+  float:left;
+}
+
+/* Variant : for right positioned triangle
+   ------------------------------------------ */
+
+.right .bubble-red {
+  margin-right:100px;
+  float:right;
+}
+
+.bubble-red:hover{
+  background:#f04349;
+  color:#000;
+}
+
+
+/* THE TRIANGLE
+   ------------------------------------------------------------------------------------------------------------------------------- */
+
+.bubble-red:after {
+  content:"";
+  position:absolute;
+  bottom:-20px; /* value = - border-top-width - border-bottom-width */
+  left:50px; /* controls horizontal position */
+  border-width:20px 0 0 20px; /* vary these values to change the angle of the vertex */
+  border-style:solid;
+  border-color:#c81e2b transparent; 
+  /* reduce the damage in FF3.0 */
+  display:block; 
+  width:0;
+}
+
+/* Variant : left
+   ------------------------------------------ */
+
+.left .bubble-red:after {
+  top:16px; 
+  left:-40px; /* value = - border-left-width - border-right-width */
+  bottom:auto;
+  border-width:15px 40px 0 0; /* vary these values to change the angle of the vertex */
+  border-color:transparent #c81e2b; 
+}
+
+/* Variant : right
+   ------------------------------------------ */
+
+.right .bubble-red:after {
+  top:16px; 
+  right:-40px; /* value = - border-left-width - border-right-width */
+  bottom:auto;
+  left:auto;
+  border-width:15px 0 0 40px; /* vary these values to change the angle of the vertex */
+  border-color:transparent #c81e2b ; 
+}
+
+
+/* ============================================================================================================================
+   == BUBBLE GREEN
+   ** ============================================================================================================================ */
+
+/* THE SPEECH BUBBLE
+   ------------------------------------------------------------------------------------------------------------------------------- */
+
+.bubble-green {
+  width:auto;
+  max-width:40%;
+  position:relative;
+  padding:15px 15px 5px;
+  margin:0.5em 0 0.5em;
+  background: #7CCD7C;
+  color:#000;
+  /* css3 */
+  -webkit-border-radius:10px;
+  -moz-border-radius:10px;
+  border-radius:10px;
+}
+
+/* Variant : for left positioned triangle
+   ------------------------------------------ */
+
+.left .bubble-green {
+  margin-left:100px;
+  float:left;
+}
+
+/* Variant : for right positioned triangle
+   ------------------------------------------ */
+
+.right .bubble-green {
+  margin-right:100px;
+  float:right;
+}
+
+
+/* THE TRIANGLE
+   ------------------------------------------------------------------------------------------------------------------------------- */
+
+.bubble-green:after {
+  content:"";
+  position:absolute;
+  bottom:-20px; /* value = - border-top-width - border-bottom-width */
+  left:50px; /* controls horizontal position */
+  border-width:15px 15px 0; /* vary these values to change the angle of the vertex */
+  border-style:solid;
+  border-color:#7CCD7C transparent;
+  /* reduce the damage in FF3.0 */
+  display:block; 
+  width:0;
+}
+
+/* Variant : left
+   ------------------------------------------ */
+
+/* creates the smaller  triangle */
+.left .bubble-green:after {
+  top:16px; /* value = (:before top) + (:before border-top) - (:after border-top) */
+  bottom:auto;
+  left:-21px; /* value = - border-left-width - border-right-width */
+  border-width:9px 21px 9px 0;
+  border-color:transparent #7CCD7C;
+}
+
+/* Variant : right
+   ------------------------------------------ */
+
+/* creates the smaller  triangle */
+.right .bubble-green:after {
+  top:16px; /* value = (:before top) + (:before border-top) - (:after border-top) */
+  bottom:auto;
+  left:auto;
+  right:-21px; /* value = - border-left-width - border-right-width */
+  border-width:9px 0 9px 21px;
+  border-color:transparent #7CCD7C;
+}
+
+.right .bubble-avatar{
+  width:80px;
+  height:38px;
+  text-align:center;
+  position:absolute;
+  right: -110px;
+  color: #000;
+}
+
+.left .bubble-avatar{
+  width:80px;
+  height:38px;
+  text-align:center;
+  position:absolute;
+  left: -110px;
+  color: #000;
+}

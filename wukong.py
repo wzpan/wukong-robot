@@ -83,7 +83,7 @@ class Wukong(object):
         detector = snowboydecoder.HotwordDetector(models, sensitivity=config.get('sensitivity', 0.5))
         
         # site
-        server.run()
+        server.run(self._conversation)
 
         # main loop
         detector.start(detected_callback=[self._detected_callback,
