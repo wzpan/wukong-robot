@@ -1,12 +1,17 @@
 # wukong-robot
 
+[![Python3](https://img.shields.io/pypi/pyversions/Django.svg?style=flat)](#)
+[![GitHub issues](https://img.shields.io/github/issues/dingdang-robot/dingdang-robot.svg)](https://github.com/wzpan/wukong-robot/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/dingdang-robot/dingdang-robot.svg)](https://github.com/wzpan/wukong-robot/pulls)
+[![Licence](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/wzpan/wukong-robot/blob/master/LICENSE)
+[![QQ群](https://img.shields.io/badge/QQ%E7%BE%A4-580447290-red.svg)](http://onmw7y6f4.bkt.clouddn.com/dingdang-group.png)
+
 wukong-robot 是一个简单灵活的中文语音对话机器人。
 
 ## Table of Contents
 
-* [开发进度](#研发进度)
 * [特性](#特性)
-* [硬件要求](#硬件要求)
+* [环境要求](#环境要求)
 * [安装](#安装)
 * [升级](#升级)
 * [运行](#运行)
@@ -29,7 +34,13 @@ wukong-robot 是一个简单灵活的中文语音对话机器人。
 * 后台配套支持。提供配套后台，可实现远程操控和修改配置（开发中，进度见[这里](https://github.com/wzpan/wukong-robot/wiki/roadmap)）。
 * 安装简单，支持更多平台。相比 dingdang-robot ，舍弃了 PocketSphinx 的离线唤醒方案，安装变得更加简单，代码量更少，更易于维护并且能在 Mac 以及更多 Linux 系统中运行。
 
-## 硬件要求 ##
+## 环境要求 ##
+
+### Python 版本 ###
+
+Python 3
+
+### 设备要求 ###
 
 wukong-robot 支持运行在以下的设备和系统中：
 

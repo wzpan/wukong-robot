@@ -4,3 +4,8 @@ body {
 .starter-template {
     padding: 3rem 1.5rem;
 }
+.container-fluid.history {
+    min-height: 20em;
+    background: #F0F8FF;
+    border: 1px solid #ccc;
+}

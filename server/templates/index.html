@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
-<link rel="stylesheet" href="./static/starter-template.css" crossorigin="anonymous">
+<link rel="stylesheet" href="{{static_url('starter-template.css')}}" crossorigin="anonymous">
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
   <a class="navbar-brand" href="/">wukong-robot</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,14 @@
 <div class="jumbotron">
   <h1 class="display-4"><i class="fas fa-robot"></i> wukong-robot</h1>
   <p class="lead">wukong-robot 是一个简单灵活的中文语音对话机器人。</p>
+</div>
+
+<div class="container-fluid history">
+  {% if not history or len(history) == 0 %}
+  <center>
+    <p> 无聊天记录，请先和 wukong-robot 聊会天吧~ </p>
+  </center>
+  {% end %}
 </div>
 
 <br/>

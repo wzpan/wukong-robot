@@ -26,7 +26,7 @@ class MainHandler(BaseHandler):
         if not self.current_user:
             self.redirect("/login")
             return
-        self.render('index.html')
+        self.render('index.html', history=[])
         
         
 class LoginHandler(BaseHandler):
