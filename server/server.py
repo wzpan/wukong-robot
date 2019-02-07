@@ -69,7 +69,7 @@ class ChatHandler(BaseHandler):
                 p = subprocess.call([soxCall], shell=True, close_fds=True)
                 utils.check_and_delete(tmpfile)
                 print(tmpfile)
-                conversation.converse(nfile)
+                conversation.doConverse(nfile)
                 res = {'code': 0};
                 self.write(json.dumps(res))
             else:

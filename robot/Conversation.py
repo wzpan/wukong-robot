@@ -44,9 +44,12 @@ class Conversation(object):
 
     def converse(self, fp):
         """ 核心对话逻辑 """
+        snowboydecoder.play_audio_file(constants.getData('beep_lo.wav'))
+        self.doConverse(fp)
+
+    def doConverse(self, fp):
         try:
             self.interrupt()
-            snowboydecoder.play_audio_file(constants.getData('beep_lo.wav'))
             query = self.asr.transcribe(fp)
             utils.check_and_delete(fp)
             self.doResponse(query)
