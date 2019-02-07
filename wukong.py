@@ -1,6 +1,6 @@
 # -*- coding: utf-8-*-
 from snowboy import snowboydecoder
-from robot import config, utils, constants, logging
+from robot import config, utils, constants, logging, statistic
 from robot.ConfigMonitor import ConfigMonitor
 from robot.Conversation import Conversation
 from server import server
@@ -72,10 +72,12 @@ class Wukong(object):
         self.init()
         
         # capture SIGINT signal, e.g., Ctrl+C
-        signal.signal(signal.SIGINT, self._signal_handler)        
+        signal.signal(signal.SIGINT, self._signal_handler)
         
         # site
         server.run(self._conversation, self)
+
+        statistic.report(0)
 
         self.initDetector()
 

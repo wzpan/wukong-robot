@@ -1,5 +1,5 @@
 # -*- coding: utf-8-*-
-from robot import ASR, TTS, AI, Player, config, constants, utils
+from robot import ASR, TTS, AI, Player, config, constants, utils, statistic
 from robot.Brain import Brain
 from snowboy import snowboydecoder
 import time 
@@ -34,6 +34,7 @@ class Conversation(object):
             logger.critical("对话初始化失败：{}".format(e))
 
     def doResponse(self, query, UUID=''):
+        statistic.report(1)
         self.interrupt()
         self.appendHistory(0, query, UUID)
         if not self.brain.query(query):
