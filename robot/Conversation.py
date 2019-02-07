@@ -41,17 +41,17 @@ class Conversation(object):
             msg = self.ai.chat(query)
             self.say(msg, True)
 
-    def converse(self, fp):
+    def converse(self, fp, callback=None):
         """ 核心对话逻辑 """
         snowboydecoder.play_audio_file(constants.getData('beep_lo.wav'))
-        self.doConverse(fp)
+        self.doConverse(fp, callback)
 
-    def doConverse(self, fp):
+    def doConverse(self, fp, callback=None):
         try:
             self.interrupt()
             query = self.asr.transcribe(fp)
             utils.check_and_delete(fp)
-            self.doResponse(query)
+            self.doResponse(query, callback)
         except Exception as e:
             logger.critical(e)
             utils.clean()

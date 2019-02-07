@@ -54,7 +54,7 @@ class ChatHandler(BaseHandler):
                 query = self.get_argument('query')
                 uuid = self.get_argument('uuid')
                 conversation.doResponse(query, uuid)
-                res = {'code': 0}
+                res = {'code': 0, 'message': 'ok'}
                 self.write(json.dumps(res));
             elif self.get_argument('type') == 'voice':
                 voice_data = self.get_argument('voice')
@@ -102,7 +102,12 @@ class GetConfigHandler(BaseHandler):
             res = {'code': 1, 'message': 'illegal visit'};
             self.write(json.dumps(res))
         else:
-            res = {'code': 0, 'message': 'ok', 'config': config.getText(), 'sensitivity': config.get('sensitivity', 0.5)}
+            key = self.get_argument("key", default="")
+            res = ''
+            if key == '':
+                res = {'code': 0, 'message': 'ok', 'config': config.getText(), 'sensitivity': config.get('sensitivity', 0.5)}
+            else:
+                res = {'code': 0, 'message': 'ok', 'value': config.get(key)}
             self.write(json.dumps(res));
         self.finish()
 
@@ -116,7 +121,8 @@ class GetLogHandler(BaseHandler):
             res = {'code': 1, 'message': 'illegal visit'};
             self.write(json.dumps(res))
         else:
-            res = {'code': 0, 'message': 'ok', 'log': logging.readLog()}
+            lines = self.get_argument('lines', default=200)
+            res = {'code': 0, 'message': 'ok', 'log': logging.readLog(lines)}
             self.write(json.dumps(res));
         self.finish()
 
@@ -164,7 +170,7 @@ class ConfigHandler(BaseHandler):
 
     def post(self):
         global conversation        
-        if self.validate(self.get_argument('validate')):
+        if self.validate(self.get_argument('validate')):            
             configStr = self.get_argument('config')
             try:
                 yaml.load(configStr)
