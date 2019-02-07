@@ -38,7 +38,7 @@ wukong-robot 是一个简单、灵活、优雅的中文语音对话机器人。
 
 ## Demo
 
-* [Demo视频]()
+* Demo视频 - coming soon
 * 后台管理端Demo - coming soon
 
 ## 环境要求 ##
