@@ -30,7 +30,7 @@
 </div>
 
 
-<div class="container history">
+<div class="container history" id="container">
   {% if not history or len(history) == 0 %}
   <center>
     <p> 无聊天记录，请先和 wukong-robot 聊会天吧~ </p>
@@ -83,12 +83,6 @@
           <i class="mfb-component__main-icon--active fa fa-times"></i>
         </a>
         <ul class="mfb-component__list">
-          <!-- <\!-- <li> -\-> -->
-          <!--   <\!-- todo: 支持麦克风静音 -\-> -->
-          <!--   <\!-- <a href="#" data-mfb-label="麦克风静音" class="mfb-component__button--child"> -\-> -->
-          <!--   <\!--   <i class="mfb-component__child-icon fa fa-microphone-slash" aria-hidden="true"></i> -\-> -->
-          <!--   <\!-- </a> -\-> -->
-          <!--</li> -->
           <li>
             <a href="#" id="stop-record" data-mfb-label="停止录制语音指令" class="mfb-component__button--child">
               <i class="mfb-component__child-icon fas fa-stop"></i>

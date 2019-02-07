@@ -72,7 +72,7 @@ $(function() {
                 } else {
                     $('#config-placeholder').append(`
     <form class="form config-form" action="#">
-    <div class="input-group" id="inputContainer">
+    <div class="input-group" id="container">
       <div class="input-group-prepend">
         <span class="input-group-text">config.yml</span>
       </div>
