@@ -15,7 +15,7 @@ class Conversation(object):
         self.player = None
         self.brain = Brain(self)
         self.reload()
-        self.history = []
+        self.history = []        
 
     def getHistory(self):
         return self.history

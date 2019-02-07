@@ -7,6 +7,7 @@ from server import server
 from watchdog.observers import Observer
 from subprocess import call
 import sys
+import os
 import signal
 import yaml
 import requests
@@ -25,6 +26,7 @@ class Wukong(object):
     
     def init(self):
         global conversation
+        self.detector = None
         self._interrupted = False
         print('''
 ********************************************************
@@ -36,6 +38,7 @@ class Wukong(object):
             如需退出，可以按 Ctrl-4 组合键。
 
 ''')
+        
         config.init()
         self._conversation = Conversation()
         self._conversation.say('{} 你好！试试对我喊唤醒词叫醒我吧'.format(config.get('first_name', '主人')), True)
@@ -72,29 +75,33 @@ class Wukong(object):
 
     def run(self):
         self.init()
+        
+        # capture SIGINT signal, e.g., Ctrl+C
+        signal.signal(signal.SIGINT, self._signal_handler)        
+        
+        # site
+        server.run(self._conversation, self)
+
+        self.initDetector()
+
+    def initDetector(self):
+        if self.detector is not None:
+            self.detector.terminate()
         models = [
             constants.getHotwordModel(config.get('hotword', 'wukong.pmdl')),
             constants.getHotwordModel(utils.get_do_not_bother_on_hotword()),
             constants.getHotwordModel(utils.get_do_not_bother_off_hotword())
         ]
-
-        # capture SIGINT signal, e.g., Ctrl+C
-        signal.signal(signal.SIGINT, self._signal_handler)
-        detector = snowboydecoder.HotwordDetector(models, sensitivity=config.get('sensitivity', 0.5))
-        
-        # site
-        server.run(self._conversation)
-
+        self.detector = snowboydecoder.HotwordDetector(models, sensitivity=config.get('sensitivity', 0.5))
         # main loop
-        detector.start(detected_callback=[self._detected_callback,
+        self.detector.start(detected_callback=[self._detected_callback,
                                           self._do_not_bother_on_callback,
                                           self._do_not_bother_off_callback],
                        audio_recorder_callback=self._conversation.converse,
                        interrupt_check=self._interrupt_callback,
                        silent_count_threshold=5,
                        sleep_time=0.03)
-        detector.terminate()        
-            
+        self.detector.terminate()            
 
     def md5(self, password):
         return hashlib.md5(password.encode('utf-8')).hexdigest()
@@ -122,8 +129,12 @@ class Wukong(object):
             logger.info('wukong-contrib 更新成功！')
         else:
             logger.info('wukong-contrib 更新失败！')
-        
-            
+
+    def restart(self):
+        logger.critical('程序重启...')
+        python = sys.executable
+        os.execl(python, python, * sys.argv)
+
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:

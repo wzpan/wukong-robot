@@ -26,13 +26,13 @@ function appendHistory(type, query, uuid) {
 
 function getHistory () {
     $.ajax({
-        url: '/history',
+        url: '/gethistory',
         type: "GET",
         data: {'validate': getCookie('validation')},
         success: function(res) {
             res = JSON.parse(res);
             if (res.code == 0) {
-                historyList = JSON.parse(res.message);
+                historyList = JSON.parse(res.history);
                 for (let i=0; i<historyList.length; ++i) {
                     h = historyList[i];
                     // 是否已绘制

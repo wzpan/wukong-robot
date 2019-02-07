@@ -4,6 +4,7 @@ body {
 .starter-template {
     padding: 3rem 1.5rem;
 }
+
 .container.history {
     background: #EAEAEA;
     border: 1px solid #e1e4e8;
@@ -12,4 +13,8 @@ body {
     padding: 32px;
     max-height: 400px;
     overflow:scroll;
+}
+.container.config {
+    padding: 32px;
+    height: 800px;
 }

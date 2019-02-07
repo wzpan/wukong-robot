@@ -202,6 +202,8 @@ class HotwordDetector(object):
                  audio_gain=1,
                  apply_frontend=False):
 
+        self._running = False
+
         tm = type(decoder_model)
         ts = type(sensitivity)
         if tm is not list:
@@ -377,7 +379,8 @@ class HotwordDetector(object):
         Terminate audio stream. Users can call start() again to detect.
         :return: None
         """
-        self.stream_in.stop_stream()
-        self.stream_in.close()
-        self.audio.terminate()
-        self._running = False
+        if self._running:
+            self.stream_in.stop_stream()
+            self.stream_in.close()
+            self.audio.terminate()
+            self._running = False

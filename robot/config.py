@@ -105,3 +105,13 @@ def get(item='', default=None):
 def getConfig():
     return _config
 
+def getText():
+    if os.path.exists(constants.getConfigPath()):
+        with open(constants.getConfigPath(), 'r') as f:
+            return f.read()
+    return ''
+
+def dump(configStr):
+    with open(constants.getConfigPath(), 'w') as f:
+        f.write(configStr)
+

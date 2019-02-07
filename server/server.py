@@ -13,6 +13,8 @@ import logging
 import asyncio
 import subprocess
 import os
+import time
+import yaml
 
 from tornado.websocket import WebSocketHandler
 
@@ -22,7 +24,7 @@ logging.basicConfig(level=logging.INFO,
                         datefmt='%Y-%m-%d %H:%M:%S')
 logger = logging.getLogger(__name__)
 
-conversation = None
+conversation, wukong = None, None
 
 class BaseHandler(tornado.web.RequestHandler):
     def isValidated(self):
@@ -70,7 +72,7 @@ class ChatHandler(BaseHandler):
                 utils.check_and_delete(tmpfile)
                 print(tmpfile)
                 conversation.doConverse(nfile)
-                res = {'code': 0};
+                res = {'code': 0, 'message': 'ok'};
                 self.write(json.dumps(res))
             else:
                 res = {'code': 1, 'message': 'illegal type'};
@@ -78,10 +80,10 @@ class ChatHandler(BaseHandler):
         else:
             res = {'code': 1, 'message': 'illegal visit'};
             self.write(json.dumps(res))
-        self.finish()        
+        self.finish()
         
         
-class HistoryHandler(BaseHandler):
+class GetHistoryHandler(BaseHandler):
 
     @tornado.web.asynchronous
     @gen.coroutine
@@ -91,9 +93,72 @@ class HistoryHandler(BaseHandler):
             res = {'code': 1, 'message': 'illegal visit'};
             self.write(json.dumps(res))
         else:
-            res = {'code': 0, 'message': json.dumps(conversation.getHistory())}
+            res = {'code': 0, 'message': 'ok', 'history': json.dumps(conversation.getHistory())}
             self.write(json.dumps(res));
         self.finish()
+
+
+class GetConfigHandler(BaseHandler):
+
+    @tornado.web.asynchronous
+    @gen.coroutine
+    def get(self):
+        if not self.validate(self.get_argument('validate')):
+            res = {'code': 1, 'message': 'illegal visit'};
+            self.write(json.dumps(res))
+        else:
+            res = {'code': 0, 'message': 'ok', 'config': config.getText(), 'sensitivity': config.get('sensitivity', 0.5)}
+            self.write(json.dumps(res));
+        self.finish()
+
+
+class OperateHandler(BaseHandler):
+
+    def post(self):
+        global wukong
+        if self.validate(self.get_argument('validate')):
+            if self.get_argument('type') == 'restart':
+                res = {'code': 0, 'message': 'ok'}
+                self.write(json.dumps(res))
+                self.finish()
+                time.sleep(3)
+                wukong.restart()
+            else:
+                res = {'code': 1, 'message': 'illegal type'}
+                self.write(json.dumps(res))
+                self.finish()
+        else:
+            res = {'code': 1, 'message': 'illegal visit'}
+            self.write(json.dumps(res))
+            self.finish()
+
+class ConfigHandler(BaseHandler):
+
+    @tornado.web.asynchronous
+    @gen.coroutine
+    def get(self):
+        if not self.isValidated():
+            self.redirect("/login")
+        else:
+            self.render('config.html', sensitivity=config.get('sensitivity'))
+
+    def post(self):
+        global conversation        
+        if self.validate(self.get_argument('validate')):
+            configStr = self.get_argument('config')
+            try:
+                yaml.load(configStr)
+                config.dump(configStr)
+                res = {'code': 0, 'message': 'ok'};
+                self.write(json.dumps(res))
+            except:
+                res = {'code': 1, 'message': 'YAML解析失败，请检查内容'};
+                self.write(json.dumps(res))
+        else:
+            res = {'code': 1, 'message': 'illegal visit'};
+            self.write(json.dumps(res))
+        self.finish()
+    
 
         
 class LoginHandler(BaseHandler):
@@ -120,7 +185,8 @@ class LogoutHandler(BaseHandler):
     @tornado.web.asynchronous
     @gen.coroutine
     def get(self):
-        self.set_cookie("validation", '')
+        if self.isValidated():
+            self.set_cookie("validation", '')
         self.redirect("/login")
 
 
@@ -134,15 +200,19 @@ settings = {
 application = tornado.web.Application([
     (r"/", MainHandler),
     (r"/login", LoginHandler),
-    (r"/history", HistoryHandler),
+    (r"/gethistory", GetHistoryHandler),
     (r"/chat", ChatHandler),
+    (r"/config", ConfigHandler),
+    (r"/getconfig", GetConfigHandler),
+    (r"/operate", OperateHandler),
     (r"/logout", LogoutHandler),
 ], **settings)
 
 
-def start_server(con):
-    global conversation
+def start_server(con, wk):
+    global conversation, wukong
     conversation = con
+    wukong = wk
     if config.get('/server/enable', False):
         host = config.get('/server/host', '0.0.0.0')
         port = config.get('/server/port', '5000')
@@ -154,6 +224,6 @@ def start_server(con):
             logger.critical('服务器启动失败: {}'.format(e))
         
 
-def run(conversation):
-    t = threading.Thread(target=lambda: start_server(conversation))
+def run(conversation, wukong):
+    t = threading.Thread(target=lambda: start_server(conversation, wukong))
     t.start()

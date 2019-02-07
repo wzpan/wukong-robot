@@ -6,7 +6,7 @@
 [![Licence](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/wzpan/wukong-robot/blob/master/LICENSE)
 [![QQ群](https://img.shields.io/badge/QQ%E7%BE%A4-580447290-red.svg)](http://hahack-1253537070.file.myqcloud.com/images/A10EA78A01ED46D5BD0FF83D459E2748.png)
 
-wukong-robot 是一个简单灵活的中文语音对话机器人。
+wukong-robot 是一个简单、灵活、优雅的中文语音对话机器人。
 
 ## Table of Contents
 
