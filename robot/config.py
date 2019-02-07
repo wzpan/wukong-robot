@@ -5,11 +5,9 @@ import os
 from . import constants
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO,
-                        format='%(asctime)s - %(message)s',
-                        datefmt='%Y-%m-%d %H:%M:%S')
 
 _config = {}
+has_init = False
 
 def reload():
     logger.info('配置文件发生变更，重新加载配置文件')
@@ -29,6 +27,7 @@ def init():
             doInit(constants.getDefaultConfigPath())
     else:
         doInit(constants.getConfigPath())
+    has_init = True
 
 def doInit(config_file=constants.getDefaultConfigPath()):
     # Create config dir if it does not exist yet
@@ -91,6 +90,8 @@ def has(item):
 
 
 def get(item='', default=None):
+    if not has_init:
+        init()
     if not item:
         return _config
     if item[0] == '/':

@@ -1,19 +1,17 @@
 # -*- coding: utf-8-*-
 import subprocess
 import time
-import logging
 import tempfile
 import threading
 import os
 import wave
 from . import utils
 import pyaudio
+from robot import logging
 from ctypes import *
 from contextlib import contextmanager
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 def py_error_handler(filename, line, function, err, fmt):
     pass

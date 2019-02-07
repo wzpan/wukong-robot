@@ -86,7 +86,6 @@ $(function() {
   </form>
 `);
                 }
-                console.log(sensitivity);
                 $('#sensitivitiy-value').text(sensitivity);
                 $('input#sensitivitiy').val(parseFloat(sensitivity));
                 $('input#sensitivity').on('input propertychange', function(e) {

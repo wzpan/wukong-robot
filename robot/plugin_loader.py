@@ -1,8 +1,8 @@
 # -*- coding: utf-8-*-
-import logging
 import pkgutil
 from . import constants
 from . import config
+from robot import logging
 
 _logger = logging.getLogger(__name__)
 _has_init = False

@@ -14,6 +14,11 @@ body {
     max-height: 400px;
     overflow:scroll;
 }
+
+.container.log {
+    padding: 32px;
+}
+
 .container.config {
     padding: 32px;
     height: 800px;

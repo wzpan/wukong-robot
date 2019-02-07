@@ -19,7 +19,7 @@ function appendHistory(type, query, uuid) {
               </div>
 `);
     }
-    $("#"+uuid).fadeIn(1000);
+    $("#"+uuid).fadeIn(2000);
     var scrollHeight = $('.history').prop("scrollHeight");
     $('.history').scrollTop(scrollHeight, 200);
 }

@@ -3,7 +3,7 @@ import imaplib
 import email
 import time
 import datetime
-import logging
+from robot import logging
 from dateutil import parser
 from robot import config
 

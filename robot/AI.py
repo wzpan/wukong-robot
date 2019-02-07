@@ -1,14 +1,12 @@
 # -*- coding: utf-8-*-
 import requests
 import json
-import logging
+from robot import logging
 from robot import config
 from uuid import getnode as get_mac
 from abc import ABCMeta, abstractmethod
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 class AbstractRobot(object):
 
@@ -21,7 +19,7 @@ class AbstractRobot(object):
         return instance
 
     def __init__(self, **kwargs):
-        logger = logging.getLogger(__name__)
+        pass
 
     @abstractmethod
     def chat(self, texts):

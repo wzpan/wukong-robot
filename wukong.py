@@ -1,6 +1,6 @@
 # -*- coding: utf-8-*-
 from snowboy import snowboydecoder
-from robot import config, utils, constants
+from robot import config, utils, constants, logging
 from robot.ConfigMonitor import ConfigMonitor
 from robot.Conversation import Conversation
 from server import server
@@ -11,16 +11,11 @@ import os
 import signal
 import yaml
 import requests
-import logging
 import hashlib
 import os
 import fire
 
-logging.basicConfig(level=logging.INFO,
-                        format='%(asctime)s - %(message)s',
-                        datefmt='%Y-%m-%d %H:%M:%S')
 logger = logging.getLogger(__name__)
-
 
 class Wukong(object):
     

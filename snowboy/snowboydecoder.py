@@ -3,19 +3,16 @@
 import collections
 import pyaudio
 from . import snowboydetect
-from robot import utils
+from robot import utils, logging
 import time
 import wave
 import os
-import logging
 from ctypes import *
 from contextlib import contextmanager
 from robot import constants, Conversation
 
 
-logging.basicConfig()
 logger = logging.getLogger("snowboy")
-logger.setLevel(logging.INFO)
 TOP_DIR = os.path.dirname(os.path.abspath(__file__))
 
 RESOURCE_FILE = os.path.join(TOP_DIR, "resources/common.res")

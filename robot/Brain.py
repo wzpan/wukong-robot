@@ -1,11 +1,9 @@
 # -*- coding: utf-8-*-
-import logging
+from robot import logging
 from . import plugin_loader
 from . import config
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 class Brain(object):
 

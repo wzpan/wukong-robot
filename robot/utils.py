@@ -7,7 +7,6 @@ import struct
 import shutil
 import re
 import time
-import logging
 import hashlib
 from . import constants, config
 from pydub import AudioSegment
@@ -15,6 +14,7 @@ from pytz import timezone
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from robot import logging
 
 logger = logging.getLogger(__name__)
 

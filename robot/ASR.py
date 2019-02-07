@@ -2,7 +2,7 @@
 from aip import AipSpeech
 from .sdk import TencentSpeech, AliSpeech
 from . import utils, config
-import logging
+from robot import logging
 import requests
 import base64
 import urllib
@@ -12,10 +12,7 @@ import time
 import json
 from abc import ABCMeta, abstractmethod
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-
 
 class AbstractASR(object):
     """
@@ -112,7 +109,7 @@ class TencentASR(AbstractASR):
             logger.info('{} 语音识别到了：{}'.format(self.SLUG, res['Response']['Result']))
             return res['Response']['Result']
         else:
-            logger.info('{} 语音识别出错了'.format(self.SLUG))
+            logger.critical('{} 语音识别出错了'.format(self.SLUG), exc_info=True)
             return ''
 
 
@@ -168,7 +165,7 @@ class XunfeiASR(AbstractASR):
             logger.info('{} 语音识别到了：{}'.format(self.SLUG, res['data']))
             return res['data']
         else:
-            logger.info('{} 语音识别出错了'.format(self.SLUG))
+            logger.critical('{} 语音识别出错了'.format(self.SLUG), exc_info=True)
             return ''
 
 
@@ -194,7 +191,7 @@ class AliASR(AbstractASR):
             logger.info('{} 语音识别到了：{}'.format(self.SLUG, result))
             return result
         else:
-            logger.info('{} 语音识别出错了'.format(self.SLUG))
+            logger.critical('{} 语音识别出错了'.format(self.SLUG), exc_info=True)
             return ''
 
 

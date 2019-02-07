@@ -1,6 +1,6 @@
 import json
 from datetime import timedelta
-from robot import config, utils
+from robot import config, utils, logging
 import base64
 import tornado.web
 import tornado.ioloop
@@ -9,7 +9,6 @@ import tornado.httpserver
 import tornado.options
 import hashlib
 import threading
-import logging
 import asyncio
 import subprocess
 import os
@@ -19,9 +18,6 @@ import yaml
 from tornado.websocket import WebSocketHandler
 
 
-logging.basicConfig(level=logging.INFO,
-                        format='%(asctime)s - %(message)s',
-                        datefmt='%Y-%m-%d %H:%M:%S')
 logger = logging.getLogger(__name__)
 
 conversation, wukong = None, None
@@ -70,7 +66,6 @@ class ChatHandler(BaseHandler):
                           ' ' + nfile + ' rate 16k'
                 p = subprocess.call([soxCall], shell=True, close_fds=True)
                 utils.check_and_delete(tmpfile)
-                print(tmpfile)
                 conversation.doConverse(nfile)
                 res = {'code': 0, 'message': 'ok'};
                 self.write(json.dumps(res))
@@ -110,6 +105,31 @@ class GetConfigHandler(BaseHandler):
             res = {'code': 0, 'message': 'ok', 'config': config.getText(), 'sensitivity': config.get('sensitivity', 0.5)}
             self.write(json.dumps(res));
         self.finish()
+
+
+class GetLogHandler(BaseHandler):
+
+    @tornado.web.asynchronous
+    @gen.coroutine
+    def get(self):
+        if not self.validate(self.get_argument('validate')):
+            res = {'code': 1, 'message': 'illegal visit'};
+            self.write(json.dumps(res))
+        else:
+            res = {'code': 0, 'message': 'ok', 'log': logging.readLog()}
+            self.write(json.dumps(res));
+        self.finish()
+
+
+class LogHandler(BaseHandler):
+
+    @tornado.web.asynchronous
+    @gen.coroutine
+    def get(self):
+        if not self.isValidated():
+            self.redirect("/login")
+        else:
+            self.render("log.html")
 
 
 class OperateHandler(BaseHandler):
@@ -166,7 +186,10 @@ class LoginHandler(BaseHandler):
     @tornado.web.asynchronous
     @gen.coroutine
     def get(self):
-        self.render('login.html', error=None)
+        if self.isValidated():
+            self.redirect('/')
+        else:
+            self.render('login.html', error=None)
 
     @tornado.web.asynchronous
     @gen.coroutine
@@ -205,6 +228,8 @@ application = tornado.web.Application([
     (r"/config", ConfigHandler),
     (r"/getconfig", GetConfigHandler),
     (r"/operate", OperateHandler),
+    (r"/getlog", GetLogHandler),
+    (r"/log", LogHandler),
     (r"/logout", LogoutHandler),
 ], **settings)
 

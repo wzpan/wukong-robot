@@ -12,10 +12,10 @@
       <li class="nav-item">
         <a class="nav-link" href="/">会话</a>
       </li>
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link" href="/config">配置</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item active">
         <a class="nav-link" href="/log">日志</a>
       </li>
       <li class="nav-item">
@@ -25,16 +25,23 @@
   </div>
 </nav>
 
-<div class="container config">
+<div class="container log">
   <div class="alert alert-info" role="alert">
-    <i class="fas fa-bell"></i> 唤醒词和敏感度的修改需重启 wukong-robot 后才生效。
+    <i class="fas fa-bell"></i> 日志不会自动刷新，要查看最新日志，请点击【刷新日志】按钮。
   </div>
-  <label for="sensitivity">离线唤醒敏感度：<span id="sensitivitiy-value"></span> </label>
-  <input type="range" class="custom-range" min="0" max="1" step="0.1" value="{{sensitivity}}" id="sensitivity">
-  <br/>
-  <label for="config-form">配置文件</label>
-  <div id="config-placeholder">
-  </div>
+  <label for="config-form">日志内容</label>
+  <form class="form log-form" action="#">
+    <div class="input-group" id="container">
+      <div class="input-group-prepend">
+        <span class="input-group-text">wukong.log</span>
+      </div>
+        <textarea rows="25" class="form-control" id="log-input" placer='1' aria-label="With textarea" readonly></textarea>
+    </div>
+    <hr>
+    <center>
+    <button type="button" class="btn btn-primary mb-2" id="REFRESH"><i class="fas fa-sync"></i> 刷新日志</button>
+    </center>
+  </form>
 </div>
 
 <br/>
@@ -67,6 +74,6 @@
 
 
 <script src="{{static_url('main.js')}}" crossorigin="anonymous"></script>
-<script src="{{static_url('config.js')}}" crossorigin="anonymous"></script>
+<script src="{{static_url('log.js')}}" crossorigin="anonymous"></script>
 <script src="./static/recorder.min.js"></script>
 {% end %}

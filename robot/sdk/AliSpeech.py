@@ -4,12 +4,10 @@ import http.client
 import urllib.parse
 import json
 from robot import utils
-import logging
+from robot import logging
 import wave
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 def processGETRequest(appKey, token, voice, text, format, sampleRate) :
     host = 'nls-gateway.cn-shanghai.aliyuncs.com'

@@ -2,7 +2,7 @@
 from aip import AipSpeech
 from .sdk import TencentSpeech, AliSpeech
 from . import utils, config
-import logging
+from robot import logging
 import tempfile
 import base64
 import time
@@ -10,9 +10,7 @@ import requests
 import hashlib
 from abc import ABCMeta, abstractmethod
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 class AbstractTTS(object):
     """
@@ -72,7 +70,7 @@ class BaiduTTS(AbstractTTS):
             logger.info('{} 语音合成成功，合成路径：{}'.format(self.SLUG, tmpfile))
             return tmpfile
         else:
-            logger.critical('{} 合成失败！'.format(self.SLUG))
+            logger.critical('{} 合成失败！'.format(self.SLUG), exc_info=True)
 
 
 class TencentTTS(AbstractTTS):
@@ -110,7 +108,7 @@ class TencentTTS(AbstractTTS):
             logger.info('{} 语音合成成功，合成路径：{}'.format(self.SLUG, tmpfile))
             return tmpfile
         else:
-            logger.critical('{} 合成失败！'.format(self.SLUG))
+            logger.critical('{} 合成失败！'.format(self.SLUG), exc_info=True)
 
 
 class XunfeiTTS(AbstractTTS):
@@ -166,7 +164,7 @@ class XunfeiTTS(AbstractTTS):
             logger.info('{} 语音合成成功，合成路径：{}'.format(self.SLUG, tmpfile))
             return tmpfile
         else :
-            logger.critical('{} 合成失败！{}'.format(self.SLUG, r.text))
+            logger.critical('{} 合成失败！{}'.format(self.SLUG, r.text), exc_info=True)
 
 
 class AliTTS(AbstractTTS):
@@ -192,7 +190,7 @@ class AliTTS(AbstractTTS):
             logger.info('{} 语音合成成功，合成路径：{}'.format(self.SLUG, tmpfile))
             return tmpfile
         else:
-            logger.critical('{} 合成失败！'.format(self.SLUG))
+            logger.critical('{} 合成失败！'.format(self.SLUG), exc_info=True)
 
 def get_engine_by_slug(slug=None):
     """

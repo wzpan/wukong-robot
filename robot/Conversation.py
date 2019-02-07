@@ -3,11 +3,10 @@ from robot import ASR, TTS, AI, Player, config, constants, utils
 from robot.Brain import Brain
 from snowboy import snowboydecoder
 import time 
-import logging
+from robot import logging
 import uuid
-logging.basicConfig()
+
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 class Conversation(object):
 
