@@ -17,7 +17,7 @@ wukong-robot 是一个简单、灵活、优雅的中文语音对话机器人。
 * [运行](#运行)
 * [配置](#配置)
 * [技能插件](#插件)
-* [API](#api)
+* [API接口](#api接口)
 * [贡献](#贡献)
 * [联系](#联系)
 * [感谢](#感谢)
@@ -88,6 +88,14 @@ python wukong.py
 
 要让 wukong-robot 暂时屏蔽离线监听，可以使用热词 “悟空别吵”；要让 wukong-robot 恢复离线监听，可以使用热词 “悟空醒醒”。
 
+此外，wukong-robot 默认在运行期间还会启动一个后台管理端，提供了远程对话、查看修改配置、查看 log 等能力。
+
+- 默认地址：http://localhost:5000
+- 默认账户名：wukong
+- 默认密码：wukong@2019
+
+建议正式使用时修改用户名和密码，以免泄漏隐私。
+
 ## 配置 ##
 
 参考[配置文件的注释](https://github.com/wzpan/wukong-robot/blob/master/static/default.yml)进行配置即可。注意不建议直接修改 default.yml 里的内容，否则会给后续通过 `git pull` 更新带来麻烦。你应该拷贝一份放到 `$HOME/.wukong/config.yml` 中，或者在运行的时候按照提示让 wukong-robot 为你完成这件事。
@@ -101,6 +109,10 @@ python wukong.py
 
 * [官方插件列表](https://github.com/wzpan/wukong-robot/wiki/plugins)
 * [用户贡献插件](https://github.com/wzpan/wukong-contrib)
+
+## API 接口 ##
+
+wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式调用，见 [后台API](https://github.com/wzpan/wukong-robot/wiki)。
 
 ## 贡献
 
