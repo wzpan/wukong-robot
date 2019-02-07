@@ -9,4 +9,4 @@ watchdog==0.9.0
 pytz==2018.9
 fire==0.1.3
 tornado==5.1.1
-
+markdown==3.0.1

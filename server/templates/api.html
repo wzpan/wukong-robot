@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% block body %}
+<link rel="stylesheet" href="{{static_url('starter-template.css')}}" crossorigin="anonymous">
+<link rel="stylesheet" href="{{static_url('api.css')}}" crossorigin="anonymous">
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <a class="navbar-brand" href="/">wukong-robot</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/">会话</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/config">配置</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/log">日志</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/api">API</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container api">
+  {% raw content %}
+</div>
+
+<br/>
+
+<center>
+  <span class="mt-5 mb-3 text-muted">wukong-robot &copy; 2019 </span>
+</center>
+
+
+<ul id="recorder" class="mfb-component--br mfb-zoomin" data-mfb-toggle="hover">
+      <li class="mfb-component__wrap">
+        <a href="#" id="record" class="mfb-component__button--main">
+          <i class="mfb-component__main-icon--resting fa fa-microphone"></i>
+          <i class="mfb-component__main-icon--active fa fa-times"></i>
+        </a>
+        <ul class="mfb-component__list">
+          <li>
+            <a href="#" id="stop-record" data-mfb-label="停止录制语音指令" class="mfb-component__button--child">
+              <i class="mfb-component__child-icon fas fa-stop"></i>
+            </a>
+          </li>
+          <li>
+            <a href="#" id="start-record" data-mfb-label="开始录制语音指令" class="mfb-component__button--child ">
+              <i class="mfb-component__child-icon fas fa-circle"></i>
+            </a>
+          </li>
+        </ul>
+      </li>
+</ul>
+
+
+<script src="{{static_url('main.js')}}" crossorigin="anonymous"></script>
+<script src="{{static_url('log.js')}}" crossorigin="anonymous"></script>
+<script src="./static/recorder.min.js"></script>
+{% end %}

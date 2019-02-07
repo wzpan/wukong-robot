@@ -1,6 +1,6 @@
 import json
 from datetime import timedelta
-from robot import config, utils, logging
+from robot import config, utils, logging, constants
 import base64
 import tornado.web
 import tornado.ioloop
@@ -14,6 +14,7 @@ import subprocess
 import os
 import time
 import yaml
+import markdown
 
 from tornado.websocket import WebSocketHandler
 
@@ -186,6 +187,25 @@ class ConfigHandler(BaseHandler):
         self.finish()
     
 
+class APIHandler(BaseHandler):
+    
+    @tornado.web.asynchronous
+    @gen.coroutine
+    def get(self):
+        if not self.isValidated():
+            self.redirect("/login")
+        else:
+            content = ''
+            with open(os.path.join(constants.TEMPLATE_PATH, "api.md"), 'r') as f:
+                content = f.read()
+            content = markdown.markdown(content, extensions=['codehilite',
+                                               'tables',
+                                               'fenced_code',
+                                               'meta',
+                                               'nl2br',
+                                               'toc'
+            ])
+            self.render('api.html', content=content)
         
 class LoginHandler(BaseHandler):
     
@@ -237,6 +257,7 @@ application = tornado.web.Application([
     (r"/getlog", GetLogHandler),
     (r"/log", LogHandler),
     (r"/logout", LogoutHandler),
+    (r"/api", APIHandler),
 ], **settings)
 
 
