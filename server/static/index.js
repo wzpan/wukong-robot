@@ -55,7 +55,6 @@ function autoRefresh( t ) {
 }
 
 function upgrade() {
-    ngProgress.start();
     $.ajax({
         url: '/upgrade',
         type: "POST",
@@ -64,6 +63,7 @@ function upgrade() {
             res = JSON.parse(res);
             if (res.code == 0) {
                 toastr.success('更新成功，3秒后将自动重启')
+                $('#updateModal').modal('hide')
             } else {
                 toastr.error(res.message, '更新失败');
             }            
@@ -110,7 +110,8 @@ $(function() {
 
     $('.UPDATE').on('click', function(e) {
         $('.UPDATE-SPIN')[0].hidden = false;
-        $(this)[0].disabled = true;        
+        $(this)[0].disabled = true;
+        upgrade();
     });
 });
 
