@@ -1,8 +1,14 @@
 body {
     padding-top: 3rem;
 }
+
 .starter-template {
     padding-top: 3rem;    
+}
+
+.update-alert {
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .container.history {

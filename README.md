@@ -1,9 +1,9 @@
 # wukong-robot
 
+[![wukong-project](https://img.shields.io/badge/project-wukong-informational.svg)](https://github.com/users/wzpan/projects/1)
 [![Python3](https://img.shields.io/pypi/pyversions/Django.svg?style=flat)](#)
 [![GitHub issues](https://img.shields.io/github/issues/wzpan/wukong-robot.svg)](https://github.com/wzpan/wukong-robot/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/wzpan/wukong-robot.svg)](https://github.com/wzpan/wukong-robot/pulls)
-[![wukong-project](https://img.shields.io/badge/project-wukong-informational.svg)](https://github.com/users/wzpan/projects/1)
 [![Licence](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/wzpan/wukong-robot/blob/master/LICENSE)
 [![QQ群](https://img.shields.io/badge/QQ%E7%BE%A4-580447290-red.svg)](http://hahack-1253537070.file.myqcloud.com/images/A10EA78A01ED46D5BD0FF83D459E2748.png)
 
@@ -40,7 +40,7 @@ wukong-robot 是一个简单、灵活、优雅的中文语音对话机器人。
 ## Demo
 
 * Demo视频 - coming soon
-* 后台管理端Demo - coming soon
+* 后台管理端Demo - https://bot.sxzz.moe/
 
 ## 环境要求 ##
 
@@ -132,11 +132,11 @@ wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式�
 
 * wukong-robot 的主要开发者是 [潘伟洲](http://hahack.com) 。
 * QQ 群：580447290（人数将满，为控制人数，需付费20元入群，群收入达到一万时将无偿捐赠给壹基金）
-* 论坛：[bbs.hahack.com](http://bbs.hahack.com)
 
 ## 感谢
 
 * 悟空的前身是 [dingdang-robot](https://github.com/dingdang-robot/dingdang-robot) 项目和 [jasper-client](https://github.com/jasperproject/jasper-client) 项目。感谢 [Shubhro Saha](http://www.shubhro.com/), [Charles Marsh](http://www.crmarsh.com/) and [Jan Holthuis](http://homepage.ruhr-uni-bochum.de/Jan.Holthuis/) 在 Jasper 项目上做出的优秀贡献；
+* 感谢三咲智子提供了后台管理端 Demo 的体验地址。
 
 ## FAQ
 

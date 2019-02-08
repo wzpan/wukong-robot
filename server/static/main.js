@@ -1,5 +1,24 @@
 var menu = document.getElementById('menu');
 
+function restart() {
+    $.ajax({
+        url: '/operate',
+        type: "POST",
+        data: {"type": "restart", "validate": getCookie("validation")},
+        success: function(res) {
+            var data = JSON.parse(res);
+            if (data.code == 0) {
+                toastr.success('三秒后将重启');
+            } else {
+                toastr.error(data.message, '重启失败');
+            }
+        },
+        error: function() {
+            toastr.error('服务器异常', '重启失败');
+        }
+    });
+}
+
 function renderMenu() {
 	menu.style.display = 'none';
 	setTimeout(function() {

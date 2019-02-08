@@ -54,6 +54,26 @@ function autoRefresh( t ) {
     setInterval("getHistory();", t);
 }
 
+function upgrade() {
+    ngProgress.start();
+    $.ajax({
+        url: '/upgrade',
+        type: "POST",
+        data: {'validate': getCookie('validation')},
+        success: function(res) {
+            res = JSON.parse(res);
+            if (res.code == 0) {
+                toastr.success('更新成功，3秒后将自动重启')
+            } else {
+                toastr.error(res.message, '更新失败');
+            }            
+        },
+        error: function() {
+            toastr.error('服务器异常', '更新失败');
+        }
+    });
+}
+
 //用于生成uuid
 function S4() {
     return (((1+Math.random())*0x10000)|0).toString(16).substring(1);

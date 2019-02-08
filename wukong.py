@@ -108,6 +108,10 @@ class Wukong(object):
         updater = Updater()
         updater.update()
 
+    def fetch(self):
+        updater = Updater()
+        updater.fetch()
+
     def restart(self):
         logger.critical('程序重启...')
         python = sys.executable

@@ -18,41 +18,6 @@ function saveConfig(msg) {
     });
 }
 
-function restart() {
-    bootbox.confirm({
-        message: "确定要重启 wukong-robot 吗？",
-        buttons: {
-            confirm: {
-                label: '确定',
-                className: 'btn-danger'
-            },
-            cancel: {
-                label: '只是手抖',
-                className: 'btn-success'
-            }
-        },
-        callback: function (result) {
-            if (!result) return;
-            $.ajax({
-                url: '/operate',
-                type: "POST",
-                data: {"type": "restart", "validate": getCookie("validation")},
-                success: function(res) {
-                    var data = JSON.parse(res);
-                    if (data.code == 0) {
-                        toastr.success('三秒后将重启');
-                    } else {
-                        toastr.error(data.message, '重启失败');
-                    }
-                },
-                error: function() {
-                    toastr.error('服务器异常', '重启失败');
-                }
-            });
-        }
-    });    
-}
-
 $(function() {
     $.ajax({
         url: '/getconfig',
@@ -81,7 +46,7 @@ $(function() {
     <hr>
     <center>
     <button type="button" class="btn btn-primary mb-2" id="SAVE"><i class="fas fa-save"></i> 保存</button>&nbsp;
-    <button type="button" class="btn btn-danger mb-2" id="RESTART"><i class="fas fa-power-off"></i> 重启</button>
+    <button type="button" class="btn btn-danger mb-2" data-toggle="modal" data-target="#restartModal"><i class="fas fa-power-off"></i> 重启</button>
     </center>
   </form>
 `);

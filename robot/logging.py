@@ -1,10 +1,14 @@
 import logging
 import sys
 import os
-from . import config, constants
+from robot import config, constants
 from logging.handlers import RotatingFileHandler, HTTPHandler
 
 PAGE = 4096
+
+DEBUG = logging.DEBUG
+INFO = logging.INFO
+ERROR = logging.ERROR
 
 def tail(filepath, n=10):
     """
@@ -61,3 +65,4 @@ def readLog(lines=200):
     if os.path.exists(log_path):
         return tail(log_path, lines)
     return ''
+    
