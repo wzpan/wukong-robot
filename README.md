@@ -41,7 +41,7 @@ wukong-robot 是一个简单、灵活、优雅的中文语音对话机器人。
 ## Demo
 
 * Demo视频 - coming soon
-* 后台管理端Demo - https://bot.sxzz.moe/
+* 后台管理端Demo - https://bot.sxzz.moe/  （体验用户名：wukong；体验密码：wukong@2019）
 
 ## 环境要求 ##
 
