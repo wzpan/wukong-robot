@@ -35,6 +35,8 @@ class Updater(object):
     def update(self):
         update_info = self.fetch()
         success = True
+        if update_info == {}:
+            logger.info('恭喜你，wukong-robot 已经是最新！')
         if 'main' in update_info:
             if self._pull(constants.APP_PATH, update_info['main']['version']) and self._pip(constants.APP_PATH):
                 logger.info('wukong-robot 更新成功！')
