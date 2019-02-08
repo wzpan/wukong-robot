@@ -1,6 +1,6 @@
 import json
 from datetime import timedelta
-from robot import config, utils, logging, constants
+from robot import config, utils, logging, constants, Updater
 import base64
 import tornado.web
 import tornado.ioloop
@@ -35,11 +35,12 @@ class MainHandler(BaseHandler):
     @tornado.web.asynchronous
     @gen.coroutine
     def get(self):
-        global conversation
+        global conversation, wukong
         if not self.isValidated():
             self.redirect("/login")
             return
         if conversation:
+            Updater.fetch()
             self.render('index.html', history=conversation.getHistory())
         else:
             self.render('index.html', history=[])

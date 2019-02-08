@@ -1,8 +1,11 @@
 import os
+import requests
 from subprocess import call
 from robot import constants, logging
 
 logger = logging.getLogger(__name__)
+
+URL = 'https://service-e32kknxi-1253537070.ap-hongkong.apigateway.myqcloud.com/release/wukong'
 
 class Updater(object):
 
@@ -29,4 +32,10 @@ class Updater(object):
             logger.info('wukong-contrib 更新成功！')
         else:
             logger.info('wukong-contrib 更新失败！')
+
+def fetch():
+    global URL
+    updater = Updater()
+    r = requests.get(URL)
+    
     

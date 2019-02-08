@@ -43,7 +43,6 @@ class Wukong(object):
         self._observer.schedule(event_handler, constants.CONFIG_PATH, False)
         self._observer.schedule(event_handler, constants.DATA_PATH, False)
         self._observer.start()
-        self._updater = Updater()        
 
     def _signal_handler(self, signal, frame):
         self._interrupted = True

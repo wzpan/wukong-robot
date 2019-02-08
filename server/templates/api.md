@@ -26,7 +26,7 @@ $ curl localhost:5000/gethistory?validate=f4bde2a342c7c75aa276f78b26cfbd8a
 
 | 参数名 |  是否必须 | 说明  |
 | ---   | ------- | ----- |
-| validate | 是 | 参见 [鉴权](#鉴权) |
+| validate | 是 | 参见 [鉴权](#_1) |
 | type  | 是 |  类型。目前只有 `restart` 一种 |
 
 - 示例：
@@ -52,7 +52,7 @@ $ curl -X POST localhost:5000/operate -d "type=restart&validate=f4bde2a342c7c75a
 
 | 参数名 |  是否必须 | 说明  |
 | ---   | ------- | ----- |
-| validate | 是 | 参见 [鉴权](#鉴权) |
+| validate | 是 | 参见 [鉴权](#_1) |
 | lines | 可选 | 最大读取的日志行数。默认值为 200  |
 
 - 示例：
@@ -82,7 +82,7 @@ $ curl localhost:5000/getlog?validate=f4bde2a342c7c75aa276f78b26cfbd8a&lines=10
 
 | 参数名 |  是否必须 | 说明  |
 | ---   | ------- | ----- |
-| validate | 是 | 参见 [鉴权](#鉴权) |
+| validate | 是 | 参见 [鉴权](#_1) |
 | type  | 是 |  query 类型。 "text": 文本型 query ； "voice"：语音型 query |
 | query | 仅当 type 为 "text" 时需要 |  发起对话的内容的 urlencode 后的值。例如 ”现在几点？“ 的 urlencode 结果 | 
 | uuid  | 仅当 type 为 "text" 时需要 |  为这个文本 query 赋予的一个 uuid。例如可以使用随机字符+时间戳。|
@@ -111,7 +111,7 @@ $ curl -X POST localhost:5000/chat -d "type=text&query=%E7%8E%B0%E5%9C%A8%E5%87%
 
 | 参数名 |  是否必须 | 说明  |
 | ---   | ------- | ----- |
-| validate | 是 | 参见 [鉴权](#鉴权) |
+| validate | 是 | 参见 [鉴权](#_1) |
 
 - 示例：
 
@@ -139,7 +139,7 @@ $ curl localhost:5000/gethistory?validate=f4bde2a342c7c75aa276f78b26cfbd8a
 
 | 参数名 |  是否必须 | 说明  |
 | ---   | ------- | ----- |
-| validate | 是 | 参见 [鉴权](#鉴权) |
+| validate | 是 | 参见 [鉴权](#_1) |
 | key | 可选 | 某个配置的键值。例如：`robot_name_cn` 。如果要多级key的对应value，则使用 `/一级key/二级key/...` 的形式，例如 `/server/host` 可以取 `server` 的 `host` 配置。 |
 
 - 示例：
@@ -167,7 +167,7 @@ $ curl localhost:5000/getconfig?validate=f4bde2a342c7c75aa276f78b26cfbd8a\&key=s
 
 | 参数名 |  是否必须 | 说明  |
 | ---   | ------- | ----- |
-| validate | 是 | 参见 [鉴权](#鉴权) |
+| validate | 是 | 参见 [鉴权](#_1) |
 | config | 是 | 配置内容，必须为 yaml 可解析的文本经过 urlencode 后的值 |
 
 - 示例：
