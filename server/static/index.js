@@ -72,8 +72,7 @@ function upgrade() {
             }            
         },
         error: function() {
-            $('.UPDATE-SPIN')[0].hidden = true;
-            $('.UPDATE')[0].disabled = false;
+            
             toastr.error('服务器异常', '更新失败');
             $('#updateModal').modal('hide')
         }
@@ -92,10 +91,11 @@ $(function() {
     autoRefresh(5000);  // 每5秒轮询一次历史消息
 
     $('.CHAT').on('click', function(e) {
-        e.preventDefault();
+        e.preventDefault();        
         var uuid = 'chat' + guid();
         var query = $("input#query")[0].value;
         appendHistory(0, query, uuid);
+        $('input#query').val('');
         $.ajax({
             url: '/chat',
             type: "POST",
