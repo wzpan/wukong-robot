@@ -20,7 +20,7 @@ class Updater(object):
 
     def _pull(self, cwd, tag):
         if os.path.exists(cwd):
-            return call(['git pull origin {} && git checkout {}'.format(tag, tag)], cwd=cwd, shell=True) == 0
+            return call(['git fetch origin {}:{} && git checkout {}'.format(tag, tag, tag)], cwd=cwd, shell=False) == 0
         else:
             logger.error("目录 {} 不存在".format(cwd))
             return False
