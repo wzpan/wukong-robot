@@ -1,6 +1,7 @@
 # -*- coding: utf-8-*-
 from snowboy import snowboydecoder
-from robot import config, utils, constants, logging, statistic, Updater
+from robot import config, utils, constants, logging, statistic
+from robot.Updater import Updater
 from robot.ConfigMonitor import ConfigMonitor
 from robot.Conversation import Conversation
 from server import server
@@ -42,7 +43,7 @@ class Wukong(object):
         self._observer.schedule(event_handler, constants.CONFIG_PATH, False)
         self._observer.schedule(event_handler, constants.DATA_PATH, False)
         self._observer.start()
-        self._updater = Updater()
+        self._updater = Updater()        
 
     def _signal_handler(self, signal, frame):
         self._interrupted = True
@@ -105,7 +106,8 @@ class Wukong(object):
         return hashlib.md5(password.encode('utf-8')).hexdigest()
 
     def update(self):
-        self._updater.update()
+        updater = Updater()
+        updater.update()
 
     def restart(self):
         logger.critical('程序重启...')
