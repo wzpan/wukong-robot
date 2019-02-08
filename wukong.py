@@ -1,6 +1,6 @@
 # -*- coding: utf-8-*-
 from snowboy import snowboydecoder
-from robot import config, utils, constants, logging, statistic
+from robot import config, utils, constants, logging, statistic, Updater
 from robot.ConfigMonitor import ConfigMonitor
 from robot.Conversation import Conversation
 from server import server
@@ -42,6 +42,7 @@ class Wukong(object):
         self._observer.schedule(event_handler, constants.CONFIG_PATH, False)
         self._observer.schedule(event_handler, constants.DATA_PATH, False)
         self._observer.start()
+        self._updater = Updater()
 
     def _signal_handler(self, signal, frame):
         self._interrupted = True
@@ -103,29 +104,8 @@ class Wukong(object):
     def md5(self, password):
         return hashlib.md5(password.encode('utf-8')).hexdigest()
 
-    def _pull(self, cwd):
-        if os.path.exists(cwd):
-            return call(['git', 'pull'], cwd=cwd, shell=False) == 0
-        else:
-            logger.error("目录 {} 不存在".format(cwd))
-            return False
-
-    def _pip(self, cwd):
-        if os.path.exists(cwd):
-            return call(['pip', 'install', '-r', 'requirements.txt'], cwd=cwd, shell=False) == 0
-        else:
-            logger.error("目录 {} 不存在".format(cwd))
-            return False
-
     def update(self):
-        if self._pull(constants.APP_PATH) and self._pip(constants.APP_PATH):
-            logger.info('wukong-robot 更新成功！')
-        else:
-            logger.info('wukong-robot 更新失败！')
-        if self._pull(constants.CONTRIB_PATH) and self._pip(constants.CONTRIB_PATH):
-            logger.info('wukong-contrib 更新成功！')
-        else:
-            logger.info('wukong-contrib 更新失败！')
+        self._updater.update()
 
     def restart(self):
         logger.critical('程序重启...')
