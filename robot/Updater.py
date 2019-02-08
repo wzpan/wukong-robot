@@ -18,9 +18,9 @@ class Updater(object):
         self.last_check = datetime.now() - timedelta(days=1.5)
         self.update_info = {}
 
-    def _pull(self, cwd):
+    def _pull(self, cwd, tag):
         if os.path.exists(cwd):
-            return call(['git', 'pull'], cwd=cwd, shell=False) == 0
+            return call(['git pull origin {} && git checkout {}'.format(tag, tag)], cwd=cwd, shell=False) == 0
         else:
             logger.error("目录 {} 不存在".format(cwd))
             return False
@@ -33,14 +33,21 @@ class Updater(object):
             return False
 
     def update(self):
-        if self._pull(constants.APP_PATH) and self._pip(constants.APP_PATH):
-            logger.info('wukong-robot 更新成功！')
-        else:
-            logger.info('wukong-robot 更新失败！')
-        if self._pull(constants.CONTRIB_PATH) and self._pip(constants.CONTRIB_PATH):
-            logger.info('wukong-contrib 更新成功！')
-        else:
-            logger.info('wukong-contrib 更新失败！')
+        update_info = self.fetch()
+        success = True
+        if 'main' in update_info:
+            if self._pull(constants.APP_PATH, update_info['main']['version']) and self._pip(constants.APP_PATH):
+                logger.info('wukong-robot 更新成功！')
+            else:
+                logger.info('wukong-robot 更新失败！')
+                success = False
+        if 'contrib' in update_info:
+            if self._pull(constants.CONTRIB_PATH, update_info['contrib']['version']) and self._pip(constants.CONTRIB_PATH):
+                logger.info('wukong-contrib 更新成功！')
+            else:
+                logger.info('wukong-contrib 更新失败！')
+                success = False
+        return success
 
     def _get_version(self, path, current):
         if os.path.exists(os.path.join(path, 'VERSION')):

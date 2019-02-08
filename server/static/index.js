@@ -107,5 +107,10 @@ $(function() {
             }
         });
     });
+
+    $('.UPDATE').on('click', function(e) {
+        $('.UPDATE-SPIN')[0].hidden = false;
+        $(this)[0].disabled = true;        
+    });
 });
 
