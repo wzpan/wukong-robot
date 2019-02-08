@@ -106,7 +106,7 @@ class Wukong(object):
 
     def update(self):
         updater = Updater()
-        updater.update()
+        return updater.update()
 
     def fetch(self):
         updater = Updater()
