@@ -66,10 +66,12 @@ function upgrade() {
                 $('#updateModal').modal('hide')
             } else {
                 toastr.error(res.message, '更新失败');
+                $('#updateModal').modal('hide')
             }            
         },
         error: function() {
             toastr.error('服务器异常', '更新失败');
+            $('#updateModal').modal('hide')
         }
     });
 }
