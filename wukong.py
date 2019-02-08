@@ -43,7 +43,6 @@ class Wukong(object):
         self._observer.schedule(event_handler, constants.CONFIG_PATH, False)
         self._observer.schedule(event_handler, constants.DATA_PATH, False)
         self._observer.start()
-        self._updater = Updater()        
 
     def _signal_handler(self, signal, frame):
         self._interrupted = True
@@ -108,6 +107,10 @@ class Wukong(object):
     def update(self):
         updater = Updater()
         updater.update()
+
+    def fetch(self):
+        updater = Updater()
+        updater.fetch()
 
     def restart(self):
         logger.critical('程序重启...')

@@ -1,6 +1,6 @@
 import json
 from datetime import timedelta
-from robot import config, utils, logging, constants
+from robot import config, utils, logging, constants, Updater
 import base64
 import tornado.web
 import tornado.ioloop
@@ -18,7 +18,6 @@ import markdown
 
 from tornado.websocket import WebSocketHandler
 
-
 logger = logging.getLogger(__name__)
 
 conversation, wukong = None, None
@@ -35,14 +34,16 @@ class MainHandler(BaseHandler):
     @tornado.web.asynchronous
     @gen.coroutine
     def get(self):
-        global conversation
+        global conversation, wukong
         if not self.isValidated():
             self.redirect("/login")
             return
         if conversation:
-            self.render('index.html', history=conversation.getHistory())
+            info = Updater.fetch()
+            print(info)
+            self.render('index.html', history=conversation.getHistory(), update_info=info)
         else:
-            self.render('index.html', history=[])
+            self.render('index.html', history=[])    
 
 class ChatHandler(BaseHandler):
 
@@ -56,7 +57,7 @@ class ChatHandler(BaseHandler):
                 uuid = self.get_argument('uuid')
                 conversation.doResponse(query, uuid)
                 res = {'code': 0, 'message': 'ok'}
-                self.write(json.dumps(res));
+                self.write(json.dumps(res))
             elif self.get_argument('type') == 'voice':
                 voice_data = self.get_argument('voice')
                 tmpfile = utils.write_temp_file(base64.b64decode(voice_data), '.wav')
@@ -68,13 +69,13 @@ class ChatHandler(BaseHandler):
                 p = subprocess.call([soxCall], shell=True, close_fds=True)
                 utils.check_and_delete(tmpfile)
                 conversation.doConverse(nfile)
-                res = {'code': 0, 'message': 'ok'};
+                res = {'code': 0, 'message': 'ok'}
                 self.write(json.dumps(res))
             else:
-                res = {'code': 1, 'message': 'illegal type'};
+                res = {'code': 1, 'message': 'illegal type'}
                 self.write(json.dumps(res))
         else:
-            res = {'code': 1, 'message': 'illegal visit'};
+            res = {'code': 1, 'message': 'illegal visit'}
             self.write(json.dumps(res))
         self.finish()
         
@@ -86,11 +87,11 @@ class GetHistoryHandler(BaseHandler):
     def get(self):
         global conversation
         if not self.validate(self.get_argument('validate')):
-            res = {'code': 1, 'message': 'illegal visit'};
+            res = {'code': 1, 'message': 'illegal visit'}
             self.write(json.dumps(res))
         else:
             res = {'code': 0, 'message': 'ok', 'history': json.dumps(conversation.getHistory())}
-            self.write(json.dumps(res));
+            self.write(json.dumps(res))
         self.finish()
 
 
@@ -100,7 +101,7 @@ class GetConfigHandler(BaseHandler):
     @gen.coroutine
     def get(self):
         if not self.validate(self.get_argument('validate')):
-            res = {'code': 1, 'message': 'illegal visit'};
+            res = {'code': 1, 'message': 'illegal visit'}
             self.write(json.dumps(res))
         else:
             key = self.get_argument("key", default="")
@@ -109,7 +110,7 @@ class GetConfigHandler(BaseHandler):
                 res = {'code': 0, 'message': 'ok', 'config': config.getText(), 'sensitivity': config.get('sensitivity', 0.5)}
             else:
                 res = {'code': 0, 'message': 'ok', 'value': config.get(key)}
-            self.write(json.dumps(res));
+            self.write(json.dumps(res))
         self.finish()
 
 
@@ -119,12 +120,12 @@ class GetLogHandler(BaseHandler):
     @gen.coroutine
     def get(self):
         if not self.validate(self.get_argument('validate')):
-            res = {'code': 1, 'message': 'illegal visit'};
+            res = {'code': 1, 'message': 'illegal visit'}
             self.write(json.dumps(res))
         else:
             lines = self.get_argument('lines', default=200)
             res = {'code': 0, 'message': 'ok', 'log': logging.readLog(lines)}
-            self.write(json.dumps(res));
+            self.write(json.dumps(res))
         self.finish()
 
 
@@ -176,13 +177,13 @@ class ConfigHandler(BaseHandler):
             try:
                 yaml.load(configStr)
                 config.dump(configStr)
-                res = {'code': 0, 'message': 'ok'};
+                res = {'code': 0, 'message': 'ok'}
                 self.write(json.dumps(res))
             except:
-                res = {'code': 1, 'message': 'YAML解析失败，请检查内容'};
+                res = {'code': 1, 'message': 'YAML解析失败，请检查内容'}
                 self.write(json.dumps(res))
         else:
-            res = {'code': 1, 'message': 'illegal visit'};
+            res = {'code': 1, 'message': 'illegal visit'}
             self.write(json.dumps(res))
         self.finish()
     
@@ -206,6 +207,26 @@ class APIHandler(BaseHandler):
                                                'toc'
             ])
             self.render('api.html', content=content)
+
+
+class UpdateHandler(BaseHandler):
+    
+    @tornado.web.asynchronous
+    @gen.coroutine
+    def post(self):
+        global wukong
+        if self.validate(self.get_argument('validate')):            
+            if wukong.update():
+                res = {'code': 0, 'message': 'ok'}
+                self.write(json.dumps(res))
+            else:
+                res = {'code': 1, 'message': '更新失败，请手动更新'}
+                self.write(json.dumps(res))
+        else:
+            res = {'code': 1, 'message': 'illegal visit'}
+            self.write(json.dumps(res))
+        self.finish()
+    
         
 class LoginHandler(BaseHandler):
     
@@ -258,6 +279,7 @@ application = tornado.web.Application([
     (r"/log", LogHandler),
     (r"/logout", LogoutHandler),
     (r"/api", APIHandler),
+    (r"/upgrade", UpdateHandler)
 ], **settings)
 
 

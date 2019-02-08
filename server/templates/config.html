@@ -37,13 +37,6 @@
   </div>
 </div>
 
-<br/>
-
-<center>
-  <span class="mt-5 mb-3 text-muted">wukong-robot &copy; 2019 </span>
-</center>
-
-
 <ul id="recorder" class="mfb-component--br mfb-zoomin" data-mfb-toggle="hover">
       <li class="mfb-component__wrap">
         <a href="#" id="record" class="mfb-component__button--main">
@@ -65,8 +58,29 @@
       </li>
 </ul>
 
+<div class="modal fade" id="restartModal" tabindex="-1" role="dialog" aria-labelledby="restartModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="restartModalLabel">你确定吗？</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        确定要重启 wukong-robot 吗？
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">只是手抖</button>
+        <button type="button" class="btn btn-primary" id="RESTART" data-dismiss="modal">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <script src="{{static_url('main.js')}}" crossorigin="anonymous"></script>
 <script src="{{static_url('config.js')}}" crossorigin="anonymous"></script>
 <script src="./static/recorder.min.js"></script>
+<script src="./static/ngprogress.min.js"></script>
 {% end %}

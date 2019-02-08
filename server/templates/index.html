@@ -24,13 +24,55 @@
     </ul>
   </div>
 </nav>
+
 <div class="jumbotron">
   <h1 class="display-4"><i class="fas fa-robot"></i> wukong-robot</h1>
   <p class="lead">wukong-robot 是一个简单灵活的中文语音对话机器人。</p>
 </div>
 
+<div class="container">
+{% if update_info and update_info != {} %}
+<div class="alert update-alert alert-success alert-dismissible fade show" role="alert">
+  有新的更新可用，<a href="#" id="check-update" data-toggle="modal" data-target="#updateModal">快看看吧</a> 。
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateModalLabel">更新信息</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul>
+        {% if 'main' in update_info %}
+        <li><strong>主仓库更新</strong>：{{ update_info['main']['description'] }}</li>
+        {% end %}
+        {% if 'contrib' in update_info %}
+        <li><strong>插件更新</strong>：{{ update_info['contrib']['description'] }}</li>
+        {% end %}
+        </ul>
+        一次更新只需要花费几分钟的时间，完成后 wukong-robot 将自动重启。
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">先不更新</button>
+        <button type="button" class="btn btn-primary UPDATE">
+          <span class="spinner-border spinner-border-sm UPDATE-SPIN" role="status" aria-hidden="true" hidden></span>
+          更新
+        </button>        
+      </div>
+    </div>
+  </div>
+</div>
+{% end %}
+</div>
 
-<div class="container history" id="container">
+<div class="container history" id="container">  
   {% if not history or len(history) == 0 %}
   <center>
     <p> 无聊天记录，请先和 wukong-robot 聊会天吧~ </p>
@@ -69,12 +111,6 @@
 </form>
 </center>
 </div>
-
-<br/>
-<center>
-  <span class="mt-5 mb-3 text-muted">wukong-robot &copy; 2019 </span>
-</center>
-
 
 <ul id="recorder" class="mfb-component--br mfb-zoomin" data-mfb-toggle="hover">
       <li class="mfb-component__wrap">
