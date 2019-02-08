@@ -219,6 +219,7 @@ class UpdateHandler(BaseHandler):
             if wukong.update():
                 res = {'code': 0, 'message': 'ok'}
                 self.write(json.dumps(res))
+                self.finish()
                 time.sleep(3)
                 wukong.restart()
             else:
