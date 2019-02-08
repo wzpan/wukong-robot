@@ -30,6 +30,8 @@ function getHistory () {
         type: "GET",
         data: {'validate': getCookie('validation')},
         success: function(res) {
+            $('.UPDATE-SPIN')[0].hidden = true;
+            $('.UPDATE')[0].disabled = false;
             res = JSON.parse(res);
             if (res.code == 0) {
                 historyList = JSON.parse(res.history);
@@ -45,6 +47,8 @@ function getHistory () {
             }            
         },
         error: function() {
+            $('.UPDATE-SPIN')[0].hidden = true;
+            $('.UPDATE')[0].disabled = false;
             console.error('get history failed!');
         }
     });
