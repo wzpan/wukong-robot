@@ -1,6 +1,6 @@
 import json
 from datetime import timedelta
-from robot import config, utils, logging, constants, Updater
+from robot import config, utils, logging, constants, updater
 import base64
 import tornado.web
 import tornado.ioloop
@@ -39,7 +39,7 @@ class MainHandler(BaseHandler):
             self.redirect("/login")
             return
         if conversation:
-            info = Updater.fetch()
+            info = updater.fetch()
             print(info)
             self.render('index.html', history=conversation.getHistory(), update_info=info)
         else:

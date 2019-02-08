@@ -1,7 +1,7 @@
 # -*- coding: utf-8-*-
 from snowboy import snowboydecoder
 from robot import config, utils, constants, logging, statistic
-from robot.Updater import Updater
+from robot.updater import Updater
 from robot.ConfigMonitor import ConfigMonitor
 from robot.Conversation import Conversation
 from server import server
