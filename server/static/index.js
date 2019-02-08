@@ -29,9 +29,7 @@ function getHistory () {
         url: '/gethistory',
         type: "GET",
         data: {'validate': getCookie('validation')},
-        success: function(res) {
-            $('.UPDATE-SPIN')[0].hidden = true;
-            $('.UPDATE')[0].disabled = false;
+        success: function(res) {            
             res = JSON.parse(res);
             if (res.code == 0) {
                 historyList = JSON.parse(res.history);
@@ -46,9 +44,7 @@ function getHistory () {
                 console.error('get history failed!');
             }            
         },
-        error: function() {
-            $('.UPDATE-SPIN')[0].hidden = true;
-            $('.UPDATE')[0].disabled = false;
+        error: function() {            
             console.error('get history failed!');
         }
     });
@@ -64,6 +60,8 @@ function upgrade() {
         type: "POST",
         data: {'validate': getCookie('validation')},
         success: function(res) {
+            $('.UPDATE-SPIN')[0].hidden = true;
+            $('.UPDATE')[0].disabled = false;
             res = JSON.parse(res);
             if (res.code == 0) {
                 toastr.success('更新成功，3秒后将自动重启')
@@ -74,6 +72,8 @@ function upgrade() {
             }            
         },
         error: function() {
+            $('.UPDATE-SPIN')[0].hidden = true;
+            $('.UPDATE')[0].disabled = false;
             toastr.error('服务器异常', '更新失败');
             $('#updateModal').modal('hide')
         }
