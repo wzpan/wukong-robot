@@ -66,7 +66,7 @@ class Updater(object):
             return self.update_info
         try:
             self.last_check = now
-            r = requests.get(URL)
+            r = requests.get(URL, timeout=3)
             info = json.loads(r.text)
             main_version = info['main']['version']
             contrib_version = info['contrib']['version']

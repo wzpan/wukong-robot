@@ -40,7 +40,6 @@ class MainHandler(BaseHandler):
             return
         if conversation:
             info = updater.fetch()
-            print(info)
             self.render('index.html', history=conversation.getHistory(), update_info=info)
         else:
             self.render('index.html', history=[])    
