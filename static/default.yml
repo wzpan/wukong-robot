@@ -139,7 +139,7 @@ camera:
 #######################
 
 # 在这里放第三方插件的配置
-# https://github.com/wzpan/dingdang-contrib
+# https://github.com/wzpan/wukong-contrib
 
 # 网易音乐
 netease_music:

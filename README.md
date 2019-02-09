@@ -114,7 +114,7 @@ python wukong.py
 
 ## API 接口 ##
 
-wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式调用，见 [后台API](https://github.com/wzpan/wukong-robot/wiki)。
+wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式调用，见 [后台API](https://github.com/wzpan/wukong-robot/wiki/api)。
 
 ## 贡献
 
