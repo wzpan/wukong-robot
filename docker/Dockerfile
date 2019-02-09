@@ -22,8 +22,8 @@ RUN git clone https://github.com/wzpan/wukong-contrib.git contrib
 WORKDIR /root/wukong-robot/snowboy/
 RUN wget http://hahack-1253537070.file.myqcloud.com/misc/snowboy-ubuntu16.04/_snowboydetect.so
 WORKDIR /root/wukong-robot
-RUN apt-get install python-all-dev python3-all-dev
 RUN git pull
+RUN pip install --upgrade pyaudio
 RUN pip3 install -r requirements.txt
 WORKDIR /root/.wukong/contrib
 RUN git pull
