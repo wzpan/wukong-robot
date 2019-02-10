@@ -6,7 +6,7 @@ RUN sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list
 # install all neccessary packages
 RUN apt-get -y update
 RUN apt-get install -y --fix-missing build-essential \
-    wget git python-pyaudio python3-pyaudio sox && \
+    wget git python-pyaudio python3-pyaudio sox ffmpeg && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 WORKDIR /root/

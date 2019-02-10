@@ -92,14 +92,17 @@ class Wukong(object):
         ]
         self.detector = snowboydecoder.HotwordDetector(models, sensitivity=config.get('sensitivity', 0.5))
         # main loop
-        self.detector.start(detected_callback=[self._detected_callback,
-                                          self._do_not_bother_on_callback,
-                                          self._do_not_bother_off_callback],
-                       audio_recorder_callback=self._conversation.converse,
-                       interrupt_check=self._interrupt_callback,
-                       silent_count_threshold=5,
-                       sleep_time=0.03)
-        self.detector.terminate()            
+        try:
+            self.detector.start(detected_callback=[self._detected_callback,
+                                                   self._do_not_bother_on_callback,
+                                                   self._do_not_bother_off_callback],
+                                audio_recorder_callback=self._conversation.converse,
+                                interrupt_check=self._interrupt_callback,
+                                silent_count_threshold=5,
+                                sleep_time=0.03)
+            self.detector.terminate()
+        except Exception as e:
+            logger.critical('离线唤醒机制初始化失败：{}'.format(e))
 
     def md5(self, password):
         return hashlib.md5(password.encode('utf-8')).hexdigest()
