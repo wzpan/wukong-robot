@@ -51,10 +51,10 @@
       <div class="modal-body">
         <ul>
         {% if 'main' in update_info %}
-        <li><strong>主仓库更新</strong>：{{ update_info['main']['description'] }}</li>
+        <li><strong>主仓库更新</strong>（{{ update_info['main']['version'] }}）：{{ update_info['main']['description'] }}</li>
         {% end %}
         {% if 'contrib' in update_info %}
-        <li><strong>插件更新</strong>：{{ update_info['contrib']['description'] }}</li>
+        <li><strong>插件更新</strong>（{{ update_info['contrib']['version'] }}）：{{ update_info['contrib']['description'] }}</li>
         {% end %}
         </ul>
         一次更新只需要花费几分钟的时间，完成后 wukong-robot 将自动重启。
@@ -64,7 +64,7 @@
         <button type="button" class="btn btn-primary UPDATE">
           <span class="spinner-border spinner-border-sm UPDATE-SPIN" role="status" aria-hidden="true" hidden></span>
           更新
-        </button>        
+        </button>
       </div>
     </div>
   </div>
