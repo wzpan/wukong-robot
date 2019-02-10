@@ -27,7 +27,7 @@ class Updater(object):
 
     def _pip(self, cwd):
         if os.path.exists(cwd):
-            return call(['pip', 'install', '-r', 'requirements.txt'], cwd=cwd, shell=False) == 0
+            return call(['pip3', 'install', '-r', 'requirements.txt'], cwd=cwd, shell=False) == 0
         else:
             logger.error("目录 {} 不存在".format(cwd))
             return False
