@@ -40,12 +40,14 @@ class Updater(object):
         if 'main' in update_info:
             if self._pull(constants.APP_PATH, update_info['main']['version']) and self._pip(constants.APP_PATH):
                 logger.info('wukong-robot 更新成功！')
+                self.update_info.pop('main')
             else:
                 logger.info('wukong-robot 更新失败！')
                 success = False
         if 'contrib' in update_info:
             if self._pull(constants.CONTRIB_PATH, update_info['contrib']['version']) and self._pip(constants.CONTRIB_PATH):
                 logger.info('wukong-contrib 更新成功！')
+                self.update_info.pop('contrib')
             else:
                 logger.info('wukong-contrib 更新失败！')
                 success = False
