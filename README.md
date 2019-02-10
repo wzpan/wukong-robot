@@ -66,20 +66,20 @@ wukong-robot 支持运行在以下的设备和系统中：
 ## 升级
 
 ``` bash
-python wukong.py update
+python3 wukong.py update
 ```
 
 如果提示升级失败，可以尝试在 wukong-robot 的根目录手动执行以下命令，看看问题出在哪。
 
 ``` sh
 git pull
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 ## 运行 ##
 
 ``` bash
-python wukong.py
+python3 wukong.py
 ```
 
 建议在 [tmux](http://blog.jobbole.com/87278/) 或 supervisor 中执行。
