@@ -15,12 +15,24 @@ import os
 import time
 import yaml
 import markdown
+import random
 
 from tornado.websocket import WebSocketHandler
 
 logger = logging.getLogger(__name__)
 
 conversation, wukong = None, None
+
+suggestions = [
+    '现在几点',
+    '你吃饭了吗',
+    '上海的天气',
+    '写一首关于大海的诗',
+    '来玩成语接龙',
+    '我有多少邮件',
+    '你叫什么名字',
+    '讲个笑话'
+]
 
 class BaseHandler(tornado.web.RequestHandler):
     def isValidated(self):
@@ -34,13 +46,14 @@ class MainHandler(BaseHandler):
     @tornado.web.asynchronous
     @gen.coroutine
     def get(self):
-        global conversation, wukong
+        global conversation, wukong, suggestions
         if not self.isValidated():
             self.redirect("/login")
             return
         if conversation:
             info = updater.fetch()
-            self.render('index.html', history=conversation.getHistory(), update_info=info)
+            suggestion = random.choice(suggestions)
+            self.render('index.html', history=conversation.getHistory(), update_info=info, suggestion=suggestion)
         else:
             self.render('index.html', history=[])    
 
@@ -266,7 +279,7 @@ settings = {
     "cookie_secret" : b'*\xc4bZv0\xd7\xf9\xb2\x8e\xff\xbcL\x1c\xfa\xfeh\xe1\xb8\xdb\xd1y_\x1a',
     "template_path": "server/templates",
     "static_path": "server/static",
-    "debug": True
+    "debug": False
 }
 
 application = tornado.web.Application([
