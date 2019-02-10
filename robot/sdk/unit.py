@@ -72,6 +72,14 @@ def getSlots(parsed):
     else:
         return []
 
+def getSay(parsed):
+    """ 提取意图 """
+    if parsed is not None and 'result' in parsed and \
+       'response_list' in parsed['result']:
+        return parsed['result']['response_list'][0]['action_list'][0]['say']
+    else:
+        return []
+
 
 if __name__ == '__main__':
     parsed = getUnit('今天的天气', "S13442", 'w5v7gUV3iPGsGntcM84PtOOM', 'KffXwW6E1alcGplcabcNs63Li6GvvnfL')

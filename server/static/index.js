@@ -93,6 +93,7 @@ $(function() {
     $('.CHAT').on('click', function(e) {
         e.preventDefault();        
         var uuid = 'chat' + guid();
+        console.log(uuid);
         var query = $("input#query")[0].value;
         appendHistory(0, query, uuid);
         $('input#query').val('');
