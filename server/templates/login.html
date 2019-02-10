@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
-<link href="/static/signin.css" rel="stylesheet">
+<link href="{{static_url('signin.css')}}" rel="stylesheet">
+  <div class="container">
   <form action="/login" class="form-signin" method=post>
     <center>
       <h1 class="h3 mb-3 font-weight-normal">Please login</h1>
@@ -14,4 +15,5 @@
       {% end %}
     </center>
   </form>
+  </div>
 {% end %}
