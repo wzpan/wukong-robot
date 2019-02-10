@@ -1,5 +1,6 @@
 # -*- coding: utf-8-*-
 from robot import logging
+from robot.sdk.unit import getUnit
 from . import plugin_loader
 from . import config
 
@@ -30,8 +31,12 @@ class Brain(object):
         text -- user input, typically speech, to be parsed by a plugin
         """
 
+        parsed = getUnit(text, "S13442",
+                         'w5v7gUV3iPGsGntcM84PtOOM',
+                         'KffXwW6E1alcGplcabcNs63Li6GvvnfL')
+
         for plugin in self.plugins:
-            if not plugin.isValid(text):
+            if not plugin.isValid(text, parsed):
                 continue
 
             logger.info("'{}' 命中技能 {}".format(text, plugin.__name__))            
@@ -39,7 +44,7 @@ class Brain(object):
             continueHandle = False
             try:
                 self.handling = True
-                continueHandle = plugin.handle(text, self.conversation)
+                continueHandle = plugin.handle(text, self.conversation, parsed)
                 self.handling = False                
             except Exception:
                 logger.critical('Failed to execute plugin',

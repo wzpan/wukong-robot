@@ -173,7 +173,7 @@ def fetchUnreadEmails(since=None, markRead=False, limit=None):
     return msgs
 
 
-def handle(text, mic):
+def handle(text, mic, parsed=None):
     """
         Responds to user-input, typically speech text, with a summary of
         the user's email inbox, reporting on the number of unread emails
@@ -214,7 +214,7 @@ def handle(text, mic):
         mic.say(response, plugin=__name__)
 
 
-def isValid(text):
+def isValid(text, parsed=None):
     """
         Returns True if the input is related to email.
 

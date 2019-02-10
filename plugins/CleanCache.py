@@ -9,7 +9,7 @@ SLUG = "cleancache"
 PRIORITY = 0
 
 
-def handle(text, mic):
+def handle(text, mic, parsed=None):
     """
         Reports the current time based on the user's timezone.
 
@@ -26,7 +26,7 @@ def handle(text, mic):
     mic.say(u'缓存目录已清空', cache=True, plugin=__name__)
 
 
-def isValid(text):
+def isValid(text, parsed=None):
     """
         Returns True if input is related to the time.
 
