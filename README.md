@@ -1,7 +1,7 @@
 # wukong-robot
 
 [![wukong-project](https://img.shields.io/badge/project-wukong-informational.svg)](https://github.com/users/wzpan/projects/1)
-[![wukong-project](https://img.shields.io/docker/pulls/wzpan/wukong-robot.svg?style=flat)](https://hub.docker.com/r/wzpan/wukong-robot)
+[![docker-pulls](https://img.shields.io/docker/pulls/wzpan/wukong-robot.svg?style=flat)](https://hub.docker.com/r/wzpan/wukong-robot)
 [![Python3](https://img.shields.io/pypi/pyversions/Django.svg?style=flat)](#)
 [![GitHub issues](https://img.shields.io/github/issues/wzpan/wukong-robot.svg)](https://github.com/wzpan/wukong-robot/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/wzpan/wukong-robot.svg)](https://github.com/wzpan/wukong-robot/pulls)
