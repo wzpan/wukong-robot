@@ -62,7 +62,7 @@ wukong-robot 支持运行在以下的设备和系统中：
 
 ## 安装 ##
 
-见 [wukong-robot 安装教程](https://github.com/wzpan/wukong-robot/wiki/install) 。
+见 [wukong-robot 安装教程](https://www.hahack.com/wukong-contrib/#/install) 。
 
 ## 升级
 
@@ -110,12 +110,12 @@ python3 wukong.py
 
 ## 技能插件 ##
 
-* [官方插件列表](https://github.com/wzpan/wukong-robot/wiki/plugins)
-* [用户贡献插件](https://github.com/wzpan/wukong-contrib)
+* [官方插件列表](https://www.hahack.com/wukong-contrib/#/official)
+* [用户贡献插件](https://www.hahack.com/wukong-contrib/#/contrib)
 
 ## API 接口 ##
 
-wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式调用，见 [后台API](https://github.com/wzpan/wukong-robot/wiki/api)。
+wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式调用，见 [后台API](https://www.hahack.com/wukong-contrib/#/api)。
 
 ## 贡献
 
