@@ -14,7 +14,16 @@ class Conversation(object):
         self.player = None
         self.brain = Brain(self)
         self.reload()
-        self.history = []        
+        # 历史会话消息
+        self.history = []
+        # 沉浸模式，处于这个模式下，被打断后将自动恢复这个技能
+        self.immersiveMode = None
+
+    def isImmersiveMode(self):
+        return self.immersiveMode
+
+    def setImmersiveMode(self, immersiveMode):
+        self.immersiveMode = immersiveMode
 
     def getHistory(self):
         return self.history
@@ -37,10 +46,12 @@ class Conversation(object):
         statistic.report(1)
         self.interrupt()
         self.appendHistory(0, query, UUID)
-        if not self.brain.query(query):
+        if not self.brain.query(query, self.immersiveMode):
             # 没命中技能，使用机器人回复
             msg = self.ai.chat(query)
             self.say(msg, True)
+            if self.immersiveMode:
+                self.brain.restore(self.immersiveMode)
 
     def converse(self, fp, callback=None):
         """ 核心对话逻辑 """
@@ -91,7 +102,7 @@ class Conversation(object):
         self.player = Player.SoxPlayer()
         self.player.play(voice, not cache, onCompleted)
 
-    def activeListen(self, MUSIC=False):
+    def activeListen(self):
         """ 主动问一个问题(适用于多轮对话) """
         snowboydecoder.play_audio_file(constants.getData('beep_hi.wav'))
         listener = snowboydecoder.ActiveListener([constants.getHotwordModel(config.get('hotword', 'wukong.pmdl'))])
@@ -99,4 +110,12 @@ class Conversation(object):
         snowboydecoder.play_audio_file(constants.getData('beep_lo.wav'))
         query = self.asr.transcribe(voice)
         utils.check_and_delete(voice)
-        return query    
+        return query
+
+    def play(self, src, delete=False, onCompleted=None):
+        """ 播放一个音频 """
+        if self.player:
+            self.interrupt()
+        self.player = Player.SoxPlayer()
+        self.player.play(src, delete, onCompleted=onCompleted)
+    

@@ -70,6 +70,7 @@ class SoxPlayer(AbstractSoundPlayer):
         super(SoxPlayer, self).__init__(**kwargs)
         self.playing = False
         self.pipe = None
+        self.delete = False
 
     def run(self):
         cmd = ['play', str(self.src)]
@@ -100,8 +101,10 @@ class SoxPlayer(AbstractSoundPlayer):
 
     def stop(self):
         if self.pipe:
+            self.onCompleted = None
             self.pipe.kill()
-            utils.check_and_delete(self.src)
+            if self.delete:
+                utils.check_and_delete(self.src)
 
     def is_playing(self):
         return self.playing

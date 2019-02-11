@@ -15,6 +15,7 @@ def handle(text, mic, parsed=None):
         Arguments:
         text -- user-input, typically transcribed speech
         mic -- used to interact with the user (for both input and output)
+        parsed -- NLU structure parsed by Baidu UNIT
     """
     sys.path.append(mic.dingdangpath.LIB_PATH)
     from utils import emailUser
@@ -106,11 +107,13 @@ def handle(text, mic, parsed=None):
         mic.say(u"请先在配置文件中开启相机拍照功能", cache=True, plugin=__name__)
 
 
-def isValid(text, parsed=None):
+def isValid(text, parsed=None, immersiveMode=None):
     """
         Returns True if input is related to the time.
 
         Arguments:
         text -- user-input, typically transcribed speech
+        parsed -- NLU structure parsed by Baidu UNIT
+        immersiveMode -- current immersive mode
     """
     return any(word in text for word in ["拍照", "拍张照"])

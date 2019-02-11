@@ -4,7 +4,9 @@ import requests
 import uuid
 import json
 import os
-from robot import constants
+from robot import constants, logging
+
+logger = logging.getLogger(__name__)
 
 def get_token(api_key, secret_key):
     cache = open(os.path.join(constants.TEMP_PATH, 'baidustt.ini'), 'a+')
@@ -64,21 +66,45 @@ def getIntent(parsed):
         return ''
 
 
-def getSlots(parsed):
+def hasIntent(parsed, intent):
     """ 提取意图 """
     if parsed is not None and 'result' in parsed and \
        'response_list' in parsed['result']:
-        return parsed['result']['response_list'][0]['schema']['slots']
+        response_list = parsed['result']['response_list']
+        for response in response_list:
+            if response['schema']['intent'] == intent:
+                return True
+        return False
+    else:
+        return False
+
+
+def getSlots(parsed, intent=''):
+    """ 提取意图 """
+    if parsed is not None and 'result' in parsed and \
+       'response_list' in parsed['result']:
+        response_list = parsed['result']['response_list']
+        if intent == '':
+            return parsed['result']['response_list'][0]['schema']['slots']
+        for response in response_list:
+            if response['schema']['intent'] == intent:
+                return response['schema']['slots']
     else:
         return []
 
-def getSay(parsed):
+def getSay(parsed, intent=''):
     """ 提取意图 """
     if parsed is not None and 'result' in parsed and \
        'response_list' in parsed['result']:
-        return parsed['result']['response_list'][0]['action_list'][0]['say']
+        response_list = parsed['result']['response_list']
+        if intent == '':
+            return response_list[0]['action_list'][0]['say']
+        for response in response_list:
+            if response['schema']['intent'] == intent:
+                return response['action_list'][0]['say']
+        return ''
     else:
-        return []
+        return ''
 
 
 if __name__ == '__main__':

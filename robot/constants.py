@@ -44,3 +44,4 @@ def getHotwordModel(fname):
         return getData(fname)
     else:
         return getConfigData(fname)
+

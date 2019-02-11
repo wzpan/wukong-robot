@@ -205,7 +205,7 @@ def get_engine_by_slug(slug=None):
     """
 
     if not slug or type(slug) is not str:
-        raise TypeError("Invalid slug '%s'", slug)
+        raise TypeError("无效的 ASR slug '%s'", slug)
 
     selected_engines = list(filter(lambda engine: hasattr(engine, "SLUG") and
                               engine.SLUG == slug, get_engines()))

@@ -22,7 +22,7 @@ class Brain(object):
         self.handling = False
         self.conversation = conversation
 
-    def query(self, text, wxBot=None):
+    def query(self, text, immersiveMode):
         """
         Passes user input to the appropriate plugin, testing it against
         each candidate plugin's isValid function.
@@ -36,10 +36,10 @@ class Brain(object):
                          'KffXwW6E1alcGplcabcNs63Li6GvvnfL')
 
         for plugin in self.plugins:
-            if not plugin.isValid(text, parsed):
+            if not plugin.isValid(text, parsed, immersiveMode):
                 continue
 
-            logger.info("'{}' 命中技能 {}".format(text, plugin.__name__))            
+            logger.info("'{}' 命中技能 {}".format(text, plugin.__name__))
 
             continueHandle = False
             try:
@@ -62,11 +62,20 @@ class Brain(object):
         logger.debug("No plugin was able to handle phrase {} ".format(text))
         return False
 
-    def understand(fp):
+    def restore(self, slug):
+        """ 恢复某个技能的处理 """
+        for plugin in self.plugins:
+            if plugin.SLUG == slug and plugin.restore:
+                plugin.restore()
+
+    def understand(self, fp):
         if self.conversation and self.conversation.asr:
             return self.conversation.asr.transcribe(fp)
         return None
 
-    def say(msg, cache=False):
+    def say(self, msg, cache=False):
         if self.conversation and self.conversation.tts:
             self.conversation.tts.say(msg, cache)
+
+    
+            
