@@ -19,7 +19,7 @@ server:
 # 建议到 https://snowboy.kitt.ai/hotword/32768
 # 使用相同环境录入你的语音，以提升唤醒成功率和准确率
 hotword: 'wukong.pmdl'  # 唤醒词模型，如要自定义请放到 $HOME/.wukong 目录中
-sensitivity: 0.5  # 灵敏度
+sensitivity: 0.4  # 灵敏度
 
 # 勿扰模式，该时间段内自动进入睡眠，避免监听
 do_not_bother:

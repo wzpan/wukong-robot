@@ -1,6 +1,6 @@
 # -*- coding: utf-8-*-
 from snowboy import snowboydecoder
-from robot import config, utils, constants, logging, statistic
+from robot import config, utils, constants, logging, statistic, Player
 from robot.updater import Updater
 from robot.ConfigMonitor import ConfigMonitor
 from robot.Conversation import Conversation
@@ -53,17 +53,17 @@ class Wukong(object):
         if not utils.is_proper_time():
             logger.warning('勿扰模式开启中')
             return
-        snowboydecoder.play_audio_file(constants.getData('beep_hi.wav'))
+        Player.play(constants.getData('beep_hi.wav'))
         self._conversation.interrupt()    
 
     def _do_not_bother_on_callback(self):
         utils.do_not_bother = True
-        snowboydecoder.play_audio_file(constants.getData('off.wav'))
+        Player.play(constants.getData('off.wav'))
         logger.info('勿扰模式打开')
 
     def _do_not_bother_off_callback(self):
         utils.do_not_bother = False
-        snowboydecoder.play_audio_file(constants.getData('on.wav'))
+        Player.play(constants.getData('on.wav'))
         logger.info('勿扰模式关闭')
 
     def _interrupt_callback(self):
