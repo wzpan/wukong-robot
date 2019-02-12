@@ -108,6 +108,7 @@ class ActiveListener(object):
 
         with no_alsa_error():            
             self.audio = pyaudio.PyAudio()
+
         self.stream_in = self.audio.open(
             input=True, output=False,
             format=self.audio.get_format_from_width(

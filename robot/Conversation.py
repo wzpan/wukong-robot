@@ -55,7 +55,7 @@ class Conversation(object):
 
     def converse(self, fp, callback=None):
         """ 核心对话逻辑 """
-        snowboydecoder.play_audio_file(constants.getData('beep_lo.wav'))
+        Player.play(constants.getData('beep_lo.wav'))
         self.doConverse(fp, callback)
 
     def doConverse(self, fp, callback=None):
