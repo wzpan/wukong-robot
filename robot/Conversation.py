@@ -73,7 +73,7 @@ class Conversation(object):
         if t in (0, 1) and text != '':
             if text.endswith(',') or text.endswith('，'):
                 text = text[:-1]
-            if UUID == '':
+            if UUID == '' or UUID == None or UUID == 'null':
                 UUID = str(uuid.uuid1())
             self.history.append({'type': t, 'text': text, 'time': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), 'uuid': UUID})
 

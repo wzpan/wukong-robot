@@ -31,6 +31,10 @@ class Brain(object):
         text -- user input, typically speech, to be parsed by a plugin
         """
 
+        if text.strip() == '':
+            self.conversation.say("抱歉，刚刚没听清，能再说一遍吗？", plugin=plugin.__name__, cache=True)
+            return True
+
         parsed = getUnit(text, "S13442",
                          'w5v7gUV3iPGsGntcM84PtOOM',
                          'KffXwW6E1alcGplcabcNs63Li6GvvnfL')

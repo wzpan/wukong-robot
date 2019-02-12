@@ -1,4 +1,5 @@
 function appendHistory(type, query, uuid) {
+    if (!uuid) return;
     if (type == 0) {
         // 用户消息
         $('.history').append(`
