@@ -120,5 +120,8 @@ $(function() {
         $(this)[0].disabled = true;
         upgrade();
     });
+
+    var scrollHeight = $('.history').prop("scrollHeight");
+    $('.history').scrollTop(scrollHeight, 200);
 });
 
