@@ -32,7 +32,7 @@ class Brain(object):
         """
 
         if text.strip() == '':
-            self.conversation.say("抱歉，刚刚没听清，能再说一遍吗？", plugin=plugin.__name__, cache=True)
+            self.conversation.say("抱歉，刚刚没听清，能再说一遍吗？", cache=True)
             return True
 
         parsed = getUnit(text, "S13442",
