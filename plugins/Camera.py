@@ -4,7 +4,7 @@ import os
 import subprocess
 import time
 import sys
-from robot import config
+from robot import config, constants
 
 SLUG = "camera"
 
@@ -17,8 +17,8 @@ def handle(text, mic, parsed=None):
         mic -- used to interact with the user (for both input and output)
         parsed -- NLU structure parsed by Baidu UNIT
     """
-    sys.path.append(mic.dingdangpath.LIB_PATH)
-    from utils import emailUser
+    sys.path.append(constants.LIB_PATH)
+    from robot.utils import emailUser
 
     quality = 100
     count_down = 3
@@ -92,7 +92,7 @@ def handle(text, mic, parsed=None):
                 mic.say(u"拍照失败，请检查相机是否连接正确", cache=True, plugin=__name__)
             return
         if sound:
-            mic.play(mic.dingdangpath.data('audio', 'camera.wav'))
+            mic.play(constants.getData('camera.wav'))
         # send to user
         if send_to_user:
             if sound:
