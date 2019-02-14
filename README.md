@@ -10,6 +10,10 @@
 
 wukong-robot 是一个简单、灵活、优雅的中文语音对话机器人/智能音箱项目，目的是让中国的 Maker 和 Haker 们也能快速打造个性化的智能音箱。
 
+<h1 align="center">
+<img width="250" src="http://hahack-1253537070.file.myqcloud.com/images/wukong-icons/256_256.png" alt="wukong-robot">
+</h1>
+
 ## Table of Contents
 
 * [特性](#特性)
@@ -42,7 +46,9 @@ wukong-robot 是一个简单、灵活、优雅的中文语音对话机器人/智
 ## Demo
 
 * Demo视频 - coming soon
-* 后台管理端Demo - https://bot.hahack.com/  （体验用户名：wukong；体验密码：wukong@2019）
+* 后台管理端Demo
+  - 体验地址：https://bot.hahack.com/  （体验用户名：wukong；体验密码：wukong@2019）
+  - 备选体验地址：https://bot.sxzz.moe/ （体验用户名：wukong；体验密码：wukong@2019）
 
 ## 环境要求 ##
 
@@ -138,6 +144,8 @@ wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式�
 ## 感谢
 
 * 悟空的前身是 [dingdang-robot](https://github.com/dingdang-robot/dingdang-robot) 项目和 [jasper-client](https://github.com/jasperproject/jasper-client) 项目。感谢 [Shubhro Saha](http://www.shubhro.com/), [Charles Marsh](http://www.crmarsh.com/) and [Jan Holthuis](http://homepage.ruhr-uni-bochum.de/Jan.Holthuis/) 在 Jasper 项目上做出的优秀贡献；
+* 感谢三咲智子提供了备选的后台管理端 Demo 体验地址。
+* 感谢 aliciacai 贡献的 wukong-robot 图标。
 
 ## FAQ
 
