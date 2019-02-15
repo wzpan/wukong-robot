@@ -96,7 +96,7 @@ def handle(text, mic, parsed=None):
         # send to user
         if send_to_user:
             if sound:
-                mic.say(u'拍照成功！正在发送照片到您的邮箱' % target, cache=True, plugin=__name__)
+                mic.say(u'拍照成功！正在发送照片到您的邮箱', cache=True, plugin=__name__)
             if emailUser(u"这是刚刚为您拍摄的照片", "", [dest_file]):
                 if sound:
                     mic.say(u'发送成功', cache=True, plugin=__name__)
