@@ -11,19 +11,11 @@ logger = logging.getLogger(__name__)
 class Conversation(object):
 
     def __init__(self):
-        self.player = None
-        self.brain = Brain(self)
         self.reload()
         # 历史会话消息
         self.history = []
         # 沉浸模式，处于这个模式下，被打断后将自动恢复这个技能
         self.immersiveMode = None
-
-    def isImmersiveMode(self):
-        return self.immersiveMode
-
-    def setImmersiveMode(self, immersiveMode):
-        self.immersiveMode = immersiveMode
 
     def getHistory(self):
         return self.history
@@ -39,19 +31,30 @@ class Conversation(object):
             self.asr = ASR.get_engine_by_slug(config.get('asr_engine', 'tencent-asr'))
             self.ai = AI.get_robot_by_slug(config.get('robot', 'tuling'))
             self.tts = TTS.get_engine_by_slug(config.get('tts_engine', 'baidu-tts'))
+            self.player = None
+            self.brain = Brain(self)
+            self.brain.printPlugins()
         except Exception as e:
             logger.critical("对话初始化失败：{}".format(e))
+
+    def checkRestore(self):
+        if self.immersiveMode:
+            self.brain.restore()
 
     def doResponse(self, query, UUID=''):
         statistic.report(1)
         self.interrupt()
         self.appendHistory(0, query, UUID)
-        if not self.brain.query(query, self.immersiveMode):
+        if not self.brain.query(query):
             # 没命中技能，使用机器人回复
             msg = self.ai.chat(query)
-            self.say(msg, True)
-            if self.immersiveMode:
-                self.brain.restore(self.immersiveMode)
+            self.say(msg, True, onCompleted=self.checkRestore)
+
+    def setImmersiveMode(self, slug):
+        self.immersiveMode = slug
+
+    def getImmersiveMode(self):
+        return self.immersiveMode
 
     def converse(self, fp, callback=None):
         """ 核心对话逻辑 """
@@ -78,10 +81,14 @@ class Conversation(object):
             self.history.append({'type': t, 'text': text, 'time': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), 'uuid': UUID})
 
     def _onCompleted(self, msg):
-        if msg.endswith('?') or msg.endswith(u'？') or \
-           u'告诉我' in msg or u'请回答' in msg:
+        if config.get('active_mode', False) and \
+           (
+               msg.endswith('?') or 
+               msg.endswith(u'？') or 
+               u'告诉我' in msg or u'请回答' in msg
+           ):
             query = self.activeListen()
-            self.doResponse(query)            
+            self.doResponse(query)
 
     def say(self, msg, cache=False, plugin='', onCompleted=None):
         """ 说一句话 """
@@ -104,10 +111,14 @@ class Conversation(object):
 
     def activeListen(self):
         """ 主动问一个问题(适用于多轮对话) """
-        snowboydecoder.play_audio_file(constants.getData('beep_hi.wav'))
+        time.sleep(1)
+        Player.play(constants.getData('beep_hi.wav'))        
         listener = snowboydecoder.ActiveListener([constants.getHotwordModel(config.get('hotword', 'wukong.pmdl'))])
-        voice = listener.listen()
-        snowboydecoder.play_audio_file(constants.getData('beep_lo.wav'))
+        voice = listener.listen(
+            silent_count_threshold=config.get('silent_threshold', 15),
+            recording_timeout=config.get('recording_timeout', 5) * 4
+        )
+        Player.play(constants.getData('beep_lo.wav'))
         query = self.asr.transcribe(voice)
         utils.check_and_delete(voice)
         return query

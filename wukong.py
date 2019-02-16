@@ -1,7 +1,7 @@
 # -*- coding: utf-8-*-
 from snowboy import snowboydecoder
 from robot import config, utils, constants, logging, statistic, Player
-from robot.updater import Updater
+from robot.Updater import Updater
 from robot.ConfigMonitor import ConfigMonitor
 from robot.Conversation import Conversation
 from server import server
@@ -98,7 +98,8 @@ class Wukong(object):
                                                    self._do_not_bother_off_callback],
                                 audio_recorder_callback=self._conversation.converse,
                                 interrupt_check=self._interrupt_callback,
-                                silent_count_threshold=5,
+                                silent_count_threshold=config.get('silent_threshold', 15),
+                                recording_timeout=config.get('recording_timeout', 5) * 4,
                                 sleep_time=0.03)
             self.detector.terminate()
         except Exception as e:

@@ -72,7 +72,7 @@ def emailUser(SUBJECT="", BODY="", ATTACH_LIST=[]):
     recipient = robot_name + " <%s>" % recipient
     user = config.get('/email/address', '')
     password = config.get('/email/password', '')
-    server = config.get('/email/server', '')
+    server = config.get('/email/smtp_server', '')
     port = config.get('/email/smtp_port', '')
 
     if not recipient or not user or not password or not server or not port:

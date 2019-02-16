@@ -75,10 +75,10 @@ class Updater(object):
             # 检查主仓库
             current_main_version = self._get_version(constants.APP_PATH, main_version)
             current_contrib_version = self._get_version(constants.CONTRIB_PATH, contrib_version)
-            if semver.compare(main_version, current_main_version):
+            if semver.compare(main_version, current_main_version) > 0:
                 logger.info('主仓库检查到更新：{}'.format(info['main']))
                 self.update_info['main'] = info['main']
-            if semver.compare(contrib_version, current_contrib_version):
+            if semver.compare(contrib_version, current_contrib_version) > 0:
                 logger.info('插件库检查到更新：{}'.format(info['contrib']))
                 self.update_info['contrib'] = info['contrib']
             return self.update_info
