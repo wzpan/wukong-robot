@@ -1,0 +1,7 @@
+Brain module
+============
+
+.. automodule:: Brain
+    :members:
+    :undoc-members:
+    :show-inheritance:

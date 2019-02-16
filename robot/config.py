@@ -91,7 +91,9 @@ def has_path(items):
 def has(item):
     """
     判断配置里是否包含某个配置项
-    :param item -- 配置项名
+
+    :param item: 配置项名
+    :returns: True: 包含; False: 不包含
     """
     return item in _config
 
@@ -99,8 +101,10 @@ def has(item):
 def get(item='', default=None):
     """
     获取某个配置的值
-    :param item -- 配置项名。如果是多级配置，则以 /a/b 的形式提供
-    :param default -- 如果没有该配置，则提供一个默认值（可选）
+
+    :param item: 配置项名。如果是多级配置，则以 "/a/b" 的形式提供
+    :param default: 默认值（可选）
+    :returns: 这个配置的值。如果没有该配置，则提供一个默认值
     """
     if not has_init:
         init()
@@ -118,7 +122,8 @@ def get(item='', default=None):
 def getConfig():
     """
     返回全部配置数据
-    :return 全部配置数据（字典类型）
+
+    :returns: 全部配置数据（字典类型）
     """
     return _config
 

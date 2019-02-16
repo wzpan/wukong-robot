@@ -1,0 +1,360 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>plugins.Email &mdash; wukong-robot 1.2.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> wukong-robot
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">wukong-robot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">模块代码</a> &raquo;</li>
+        
+      <li>plugins.Email</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>plugins.Email 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8-*-</span>
+<span class="kn">import</span> <span class="nn">imaplib</span>
+<span class="kn">import</span> <span class="nn">email</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">logging</span>
+<span class="kn">from</span> <span class="nn">dateutil</span> <span class="k">import</span> <span class="n">parser</span>
+<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">robot.sdk.AbstractPlugin</span> <span class="k">import</span> <span class="n">AbstractPlugin</span>
+
+<div class="viewcode-block" id="Plugin"><a class="viewcode-back" href="../../plugins.html#plugins.Email.Plugin">[文档]</a><span class="k">class</span> <span class="nc">Plugin</span><span class="p">(</span><span class="n">AbstractPlugin</span><span class="p">):</span>
+
+    <span class="n">SLUG</span> <span class="o">=</span> <span class="s1">&#39;email&#39;</span>
+
+<div class="viewcode-block" id="Plugin.getSender"><a class="viewcode-back" href="../../plugins.html#plugins.Email.Plugin.getSender">[文档]</a>    <span class="k">def</span> <span class="nf">getSender</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Returns the best-guess sender of an email.</span>
+
+<span class="sd">            Arguments:</span>
+<span class="sd">            msg -- the email whose sender is desired</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">            Sender of the sender.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fromstr</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;From&quot;</span><span class="p">])</span>
+        <span class="n">ls</span> <span class="o">=</span> <span class="n">fromstr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ls</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="n">fromname</span> <span class="o">=</span> <span class="n">email</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">decode_header</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ls</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">))</span>
+            <span class="n">sender</span> <span class="o">=</span> <span class="n">fromname</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ls</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="n">fromname</span> <span class="o">=</span> <span class="n">email</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">decode_header</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">fromstr</span><span class="p">[:</span><span class="n">fromstr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;&lt;&#39;</span><span class="p">)])</span>
+                                                  <span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">))</span>
+            <span class="n">sender</span> <span class="o">=</span> <span class="n">fromname</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sender</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;From&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">sender</span></div>
+
+<div class="viewcode-block" id="Plugin.isSelfEmail"><a class="viewcode-back" href="../../plugins.html#plugins.Email.Plugin.isSelfEmail">[文档]</a>    <span class="k">def</span> <span class="nf">isSelfEmail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Whether the email is sent by the user &quot;&quot;&quot;</span>
+        <span class="n">fromstr</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;From&quot;</span><span class="p">])</span>
+        <span class="n">addr</span> <span class="o">=</span> <span class="p">(</span><span class="n">fromstr</span><span class="p">[</span><span class="n">fromstr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;&lt;&#39;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">fromstr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;&gt;&#39;</span><span class="p">)])</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">address</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">][</span><span class="s1">&#39;address&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">addr</span> <span class="o">==</span> <span class="n">address</span></div>
+
+<div class="viewcode-block" id="Plugin.getSubject"><a class="viewcode-back" href="../../plugins.html#plugins.Email.Plugin.getSubject">[文档]</a>    <span class="k">def</span> <span class="nf">getSubject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Returns the title of an email</span>
+
+<span class="sd">            Arguments:</span>
+<span class="sd">            msg -- the email</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">            Title of the email.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">subject</span> <span class="o">=</span> <span class="n">email</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">decode_header</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s1">&#39;subject&#39;</span><span class="p">])</span>
+        <span class="n">sub</span> <span class="o">=</span> <span class="n">subject</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="n">to_read</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">sub</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">to_read</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/email/read_email_title&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">to_read</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;邮件标题为 </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">sub</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span></div>
+
+<div class="viewcode-block" id="Plugin.isNewEmail"><a class="viewcode-back" href="../../plugins.html#plugins.Email.Plugin.isNewEmail">[文档]</a>    <span class="k">def</span> <span class="nf">isNewEmail</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Wether an email is a new email &quot;&quot;&quot;</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">])</span>
+        <span class="n">dtext</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">dtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">dtext</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1"> %b %Y %H:%M:%S&#39;</span><span class="p">)</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="o">*</span><span class="n">dtime</span><span class="p">[:</span><span class="mi">6</span><span class="p">])</span>
+        <span class="n">cr</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="o">*</span><span class="n">current</span><span class="p">[:</span><span class="mi">6</span><span class="p">])</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">cr</span> <span class="o">-</span> <span class="n">dt</span><span class="p">)</span><span class="o">.</span><span class="n">days</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="Plugin.getDate"><a class="viewcode-back" href="../../plugins.html#plugins.Email.Plugin.getDate">[文档]</a>    <span class="k">def</span> <span class="nf">getDate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">email</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Plugin.getMostRecentDate"><a class="viewcode-back" href="../../plugins.html#plugins.Email.Plugin.getMostRecentDate">[文档]</a>    <span class="k">def</span> <span class="nf">getMostRecentDate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">emails</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Returns the most recent date of any email in the list provided.</span>
+
+<span class="sd">            Arguments:</span>
+<span class="sd">            emails -- a list of emails to check</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">            Date of the most recent email.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dates</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">getDate</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">emails</span><span class="p">]</span>
+        <span class="n">dates</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dates</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">dates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Plugin.fetchUnreadEmails"><a class="viewcode-back" href="../../plugins.html#plugins.Email.Plugin.fetchUnreadEmails">[文档]</a>    <span class="k">def</span> <span class="nf">fetchUnreadEmails</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">since</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">markRead</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Fetches a list of unread email objects from a user&#39;s email inbox.</span>
+
+<span class="sd">            Arguments:</span>
+<span class="sd">            since -- if provided, no emails before this date will be returned</span>
+<span class="sd">            markRead -- if True, marks all returned emails as read in target inbox</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">            A list of unread email objects.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="n">profile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">imaplib</span><span class="o">.</span><span class="n">IMAP4</span><span class="p">(</span><span class="n">profile</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">][</span><span class="s1">&#39;imap_server&#39;</span><span class="p">],</span>
+                             <span class="n">profile</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">][</span><span class="s1">&#39;imap_port&#39;</span><span class="p">])</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">msgs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">profile</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">][</span><span class="s1">&#39;address&#39;</span><span class="p">],</span> <span class="n">profile</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">][</span><span class="s1">&#39;password&#39;</span><span class="p">])</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">readonly</span><span class="o">=</span><span class="p">(</span><span class="ow">not</span> <span class="n">markRead</span><span class="p">))</span>
+            <span class="p">(</span><span class="n">retcode</span><span class="p">,</span> <span class="n">messages</span><span class="p">)</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;(UNSEEN)&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;抱歉，您的邮箱账户验证失败了，请检查下配置&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">retcode</span> <span class="o">==</span> <span class="s1">&#39;OK&#39;</span> <span class="ow">and</span> <span class="n">messages</span> <span class="o">!=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]:</span>
+            <span class="n">numUnread</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39; &#39;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">limit</span> <span class="ow">and</span> <span class="n">numUnread</span> <span class="o">&gt;</span> <span class="n">limit</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">numUnread</span>
+
+            <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">messages</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39; &#39;</span><span class="p">):</span>
+                <span class="c1"># parse email RFC822 format</span>
+                <span class="n">ret</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="s1">&#39;(RFC822)&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="n">email</span><span class="o">.</span><span class="n">message_from_string</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">since</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">getDate</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">since</span><span class="p">:</span>
+                    <span class="n">msgs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">logout</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">msgs</span></div>
+    
+
+<div class="viewcode-block" id="Plugin.handle"><a class="viewcode-back" href="../../plugins.html#plugins.Email.Plugin.handle">[文档]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">parsed</span><span class="p">):</span>
+        <span class="n">msgs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetchUnreadEmails</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">msgs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span>
+                <span class="sa">u</span><span class="s2">&quot;抱歉，您的邮箱账户验证失败了&quot;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">msgs</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="s2">&quot;您有 </span><span class="si">%d</span><span class="s2"> 封未读邮件&quot;</span> <span class="o">%</span> <span class="n">msgs</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">senders</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">getSender</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msgs</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">senders</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;您没有未读邮件，真棒！&quot;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">senders</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;您有来自 </span><span class="si">{}</span><span class="s2"> 的未读邮件。</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">senders</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">getSubject</span><span class="p">(</span><span class="n">msgs</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="sa">u</span><span class="s2">&quot;您有 </span><span class="si">%d</span><span class="s2"> 封未读邮件&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span>
+                <span class="n">senders</span><span class="p">)</span>
+            <span class="n">unique_senders</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">senders</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_senders</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">unique_senders</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span> <span class="o">+</span> <span class="n">unique_senders</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">response</span> <span class="o">+=</span> <span class="s2">&quot;。这些邮件的发件人包括：&quot;</span>
+                <span class="n">response</span> <span class="o">+=</span> <span class="s1">&#39; 和 &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">senders</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">response</span> <span class="o">+=</span> <span class="s2">&quot;，邮件都来自 &quot;</span> <span class="o">+</span> <span class="n">unique_senders</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">response</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Plugin.isValid"><a class="viewcode-back" href="../../plugins.html#plugins.Email.Plugin.isValid">[文档]</a>    <span class="k">def</span> <span class="nf">isValid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">parsed</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">word</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="p">[</span><span class="sa">u</span><span class="s1">&#39;邮箱&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;邮件&#39;</span><span class="p">])</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, wzpan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

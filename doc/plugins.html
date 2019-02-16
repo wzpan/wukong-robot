@@ -1,0 +1,395 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>plugins package &mdash; wukong-robot 1.2.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> wukong-robot
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">plugins package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-plugins.Camera">plugins.Camera module</a></li>
+<li><a class="reference internal" href="#module-plugins.CleanCache">plugins.CleanCache module</a></li>
+<li><a class="reference internal" href="#module-plugins.Email">plugins.Email module</a></li>
+<li><a class="reference internal" href="#module-plugins.Poem">plugins.Poem module</a></li>
+<li><a class="reference internal" href="#module-plugins">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">wukong-robot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>plugins package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/plugins.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="plugins-package">
+<h1>plugins package<a class="headerlink" href="#plugins-package" title="永久链接至标题">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-plugins.Camera">
+<span id="plugins-camera-module"></span><h2>plugins.Camera module<a class="headerlink" href="#module-plugins.Camera" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="plugins.Camera.Plugin">
+<em class="property">class </em><code class="descclassname">plugins.Camera.</code><code class="descname">Plugin</code><span class="sig-paren">(</span><em>con</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plugins/Camera.html#Plugin"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#plugins.Camera.Plugin" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin" title="robot.sdk.AbstractPlugin.AbstractPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">robot.sdk.AbstractPlugin.AbstractPlugin</span></code></a></p>
+<dl class="attribute">
+<dt id="plugins.Camera.Plugin.SLUG">
+<code class="descname">SLUG</code><em class="property"> = 'camera'</em><a class="headerlink" href="#plugins.Camera.Plugin.SLUG" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="plugins.Camera.Plugin.handle">
+<code class="descname">handle</code><span class="sig-paren">(</span><em>text</em>, <em>parsed</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plugins/Camera.html#Plugin.handle"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#plugins.Camera.Plugin.handle" title="永久链接至目标">¶</a></dt>
+<dd><p>处理逻辑</p>
+<p>参数：
+query – 用户的指令字符串
+parsed – 用户指令经过 NLU 解析后的结果</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="plugins.Camera.Plugin.isValid">
+<code class="descname">isValid</code><span class="sig-paren">(</span><em>text</em>, <em>parsed</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plugins/Camera.html#Plugin.isValid"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#plugins.Camera.Plugin.isValid" title="永久链接至目标">¶</a></dt>
+<dd><p>是否适合由该插件处理</p>
+<p>参数：
+query – 用户的指令字符串
+parsed – 用户指令经过 NLU 解析后的结果</p>
+<p>返回：
+True: 适合由该插件处理
+False: 不适合由该插件处理</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-plugins.CleanCache">
+<span id="plugins-cleancache-module"></span><h2>plugins.CleanCache module<a class="headerlink" href="#module-plugins.CleanCache" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="plugins.CleanCache.Plugin">
+<em class="property">class </em><code class="descclassname">plugins.CleanCache.</code><code class="descname">Plugin</code><span class="sig-paren">(</span><em>con</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plugins/CleanCache.html#Plugin"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#plugins.CleanCache.Plugin" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin" title="robot.sdk.AbstractPlugin.AbstractPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">robot.sdk.AbstractPlugin.AbstractPlugin</span></code></a></p>
+<dl class="attribute">
+<dt id="plugins.CleanCache.Plugin.SLUG">
+<code class="descname">SLUG</code><em class="property"> = 'cleancache'</em><a class="headerlink" href="#plugins.CleanCache.Plugin.SLUG" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="plugins.CleanCache.Plugin.handle">
+<code class="descname">handle</code><span class="sig-paren">(</span><em>text</em>, <em>parsed</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plugins/CleanCache.html#Plugin.handle"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#plugins.CleanCache.Plugin.handle" title="永久链接至目标">¶</a></dt>
+<dd><p>处理逻辑</p>
+<p>参数：
+query – 用户的指令字符串
+parsed – 用户指令经过 NLU 解析后的结果</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="plugins.CleanCache.Plugin.isValid">
+<code class="descname">isValid</code><span class="sig-paren">(</span><em>text</em>, <em>parsed</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plugins/CleanCache.html#Plugin.isValid"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#plugins.CleanCache.Plugin.isValid" title="永久链接至目标">¶</a></dt>
+<dd><p>是否适合由该插件处理</p>
+<p>参数：
+query – 用户的指令字符串
+parsed – 用户指令经过 NLU 解析后的结果</p>
+<p>返回：
+True: 适合由该插件处理
+False: 不适合由该插件处理</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-plugins.Email">
+<span id="plugins-email-module"></span><h2>plugins.Email module<a class="headerlink" href="#module-plugins.Email" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="plugins.Email.Plugin">
+<em class="property">class </em><code class="descclassname">plugins.Email.</code><code class="descname">Plugin</code><span class="sig-paren">(</span><em>con</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plugins/Email.html#Plugin"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#plugins.Email.Plugin" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin" title="robot.sdk.AbstractPlugin.AbstractPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">robot.sdk.AbstractPlugin.AbstractPlugin</span></code></a></p>
+<dl class="attribute">
+<dt id="plugins.Email.Plugin.SLUG">
+<code class="descname">SLUG</code><em class="property"> = 'email'</em><a class="headerlink" href="#plugins.Email.Plugin.SLUG" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="plugins.Email.Plugin.fetchUnreadEmails">
+<code class="descname">fetchUnreadEmails</code><span class="sig-paren">(</span><em>since=None</em>, <em>markRead=False</em>, <em>limit=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plugins/Email.html#Plugin.fetchUnreadEmails"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#plugins.Email.Plugin.fetchUnreadEmails" title="永久链接至目标">¶</a></dt>
+<dd><p>Fetches a list of unread email objects from a user’s email inbox.</p>
+<p>Arguments:
+since – if provided, no emails before this date will be returned
+markRead – if True, marks all returned emails as read in target inbox</p>
+<p>Returns:
+A list of unread email objects.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="plugins.Email.Plugin.getDate">
+<code class="descname">getDate</code><span class="sig-paren">(</span><em>email</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plugins/Email.html#Plugin.getDate"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#plugins.Email.Plugin.getDate" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="plugins.Email.Plugin.getMostRecentDate">
+<code class="descname">getMostRecentDate</code><span class="sig-paren">(</span><em>emails</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plugins/Email.html#Plugin.getMostRecentDate"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#plugins.Email.Plugin.getMostRecentDate" title="永久链接至目标">¶</a></dt>
+<dd><p>Returns the most recent date of any email in the list provided.</p>
+<p>Arguments:
+emails – a list of emails to check</p>
+<p>Returns:
+Date of the most recent email.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="plugins.Email.Plugin.getSender">
+<code class="descname">getSender</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plugins/Email.html#Plugin.getSender"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#plugins.Email.Plugin.getSender" title="永久链接至目标">¶</a></dt>
+<dd><p>Returns the best-guess sender of an email.</p>
+<p>Arguments:
+msg – the email whose sender is desired</p>
+<p>Returns:
+Sender of the sender.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="plugins.Email.Plugin.getSubject">
+<code class="descname">getSubject</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plugins/Email.html#Plugin.getSubject"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#plugins.Email.Plugin.getSubject" title="永久链接至目标">¶</a></dt>
+<dd><p>Returns the title of an email</p>
+<p>Arguments:
+msg – the email</p>
+<p>Returns:
+Title of the email.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="plugins.Email.Plugin.handle">
+<code class="descname">handle</code><span class="sig-paren">(</span><em>text</em>, <em>parsed</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plugins/Email.html#Plugin.handle"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#plugins.Email.Plugin.handle" title="永久链接至目标">¶</a></dt>
+<dd><p>处理逻辑</p>
+<p>参数：
+query – 用户的指令字符串
+parsed – 用户指令经过 NLU 解析后的结果</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="plugins.Email.Plugin.isNewEmail">
+<code class="descname">isNewEmail</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/plugins/Email.html#Plugin.isNewEmail"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#plugins.Email.Plugin.isNewEmail" title="永久链接至目标">¶</a></dt>
+<dd><p>Wether an email is a new email</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="plugins.Email.Plugin.isSelfEmail">
+<code class="descname">isSelfEmail</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plugins/Email.html#Plugin.isSelfEmail"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#plugins.Email.Plugin.isSelfEmail" title="永久链接至目标">¶</a></dt>
+<dd><p>Whether the email is sent by the user</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="plugins.Email.Plugin.isValid">
+<code class="descname">isValid</code><span class="sig-paren">(</span><em>text</em>, <em>parsed</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plugins/Email.html#Plugin.isValid"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#plugins.Email.Plugin.isValid" title="永久链接至目标">¶</a></dt>
+<dd><p>是否适合由该插件处理</p>
+<p>参数：
+query – 用户的指令字符串
+parsed – 用户指令经过 NLU 解析后的结果</p>
+<p>返回：
+True: 适合由该插件处理
+False: 不适合由该插件处理</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-plugins.Poem">
+<span id="plugins-poem-module"></span><h2>plugins.Poem module<a class="headerlink" href="#module-plugins.Poem" title="永久链接至标题">¶</a></h2>
+<dl class="function">
+<dt id="plugins.Poem.handle">
+<code class="descclassname">plugins.Poem.</code><code class="descname">handle</code><span class="sig-paren">(</span><em>text</em>, <em>mic</em>, <em>parsed</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plugins/Poem.html#handle"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#plugins.Poem.handle" title="永久链接至目标">¶</a></dt>
+<dd><p>Responds to user-input, typically speech text</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>text – user-input, typically transcribed speech
+mic – used to interact with the user (for both input and output)        
+parsed – NLU structure parsed by Baidu UNIT</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="plugins.Poem.isValid">
+<code class="descclassname">plugins.Poem.</code><code class="descname">isValid</code><span class="sig-paren">(</span><em>text</em>, <em>parsed=None</em>, <em>immersiveMode=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plugins/Poem.html#isValid"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#plugins.Poem.isValid" title="永久链接至目标">¶</a></dt>
+<dd><p>Returns True if the input is related to weather.</p>
+<p>Arguments:
+text – user-input, typically transcribed speech
+parsed – NLU structure parsed by Baidu UNIT
+immersiveMode – current immersive mode</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-plugins">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-plugins" title="永久链接至标题">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, wzpan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+statistic module
+================
+
+.. automodule:: statistic
+    :members:
+    :undoc-members:
+    :show-inheritance:

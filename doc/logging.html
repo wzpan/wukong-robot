@@ -1,0 +1,1082 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>logging module &mdash; wukong-robot 1.2.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> wukong-robot
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">logging module</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">wukong-robot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>logging module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/logging.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-logging">
+<span id="logging-module"></span><h1>logging module<a class="headerlink" href="#module-logging" title="永久链接至标题">¶</a></h1>
+<p>Logging package for Python. Based on PEP 282 and comments thereto in
+comp.lang.python.</p>
+<p>Copyright (C) 2001-2016 Vinay Sajip. All Rights Reserved.</p>
+<p>To use, simply ‘import logging’ and log away!</p>
+<dl class="class">
+<dt id="logging.BufferingFormatter">
+<em class="property">class </em><code class="descclassname">logging.</code><code class="descname">BufferingFormatter</code><span class="sig-paren">(</span><em>linefmt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#BufferingFormatter"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.BufferingFormatter" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A formatter suitable for formatting a number of records.</p>
+<dl class="method">
+<dt id="logging.BufferingFormatter.format">
+<code class="descname">format</code><span class="sig-paren">(</span><em>records</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#BufferingFormatter.format"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.BufferingFormatter.format" title="永久链接至目标">¶</a></dt>
+<dd><p>Format the specified records and return the result as a string.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.BufferingFormatter.formatFooter">
+<code class="descname">formatFooter</code><span class="sig-paren">(</span><em>records</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#BufferingFormatter.formatFooter"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.BufferingFormatter.formatFooter" title="永久链接至目标">¶</a></dt>
+<dd><p>Return the footer string for the specified records.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.BufferingFormatter.formatHeader">
+<code class="descname">formatHeader</code><span class="sig-paren">(</span><em>records</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#BufferingFormatter.formatHeader"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.BufferingFormatter.formatHeader" title="永久链接至目标">¶</a></dt>
+<dd><p>Return the header string for the specified records.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="logging.FileHandler">
+<em class="property">class </em><code class="descclassname">logging.</code><code class="descname">FileHandler</code><span class="sig-paren">(</span><em>filename</em>, <em>mode='a'</em>, <em>encoding=None</em>, <em>delay=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#FileHandler"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.FileHandler" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#logging.StreamHandler" title="logging.StreamHandler"><code class="xref py py-class docutils literal notranslate"><span class="pre">logging.StreamHandler</span></code></a></p>
+<p>A handler class which writes formatted logging records to disk files.</p>
+<dl class="method">
+<dt id="logging.FileHandler.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#FileHandler.close"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.FileHandler.close" title="永久链接至目标">¶</a></dt>
+<dd><p>Closes the stream.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.FileHandler.emit">
+<code class="descname">emit</code><span class="sig-paren">(</span><em>record</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#FileHandler.emit"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.FileHandler.emit" title="永久链接至目标">¶</a></dt>
+<dd><p>Emit a record.</p>
+<p>If the stream was not opened because ‘delay’ was specified in the
+constructor, open it before calling the superclass’s emit.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="logging.Filter">
+<em class="property">class </em><code class="descclassname">logging.</code><code class="descname">Filter</code><span class="sig-paren">(</span><em>name=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Filter"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Filter" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Filter instances are used to perform arbitrary filtering of LogRecords.</p>
+<p>Loggers and Handlers can optionally use Filter instances to filter
+records as desired. The base filter class only allows events which are
+below a certain point in the logger hierarchy. For example, a filter
+initialized with “A.B” will allow events logged by loggers “A.B”,
+“A.B.C”, “A.B.C.D”, “A.B.D” etc. but not “A.BB”, “B.A.B” etc. If
+initialized with the empty string, all events are passed.</p>
+<dl class="method">
+<dt id="logging.Filter.filter">
+<code class="descname">filter</code><span class="sig-paren">(</span><em>record</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Filter.filter"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Filter.filter" title="永久链接至目标">¶</a></dt>
+<dd><p>Determine if the specified record is to be logged.</p>
+<p>Is the specified record to be logged? Returns 0 for no, nonzero for
+yes. If deemed appropriate, the record may be modified in-place.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="logging.Formatter">
+<em class="property">class </em><code class="descclassname">logging.</code><code class="descname">Formatter</code><span class="sig-paren">(</span><em>fmt=None</em>, <em>datefmt=None</em>, <em>style='%'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Formatter"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Formatter" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Formatter instances are used to convert a LogRecord to text.</p>
+<p>Formatters need to know how a LogRecord is constructed. They are
+responsible for converting a LogRecord to (usually) a string which can
+be interpreted by either a human or an external system. The base Formatter
+allows a formatting string to be specified. If none is supplied, the
+default value of “%s(message)” is used.</p>
+<p>The Formatter can be initialized with a format string which makes use of
+knowledge of the LogRecord attributes - e.g. the default value mentioned
+above makes use of the fact that the user’s message and arguments are pre-
+formatted into a LogRecord’s message attribute. Currently, the useful
+attributes in a LogRecord are described by:</p>
+<p>%(name)s            Name of the logger (logging channel)
+%(levelno)s         Numeric logging level for the message (DEBUG, INFO,</p>
+<blockquote>
+<div>WARNING, ERROR, CRITICAL)</div></blockquote>
+<dl class="docutils">
+<dt>%(levelname)s       Text logging level for the message (“DEBUG”, “INFO”,</dt>
+<dd>“WARNING”, “ERROR”, “CRITICAL”)</dd>
+<dt>%(pathname)s        Full pathname of the source file where the logging</dt>
+<dd>call was issued (if available)</dd>
+</dl>
+<p>%(filename)s        Filename portion of pathname
+%(module)s          Module (name portion of filename)
+%(lineno)d          Source line number where the logging call was issued</p>
+<blockquote>
+<div>(if available)</div></blockquote>
+<p>%(funcName)s        Function name
+%(created)f         Time when the LogRecord was created (time.time()</p>
+<blockquote>
+<div>return value)</div></blockquote>
+<p>%(asctime)s         Textual time when the LogRecord was created
+%(msecs)d           Millisecond portion of the creation time
+%(relativeCreated)d Time in milliseconds when the LogRecord was created,</p>
+<blockquote>
+<div>relative to the time the logging module was loaded
+(typically at application startup time)</div></blockquote>
+<p>%(thread)d          Thread ID (if available)
+%(threadName)s      Thread name (if available)
+%(process)d         Process ID (if available)
+%(message)s         The result of record.getMessage(), computed just as</p>
+<blockquote>
+<div>the record is emitted</div></blockquote>
+<dl class="method">
+<dt id="logging.Formatter.converter">
+<code class="descname">converter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#logging.Formatter.converter" title="永久链接至目标">¶</a></dt>
+<dd><dl class="docutils">
+<dt>localtime([seconds]) -&gt; (tm_year,tm_mon,tm_mday,tm_hour,tm_min,</dt>
+<dd>tm_sec,tm_wday,tm_yday,tm_isdst)</dd>
+</dl>
+<p>Convert seconds since the Epoch to a time tuple expressing local time.
+When ‘seconds’ is not passed in, convert the current time instead.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="logging.Formatter.default_msec_format">
+<code class="descname">default_msec_format</code><em class="property"> = '%s,%03d'</em><a class="headerlink" href="#logging.Formatter.default_msec_format" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="logging.Formatter.default_time_format">
+<code class="descname">default_time_format</code><em class="property"> = '%Y-%m-%d %H:%M:%S'</em><a class="headerlink" href="#logging.Formatter.default_time_format" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="logging.Formatter.format">
+<code class="descname">format</code><span class="sig-paren">(</span><em>record</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Formatter.format"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Formatter.format" title="永久链接至目标">¶</a></dt>
+<dd><p>Format the specified record as text.</p>
+<p>The record’s attribute dictionary is used as the operand to a
+string formatting operation which yields the returned string.
+Before formatting the dictionary, a couple of preparatory steps
+are carried out. The message attribute of the record is computed
+using LogRecord.getMessage(). If the formatting string uses the
+time (as determined by a call to usesTime(), formatTime() is
+called to format the event time. If there is exception information,
+it is formatted using formatException() and appended to the message.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Formatter.formatException">
+<code class="descname">formatException</code><span class="sig-paren">(</span><em>ei</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Formatter.formatException"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Formatter.formatException" title="永久链接至目标">¶</a></dt>
+<dd><p>Format and return the specified exception information as a string.</p>
+<p>This default implementation just uses
+traceback.print_exception()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Formatter.formatMessage">
+<code class="descname">formatMessage</code><span class="sig-paren">(</span><em>record</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Formatter.formatMessage"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Formatter.formatMessage" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="logging.Formatter.formatStack">
+<code class="descname">formatStack</code><span class="sig-paren">(</span><em>stack_info</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Formatter.formatStack"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Formatter.formatStack" title="永久链接至目标">¶</a></dt>
+<dd><p>This method is provided as an extension point for specialized
+formatting of stack information.</p>
+<p>The input data is a string as returned from a call to
+<code class="xref py py-func docutils literal notranslate"><span class="pre">traceback.print_stack()</span></code>, but with the last trailing newline
+removed.</p>
+<p>The base implementation just returns the value passed in.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Formatter.formatTime">
+<code class="descname">formatTime</code><span class="sig-paren">(</span><em>record</em>, <em>datefmt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Formatter.formatTime"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Formatter.formatTime" title="永久链接至目标">¶</a></dt>
+<dd><p>Return the creation time of the specified LogRecord as formatted text.</p>
+<p>This method should be called from format() by a formatter which
+wants to make use of a formatted time. This method can be overridden
+in formatters to provide for any specific requirement, but the
+basic behaviour is as follows: if datefmt (a string) is specified,
+it is used with time.strftime() to format the creation time of the
+record. Otherwise, the ISO8601 format is used. The resulting
+string is returned. This function uses a user-configurable function
+to convert the creation time to a tuple. By default, time.localtime()
+is used; to change this for a particular formatter instance, set the
+‘converter’ attribute to a function with the same signature as
+time.localtime() or time.gmtime(). To change it for all formatters,
+for example if you want all logging times to be shown in GMT,
+set the ‘converter’ attribute in the Formatter class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Formatter.usesTime">
+<code class="descname">usesTime</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Formatter.usesTime"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Formatter.usesTime" title="永久链接至目标">¶</a></dt>
+<dd><p>Check if the format uses the creation time of the record.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="logging.Handler">
+<em class="property">class </em><code class="descclassname">logging.</code><code class="descname">Handler</code><span class="sig-paren">(</span><em>level=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Handler"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Handler" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">logging.Filterer</span></code></p>
+<p>Handler instances dispatch logging events to specific destinations.</p>
+<p>The base handler class. Acts as a placeholder which defines the Handler
+interface. Handlers can optionally use Formatter instances to format
+records as desired. By default, no formatter is specified; in this case,
+the ‘raw’ message as determined by record.message is logged.</p>
+<dl class="method">
+<dt id="logging.Handler.acquire">
+<code class="descname">acquire</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Handler.acquire"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Handler.acquire" title="永久链接至目标">¶</a></dt>
+<dd><p>Acquire the I/O thread lock.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Handler.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Handler.close"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Handler.close" title="永久链接至目标">¶</a></dt>
+<dd><p>Tidy up any resources used by the handler.</p>
+<p>This version removes the handler from an internal map of handlers,
+_handlers, which is used for handler lookup by name. Subclasses
+should ensure that this gets called from overridden close()
+methods.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Handler.createLock">
+<code class="descname">createLock</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Handler.createLock"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Handler.createLock" title="永久链接至目标">¶</a></dt>
+<dd><p>Acquire a thread lock for serializing access to the underlying I/O.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Handler.emit">
+<code class="descname">emit</code><span class="sig-paren">(</span><em>record</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Handler.emit"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Handler.emit" title="永久链接至目标">¶</a></dt>
+<dd><p>Do whatever it takes to actually log the specified logging record.</p>
+<p>This version is intended to be implemented by subclasses and so
+raises a NotImplementedError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Handler.flush">
+<code class="descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Handler.flush"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Handler.flush" title="永久链接至目标">¶</a></dt>
+<dd><p>Ensure all logging output has been flushed.</p>
+<p>This version does nothing and is intended to be implemented by
+subclasses.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Handler.format">
+<code class="descname">format</code><span class="sig-paren">(</span><em>record</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Handler.format"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Handler.format" title="永久链接至目标">¶</a></dt>
+<dd><p>Format the specified record.</p>
+<p>If a formatter is set, use it. Otherwise, use the default formatter
+for the module.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Handler.get_name">
+<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Handler.get_name"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Handler.get_name" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="logging.Handler.handle">
+<code class="descname">handle</code><span class="sig-paren">(</span><em>record</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Handler.handle"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Handler.handle" title="永久链接至目标">¶</a></dt>
+<dd><p>Conditionally emit the specified logging record.</p>
+<p>Emission depends on filters which may have been added to the handler.
+Wrap the actual emission of the record with acquisition/release of
+the I/O thread lock. Returns whether the filter passed the record for
+emission.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Handler.handleError">
+<code class="descname">handleError</code><span class="sig-paren">(</span><em>record</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Handler.handleError"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Handler.handleError" title="永久链接至目标">¶</a></dt>
+<dd><p>Handle errors which occur during an emit() call.</p>
+<p>This method should be called from handlers when an exception is
+encountered during an emit() call. If raiseExceptions is false,
+exceptions get silently ignored. This is what is mostly wanted
+for a logging system - most users will not care about errors in
+the logging system, they are more interested in application errors.
+You could, however, replace this with a custom handler if you wish.
+The record which was being processed is passed in to this method.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="logging.Handler.name">
+<code class="descname">name</code><a class="headerlink" href="#logging.Handler.name" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="logging.Handler.release">
+<code class="descname">release</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Handler.release"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Handler.release" title="永久链接至目标">¶</a></dt>
+<dd><p>Release the I/O thread lock.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Handler.setFormatter">
+<code class="descname">setFormatter</code><span class="sig-paren">(</span><em>fmt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Handler.setFormatter"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Handler.setFormatter" title="永久链接至目标">¶</a></dt>
+<dd><p>Set the formatter for this handler.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Handler.setLevel">
+<code class="descname">setLevel</code><span class="sig-paren">(</span><em>level</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Handler.setLevel"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Handler.setLevel" title="永久链接至目标">¶</a></dt>
+<dd><p>Set the logging level of this handler.  level must be an int or a str.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Handler.set_name">
+<code class="descname">set_name</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Handler.set_name"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Handler.set_name" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="logging.LogRecord">
+<em class="property">class </em><code class="descclassname">logging.</code><code class="descname">LogRecord</code><span class="sig-paren">(</span><em>name</em>, <em>level</em>, <em>pathname</em>, <em>lineno</em>, <em>msg</em>, <em>args</em>, <em>exc_info</em>, <em>func=None</em>, <em>sinfo=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#LogRecord"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.LogRecord" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A LogRecord instance represents an event being logged.</p>
+<p>LogRecord instances are created every time something is logged. They
+contain all the information pertinent to the event being logged. The
+main information passed in is in msg and args, which are combined
+using str(msg) % args to create the message field of the record. The
+record also includes information such as when the record was created,
+the source line where the logging call was made, and any exception
+information to be logged.</p>
+<dl class="method">
+<dt id="logging.LogRecord.getMessage">
+<code class="descname">getMessage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#LogRecord.getMessage"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.LogRecord.getMessage" title="永久链接至目标">¶</a></dt>
+<dd><p>Return the message for this LogRecord.</p>
+<p>Return the message for this LogRecord after merging any user-supplied
+arguments with the message.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="logging.Logger">
+<em class="property">class </em><code class="descclassname">logging.</code><code class="descname">Logger</code><span class="sig-paren">(</span><em>name</em>, <em>level=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Logger"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Logger" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">logging.Filterer</span></code></p>
+<p>Instances of the Logger class represent a single logging channel. A
+“logging channel” indicates an area of an application. Exactly how an
+“area” is defined is up to the application developer. Since an
+application can have any number of areas, logging channels are identified
+by a unique string. Application areas can be nested (e.g. an area
+of “input processing” might include sub-areas “read CSV files”, “read
+XLS files” and “read Gnumeric files”). To cater for this natural nesting,
+channel names are organized into a namespace hierarchy where levels are
+separated by periods, much like the Java or Python package namespace. So
+in the instance given above, channel names might be “input” for the upper
+level, and “input.csv”, “input.xls” and “input.gnu” for the sub-levels.
+There is no arbitrary limit to the depth of nesting.</p>
+<dl class="method">
+<dt id="logging.Logger.addHandler">
+<code class="descname">addHandler</code><span class="sig-paren">(</span><em>hdlr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Logger.addHandler"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Logger.addHandler" title="永久链接至目标">¶</a></dt>
+<dd><p>Add the specified handler to this logger.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Logger.callHandlers">
+<code class="descname">callHandlers</code><span class="sig-paren">(</span><em>record</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Logger.callHandlers"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Logger.callHandlers" title="永久链接至目标">¶</a></dt>
+<dd><p>Pass a record to all relevant handlers.</p>
+<p>Loop through all handlers for this logger and its parents in the
+logger hierarchy. If no handler was found, output a one-off error
+message to sys.stderr. Stop searching up the hierarchy whenever a
+logger with the “propagate” attribute set to zero is found - that
+will be the last logger whose handlers are called.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Logger.critical">
+<code class="descname">critical</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Logger.critical"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Logger.critical" title="永久链接至目标">¶</a></dt>
+<dd><p>Log ‘msg % args’ with severity ‘CRITICAL’.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.critical(“Houston, we have a %s”, “major disaster”, exc_info=1)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Logger.debug">
+<code class="descname">debug</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Logger.debug"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Logger.debug" title="永久链接至目标">¶</a></dt>
+<dd><p>Log ‘msg % args’ with severity ‘DEBUG’.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.debug(“Houston, we have a %s”, “thorny problem”, exc_info=1)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Logger.error">
+<code class="descname">error</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Logger.error"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Logger.error" title="永久链接至目标">¶</a></dt>
+<dd><p>Log ‘msg % args’ with severity ‘ERROR’.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.error(“Houston, we have a %s”, “major problem”, exc_info=1)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Logger.exception">
+<code class="descname">exception</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>exc_info=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Logger.exception"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Logger.exception" title="永久链接至目标">¶</a></dt>
+<dd><p>Convenience method for logging an ERROR with exception information.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Logger.fatal">
+<code class="descname">fatal</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#logging.Logger.fatal" title="永久链接至目标">¶</a></dt>
+<dd><p>Log ‘msg % args’ with severity ‘CRITICAL’.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.critical(“Houston, we have a %s”, “major disaster”, exc_info=1)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Logger.findCaller">
+<code class="descname">findCaller</code><span class="sig-paren">(</span><em>stack_info=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Logger.findCaller"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Logger.findCaller" title="永久链接至目标">¶</a></dt>
+<dd><p>Find the stack frame of the caller so that we can note the source
+file name, line number and function name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Logger.getChild">
+<code class="descname">getChild</code><span class="sig-paren">(</span><em>suffix</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Logger.getChild"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Logger.getChild" title="永久链接至目标">¶</a></dt>
+<dd><p>Get a logger which is a descendant to this one.</p>
+<p>This is a convenience method, such that</p>
+<p>logging.getLogger(‘abc’).getChild(‘def.ghi’)</p>
+<p>is the same as</p>
+<p>logging.getLogger(‘abc.def.ghi’)</p>
+<p>It’s useful, for example, when the parent logger is named using
+__name__ rather than a literal string.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Logger.getEffectiveLevel">
+<code class="descname">getEffectiveLevel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Logger.getEffectiveLevel"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Logger.getEffectiveLevel" title="永久链接至目标">¶</a></dt>
+<dd><p>Get the effective level for this logger.</p>
+<p>Loop through this logger and its parents in the logger hierarchy,
+looking for a non-zero logging level. Return the first one found.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Logger.handle">
+<code class="descname">handle</code><span class="sig-paren">(</span><em>record</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Logger.handle"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Logger.handle" title="永久链接至目标">¶</a></dt>
+<dd><p>Call the handlers for the specified record.</p>
+<p>This method is used for unpickled records received from a socket, as
+well as those created locally. Logger-level filtering is applied.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Logger.hasHandlers">
+<code class="descname">hasHandlers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Logger.hasHandlers"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Logger.hasHandlers" title="永久链接至目标">¶</a></dt>
+<dd><p>See if this logger has any handlers configured.</p>
+<p>Loop through all handlers for this logger and its parents in the
+logger hierarchy. Return True if a handler was found, else False.
+Stop searching up the hierarchy whenever a logger with the “propagate”
+attribute set to zero is found - that will be the last logger which
+is checked for the existence of handlers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Logger.info">
+<code class="descname">info</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Logger.info"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Logger.info" title="永久链接至目标">¶</a></dt>
+<dd><p>Log ‘msg % args’ with severity ‘INFO’.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.info(“Houston, we have a %s”, “interesting problem”, exc_info=1)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Logger.isEnabledFor">
+<code class="descname">isEnabledFor</code><span class="sig-paren">(</span><em>level</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Logger.isEnabledFor"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Logger.isEnabledFor" title="永久链接至目标">¶</a></dt>
+<dd><p>Is this logger enabled for level ‘level’?</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Logger.log">
+<code class="descname">log</code><span class="sig-paren">(</span><em>level</em>, <em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Logger.log"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Logger.log" title="永久链接至目标">¶</a></dt>
+<dd><p>Log ‘msg % args’ with the integer severity ‘level’.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.log(level, “We have a %s”, “mysterious problem”, exc_info=1)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Logger.makeRecord">
+<code class="descname">makeRecord</code><span class="sig-paren">(</span><em>name</em>, <em>level</em>, <em>fn</em>, <em>lno</em>, <em>msg</em>, <em>args</em>, <em>exc_info</em>, <em>func=None</em>, <em>extra=None</em>, <em>sinfo=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Logger.makeRecord"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Logger.makeRecord" title="永久链接至目标">¶</a></dt>
+<dd><p>A factory method which can be overridden in subclasses to create
+specialized LogRecords.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="logging.Logger.manager">
+<code class="descname">manager</code><em class="property"> = &lt;logging.Manager object&gt;</em><a class="headerlink" href="#logging.Logger.manager" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="logging.Logger.removeHandler">
+<code class="descname">removeHandler</code><span class="sig-paren">(</span><em>hdlr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Logger.removeHandler"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Logger.removeHandler" title="永久链接至目标">¶</a></dt>
+<dd><p>Remove the specified handler from this logger.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="logging.Logger.root">
+<code class="descname">root</code><em class="property"> = &lt;logging.RootLogger object&gt;</em><a class="headerlink" href="#logging.Logger.root" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="logging.Logger.setLevel">
+<code class="descname">setLevel</code><span class="sig-paren">(</span><em>level</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Logger.setLevel"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Logger.setLevel" title="永久链接至目标">¶</a></dt>
+<dd><p>Set the logging level of this logger.  level must be an int or a str.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.Logger.warn">
+<code class="descname">warn</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Logger.warn"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Logger.warn" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="logging.Logger.warning">
+<code class="descname">warning</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#Logger.warning"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.Logger.warning" title="永久链接至目标">¶</a></dt>
+<dd><p>Log ‘msg % args’ with severity ‘WARNING’.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.warning(“Houston, we have a %s”, “bit of a problem”, exc_info=1)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="logging.LoggerAdapter">
+<em class="property">class </em><code class="descclassname">logging.</code><code class="descname">LoggerAdapter</code><span class="sig-paren">(</span><em>logger</em>, <em>extra</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#LoggerAdapter"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.LoggerAdapter" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>An adapter for loggers which makes it easier to specify contextual
+information in logging output.</p>
+<dl class="method">
+<dt id="logging.LoggerAdapter.critical">
+<code class="descname">critical</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#LoggerAdapter.critical"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.LoggerAdapter.critical" title="永久链接至目标">¶</a></dt>
+<dd><p>Delegate a critical call to the underlying logger.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.LoggerAdapter.debug">
+<code class="descname">debug</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#LoggerAdapter.debug"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.LoggerAdapter.debug" title="永久链接至目标">¶</a></dt>
+<dd><p>Delegate a debug call to the underlying logger.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.LoggerAdapter.error">
+<code class="descname">error</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#LoggerAdapter.error"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.LoggerAdapter.error" title="永久链接至目标">¶</a></dt>
+<dd><p>Delegate an error call to the underlying logger.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.LoggerAdapter.exception">
+<code class="descname">exception</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>exc_info=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#LoggerAdapter.exception"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.LoggerAdapter.exception" title="永久链接至目标">¶</a></dt>
+<dd><p>Delegate an exception call to the underlying logger.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.LoggerAdapter.getEffectiveLevel">
+<code class="descname">getEffectiveLevel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#LoggerAdapter.getEffectiveLevel"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.LoggerAdapter.getEffectiveLevel" title="永久链接至目标">¶</a></dt>
+<dd><p>Get the effective level for the underlying logger.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.LoggerAdapter.hasHandlers">
+<code class="descname">hasHandlers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#LoggerAdapter.hasHandlers"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.LoggerAdapter.hasHandlers" title="永久链接至目标">¶</a></dt>
+<dd><p>See if the underlying logger has any handlers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.LoggerAdapter.info">
+<code class="descname">info</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#LoggerAdapter.info"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.LoggerAdapter.info" title="永久链接至目标">¶</a></dt>
+<dd><p>Delegate an info call to the underlying logger.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.LoggerAdapter.isEnabledFor">
+<code class="descname">isEnabledFor</code><span class="sig-paren">(</span><em>level</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#LoggerAdapter.isEnabledFor"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.LoggerAdapter.isEnabledFor" title="永久链接至目标">¶</a></dt>
+<dd><p>Is this logger enabled for level ‘level’?</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.LoggerAdapter.log">
+<code class="descname">log</code><span class="sig-paren">(</span><em>level</em>, <em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#LoggerAdapter.log"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.LoggerAdapter.log" title="永久链接至目标">¶</a></dt>
+<dd><p>Delegate a log call to the underlying logger, after adding
+contextual information from this adapter instance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.LoggerAdapter.process">
+<code class="descname">process</code><span class="sig-paren">(</span><em>msg</em>, <em>kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#LoggerAdapter.process"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.LoggerAdapter.process" title="永久链接至目标">¶</a></dt>
+<dd><p>Process the logging message and keyword arguments passed in to
+a logging call to insert contextual information. You can either
+manipulate the message itself, the keyword args or both. Return
+the message and kwargs modified (or not) to suit your needs.</p>
+<p>Normally, you’ll only need to override this one method in a
+LoggerAdapter subclass for your specific needs.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.LoggerAdapter.setLevel">
+<code class="descname">setLevel</code><span class="sig-paren">(</span><em>level</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#LoggerAdapter.setLevel"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.LoggerAdapter.setLevel" title="永久链接至目标">¶</a></dt>
+<dd><p>Set the specified level on the underlying logger.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.LoggerAdapter.warn">
+<code class="descname">warn</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#LoggerAdapter.warn"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.LoggerAdapter.warn" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="logging.LoggerAdapter.warning">
+<code class="descname">warning</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#LoggerAdapter.warning"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.LoggerAdapter.warning" title="永久链接至目标">¶</a></dt>
+<dd><p>Delegate a warning call to the underlying logger.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="logging.NullHandler">
+<em class="property">class </em><code class="descclassname">logging.</code><code class="descname">NullHandler</code><span class="sig-paren">(</span><em>level=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#NullHandler"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.NullHandler" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#logging.Handler" title="logging.Handler"><code class="xref py py-class docutils literal notranslate"><span class="pre">logging.Handler</span></code></a></p>
+<p>This handler does nothing. It’s intended to be used to avoid the
+“No handlers could be found for logger XXX” one-off warning. This is
+important for library code, which may contain code to log events. If a user
+of the library does not configure logging, the one-off warning might be
+produced; to avoid this, the library developer simply needs to instantiate
+a NullHandler and add it to the top-level logger of the library module or
+package.</p>
+<dl class="method">
+<dt id="logging.NullHandler.createLock">
+<code class="descname">createLock</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#NullHandler.createLock"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.NullHandler.createLock" title="永久链接至目标">¶</a></dt>
+<dd><p>Acquire a thread lock for serializing access to the underlying I/O.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.NullHandler.emit">
+<code class="descname">emit</code><span class="sig-paren">(</span><em>record</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#NullHandler.emit"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.NullHandler.emit" title="永久链接至目标">¶</a></dt>
+<dd><p>Stub.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.NullHandler.handle">
+<code class="descname">handle</code><span class="sig-paren">(</span><em>record</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#NullHandler.handle"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.NullHandler.handle" title="永久链接至目标">¶</a></dt>
+<dd><p>Stub.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="logging.StreamHandler">
+<em class="property">class </em><code class="descclassname">logging.</code><code class="descname">StreamHandler</code><span class="sig-paren">(</span><em>stream=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#StreamHandler"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.StreamHandler" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#logging.Handler" title="logging.Handler"><code class="xref py py-class docutils literal notranslate"><span class="pre">logging.Handler</span></code></a></p>
+<p>A handler class which writes logging records, appropriately formatted,
+to a stream. Note that this class does not close the stream, as
+sys.stdout or sys.stderr may be used.</p>
+<dl class="method">
+<dt id="logging.StreamHandler.emit">
+<code class="descname">emit</code><span class="sig-paren">(</span><em>record</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#StreamHandler.emit"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.StreamHandler.emit" title="永久链接至目标">¶</a></dt>
+<dd><p>Emit a record.</p>
+<p>If a formatter is specified, it is used to format the record.
+The record is then written to the stream with a trailing newline.  If
+exception information is present, it is formatted using
+traceback.print_exception and appended to the stream.  If the stream
+has an ‘encoding’ attribute, it is used to determine how to do the
+output to the stream.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="logging.StreamHandler.flush">
+<code class="descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#StreamHandler.flush"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.StreamHandler.flush" title="永久链接至目标">¶</a></dt>
+<dd><p>Flushes the stream.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="logging.StreamHandler.terminator">
+<code class="descname">terminator</code><em class="property"> = '\n'</em><a class="headerlink" href="#logging.StreamHandler.terminator" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="logging.addLevelName">
+<code class="descclassname">logging.</code><code class="descname">addLevelName</code><span class="sig-paren">(</span><em>level</em>, <em>levelName</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#addLevelName"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.addLevelName" title="永久链接至目标">¶</a></dt>
+<dd><p>Associate ‘levelName’ with ‘level’.</p>
+<p>This is used when converting levels to text during message formatting.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="logging.basicConfig">
+<code class="descclassname">logging.</code><code class="descname">basicConfig</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#basicConfig"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.basicConfig" title="永久链接至目标">¶</a></dt>
+<dd><p>Do basic configuration for the logging system.</p>
+<p>This function does nothing if the root logger already has handlers
+configured. It is a convenience method intended for use by simple scripts
+to do one-shot configuration of the logging package.</p>
+<p>The default behaviour is to create a StreamHandler which writes to
+sys.stderr, set a formatter using the BASIC_FORMAT format string, and
+add the handler to the root logger.</p>
+<p>A number of optional keyword arguments may be specified, which can alter
+the default behaviour.</p>
+<dl class="docutils">
+<dt>filename  Specifies that a FileHandler be created, using the specified</dt>
+<dd>filename, rather than a StreamHandler.</dd>
+<dt>filemode  Specifies the mode to open the file, if filename is specified</dt>
+<dd>(if filemode is unspecified, it defaults to ‘a’).</dd>
+</dl>
+<p>format    Use the specified format string for the handler.
+datefmt   Use the specified date/time format.
+style     If a format string is specified, use this to specify the</p>
+<blockquote>
+<div>type of format string (possible values ‘%’, ‘{‘, ‘$’, for
+%-formatting, <code class="xref py py-meth docutils literal notranslate"><span class="pre">str.format()</span></code> and <code class="xref py py-class docutils literal notranslate"><span class="pre">string.Template</span></code>
+- defaults to ‘%’).</div></blockquote>
+<p>level     Set the root logger level to the specified level.
+stream    Use the specified stream to initialize the StreamHandler. Note</p>
+<blockquote>
+<div>that this argument is incompatible with ‘filename’ - if both
+are present, ‘stream’ is ignored.</div></blockquote>
+<dl class="docutils">
+<dt>handlers  If specified, this should be an iterable of already created</dt>
+<dd>handlers, which will be added to the root handler. Any handler
+in the list which does not have a formatter assigned will be
+assigned the formatter created in this function.</dd>
+</dl>
+<p>Note that you could specify a stream created using open(filename, mode)
+rather than passing the filename and mode in. However, it should be
+remembered that StreamHandler does not close its stream (since it may be
+using sys.stdout or sys.stderr), whereas FileHandler closes its stream
+when the handler is closed.</p>
+<div class="versionchanged">
+<p><span class="versionmodified">在 3.2 版更改: </span>Added the <code class="docutils literal notranslate"><span class="pre">style</span></code> parameter.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">在 3.3 版更改: </span>Added the <code class="docutils literal notranslate"><span class="pre">handlers</span></code> parameter. A <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> is now thrown for
+incompatible arguments (e.g. <code class="docutils literal notranslate"><span class="pre">handlers</span></code> specified together with
+<code class="docutils literal notranslate"><span class="pre">filename</span></code>/<code class="docutils literal notranslate"><span class="pre">filemode</span></code>, or <code class="docutils literal notranslate"><span class="pre">filename</span></code>/<code class="docutils literal notranslate"><span class="pre">filemode</span></code> specified
+together with <code class="docutils literal notranslate"><span class="pre">stream</span></code>, or <code class="docutils literal notranslate"><span class="pre">handlers</span></code> specified together with
+<code class="docutils literal notranslate"><span class="pre">stream</span></code>.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="logging.captureWarnings">
+<code class="descclassname">logging.</code><code class="descname">captureWarnings</code><span class="sig-paren">(</span><em>capture</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#captureWarnings"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.captureWarnings" title="永久链接至目标">¶</a></dt>
+<dd><p>If capture is true, redirect all warnings to the logging package.
+If capture is False, ensure that warnings are not redirected to logging
+but to their original destinations.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="logging.critical">
+<code class="descclassname">logging.</code><code class="descname">critical</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#critical"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.critical" title="永久链接至目标">¶</a></dt>
+<dd><p>Log a message with severity ‘CRITICAL’ on the root logger. If the logger
+has no handlers, call basicConfig() to add a console handler with a
+pre-defined format.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="logging.debug">
+<code class="descclassname">logging.</code><code class="descname">debug</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#debug"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.debug" title="永久链接至目标">¶</a></dt>
+<dd><p>Log a message with severity ‘DEBUG’ on the root logger. If the logger has
+no handlers, call basicConfig() to add a console handler with a pre-defined
+format.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="logging.disable">
+<code class="descclassname">logging.</code><code class="descname">disable</code><span class="sig-paren">(</span><em>level</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#disable"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.disable" title="永久链接至目标">¶</a></dt>
+<dd><p>Disable all logging calls of severity ‘level’ and below.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="logging.error">
+<code class="descclassname">logging.</code><code class="descname">error</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#error"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.error" title="永久链接至目标">¶</a></dt>
+<dd><p>Log a message with severity ‘ERROR’ on the root logger. If the logger has
+no handlers, call basicConfig() to add a console handler with a pre-defined
+format.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="logging.exception">
+<code class="descclassname">logging.</code><code class="descname">exception</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>exc_info=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#exception"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.exception" title="永久链接至目标">¶</a></dt>
+<dd><p>Log a message with severity ‘ERROR’ on the root logger, with exception
+information. If the logger has no handlers, basicConfig() is called to add
+a console handler with a pre-defined format.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="logging.fatal">
+<code class="descclassname">logging.</code><code class="descname">fatal</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#logging.fatal" title="永久链接至目标">¶</a></dt>
+<dd><p>Log a message with severity ‘CRITICAL’ on the root logger. If the logger
+has no handlers, call basicConfig() to add a console handler with a
+pre-defined format.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="logging.getLevelName">
+<code class="descclassname">logging.</code><code class="descname">getLevelName</code><span class="sig-paren">(</span><em>level</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#getLevelName"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.getLevelName" title="永久链接至目标">¶</a></dt>
+<dd><p>Return the textual representation of logging level ‘level’.</p>
+<p>If the level is one of the predefined levels (CRITICAL, ERROR, WARNING,
+INFO, DEBUG) then you get the corresponding string. If you have
+associated levels with names using addLevelName then the name you have
+associated with ‘level’ is returned.</p>
+<p>If a numeric value corresponding to one of the defined levels is passed
+in, the corresponding string representation is returned.</p>
+<p>Otherwise, the string “Level %s” % level is returned.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="logging.getLogger">
+<code class="descclassname">logging.</code><code class="descname">getLogger</code><span class="sig-paren">(</span><em>name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#getLogger"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.getLogger" title="永久链接至目标">¶</a></dt>
+<dd><p>Return a logger with the specified name, creating it if necessary.</p>
+<p>If no name is specified, return the root logger.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="logging.getLoggerClass">
+<code class="descclassname">logging.</code><code class="descname">getLoggerClass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#getLoggerClass"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.getLoggerClass" title="永久链接至目标">¶</a></dt>
+<dd><p>Return the class to be used when instantiating a logger.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="logging.info">
+<code class="descclassname">logging.</code><code class="descname">info</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#info"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.info" title="永久链接至目标">¶</a></dt>
+<dd><p>Log a message with severity ‘INFO’ on the root logger. If the logger has
+no handlers, call basicConfig() to add a console handler with a pre-defined
+format.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="logging.log">
+<code class="descclassname">logging.</code><code class="descname">log</code><span class="sig-paren">(</span><em>level</em>, <em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#log"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.log" title="永久链接至目标">¶</a></dt>
+<dd><p>Log ‘msg % args’ with the integer severity ‘level’ on the root logger. If
+the logger has no handlers, call basicConfig() to add a console handler
+with a pre-defined format.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="logging.makeLogRecord">
+<code class="descclassname">logging.</code><code class="descname">makeLogRecord</code><span class="sig-paren">(</span><em>dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#makeLogRecord"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.makeLogRecord" title="永久链接至目标">¶</a></dt>
+<dd><p>Make a LogRecord whose attributes are defined by the specified dictionary,
+This function is useful for converting a logging event received over
+a socket connection (which is sent as a dictionary) into a LogRecord
+instance.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="logging.setLoggerClass">
+<code class="descclassname">logging.</code><code class="descname">setLoggerClass</code><span class="sig-paren">(</span><em>klass</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#setLoggerClass"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.setLoggerClass" title="永久链接至目标">¶</a></dt>
+<dd><p>Set the class to be used when instantiating a logger. The class should
+define __init__() such that only a name argument is required, and the
+__init__() should call Logger.__init__()</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="logging.warn">
+<code class="descclassname">logging.</code><code class="descname">warn</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#warn"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.warn" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="logging.warning">
+<code class="descclassname">logging.</code><code class="descname">warning</code><span class="sig-paren">(</span><em>msg</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#warning"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.warning" title="永久链接至目标">¶</a></dt>
+<dd><p>Log a message with severity ‘WARNING’ on the root logger. If the logger has
+no handlers, call basicConfig() to add a console handler with a pre-defined
+format.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="logging.getLogRecordFactory">
+<code class="descclassname">logging.</code><code class="descname">getLogRecordFactory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#getLogRecordFactory"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.getLogRecordFactory" title="永久链接至目标">¶</a></dt>
+<dd><p>Return the factory to be used when instantiating a log record.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="logging.setLogRecordFactory">
+<code class="descclassname">logging.</code><code class="descname">setLogRecordFactory</code><span class="sig-paren">(</span><em>factory</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/logging.html#setLogRecordFactory"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#logging.setLogRecordFactory" title="永久链接至目标">¶</a></dt>
+<dd><p>Set the factory to be used when instantiating a log record.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><strong>factory</strong> – A callable which will be called to instantiate</td>
+</tr>
+</tbody>
+</table>
+<p>a log record.</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, wzpan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

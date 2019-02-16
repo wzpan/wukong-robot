@@ -1,0 +1,7 @@
+TTS module
+==========
+
+.. automodule:: TTS
+    :members:
+    :undoc-members:
+    :show-inheritance:

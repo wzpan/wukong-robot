@@ -45,6 +45,8 @@ def tail(filepath, n=10):
 def getLogger(name):
     """ 
     作用同标准模块 logging.getLogger(name) 
+    
+    :returns: logger
     """
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
@@ -66,7 +68,9 @@ def getLogger(name):
 def readLog(lines=200):
     """ 
     获取最新的指定行数的 log
-    :param lines -- 最大的行数
+
+    :param lines: 最大的行数
+    :returns: 最新指定行数的 log
     """
     log_path = os.path.join(constants.TEMP_PATH, 'wukong.log')
     if os.path.exists(log_path):

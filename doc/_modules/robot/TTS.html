@@ -1,0 +1,415 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>robot.TTS &mdash; wukong-robot 1.2.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> wukong-robot
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">wukong-robot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">模块代码</a> &raquo;</li>
+        
+      <li>robot.TTS</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>robot.TTS 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8-*-</span>
+<span class="kn">from</span> <span class="nn">aip</span> <span class="k">import</span> <span class="n">AipSpeech</span>
+<span class="kn">from</span> <span class="nn">.sdk</span> <span class="k">import</span> <span class="n">TencentSpeech</span><span class="p">,</span> <span class="n">AliSpeech</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">utils</span><span class="p">,</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">logging</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AbstractTTS"><a class="viewcode-back" href="../../robot.html#robot.TTS.AbstractTTS">[文档]</a><span class="k">class</span> <span class="nc">AbstractTTS</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generic parent class for all TTS engines</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ABCMeta</span>
+
+<div class="viewcode-block" id="AbstractTTS.get_config"><a class="viewcode-back" href="../../robot.html#robot.TTS.AbstractTTS.get_config">[文档]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{}</span></div>
+
+<div class="viewcode-block" id="AbstractTTS.get_instance"><a class="viewcode-back" href="../../robot.html#robot.TTS.AbstractTTS.get_instance">[文档]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_instance</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">profile</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">profile</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">instance</span></div>
+
+<div class="viewcode-block" id="AbstractTTS.get_speech"><a class="viewcode-back" href="../../robot.html#robot.TTS.AbstractTTS.get_speech">[文档]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_speech</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phrase</span><span class="p">):</span>
+        <span class="k">pass</span></div></div>
+
+<div class="viewcode-block" id="BaiduTTS"><a class="viewcode-back" href="../../robot.html#robot.TTS.BaiduTTS">[文档]</a><span class="k">class</span> <span class="nc">BaiduTTS</span><span class="p">(</span><span class="n">AbstractTTS</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    使用百度语音合成技术</span>
+<span class="sd">    要使用本模块, 首先到 yuyin.baidu.com 注册一个开发者账号,</span>
+<span class="sd">    之后创建一个新应用, 然后在应用管理的&quot;查看key&quot;中获得 API Key 和 Secret Key</span>
+<span class="sd">    填入 config.yml 中.</span>
+<span class="sd">    ...</span>
+<span class="sd">        baidu_yuyin: </span>
+<span class="sd">            appid: &#39;9670645&#39;</span>
+<span class="sd">            api_key: &#39;qg4haN8b2bGvFtCbBGqhrmZy&#39;</span>
+<span class="sd">            secret_key: &#39;585d4eccb50d306c401d7df138bb02e7&#39;</span>
+<span class="sd">            dev_pid: 1936</span>
+<span class="sd">            per: 1</span>
+<span class="sd">            lan: &#39;zh&#39;</span>
+<span class="sd">        ...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">SLUG</span> <span class="o">=</span> <span class="s2">&quot;baidu-tts&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">appid</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">,</span> <span class="n">per</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">lan</span><span class="o">=</span><span class="s1">&#39;zh&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">AipSpeech</span><span class="p">(</span><span class="n">appid</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">per</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lan</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">per</span><span class="p">),</span> <span class="n">lan</span>
+
+<div class="viewcode-block" id="BaiduTTS.get_config"><a class="viewcode-back" href="../../robot.html#robot.TTS.BaiduTTS.get_config">[文档]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="c1"># Try to get baidu_yuyin config from config</span>
+        <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;baidu_yuyin&#39;</span><span class="p">,</span> <span class="p">{})</span></div>
+
+<div class="viewcode-block" id="BaiduTTS.get_speech"><a class="viewcode-back" href="../../robot.html#robot.TTS.BaiduTTS.get_speech">[文档]</a>    <span class="k">def</span> <span class="nf">get_speech</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phrase</span><span class="p">):</span>
+        <span class="n">result</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">synthesis</span><span class="p">(</span><span class="n">phrase</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lan</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;per&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">per</span><span class="p">});</span>
+        <span class="c1"># 识别正确返回语音二进制 错误则返回dict 参照下面错误码</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">write_temp_file</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;.mp3&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> 语音合成成功，合成路径：</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">,</span> <span class="n">tmpfile</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">tmpfile</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> 合成失败！&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">),</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="TencentTTS"><a class="viewcode-back" href="../../robot.html#robot.TTS.TencentTTS">[文档]</a><span class="k">class</span> <span class="nc">TencentTTS</span><span class="p">(</span><span class="n">AbstractTTS</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    腾讯的语音合成</span>
+<span class="sd">    region: 服务地域，挑个离自己最近的区域有助于提升速度。</span>
+<span class="sd">        有效值：https://cloud.tencent.com/document/api/441/17365#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8</span>
+<span class="sd">    voiceType:</span>
+<span class="sd">        - 0：女声1，亲和风格(默认)</span>
+<span class="sd">        - 1：男声1，成熟风格</span>
+<span class="sd">        - 2：男声2，成熟风格</span>
+<span class="sd">    language:</span>
+<span class="sd">        - 1: 中文，最大100个汉字（标点符号算一个汉子）</span>
+<span class="sd">        - 2: 英文，最大支持400个字母（标点符号算一个字母）</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">SLUG</span> <span class="o">=</span> <span class="s2">&quot;tencent-tts&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">appid</span><span class="p">,</span> <span class="n">secretid</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="s1">&#39;ap-guangzhou&#39;</span><span class="p">,</span> <span class="n">voiceType</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="n">TencentSpeech</span><span class="o">.</span><span class="n">tencentSpeech</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">secretid</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">voiceType</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">language</span> <span class="o">=</span> <span class="n">region</span><span class="p">,</span> <span class="n">voiceType</span><span class="p">,</span> <span class="n">language</span>
+
+<div class="viewcode-block" id="TencentTTS.get_config"><a class="viewcode-back" href="../../robot.html#robot.TTS.TencentTTS.get_config">[文档]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="c1"># Try to get tencent_yuyin config from config</span>
+        <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tencent_yuyin&#39;</span><span class="p">,</span> <span class="p">{})</span></div>
+                
+<div class="viewcode-block" id="TencentTTS.get_speech"><a class="viewcode-back" href="../../robot.html#robot.TTS.TencentTTS.get_speech">[文档]</a>    <span class="k">def</span> <span class="nf">get_speech</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phrase</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">TTS</span><span class="p">(</span><span class="n">phrase</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">voiceType</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">language</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;Response&#39;</span> <span class="ow">in</span> <span class="n">result</span> <span class="ow">and</span> <span class="s1">&#39;Audio&#39;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">]:</span>
+            <span class="n">audio</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">][</span><span class="s1">&#39;Audio&#39;</span><span class="p">]</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">audio</span><span class="p">)</span>
+            <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">write_temp_file</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;.wav&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> 语音合成成功，合成路径：</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">,</span> <span class="n">tmpfile</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">tmpfile</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> 合成失败！&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">),</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="XunfeiTTS"><a class="viewcode-back" href="../../robot.html#robot.TTS.XunfeiTTS">[文档]</a><span class="k">class</span> <span class="nc">XunfeiTTS</span><span class="p">(</span><span class="n">AbstractTTS</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    科大讯飞的语音识别API.</span>
+<span class="sd">    外网ip查询：https://ip.51240.com/</span>
+<span class="sd">    voice_name: https://www.xfyun.cn/services/online_tts</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">SLUG</span> <span class="o">=</span> <span class="s2">&quot;xunfei-tts&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">appid</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span> <span class="n">voice_name</span><span class="o">=</span><span class="s1">&#39;xiaoyan&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">appid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">voice_name</span> <span class="o">=</span> <span class="n">appid</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span> <span class="n">voice_name</span>
+
+<div class="viewcode-block" id="XunfeiTTS.get_config"><a class="viewcode-back" href="../../robot.html#robot.TTS.XunfeiTTS.get_config">[文档]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="c1"># Try to get xunfei_yuyin config from config</span>
+        <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;xunfei_yuyin&#39;</span><span class="p">,</span> <span class="p">{})</span>     </div>
+
+<div class="viewcode-block" id="XunfeiTTS.getHeader"><a class="viewcode-back" href="../../robot.html#robot.TTS.XunfeiTTS.getHeader">[文档]</a>    <span class="k">def</span> <span class="nf">getHeader</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aue</span><span class="p">):</span>
+        <span class="n">curTime</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()))</span>
+        <span class="c1"># curTime = &#39;1526542623&#39;</span>
+        <span class="n">param</span> <span class="o">=</span> <span class="s2">&quot;{</span><span class="se">\&quot;</span><span class="s2">aue</span><span class="se">\&quot;</span><span class="s2">:</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="o">+</span><span class="n">aue</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">,</span><span class="se">\&quot;</span><span class="s2">auf</span><span class="se">\&quot;</span><span class="s2">:</span><span class="se">\&quot;</span><span class="s2">audio/L16;rate=16000</span><span class="se">\&quot;</span><span class="s2">,</span><span class="se">\&quot;</span><span class="s2">voice_name</span><span class="se">\&quot;</span><span class="s2">:</span><span class="se">\&quot;</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">voice_name</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">,</span><span class="se">\&quot;</span><span class="s2">engine_type</span><span class="se">\&quot;</span><span class="s2">:</span><span class="se">\&quot;</span><span class="s2">intp65</span><span class="se">\&quot;</span><span class="s2">}&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;param:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">param</span><span class="p">))</span>
+        <span class="n">paramBase64</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)),</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;x_param:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">paramBase64</span><span class="p">))</span>
+
+        <span class="n">m2</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">()</span>
+        <span class="n">m2</span><span class="o">.</span><span class="n">update</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">api_key</span> <span class="o">+</span> <span class="n">curTime</span> <span class="o">+</span> <span class="n">paramBase64</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+        <span class="n">checkSum</span> <span class="o">=</span> <span class="n">m2</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;X-CurTime&#39;</span><span class="p">:</span> <span class="n">curTime</span><span class="p">,</span>
+            <span class="s1">&#39;X-Param&#39;</span><span class="p">:</span> <span class="n">paramBase64</span><span class="p">,</span>
+            <span class="s1">&#39;X-Appid&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">appid</span><span class="p">,</span>
+            <span class="s1">&#39;X-CheckSum&#39;</span><span class="p">:</span> <span class="n">checkSum</span><span class="p">,</span>
+            <span class="s1">&#39;X-Real-Ip&#39;</span><span class="p">:</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/x-www-form-urlencoded; charset=utf-8&#39;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">header</span></div>
+
+<div class="viewcode-block" id="XunfeiTTS.getBody"><a class="viewcode-back" href="../../robot.html#robot.TTS.XunfeiTTS.getBody">[文档]</a>    <span class="k">def</span> <span class="nf">getBody</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;text&#39;</span><span class="p">:</span><span class="n">text</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+<div class="viewcode-block" id="XunfeiTTS.get_speech"><a class="viewcode-back" href="../../robot.html#robot.TTS.XunfeiTTS.get_speech">[文档]</a>    <span class="k">def</span> <span class="nf">get_speech</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phrase</span><span class="p">):</span>
+        <span class="n">URL</span> <span class="o">=</span> <span class="s2">&quot;http://api.xfyun.cn/v1/service/v1/tts&quot;</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">URL</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getHeader</span><span class="p">(</span><span class="s1">&#39;lame&#39;</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getBody</span><span class="p">(</span><span class="n">phrase</span><span class="p">))</span>
+        <span class="n">contentType</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">contentType</span> <span class="o">==</span> <span class="s2">&quot;audio/mpeg&quot;</span><span class="p">:</span>
+            <span class="n">sid</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;sid&#39;</span><span class="p">]</span>
+            <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">write_temp_file</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="s1">&#39;.mp3&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> 语音合成成功，合成路径：</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">,</span> <span class="n">tmpfile</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">tmpfile</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> 合成失败！</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">),</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="AliTTS"><a class="viewcode-back" href="../../robot.html#robot.TTS.AliTTS">[文档]</a><span class="k">class</span> <span class="nc">AliTTS</span><span class="p">(</span><span class="n">AbstractTTS</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    阿里的TTS</span>
+<span class="sd">    voice: 发音人，默认是 xiaoyun</span>
+<span class="sd">        全部发音人列表：https://help.aliyun.com/document_detail/84435.html?spm=a2c4g.11186623.2.24.67ce5275q2RGsT</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">SLUG</span> <span class="o">=</span> <span class="s2">&quot;ali-tts&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">appKey</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="s1">&#39;xiaoyun&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">appKey</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">voice</span> <span class="o">=</span> <span class="n">appKey</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">voice</span>
+
+<div class="viewcode-block" id="AliTTS.get_config"><a class="viewcode-back" href="../../robot.html#robot.TTS.AliTTS.get_config">[文档]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="c1"># Try to get ali_yuyin config from config</span>
+        <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ali_yuyin&#39;</span><span class="p">,</span> <span class="p">{})</span></div>
+                
+<div class="viewcode-block" id="AliTTS.get_speech"><a class="viewcode-back" href="../../robot.html#robot.TTS.AliTTS.get_speech">[文档]</a>    <span class="k">def</span> <span class="nf">get_speech</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phrase</span><span class="p">):</span>
+        <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">AliSpeech</span><span class="o">.</span><span class="n">tts</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">appKey</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">voice</span><span class="p">,</span> <span class="n">phrase</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tmpfile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> 语音合成成功，合成路径：</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">,</span> <span class="n">tmpfile</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">tmpfile</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> 合成失败！&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">),</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="get_engine_by_slug"><a class="viewcode-back" href="../../robot.html#robot.TTS.get_engine_by_slug">[文档]</a><span class="k">def</span> <span class="nf">get_engine_by_slug</span><span class="p">(</span><span class="n">slug</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        A TTS Engine implementation available on the current platform</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError if no speaker implementation is supported on this platform</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">slug</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">slug</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;无效的 TTS slug &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">slug</span><span class="p">)</span>
+
+    <span class="n">selected_engines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">engine</span><span class="p">:</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="s2">&quot;SLUG&quot;</span><span class="p">)</span> <span class="ow">and</span>
+                              <span class="n">engine</span><span class="o">.</span><span class="n">SLUG</span> <span class="o">==</span> <span class="n">slug</span><span class="p">,</span> <span class="n">get_engines</span><span class="p">()))</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_engines</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;错误：找不到名为 </span><span class="si">{}</span><span class="s2"> 的 TTS 引擎&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">slug</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_engines</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;注意: 有多个 TTS 名称与指定的引擎名 </span><span class="si">{}</span><span class="s2"> 匹配&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">slug</span><span class="p">)</span>        
+        <span class="n">engine</span> <span class="o">=</span> <span class="n">selected_engines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;使用 </span><span class="si">{}</span><span class="s2"> TTS 引擎&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">SLUG</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">engine</span><span class="o">.</span><span class="n">get_instance</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="get_engines"><a class="viewcode-back" href="../../robot.html#robot.TTS.get_engines">[文档]</a><span class="k">def</span> <span class="nf">get_engines</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">get_subclasses</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">subclasses</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">subclass</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__subclasses__</span><span class="p">():</span>
+            <span class="n">subclasses</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">subclass</span><span class="p">)</span>
+            <span class="n">subclasses</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">get_subclasses</span><span class="p">(</span><span class="n">subclass</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">subclasses</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">engine</span> <span class="k">for</span> <span class="n">engine</span> <span class="ow">in</span>
+            <span class="nb">list</span><span class="p">(</span><span class="n">get_subclasses</span><span class="p">(</span><span class="n">AbstractTTS</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="s1">&#39;SLUG&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">engine</span><span class="o">.</span><span class="n">SLUG</span><span class="p">]</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, wzpan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
