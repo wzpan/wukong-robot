@@ -51,7 +51,7 @@ class MainHandler(BaseHandler):
             self.redirect("/login")
             return
         if conversation:
-            info = updater.fetch()
+            info = Updater.fetch()
             suggestion = random.choice(suggestions)
             self.render('index.html', history=conversation.getHistory(), update_info=info, suggestion=suggestion)
         else:
