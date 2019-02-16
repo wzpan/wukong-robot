@@ -1,6 +1,6 @@
 import json
 from datetime import timedelta
-from robot import config, utils, logging, constants, updater
+from robot import config, utils, logging, constants, Updater
 import base64
 import tornado.web
 import tornado.ioloop
