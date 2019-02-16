@@ -1,0 +1,352 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>robot.Player &mdash; wukong-robot 1.2.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> wukong-robot
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">wukong-robot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">模块代码</a> &raquo;</li>
+        
+      <li>robot.Player</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>robot.Player 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8-*-</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">wave</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">utils</span>
+<span class="kn">import</span> <span class="nn">pyaudio</span>
+<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">logging</span>
+<span class="kn">from</span> <span class="nn">ctypes</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="k">import</span> <span class="n">contextmanager</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="py_error_handler"><a class="viewcode-back" href="../../robot.html#robot.Player.py_error_handler">[文档]</a><span class="k">def</span> <span class="nf">py_error_handler</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">err</span><span class="p">,</span> <span class="n">fmt</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<span class="n">ERROR_HANDLER_FUNC</span> <span class="o">=</span> <span class="n">CFUNCTYPE</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">c_char_p</span><span class="p">,</span> <span class="n">c_int</span><span class="p">,</span> <span class="n">c_char_p</span><span class="p">,</span> <span class="n">c_int</span><span class="p">,</span> <span class="n">c_char_p</span><span class="p">)</span>
+
+<span class="n">c_error_handler</span> <span class="o">=</span> <span class="n">ERROR_HANDLER_FUNC</span><span class="p">(</span><span class="n">py_error_handler</span><span class="p">)</span>
+
+<div class="viewcode-block" id="no_alsa_error"><a class="viewcode-back" href="../../robot.html#robot.Player.no_alsa_error">[文档]</a><span class="nd">@contextmanager</span>
+<span class="k">def</span> <span class="nf">no_alsa_error</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">asound</span> <span class="o">=</span> <span class="n">cdll</span><span class="o">.</span><span class="n">LoadLibrary</span><span class="p">(</span><span class="s1">&#39;libasound.so&#39;</span><span class="p">)</span>
+        <span class="n">asound</span><span class="o">.</span><span class="n">snd_lib_error_set_handler</span><span class="p">(</span><span class="n">c_error_handler</span><span class="p">)</span>
+        <span class="k">yield</span>
+        <span class="n">asound</span><span class="o">.</span><span class="n">snd_lib_error_set_handler</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">yield</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="play"><a class="viewcode-back" href="../../robot.html#robot.Player.play">[文档]</a><span class="k">def</span> <span class="nf">play</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">onCompleted</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># WavPlayer does not work well on my Macbook,</span>
+    <span class="c1"># henceforce I choose SoxPlayer</span>
+    <span class="c1">#player = getPlayerByFileName(fname)</span>
+    <span class="n">player</span> <span class="o">=</span> <span class="n">SoxPlayer</span><span class="p">()</span>
+    <span class="n">player</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">onCompleted</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="getPlayerByFileName"><a class="viewcode-back" href="../../robot.html#robot.Player.getPlayerByFileName">[文档]</a><span class="k">def</span> <span class="nf">getPlayerByFileName</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+    <span class="n">foo</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="s1">&#39;.mp3&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">SoxPlayer</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">ext</span> <span class="o">==</span> <span class="s1">&#39;.wav&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">WavPlayer</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="AbstractSoundPlayer"><a class="viewcode-back" href="../../robot.html#robot.Player.AbstractSoundPlayer">[文档]</a><span class="k">class</span> <span class="nc">AbstractSoundPlayer</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AbstractSoundPlayer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="AbstractSoundPlayer.play"><a class="viewcode-back" href="../../robot.html#robot.Player.AbstractSoundPlayer.play">[文档]</a>    <span class="k">def</span> <span class="nf">play</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="AbstractSoundPlayer.play_block"><a class="viewcode-back" href="../../robot.html#robot.Player.AbstractSoundPlayer.play_block">[文档]</a>    <span class="k">def</span> <span class="nf">play_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="AbstractSoundPlayer.stop"><a class="viewcode-back" href="../../robot.html#robot.Player.AbstractSoundPlayer.stop">[文档]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="AbstractSoundPlayer.is_playing"><a class="viewcode-back" href="../../robot.html#robot.Player.AbstractSoundPlayer.is_playing">[文档]</a>    <span class="k">def</span> <span class="nf">is_playing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span></div></div>
+    
+
+<div class="viewcode-block" id="SoxPlayer"><a class="viewcode-back" href="../../robot.html#robot.Player.SoxPlayer">[文档]</a><span class="k">class</span> <span class="nc">SoxPlayer</span><span class="p">(</span><span class="n">AbstractSoundPlayer</span><span class="p">):</span>
+    <span class="n">SLUG</span> <span class="o">=</span> <span class="s1">&#39;SoxPlayer&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SoxPlayer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">playing</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipe</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delete</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="SoxPlayer.run"><a class="viewcode-back" href="../../robot.html#robot.Player.SoxPlayer.run">[文档]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;play&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src</span><span class="p">)]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Executing </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cmd</span><span class="p">))</span>
+
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryFile</span><span class="p">()</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pipe</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">playing</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pipe</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">playing</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;play Output was: &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete</span><span class="p">:</span>
+            <span class="n">utils</span><span class="o">.</span><span class="n">check_and_delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">onCompleted</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">onCompleted</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SoxPlayer.play"><a class="viewcode-back" href="../../robot.html#robot.Player.SoxPlayer.play">[文档]</a>    <span class="k">def</span> <span class="nf">play</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">onCompleted</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">src</span> <span class="o">=</span> <span class="n">src</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delete</span> <span class="o">=</span> <span class="n">delete</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onCompleted</span> <span class="o">=</span> <span class="n">onCompleted</span></div>
+
+<div class="viewcode-block" id="SoxPlayer.play_block"><a class="viewcode-back" href="../../robot.html#robot.Player.SoxPlayer.play_block">[文档]</a>    <span class="k">def</span> <span class="nf">play_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SoxPlayer.stop"><a class="viewcode-back" href="../../robot.html#robot.Player.SoxPlayer.stop">[文档]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipe</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">onCompleted</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pipe</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete</span><span class="p">:</span>
+                <span class="n">utils</span><span class="o">.</span><span class="n">check_and_delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SoxPlayer.is_playing"><a class="viewcode-back" href="../../robot.html#robot.Player.SoxPlayer.is_playing">[文档]</a>    <span class="k">def</span> <span class="nf">is_playing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">playing</span></div></div>
+
+
+<div class="viewcode-block" id="WavPlayer"><a class="viewcode-back" href="../../robot.html#robot.Player.WavPlayer">[文档]</a><span class="k">class</span> <span class="nc">WavPlayer</span><span class="p">(</span><span class="n">AbstractSoundPlayer</span><span class="p">):</span>
+    <span class="n">SLUG</span> <span class="o">=</span> <span class="s1">&#39;WavPlayer&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">WavPlayer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">playing</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop</span> <span class="o">=</span> <span class="kc">False</span>        
+
+<div class="viewcode-block" id="WavPlayer.run"><a class="viewcode-back" href="../../robot.html#robot.Player.WavPlayer.run">[文档]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># play a voice</span>
+        <span class="n">CHUNK</span> <span class="o">=</span> <span class="mi">1024</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;playing wave </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">src</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">wave</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">no_alsa_error</span><span class="p">():</span>
+            <span class="n">audio</span> <span class="o">=</span> <span class="n">pyaudio</span><span class="o">.</span><span class="n">PyAudio</span><span class="p">()</span>
+
+        <span class="n">stream</span> <span class="o">=</span> <span class="n">audio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span>
+            <span class="nb">format</span><span class="o">=</span><span class="n">audio</span><span class="o">.</span><span class="n">get_format_from_width</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">getsampwidth</span><span class="p">()),</span>
+            <span class="n">channels</span><span class="o">=</span><span class="n">f</span><span class="o">.</span><span class="n">getnchannels</span><span class="p">(),</span>
+            <span class="n">rate</span><span class="o">=</span><span class="n">f</span><span class="o">.</span><span class="n">getframerate</span><span class="p">(),</span>
+            <span class="nb">input</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">playing</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">stream</span><span class="o">.</span><span class="n">start_stream</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readframes</span><span class="p">(</span><span class="n">CHUNK</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">data</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">:</span>
+            <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readframes</span><span class="p">(</span><span class="n">CHUNK</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;data==&quot;&quot;: </span><span class="si">{}</span><span class="s1">, self.stop: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">playing</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">stream</span><span class="o">.</span><span class="n">stop_stream</span><span class="p">()</span>
+        <span class="n">stream</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">audio</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">onCompleted</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">onCompleted</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="WavPlayer.play"><a class="viewcode-back" href="../../robot.html#robot.Player.WavPlayer.play">[文档]</a>    <span class="k">def</span> <span class="nf">play</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">onCompleted</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">src</span> <span class="o">=</span> <span class="n">src</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onCompleted</span> <span class="o">=</span> <span class="n">onCompleted</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="WavPlayer.play_block"><a class="viewcode-back" href="../../robot.html#robot.Player.WavPlayer.play_block">[文档]</a>    <span class="k">def</span> <span class="nf">play_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="WavPlayer.stop"><a class="viewcode-back" href="../../robot.html#robot.Player.WavPlayer.stop">[文档]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">check_and_delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="WavPlayer.is_playing"><a class="viewcode-back" href="../../robot.html#robot.Player.WavPlayer.is_playing">[文档]</a>    <span class="k">def</span> <span class="nf">is_playing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">playing</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, wzpan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

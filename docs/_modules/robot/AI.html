@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>robot.AI &mdash; wukong-robot 1.2.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> wukong-robot
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">wukong-robot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">模块代码</a> &raquo;</li>
+        
+      <li>robot.AI</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>robot.AI 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8-*-</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">logging</span>
+<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">uuid</span> <span class="k">import</span> <span class="n">getnode</span> <span class="k">as</span> <span class="n">get_mac</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AbstractRobot"><a class="viewcode-back" href="../../robot.html#robot.AI.AbstractRobot">[文档]</a><span class="k">class</span> <span class="nc">AbstractRobot</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ABCMeta</span>
+
+<div class="viewcode-block" id="AbstractRobot.get_instance"><a class="viewcode-back" href="../../robot.html#robot.AI.AbstractRobot.get_instance">[文档]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_instance</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">profile</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">profile</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">instance</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="AbstractRobot.chat"><a class="viewcode-back" href="../../robot.html#robot.AI.AbstractRobot.chat">[文档]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">chat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">):</span>
+        <span class="k">pass</span></div></div>
+
+
+<div class="viewcode-block" id="TulingRobot"><a class="viewcode-back" href="../../robot.html#robot.AI.TulingRobot">[文档]</a><span class="k">class</span> <span class="nc">TulingRobot</span><span class="p">(</span><span class="n">AbstractRobot</span><span class="p">):</span>
+
+    <span class="n">SLUG</span> <span class="o">=</span> <span class="s2">&quot;tuling&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tuling_key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        图灵机器人</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tuling_key</span> <span class="o">=</span> <span class="n">tuling_key</span>
+
+<div class="viewcode-block" id="TulingRobot.get_config"><a class="viewcode-back" href="../../robot.html#robot.AI.TulingRobot.get_config">[文档]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="c1"># Try to get ali_yuyin config from config</span>
+        <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tuling&#39;</span><span class="p">,</span> <span class="p">{})</span></div>
+
+<div class="viewcode-block" id="TulingRobot.chat"><a class="viewcode-back" href="../../robot.html#robot.AI.TulingRobot.chat">[文档]</a>    <span class="k">def</span> <span class="nf">chat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        使用图灵机器人聊天</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">        texts -- user input, typically speech, to be parsed by a module</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://www.tuling123.com/openapi/api&quot;</span>
+            <span class="n">userid</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_mac</span><span class="p">())[:</span><span class="mi">32</span><span class="p">]</span>
+            <span class="n">body</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">tuling_key</span><span class="p">,</span> <span class="s1">&#39;info&#39;</span><span class="p">:</span> <span class="n">msg</span><span class="p">,</span> <span class="s1">&#39;userid&#39;</span><span class="p">:</span> <span class="n">userid</span><span class="p">}</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">body</span><span class="p">)</span>
+            <span class="n">respond</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="k">if</span> <span class="n">respond</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">100000</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">respond</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&lt;br&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;  &#39;</span><span class="p">)</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;</span><span class="se">\xa0</span><span class="s1">&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">respond</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">200000</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">respond</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">respond</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">302000</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">respond</span><span class="p">[</span><span class="s1">&#39;list&#39;</span><span class="p">]:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">&quot;【&quot;</span> <span class="o">+</span> <span class="n">k</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">&quot;】 &quot;</span> <span class="o">+</span>\
+                        <span class="n">k</span><span class="p">[</span><span class="s1">&#39;article&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">k</span><span class="p">[</span><span class="s1">&#39;detailurl&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">respond</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&lt;br&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;  &#39;</span><span class="p">)</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;</span><span class="se">\xa0</span><span class="s1">&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> 回答：</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">,</span> <span class="n">result</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">result</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Tuling robot failed to responsed for </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span>
+                                  <span class="n">msg</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>            
+            <span class="k">return</span> <span class="s2">&quot;抱歉, 我的大脑短路了，请稍后再试试.&quot;</span></div></div>
+
+
+<div class="viewcode-block" id="Emotibot"><a class="viewcode-back" href="../../robot.html#robot.AI.Emotibot">[文档]</a><span class="k">class</span> <span class="nc">Emotibot</span><span class="p">(</span><span class="n">AbstractRobot</span><span class="p">):</span>
+
+    <span class="n">SLUG</span> <span class="o">=</span> <span class="s2">&quot;emotibot&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">appid</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">more</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Emotibot机器人</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>        
+        <span class="bp">self</span><span class="o">.</span><span class="n">appid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">more</span> <span class="o">=</span> <span class="n">appid</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">more</span>
+
+<div class="viewcode-block" id="Emotibot.get_config"><a class="viewcode-back" href="../../robot.html#robot.AI.Emotibot.get_config">[文档]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">appid</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/emotibot/appid&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="s1">&#39;深圳&#39;</span><span class="p">)</span>
+        <span class="n">more</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;active_mode&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;appid&#39;</span><span class="p">:</span> <span class="n">appid</span><span class="p">,</span>
+            <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="n">location</span><span class="p">,</span>
+            <span class="s1">&#39;more&#39;</span><span class="p">:</span> <span class="n">more</span>
+        <span class="p">}</span></div>
+
+<div class="viewcode-block" id="Emotibot.chat"><a class="viewcode-back" href="../../robot.html#robot.AI.Emotibot.chat">[文档]</a>    <span class="k">def</span> <span class="nf">chat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        使用Emotibot机器人聊天</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">        texts -- user input, typically speech, to be parsed by a module</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://idc.emotibot.com/api/ApiKey/openapi.php&quot;</span>
+            <span class="n">userid</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_mac</span><span class="p">())[:</span><span class="mi">32</span><span class="p">]</span>
+            <span class="n">register_data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;cmd&quot;</span><span class="p">:</span> <span class="s2">&quot;chat&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;appid&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">appid</span><span class="p">,</span>
+                <span class="s2">&quot;userid&quot;</span><span class="p">:</span> <span class="n">userid</span><span class="p">,</span>
+                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">msg</span><span class="p">,</span>
+                <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span>
+            <span class="p">}</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">register_data</span><span class="p">)</span>
+            <span class="n">jsondata</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="n">responds</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="n">jsondata</span><span class="p">[</span><span class="s1">&#39;return&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">more</span><span class="p">:</span>
+                    <span class="n">datas</span> <span class="o">=</span> <span class="n">jsondata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">datas</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;text&#39;</span><span class="p">:</span>
+                            <span class="n">responds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">responds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">jsondata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">))</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">responds</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;抱歉, 我的大脑短路了，请稍后再试试.&quot;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> 回答：</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">,</span> <span class="n">result</span><span class="p">))</span>            
+            <span class="k">return</span> <span class="n">result</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Emotibot failed to responsed for </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span>
+                                  <span class="n">msg</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;抱歉, 我的大脑短路了，请稍后再试试.&quot;</span></div></div>
+
+
+
+
+<div class="viewcode-block" id="get_robot_by_slug"><a class="viewcode-back" href="../../robot.html#robot.AI.get_robot_by_slug">[文档]</a><span class="k">def</span> <span class="nf">get_robot_by_slug</span><span class="p">(</span><span class="n">slug</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        A robot implementation available on the current platform</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">slug</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">slug</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Invalid slug &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">slug</span><span class="p">)</span>
+
+    <span class="n">selected_robots</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">robot</span><span class="p">:</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="s2">&quot;SLUG&quot;</span><span class="p">)</span> <span class="ow">and</span>
+                             <span class="n">robot</span><span class="o">.</span><span class="n">SLUG</span> <span class="o">==</span> <span class="n">slug</span><span class="p">,</span> <span class="n">get_robots</span><span class="p">()))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_robots</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No robot found for slug &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">slug</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_robots</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;WARNING: Multiple robots found for slug &#39;</span><span class="si">%s</span><span class="s2">&#39;. &quot;</span> <span class="o">+</span>
+                  <span class="s2">&quot;This is most certainly a bug.&quot;</span> <span class="o">%</span> <span class="n">slug</span><span class="p">)</span>        
+        <span class="n">robot</span> <span class="o">=</span> <span class="n">selected_robots</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;使用 </span><span class="si">{}</span><span class="s2"> 对话机器人&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">robot</span><span class="o">.</span><span class="n">SLUG</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">robot</span><span class="o">.</span><span class="n">get_instance</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="get_robots"><a class="viewcode-back" href="../../robot.html#robot.AI.get_robots">[文档]</a><span class="k">def</span> <span class="nf">get_robots</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">get_subclasses</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">subclasses</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">subclass</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__subclasses__</span><span class="p">():</span>
+            <span class="n">subclasses</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">subclass</span><span class="p">)</span>
+            <span class="n">subclasses</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">get_subclasses</span><span class="p">(</span><span class="n">subclass</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">subclasses</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">robot</span> <span class="k">for</span> <span class="n">robot</span> <span class="ow">in</span>
+            <span class="nb">list</span><span class="p">(</span><span class="n">get_subclasses</span><span class="p">(</span><span class="n">AbstractRobot</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="s1">&#39;SLUG&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">robot</span><span class="o">.</span><span class="n">SLUG</span><span class="p">]</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, wzpan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

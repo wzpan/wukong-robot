@@ -1,0 +1,370 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>robot.utils &mdash; wukong-robot 1.2.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> wukong-robot
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">wukong-robot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">模块代码</a> &raquo;</li>
+        
+      <li>robot.utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>robot.utils 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8-*-</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">wave</span>
+<span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">constants</span><span class="p">,</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">pydub</span> <span class="k">import</span> <span class="n">AudioSegment</span>
+<span class="kn">from</span> <span class="nn">pytz</span> <span class="k">import</span> <span class="n">timezone</span>
+<span class="kn">import</span> <span class="nn">smtplib</span>
+<span class="kn">from</span> <span class="nn">email.mime.text</span> <span class="k">import</span> <span class="n">MIMEText</span>
+<span class="kn">from</span> <span class="nn">email.mime.multipart</span> <span class="k">import</span> <span class="n">MIMEMultipart</span>
+<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">logging</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">do_not_bother</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="sendEmail"><a class="viewcode-back" href="../../robot.html#robot.utils.sendEmail">[文档]</a><span class="k">def</span> <span class="nf">sendEmail</span><span class="p">(</span><span class="n">SUBJECT</span><span class="p">,</span> <span class="n">BODY</span><span class="p">,</span> <span class="n">ATTACH_LIST</span><span class="p">,</span> <span class="n">TO</span><span class="p">,</span> <span class="n">FROM</span><span class="p">,</span> <span class="n">SENDER</span><span class="p">,</span>
+              <span class="n">PASSWORD</span><span class="p">,</span> <span class="n">SMTP_SERVER</span><span class="p">,</span> <span class="n">SMTP_PORT</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sends an email.&quot;&quot;&quot;</span>
+    <span class="n">txt</span> <span class="o">=</span> <span class="n">MIMEText</span><span class="p">(</span><span class="n">BODY</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="s1">&#39;html&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">MIMEMultipart</span><span class="p">()</span>
+    <span class="n">msg</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>    
+
+    <span class="k">for</span> <span class="n">attach</span> <span class="ow">in</span> <span class="n">ATTACH_LIST</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">att</span> <span class="o">=</span> <span class="n">MIMEText</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">attach</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="s1">&#39;base64&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">attach</span><span class="p">)</span>
+            <span class="n">att</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;application/octet-stream&#39;</span>
+            <span class="n">att</span><span class="p">[</span><span class="s2">&quot;Content-Disposition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;attachment; filename=&quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">filename</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">att</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;附件 </span><span class="si">%s</span><span class="s1"> 发送失败！&#39;</span> <span class="o">%</span> <span class="n">attach</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+    <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;From&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">SENDER</span>
+    <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;To&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">TO</span>
+    <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;Subject&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">SUBJECT</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">smtplib</span><span class="o">.</span><span class="n">SMTP</span><span class="p">()</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">SMTP_SERVER</span><span class="p">,</span> <span class="n">SMTP_PORT</span><span class="p">)</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">starttls</span><span class="p">()</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">FROM</span><span class="p">,</span> <span class="n">PASSWORD</span><span class="p">)</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">sendmail</span><span class="p">(</span><span class="n">SENDER</span><span class="p">,</span> <span class="n">TO</span><span class="p">,</span> <span class="n">msg</span><span class="o">.</span><span class="n">as_string</span><span class="p">())</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="emailUser"><a class="viewcode-back" href="../../robot.html#robot.utils.emailUser">[文档]</a><span class="k">def</span> <span class="nf">emailUser</span><span class="p">(</span><span class="n">SUBJECT</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">BODY</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ATTACH_LIST</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    sends an email.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        SUBJECT -- subject line of the email</span>
+<span class="sd">        BODY -- body text of the email</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># add footer</span>
+    <span class="k">if</span> <span class="n">BODY</span><span class="p">:</span>
+        <span class="n">BODY</span> <span class="o">=</span> <span class="sa">u</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">，&lt;br&gt;&lt;br&gt;这是您要的内容：&lt;br&gt;</span><span class="si">%s</span><span class="s2">&lt;br&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;first_name&#39;</span><span class="p">],</span> <span class="n">BODY</span><span class="p">)</span>
+
+    <span class="n">recipient</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/email/address&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">robot_name</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;robot_name_cn&#39;</span><span class="p">,</span> <span class="s1">&#39;wukong-robot&#39;</span><span class="p">)</span>
+    <span class="n">recipient</span> <span class="o">=</span> <span class="n">robot_name</span> <span class="o">+</span> <span class="s2">&quot; &lt;</span><span class="si">%s</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="n">recipient</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/email/address&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/email/password&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">server</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/email/smtp_server&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">port</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/email/smtp_port&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">recipient</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">user</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">password</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">server</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">port</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">sendEmail</span><span class="p">(</span><span class="n">SUBJECT</span><span class="p">,</span> <span class="n">BODY</span><span class="p">,</span> <span class="n">ATTACH_LIST</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span>
+                  <span class="n">recipient</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="get_file_content"><a class="viewcode-back" href="../../robot.html#robot.utils.get_file_content">[文档]</a><span class="k">def</span> <span class="nf">get_file_content</span><span class="p">(</span><span class="n">filePath</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; 读取文件 &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filePath</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="check_and_delete"><a class="viewcode-back" href="../../robot.html#robot.utils.check_and_delete">[文档]</a><span class="k">def</span> <span class="nf">check_and_delete</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; 检查并删除文件 &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="write_temp_file"><a class="viewcode-back" href="../../robot.html#robot.utils.write_temp_file">[文档]</a><span class="k">def</span> <span class="nf">write_temp_file</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">suffix</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; 二进制形式写入临时文件 &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">return</span> <span class="n">tmpfile</span></div>
+
+<div class="viewcode-block" id="get_pcm_from_wav"><a class="viewcode-back" href="../../robot.html#robot.utils.get_pcm_from_wav">[文档]</a><span class="k">def</span> <span class="nf">get_pcm_from_wav</span><span class="p">(</span><span class="n">wav_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; 从 wav 文件中读取 pcm &quot;&quot;&quot;</span>
+    <span class="n">wav</span> <span class="o">=</span> <span class="n">wave</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">wav_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">wav</span><span class="o">.</span><span class="n">readframes</span><span class="p">(</span><span class="n">wav</span><span class="o">.</span><span class="n">getnframes</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="convert_wav_to_mp3"><a class="viewcode-back" href="../../robot.html#robot.utils.convert_wav_to_mp3">[文档]</a><span class="k">def</span> <span class="nf">convert_wav_to_mp3</span><span class="p">(</span><span class="n">wav_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; 将 wav 文件转成 mp3 &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">wav_path</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;文件错误 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">wav_path</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">mp3_path</span> <span class="o">=</span> <span class="n">wav_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.wav&#39;</span><span class="p">,</span> <span class="s1">&#39;.mp3&#39;</span><span class="p">)</span>
+    <span class="n">AudioSegment</span><span class="o">.</span><span class="n">from_wav</span><span class="p">(</span><span class="n">wav_path</span><span class="p">)</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">mp3_path</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;mp3&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mp3_path</span></div>
+
+<div class="viewcode-block" id="convert_mp3_to_wav"><a class="viewcode-back" href="../../robot.html#robot.utils.convert_mp3_to_wav">[文档]</a><span class="k">def</span> <span class="nf">convert_mp3_to_wav</span><span class="p">(</span><span class="n">mp3_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; 将 mp3 文件转成 wav &quot;&quot;&quot;</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">mp3_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.mp3&quot;</span><span class="p">,</span> <span class="s2">&quot;.wav&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mp3_path</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;文件错误 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mp3_path</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">voice</span> <span class="o">=</span> <span class="n">AudioSegment</span><span class="o">.</span><span class="n">from_mp3</span><span class="p">(</span><span class="n">mp3_path</span><span class="p">)</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;wav&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">target</span>        </div>
+
+<div class="viewcode-block" id="clean"><a class="viewcode-back" href="../../robot.html#robot.utils.clean">[文档]</a><span class="k">def</span> <span class="nf">clean</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; 清理垃圾数据 &quot;&quot;&quot;</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">TEMP_PATH</span>
+    <span class="n">temp_files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">temp_files</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;output[\d]*\.wav&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="is_proper_time"><a class="viewcode-back" href="../../robot.html#robot.utils.is_proper_time">[文档]</a><span class="k">def</span> <span class="nf">is_proper_time</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; 是否合适时间 &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">do_not_bother</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">has</span><span class="p">(</span><span class="s1">&#39;do_not_bother&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="n">bother_profile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;do_not_bother&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">bother_profile</span><span class="p">[</span><span class="s1">&#39;enable&#39;</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="s1">&#39;since&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bother_profile</span> <span class="ow">or</span> <span class="s1">&#39;till&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bother_profile</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="n">since</span> <span class="o">=</span> <span class="n">bother_profile</span><span class="p">[</span><span class="s1">&#39;since&#39;</span><span class="p">]</span>
+    <span class="n">till</span> <span class="o">=</span> <span class="n">bother_profile</span><span class="p">[</span><span class="s1">&#39;till&#39;</span><span class="p">]</span>
+    <span class="n">current</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span><span class="o">.</span><span class="n">tm_hour</span>
+    <span class="k">if</span> <span class="n">till</span> <span class="o">&gt;</span> <span class="n">since</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">current</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">since</span><span class="p">,</span> <span class="n">till</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="p">(</span><span class="n">current</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">since</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span> <span class="ow">or</span>
+                    <span class="n">current</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">till</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="get_do_not_bother_on_hotword"><a class="viewcode-back" href="../../robot.html#robot.utils.get_do_not_bother_on_hotword">[文档]</a><span class="k">def</span> <span class="nf">get_do_not_bother_on_hotword</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; 打开勿扰模式唤醒词 &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/do_not_bother/on_hotword&#39;</span><span class="p">,</span> <span class="s1">&#39;悟空别吵.pmdl&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="get_do_not_bother_off_hotword"><a class="viewcode-back" href="../../robot.html#robot.utils.get_do_not_bother_off_hotword">[文档]</a><span class="k">def</span> <span class="nf">get_do_not_bother_off_hotword</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; 关闭勿扰模式唤醒词 &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/do_not_bother/off_hotword&#39;</span><span class="p">,</span> <span class="s1">&#39;悟空醒醒.pmdl&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="getTimezone"><a class="viewcode-back" href="../../robot.html#robot.utils.getTimezone">[文档]</a><span class="k">def</span> <span class="nf">getTimezone</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; 获取时区 &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">timezone</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timezone&#39;</span><span class="p">,</span> <span class="s1">&#39;HKT&#39;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="getCache"><a class="viewcode-back" href="../../robot.html#robot.utils.getCache">[文档]</a><span class="k">def</span> <span class="nf">getCache</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; 获取缓存的语音 &quot;&quot;&quot;</span>
+    <span class="n">md5</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+    <span class="n">mp3_cache</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">TEMP_PATH</span><span class="p">,</span> <span class="n">md5</span> <span class="o">+</span> <span class="s1">&#39;.mp3&#39;</span><span class="p">)</span>
+    <span class="n">wav_cache</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">TEMP_PATH</span><span class="p">,</span> <span class="n">md5</span> <span class="o">+</span> <span class="s1">&#39;.wav&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mp3_cache</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">mp3_cache</span>
+    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">wav_cache</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">wav_cache</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="saveCache"><a class="viewcode-back" href="../../robot.html#robot.utils.saveCache">[文档]</a><span class="k">def</span> <span class="nf">saveCache</span><span class="p">(</span><span class="n">voice</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; 获取缓存的语音 &quot;&quot;&quot;</span>
+    <span class="n">foo</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">voice</span><span class="p">)</span>
+    <span class="n">md5</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">voice</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">TEMP_PATH</span><span class="p">,</span> <span class="n">md5</span><span class="o">+</span><span class="n">ext</span><span class="p">))</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, wzpan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

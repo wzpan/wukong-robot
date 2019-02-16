@@ -1,0 +1,323 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>robot.sdk.RASRsdk &mdash; wukong-robot 1.2.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> wukong-robot
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">wukong-robot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">模块代码</a> &raquo;</li>
+        
+      <li>robot.sdk.RASRsdk</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>robot.sdk.RASRsdk 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding:utf-8 -*-</span>
+<span class="kn">import</span> <span class="nn">urllib.request</span>
+<span class="kn">import</span> <span class="nn">hmac</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+
+<div class="viewcode-block" id="formatSignString"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.RASRsdk.formatSignString">[文档]</a><span class="k">def</span> <span class="nf">formatSignString</span><span class="p">(</span><span class="n">param</span><span class="p">):</span>
+    <span class="n">signstr</span> <span class="o">=</span> <span class="s2">&quot;POSTaai.qcloud.com/asr/v1/&quot;</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">param</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;appid&#39;</span> <span class="ow">in</span> <span class="n">t</span><span class="p">:</span>
+            <span class="n">signstr</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">break</span>
+    <span class="n">signstr</span> <span class="o">+=</span> <span class="s2">&quot;?&quot;</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">param</span><span class="p">:</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="k">if</span> <span class="s1">&#39;appid&#39;</span> <span class="ow">in</span> <span class="n">x</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tmp</span><span class="p">:</span>
+            <span class="n">signstr</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">signstr</span> <span class="o">+=</span> <span class="s2">&quot;=&quot;</span>
+        <span class="n">signstr</span> <span class="o">=</span> <span class="n">signstr</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">signstr</span> <span class="o">+=</span> <span class="s2">&quot;&amp;&quot;</span>
+    <span class="n">signstr</span> <span class="o">=</span> <span class="n">signstr</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># print &#39;signstr&#39;,signstr</span>
+    <span class="k">return</span> <span class="n">signstr</span></div>
+
+
+<div class="viewcode-block" id="sign"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.RASRsdk.sign">[文档]</a><span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="n">signstr</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">):</span>
+    <span class="n">sign_bytes</span><span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">signstr</span> <span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">secret_bytes</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">hmacstr</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">secret_bytes</span><span class="p">,</span> <span class="n">sign_bytes</span><span class="p">,</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">hmacstr</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">s</span></div>
+
+
+<div class="viewcode-block" id="randstr"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.RASRsdk.randstr">[文档]</a><span class="k">def</span> <span class="nf">randstr</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">seed</span> <span class="o">=</span> <span class="s2">&quot;1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;</span>
+    <span class="n">sa</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">sa</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">seed</span><span class="p">))</span>
+    <span class="n">salt</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sa</span><span class="p">)</span>
+    <span class="c1"># print salt</span>
+    <span class="k">return</span> <span class="n">salt</span></div>
+
+
+<div class="viewcode-block" id="sendVoice"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.RASRsdk.sendVoice">[文档]</a><span class="k">def</span> <span class="nf">sendVoice</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">secretid</span><span class="p">,</span> <span class="n">appid</span><span class="p">,</span> <span class="n">engine_model_type</span><span class="p">,</span> <span class="n">res_type</span><span class="p">,</span> <span class="n">result_text_format</span><span class="p">,</span> <span class="n">voice_format</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">cutlength</span><span class="p">,</span> <span class="n">template_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">secret_key</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;secretKey can not empty&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">secretid</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;secretid can not empty&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">appid</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;appid can not empty&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">engine_model_type</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">engine_model_type</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;8k_0&#39;</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">engine_model_type</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;16k_0&#39;</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span>
+        <span class="n">engine_model_type</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;16k_en&#39;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;engine_model_type is not right&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">res_type</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">res_type</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;0&#39;</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">res_type</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;1&#39;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;res_type is not right&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">result_text_format</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">result_text_format</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;0&#39;</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">result_text_format</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;1&#39;</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span>
+            <span class="n">result_text_format</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;2&#39;</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">result_text_format</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;3&#39;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;result_text_format is not right&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">voice_format</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">voice_format</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;1&#39;</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">voice_format</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;4&#39;</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">voice_format</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;6&#39;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;voice_format is not right&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">filepath</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;filepath can not empty&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">cutlength</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">cutlength</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="o">==</span> <span class="kc">False</span> <span class="ow">or</span> <span class="n">cutlength</span> <span class="o">&gt;</span> <span class="mi">200000</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;cutlength can not empty&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="c1"># secret_key = &quot;oaYWFO70LGDmcpfwo8uF1IInayysGtgZ&quot;</span>
+    <span class="n">query_arr</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">query_arr</span><span class="p">[</span><span class="s1">&#39;appid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">appid</span>
+    <span class="n">query_arr</span><span class="p">[</span><span class="s1">&#39;projectid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1013976</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">template_name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">query_arr</span><span class="p">[</span><span class="s1">&#39;template_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template_name</span>
+    <span class="n">query_arr</span><span class="p">[</span><span class="s1">&#39;sub_service_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">query_arr</span><span class="p">[</span><span class="s1">&#39;engine_model_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">engine_model_type</span>
+    <span class="n">query_arr</span><span class="p">[</span><span class="s1">&#39;res_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">res_type</span>
+    <span class="n">query_arr</span><span class="p">[</span><span class="s1">&#39;result_text_format&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">result_text_format</span>
+    <span class="n">query_arr</span><span class="p">[</span><span class="s1">&#39;voice_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">randstr</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">query_arr</span><span class="p">[</span><span class="s1">&#39;timeout&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">query_arr</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">query_arr</span><span class="p">[</span><span class="s1">&#39;secretid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">secretid</span>
+    <span class="n">query_arr</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()))</span>
+    <span class="n">query_arr</span><span class="p">[</span><span class="s1">&#39;expired&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span> <span class="o">+</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span>
+    <span class="n">query_arr</span><span class="p">[</span><span class="s1">&#39;nonce&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">query_arr</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">query_arr</span><span class="p">[</span><span class="s1">&#39;voice_format&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">voice_format</span>
+    <span class="n">file_object</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+    <span class="n">file_object</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">SEEK_END</span><span class="p">)</span>
+    <span class="n">datalen</span> <span class="o">=</span> <span class="n">file_object</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span>
+    <span class="n">file_object</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">SEEK_SET</span><span class="p">)</span>
+    <span class="n">seq</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">datalen</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">datalen</span> <span class="o">&lt;</span> <span class="n">cutlength</span><span class="p">):</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">query_arr</span><span class="p">[</span><span class="s1">&#39;end&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">end</span>
+        <span class="n">query_arr</span><span class="p">[</span><span class="s1">&#39;seq&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">seq</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">query_arr</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">signstr</span> <span class="o">=</span> <span class="n">formatSignString</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="n">autho</span> <span class="o">=</span> <span class="n">sign</span><span class="p">(</span><span class="n">signstr</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">datalen</span> <span class="o">&lt;</span> <span class="n">cutlength</span><span class="p">):</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="n">file_object</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">datalen</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="n">file_object</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">cutlength</span><span class="p">)</span>
+        <span class="n">seq</span> <span class="o">=</span> <span class="n">seq</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">datalen</span> <span class="o">=</span> <span class="n">datalen</span> <span class="o">-</span> <span class="n">cutlength</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Authorization&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">autho</span>
+        <span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Content-Length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">requrl</span> <span class="o">=</span> <span class="s2">&quot;http://&quot;</span>
+        <span class="n">requrl</span> <span class="o">+=</span> <span class="n">signstr</span><span class="p">[</span><span class="mi">4</span><span class="p">::]</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">requrl</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">content</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>        
+        <span class="n">res_data</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">res_data</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">])</span>    
+    <span class="n">file_object</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, wzpan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,481 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>snowboy package &mdash; wukong-robot 1.2.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> wukong-robot
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">snowboy package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-snowboy.snowboydecoder">snowboy.snowboydecoder module</a></li>
+<li><a class="reference internal" href="#module-snowboy.snowboydetect">snowboy.snowboydetect module</a></li>
+<li><a class="reference internal" href="#module-snowboy">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">wukong-robot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>snowboy package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/snowboy.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="snowboy-package">
+<h1>snowboy package<a class="headerlink" href="#snowboy-package" title="永久链接至标题">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-snowboy.snowboydecoder">
+<span id="snowboy-snowboydecoder-module"></span><h2>snowboy.snowboydecoder module<a class="headerlink" href="#module-snowboy.snowboydecoder" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="snowboy.snowboydecoder.ActiveListener">
+<em class="property">class </em><code class="descclassname">snowboy.snowboydecoder.</code><code class="descname">ActiveListener</code><span class="sig-paren">(</span><em>decoder_model</em>, <em>resource='/home/pi/wukong-robot/snowboy/resources/common.res'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydecoder.html#ActiveListener"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydecoder.ActiveListener" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Active Listening with VAD</p>
+<dl class="method">
+<dt id="snowboy.snowboydecoder.ActiveListener.listen">
+<code class="descname">listen</code><span class="sig-paren">(</span><em>interrupt_check=&lt;function ActiveListener.&lt;lambda&gt;&gt;</em>, <em>sleep_time=0.03</em>, <em>silent_count_threshold=15</em>, <em>recording_timeout=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydecoder.html#ActiveListener.listen"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydecoder.ActiveListener.listen" title="永久链接至目标">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><ul class="first simple">
+<li><strong>interrupt_check</strong> – a function that returns True if the main loop
+needs to stop.</li>
+<li><strong>silent_count_threshold</strong> – indicates how long silence must be heard
+to mark the end of a phrase that is
+being recorded.</li>
+<li><strong>sleep_time</strong> (<em>float</em>) – how much time in second every loop waits.</li>
+<li><strong>recording_timeout</strong> – limits the maximum length of a recording.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body"><p class="first last">recorded file path</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="snowboy.snowboydecoder.ActiveListener.saveMessage">
+<code class="descname">saveMessage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydecoder.html#ActiveListener.saveMessage"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydecoder.ActiveListener.saveMessage" title="永久链接至目标">¶</a></dt>
+<dd><p>Save the message stored in self.recordedData to a timestamped file.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="snowboy.snowboydecoder.HotwordDetector">
+<em class="property">class </em><code class="descclassname">snowboy.snowboydecoder.</code><code class="descname">HotwordDetector</code><span class="sig-paren">(</span><em>decoder_model</em>, <em>resource='/home/pi/wukong-robot/snowboy/resources/common.res'</em>, <em>sensitivity=[]</em>, <em>audio_gain=1</em>, <em>apply_frontend=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydecoder.html#HotwordDetector"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydecoder.HotwordDetector" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Snowboy decoder to detect whether a keyword specified by <cite>decoder_model</cite>
+exists in a microphone input stream.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><ul class="first last simple">
+<li><strong>decoder_model</strong> – decoder model file path, a string or a list of strings</li>
+<li><strong>resource</strong> – resource file path.</li>
+<li><strong>sensitivity</strong> – decoder sensitivity, a float of a list of floats.
+The bigger the value, the more senstive the
+decoder. If an empty list is provided, then the
+default sensitivity in the model will be used.</li>
+<li><strong>audio_gain</strong> – multiply input volume by this factor.</li>
+<li><strong>apply_frontend</strong> – applies the frontend processing algorithm if True.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="snowboy.snowboydecoder.HotwordDetector.saveMessage">
+<code class="descname">saveMessage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydecoder.html#HotwordDetector.saveMessage"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydecoder.HotwordDetector.saveMessage" title="永久链接至目标">¶</a></dt>
+<dd><p>Save the message stored in self.recordedData to a timestamped file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="snowboy.snowboydecoder.HotwordDetector.start">
+<code class="descname">start</code><span class="sig-paren">(</span><em>detected_callback=&lt;function play_audio_file&gt;</em>, <em>interrupt_check=&lt;function HotwordDetector.&lt;lambda&gt;&gt;</em>, <em>sleep_time=0.03</em>, <em>audio_recorder_callback=None</em>, <em>silent_count_threshold=15</em>, <em>recording_timeout=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydecoder.html#HotwordDetector.start"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydecoder.HotwordDetector.start" title="永久链接至目标">¶</a></dt>
+<dd><p>Start the voice detector. For every <cite>sleep_time</cite> second it checks the
+audio buffer for triggering keywords. If detected, then call
+corresponding function in <cite>detected_callback</cite>, which can be a single
+function (single model) or a list of callback functions (multiple
+models). Every loop it also calls <cite>interrupt_check</cite> – if it returns
+True, then breaks from the loop and return.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><ul class="first simple">
+<li><strong>detected_callback</strong> – a function or list of functions. The number of
+items must match the number of models in
+<cite>decoder_model</cite>.</li>
+<li><strong>interrupt_check</strong> – a function that returns True if the main loop
+needs to stop.</li>
+<li><strong>sleep_time</strong> (<em>float</em>) – how much time in second every loop waits.</li>
+<li><strong>audio_recorder_callback</strong> – if specified, this will be called after
+a keyword has been spoken and after the
+phrase immediately after the keyword has
+been recorded. The function will be
+passed the name of the file where the
+phrase was recorded.</li>
+<li><strong>silent_count_threshold</strong> – indicates how long silence must be heard
+to mark the end of a phrase that is
+being recorded.</li>
+<li><strong>recording_timeout</strong> – limits the maximum length of a recording.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="snowboy.snowboydecoder.HotwordDetector.terminate">
+<code class="descname">terminate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydecoder.html#HotwordDetector.terminate"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydecoder.HotwordDetector.terminate" title="永久链接至目标">¶</a></dt>
+<dd><p>Terminate audio stream. Users can call start() again to detect.
+:return: None</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="snowboy.snowboydecoder.RingBuffer">
+<em class="property">class </em><code class="descclassname">snowboy.snowboydecoder.</code><code class="descname">RingBuffer</code><span class="sig-paren">(</span><em>size=4096</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydecoder.html#RingBuffer"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydecoder.RingBuffer" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Ring buffer to hold audio from PortAudio</p>
+<dl class="method">
+<dt id="snowboy.snowboydecoder.RingBuffer.extend">
+<code class="descname">extend</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydecoder.html#RingBuffer.extend"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydecoder.RingBuffer.extend" title="永久链接至目标">¶</a></dt>
+<dd><p>Adds data to the end of buffer</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="snowboy.snowboydecoder.RingBuffer.get">
+<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydecoder.html#RingBuffer.get"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydecoder.RingBuffer.get" title="永久链接至目标">¶</a></dt>
+<dd><p>Retrieves data from the beginning of buffer and clears it</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="snowboy.snowboydecoder.no_alsa_error">
+<code class="descclassname">snowboy.snowboydecoder.</code><code class="descname">no_alsa_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydecoder.html#no_alsa_error"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydecoder.no_alsa_error" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="snowboy.snowboydecoder.play_audio_file">
+<code class="descclassname">snowboy.snowboydecoder.</code><code class="descname">play_audio_file</code><span class="sig-paren">(</span><em>fname='/home/pi/wukong-robot/snowboy/resources/ding.wav'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydecoder.html#play_audio_file"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydecoder.play_audio_file" title="永久链接至目标">¶</a></dt>
+<dd><p>Simple callback function to play a wave file. By default it plays
+a Ding sound.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><strong>fname</strong> (<em>str</em>) – wave file name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="snowboy.snowboydecoder.py_error_handler">
+<code class="descclassname">snowboy.snowboydecoder.</code><code class="descname">py_error_handler</code><span class="sig-paren">(</span><em>filename</em>, <em>line</em>, <em>function</em>, <em>err</em>, <em>fmt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydecoder.html#py_error_handler"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydecoder.py_error_handler" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-snowboy.snowboydetect">
+<span id="snowboy-snowboydetect-module"></span><h2>snowboy.snowboydetect module<a class="headerlink" href="#module-snowboy.snowboydetect" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="snowboy.snowboydetect.SnowboyDetect">
+<em class="property">class </em><code class="descclassname">snowboy.snowboydetect.</code><code class="descname">SnowboyDetect</code><span class="sig-paren">(</span><em>resource_filename</em>, <em>model_str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydetect.html#SnowboyDetect"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydetect.SnowboyDetect" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="snowboy.snowboydetect.SnowboyDetect.ApplyFrontend">
+<code class="descname">ApplyFrontend</code><span class="sig-paren">(</span><em>apply_frontend</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydetect.html#SnowboyDetect.ApplyFrontend"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydetect.SnowboyDetect.ApplyFrontend" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="snowboy.snowboydetect.SnowboyDetect.BitsPerSample">
+<code class="descname">BitsPerSample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydetect.html#SnowboyDetect.BitsPerSample"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydetect.SnowboyDetect.BitsPerSample" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="snowboy.snowboydetect.SnowboyDetect.GetSensitivity">
+<code class="descname">GetSensitivity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydetect.html#SnowboyDetect.GetSensitivity"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydetect.SnowboyDetect.GetSensitivity" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="snowboy.snowboydetect.SnowboyDetect.NumChannels">
+<code class="descname">NumChannels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydetect.html#SnowboyDetect.NumChannels"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydetect.SnowboyDetect.NumChannels" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="snowboy.snowboydetect.SnowboyDetect.NumHotwords">
+<code class="descname">NumHotwords</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydetect.html#SnowboyDetect.NumHotwords"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydetect.SnowboyDetect.NumHotwords" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="snowboy.snowboydetect.SnowboyDetect.Reset">
+<code class="descname">Reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydetect.html#SnowboyDetect.Reset"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydetect.SnowboyDetect.Reset" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="snowboy.snowboydetect.SnowboyDetect.RunDetection">
+<code class="descname">RunDetection</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydetect.html#SnowboyDetect.RunDetection"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydetect.SnowboyDetect.RunDetection" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="snowboy.snowboydetect.SnowboyDetect.SampleRate">
+<code class="descname">SampleRate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydetect.html#SnowboyDetect.SampleRate"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydetect.SnowboyDetect.SampleRate" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="snowboy.snowboydetect.SnowboyDetect.SetAudioGain">
+<code class="descname">SetAudioGain</code><span class="sig-paren">(</span><em>audio_gain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydetect.html#SnowboyDetect.SetAudioGain"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydetect.SnowboyDetect.SetAudioGain" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="snowboy.snowboydetect.SnowboyDetect.SetHighSensitivity">
+<code class="descname">SetHighSensitivity</code><span class="sig-paren">(</span><em>high_sensitivity_str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydetect.html#SnowboyDetect.SetHighSensitivity"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydetect.SnowboyDetect.SetHighSensitivity" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="snowboy.snowboydetect.SnowboyDetect.SetSensitivity">
+<code class="descname">SetSensitivity</code><span class="sig-paren">(</span><em>sensitivity_str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydetect.html#SnowboyDetect.SetSensitivity"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydetect.SnowboyDetect.SetSensitivity" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="snowboy.snowboydetect.SnowboyDetect.UpdateModel">
+<code class="descname">UpdateModel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydetect.html#SnowboyDetect.UpdateModel"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydetect.SnowboyDetect.UpdateModel" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="snowboy.snowboydetect.SnowboyVad">
+<em class="property">class </em><code class="descclassname">snowboy.snowboydetect.</code><code class="descname">SnowboyVad</code><span class="sig-paren">(</span><em>resource_filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydetect.html#SnowboyVad"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydetect.SnowboyVad" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="snowboy.snowboydetect.SnowboyVad.ApplyFrontend">
+<code class="descname">ApplyFrontend</code><span class="sig-paren">(</span><em>apply_frontend</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydetect.html#SnowboyVad.ApplyFrontend"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydetect.SnowboyVad.ApplyFrontend" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="snowboy.snowboydetect.SnowboyVad.BitsPerSample">
+<code class="descname">BitsPerSample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydetect.html#SnowboyVad.BitsPerSample"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydetect.SnowboyVad.BitsPerSample" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="snowboy.snowboydetect.SnowboyVad.NumChannels">
+<code class="descname">NumChannels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydetect.html#SnowboyVad.NumChannels"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydetect.SnowboyVad.NumChannels" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="snowboy.snowboydetect.SnowboyVad.Reset">
+<code class="descname">Reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydetect.html#SnowboyVad.Reset"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydetect.SnowboyVad.Reset" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="snowboy.snowboydetect.SnowboyVad.RunVad">
+<code class="descname">RunVad</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydetect.html#SnowboyVad.RunVad"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydetect.SnowboyVad.RunVad" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="snowboy.snowboydetect.SnowboyVad.SampleRate">
+<code class="descname">SampleRate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydetect.html#SnowboyVad.SampleRate"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydetect.SnowboyVad.SampleRate" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="snowboy.snowboydetect.SnowboyVad.SetAudioGain">
+<code class="descname">SetAudioGain</code><span class="sig-paren">(</span><em>audio_gain</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/snowboy/snowboydetect.html#SnowboyVad.SetAudioGain"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#snowboy.snowboydetect.SnowboyVad.SetAudioGain" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-snowboy">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-snowboy" title="永久链接至标题">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, wzpan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

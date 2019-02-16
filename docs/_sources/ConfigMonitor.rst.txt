@@ -1,0 +1,7 @@
+ConfigMonitor module
+====================
+
+.. automodule:: ConfigMonitor
+    :members:
+    :undoc-members:
+    :show-inheritance:

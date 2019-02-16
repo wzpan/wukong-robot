@@ -1,0 +1,329 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>robot.drivers.pixels &mdash; wukong-robot 1.2.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> wukong-robot
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">wukong-robot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">模块代码</a> &raquo;</li>
+        
+      <li>robot.drivers.pixels</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>robot.drivers.pixels 源代码</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">apa102</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">queue</span> <span class="k">as</span> <span class="nn">Queue</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">Queue</span> <span class="k">as</span> <span class="nn">Queue</span>
+
+
+<div class="viewcode-block" id="Pixels"><a class="viewcode-back" href="../../../robot.drivers.html#robot.drivers.pixels.Pixels">[文档]</a><span class="k">class</span> <span class="nc">Pixels</span><span class="p">:</span>
+    <span class="n">PIXELS_N</span> <span class="o">=</span> <span class="mi">3</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">basis</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">PIXELS_N</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">basis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">basis</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">basis</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">PIXELS_N</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dev</span> <span class="o">=</span> <span class="n">apa102</span><span class="o">.</span><span class="n">APA102</span><span class="p">(</span><span class="n">num_led</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">PIXELS_N</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Pixels.wakeup"><a class="viewcode-back" href="../../../robot.drivers.html#robot.drivers.pixels.Pixels.wakeup">[文档]</a>    <span class="k">def</span> <span class="nf">wakeup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_wakeup</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Pixels.listen"><a class="viewcode-back" href="../../../robot.drivers.html#robot.drivers.pixels.Pixels.listen">[文档]</a>    <span class="k">def</span> <span class="nf">listen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_listen</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Pixels.think"><a class="viewcode-back" href="../../../robot.drivers.html#robot.drivers.pixels.Pixels.think">[文档]</a>    <span class="k">def</span> <span class="nf">think</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_think</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Pixels.speak"><a class="viewcode-back" href="../../../robot.drivers.html#robot.drivers.pixels.Pixels.speak">[文档]</a>    <span class="k">def</span> <span class="nf">speak</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_speak</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Pixels.off"><a class="viewcode-back" href="../../../robot.drivers.html#robot.drivers.pixels.Pixels.off">[文档]</a>    <span class="k">def</span> <span class="nf">off</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_off</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+            <span class="n">func</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_wakeup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">25</span><span class="p">):</span>
+            <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">basis</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">colors</span> <span class="o">=</span> <span class="n">colors</span>
+
+    <span class="k">def</span> <span class="nf">_listen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">25</span><span class="p">):</span>
+            <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">basis</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">colors</span> <span class="o">=</span> <span class="n">colors</span>
+
+    <span class="k">def</span> <span class="nf">_think</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">colors</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+            <span class="n">colors</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span> <span class="o">+</span> <span class="n">colors</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="mf">0.1</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+            <span class="n">colors</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span> <span class="o">+</span> <span class="n">colors</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">([(</span><span class="n">v</span> <span class="o">*</span> <span class="p">(</span><span class="mi">4</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">colors</span><span class="p">])</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">t</span> <span class="o">/=</span> <span class="mi">2</span>
+
+        <span class="c1"># time.sleep(0.5)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">colors</span> <span class="o">=</span> <span class="n">colors</span>
+
+    <span class="k">def</span> <span class="nf">_speak</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">colors</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">25</span><span class="p">):</span>
+                <span class="n">colors</span> <span class="o">=</span> <span class="p">[(</span><span class="n">v</span> <span class="o">*</span> <span class="n">i</span> <span class="o">/</span> <span class="mi">24</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">colors</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">colors</span> <span class="o">=</span> <span class="p">[(</span><span class="n">v</span> <span class="o">*</span> <span class="n">i</span> <span class="o">/</span> <span class="mi">24</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">colors</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_off</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_off</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">PIXELS_N</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Pixels.write"><a class="viewcode-back" href="../../../robot.drivers.html#robot.drivers.pixels.Pixels.write">[文档]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">colors</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PIXELS_N</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">set_pixel</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">colors</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">i</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">colors</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">colors</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div></div>
+
+
+<span class="n">pixels</span> <span class="o">=</span> <span class="n">Pixels</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">pixels</span><span class="o">.</span><span class="n">wakeup</span><span class="p">()</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">pixels</span><span class="o">.</span><span class="n">think</span><span class="p">()</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">pixels</span><span class="o">.</span><span class="n">speak</span><span class="p">()</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">pixels</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="k">break</span>
+
+
+    <span class="n">pixels</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, wzpan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

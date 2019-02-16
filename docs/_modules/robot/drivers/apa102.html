@@ -1,0 +1,424 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>robot.drivers.apa102 &mdash; wukong-robot 1.2.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> wukong-robot
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">wukong-robot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">模块代码</a> &raquo;</li>
+        
+      <li>robot.drivers.apa102</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>robot.drivers.apa102 源代码</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">from https://github.com/tinue/APA102_Pi</span>
+<span class="sd">This is the main driver module for APA102 LEDs</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">spidev</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">ceil</span>
+
+<span class="n">RGB_MAP</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;rgb&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;rbg&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;grb&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="s1">&#39;gbr&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;brg&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;bgr&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="p">}</span>
+
+<div class="viewcode-block" id="APA102"><a class="viewcode-back" href="../../../robot.drivers.html#robot.drivers.apa102.APA102">[文档]</a><span class="k">class</span> <span class="nc">APA102</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Driver for APA102 LEDS (aka &quot;DotStar&quot;).</span>
+
+<span class="sd">    (c) Martin Erzberger 2016-2017</span>
+
+<span class="sd">    My very first Python code, so I am sure there is a lot to be optimized ;)</span>
+
+<span class="sd">    Public methods are:</span>
+<span class="sd">     - set_pixel</span>
+<span class="sd">     - set_pixel_rgb</span>
+<span class="sd">     - show</span>
+<span class="sd">     - clear_strip</span>
+<span class="sd">     - cleanup</span>
+
+<span class="sd">    Helper methods for color manipulation are:</span>
+<span class="sd">     - combine_color</span>
+<span class="sd">     - wheel</span>
+
+<span class="sd">    The rest of the methods are used internally and should not be used by the</span>
+<span class="sd">    user of the library.</span>
+
+<span class="sd">    Very brief overview of APA102: An APA102 LED is addressed with SPI. The bits</span>
+<span class="sd">    are shifted in one by one, starting with the least significant bit.</span>
+
+<span class="sd">    An LED usually just forwards everything that is sent to its data-in to</span>
+<span class="sd">    data-out. While doing this, it remembers its own color and keeps glowing</span>
+<span class="sd">    with that color as long as there is power.</span>
+
+<span class="sd">    An LED can be switched to not forward the data, but instead use the data</span>
+<span class="sd">    to change it&#39;s own color. This is done by sending (at least) 32 bits of</span>
+<span class="sd">    zeroes to data-in. The LED then accepts the next correct 32 bit LED</span>
+<span class="sd">    frame (with color information) as its new color setting.</span>
+
+<span class="sd">    After having received the 32 bit color frame, the LED changes color,</span>
+<span class="sd">    and then resumes to just copying data-in to data-out.</span>
+
+<span class="sd">    The really clever bit is this: While receiving the 32 bit LED frame,</span>
+<span class="sd">    the LED sends zeroes on its data-out line. Because a color frame is</span>
+<span class="sd">    32 bits, the LED sends 32 bits of zeroes to the next LED.</span>
+<span class="sd">    As we have seen above, this means that the next LED is now ready</span>
+<span class="sd">    to accept a color frame and update its color.</span>
+
+<span class="sd">    So that&#39;s really the entire protocol:</span>
+<span class="sd">    - Start by sending 32 bits of zeroes. This prepares LED 1 to update</span>
+<span class="sd">      its color.</span>
+<span class="sd">    - Send color information one by one, starting with the color for LED 1,</span>
+<span class="sd">      then LED 2 etc.</span>
+<span class="sd">    - Finish off by cycling the clock line a few times to get all data</span>
+<span class="sd">      to the very last LED on the strip</span>
+
+<span class="sd">    The last step is necessary, because each LED delays forwarding the data</span>
+<span class="sd">    a bit. Imagine ten people in a row. When you yell the last color</span>
+<span class="sd">    information, i.e. the one for person ten, to the first person in</span>
+<span class="sd">    the line, then you are not finished yet. Person one has to turn around</span>
+<span class="sd">    and yell it to person 2, and so on. So it takes ten additional &quot;dummy&quot;</span>
+<span class="sd">    cycles until person ten knows the color. When you look closer,</span>
+<span class="sd">    you will see that not even person 9 knows its own color yet. This</span>
+<span class="sd">    information is still with person 2. Essentially the driver sends additional</span>
+<span class="sd">    zeroes to LED 1 as long as it takes for the last color frame to make it</span>
+<span class="sd">    down the line to the last LED.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Constants</span>
+    <span class="n">MAX_BRIGHTNESS</span> <span class="o">=</span> <span class="mi">31</span> <span class="c1"># Safeguard: Set to a value appropriate for your setup</span>
+    <span class="n">LED_START</span> <span class="o">=</span> <span class="mb">0b11100000</span> <span class="c1"># Three &quot;1&quot; bits, followed by 5 brightness bits</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_led</span><span class="p">,</span> <span class="n">global_brightness</span><span class="o">=</span><span class="n">MAX_BRIGHTNESS</span><span class="p">,</span>
+                 <span class="n">order</span><span class="o">=</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span> <span class="n">bus</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_speed_hz</span><span class="o">=</span><span class="mi">8000000</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_led</span> <span class="o">=</span> <span class="n">num_led</span>  <span class="c1"># The number of LEDs in the Strip</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="n">order</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rgb</span> <span class="o">=</span> <span class="n">RGB_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">RGB_MAP</span><span class="p">[</span><span class="s1">&#39;rgb&#39;</span><span class="p">])</span>
+        <span class="c1"># Limit the brightness to the maximum if it&#39;s set higher</span>
+        <span class="k">if</span> <span class="n">global_brightness</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAX_BRIGHTNESS</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">global_brightness</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MAX_BRIGHTNESS</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">global_brightness</span> <span class="o">=</span> <span class="n">global_brightness</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">leds</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">LED_START</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_led</span> <span class="c1"># Pixel buffer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spi</span> <span class="o">=</span> <span class="n">spidev</span><span class="o">.</span><span class="n">SpiDev</span><span class="p">()</span>  <span class="c1"># Init the SPI device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spi</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">bus</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>  <span class="c1"># Open SPI port 0, slave device (CS) 1</span>
+        <span class="c1"># Up the speed a bit, so that the LEDs are painted faster</span>
+        <span class="k">if</span> <span class="n">max_speed_hz</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spi</span><span class="o">.</span><span class="n">max_speed_hz</span> <span class="o">=</span> <span class="n">max_speed_hz</span>
+
+<div class="viewcode-block" id="APA102.clock_start_frame"><a class="viewcode-back" href="../../../robot.drivers.html#robot.drivers.apa102.APA102.clock_start_frame">[文档]</a>    <span class="k">def</span> <span class="nf">clock_start_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sends a start frame to the LED strip.</span>
+
+<span class="sd">        This method clocks out a start frame, telling the receiving LED</span>
+<span class="sd">        that it must update its own color now.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spi</span><span class="o">.</span><span class="n">xfer2</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>  <span class="c1"># Start frame, 32 zero bits</span></div>
+
+
+<div class="viewcode-block" id="APA102.clock_end_frame"><a class="viewcode-back" href="../../../robot.drivers.html#robot.drivers.apa102.APA102.clock_end_frame">[文档]</a>    <span class="k">def</span> <span class="nf">clock_end_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sends an end frame to the LED strip.</span>
+
+<span class="sd">        As explained above, dummy data must be sent after the last real colour</span>
+<span class="sd">        information so that all of the data can reach its destination down the line.</span>
+<span class="sd">        The delay is not as bad as with the human example above.</span>
+<span class="sd">        It is only 1/2 bit per LED. This is because the SPI clock line</span>
+<span class="sd">        needs to be inverted.</span>
+
+<span class="sd">        Say a bit is ready on the SPI data line. The sender communicates</span>
+<span class="sd">        this by toggling the clock line. The bit is read by the LED</span>
+<span class="sd">        and immediately forwarded to the output data line. When the clock goes</span>
+<span class="sd">        down again on the input side, the LED will toggle the clock up</span>
+<span class="sd">        on the output to tell the next LED that the bit is ready.</span>
+
+<span class="sd">        After one LED the clock is inverted, and after two LEDs it is in sync</span>
+<span class="sd">        again, but one cycle behind. Therefore, for every two LEDs, one bit</span>
+<span class="sd">        of delay gets accumulated. For 300 LEDs, 150 additional bits must be fed to</span>
+<span class="sd">        the input of LED one so that the data can reach the last LED.</span>
+
+<span class="sd">        Ultimately, we need to send additional numLEDs/2 arbitrary data bits,</span>
+<span class="sd">        in order to trigger numLEDs/2 additional clock changes. This driver</span>
+<span class="sd">        sends zeroes, which has the benefit of getting LED one partially or</span>
+<span class="sd">        fully ready for the next update to the strip. An optimized version</span>
+<span class="sd">        of the driver could omit the &quot;clockStartFrame&quot; method if enough zeroes have</span>
+<span class="sd">        been sent as part of &quot;clockEndFrame&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Round up num_led/2 bits (or num_led/16 bytes)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">num_led</span> <span class="o">+</span> <span class="mi">15</span><span class="p">)</span> <span class="o">//</span> <span class="mi">16</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spi</span><span class="o">.</span><span class="n">xfer2</span><span class="p">([</span><span class="mh">0x00</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="APA102.clear_strip"><a class="viewcode-back" href="../../../robot.drivers.html#robot.drivers.apa102.APA102.clear_strip">[文档]</a>    <span class="k">def</span> <span class="nf">clear_strip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Turns off the strip and shows the result right away.&quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">led</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_led</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_pixel</span><span class="p">(</span><span class="n">led</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="APA102.set_pixel"><a class="viewcode-back" href="../../../robot.drivers.html#robot.drivers.apa102.APA102.set_pixel">[文档]</a>    <span class="k">def</span> <span class="nf">set_pixel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">led_num</span><span class="p">,</span> <span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">,</span> <span class="n">bright_percent</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sets the color of one pixel in the LED stripe.</span>
+
+<span class="sd">        The changed pixel is not shown yet on the Stripe, it is only</span>
+<span class="sd">        written to the pixel buffer. Colors are passed individually.</span>
+<span class="sd">        If brightness is not set the global brightness setting is used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">led_num</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>  <span class="c1"># Pixel is invisible, so ignore</span>
+        <span class="k">if</span> <span class="n">led_num</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_led</span><span class="p">:</span>
+            <span class="k">return</span>  <span class="c1"># again, invisible</span>
+
+        <span class="c1"># Calculate pixel brightness as a percentage of the</span>
+        <span class="c1"># defined global_brightness. Round up to nearest integer</span>
+        <span class="c1"># as we expect some brightness unless set to 0</span>
+        <span class="n">brightness</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">(</span><span class="n">bright_percent</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">global_brightness</span><span class="o">/</span><span class="mf">100.0</span><span class="p">)</span>
+        <span class="n">brightness</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">brightness</span><span class="p">)</span>
+
+        <span class="c1"># LED startframe is three &quot;1&quot; bits, followed by 5 brightness bits</span>
+        <span class="n">ledstart</span> <span class="o">=</span> <span class="p">(</span><span class="n">brightness</span> <span class="o">&amp;</span> <span class="mb">0b00011111</span><span class="p">)</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">LED_START</span>
+
+        <span class="n">start_index</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">led_num</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leds</span><span class="p">[</span><span class="n">start_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">ledstart</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leds</span><span class="p">[</span><span class="n">start_index</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rgb</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">red</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leds</span><span class="p">[</span><span class="n">start_index</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rgb</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">green</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leds</span><span class="p">[</span><span class="n">start_index</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rgb</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span> <span class="o">=</span> <span class="n">blue</span></div>
+
+
+<div class="viewcode-block" id="APA102.set_pixel_rgb"><a class="viewcode-back" href="../../../robot.drivers.html#robot.drivers.apa102.APA102.set_pixel_rgb">[文档]</a>    <span class="k">def</span> <span class="nf">set_pixel_rgb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">led_num</span><span class="p">,</span> <span class="n">rgb_color</span><span class="p">,</span> <span class="n">bright_percent</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sets the color of one pixel in the LED stripe.</span>
+
+<span class="sd">        The changed pixel is not shown yet on the Stripe, it is only</span>
+<span class="sd">        written to the pixel buffer.</span>
+<span class="sd">        Colors are passed combined (3 bytes concatenated)</span>
+<span class="sd">        If brightness is not set the global brightness setting is used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_pixel</span><span class="p">(</span><span class="n">led_num</span><span class="p">,</span> <span class="p">(</span><span class="n">rgb_color</span> <span class="o">&amp;</span> <span class="mh">0xFF0000</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">,</span>
+                       <span class="p">(</span><span class="n">rgb_color</span> <span class="o">&amp;</span> <span class="mh">0x00FF00</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">,</span> <span class="n">rgb_color</span> <span class="o">&amp;</span> <span class="mh">0x0000FF</span><span class="p">,</span>
+                        <span class="n">bright_percent</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="APA102.rotate"><a class="viewcode-back" href="../../../robot.drivers.html#robot.drivers.apa102.APA102.rotate">[文档]</a>    <span class="k">def</span> <span class="nf">rotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">positions</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Rotate the LEDs by the specified number of positions.</span>
+
+<span class="sd">        Treating the internal LED array as a circular buffer, rotate it by</span>
+<span class="sd">        the specified number of positions. The number could be negative,</span>
+<span class="sd">        which means rotating in the opposite direction.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cutoff</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">positions</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_led</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">leds</span><span class="p">[</span><span class="n">cutoff</span><span class="p">:]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">leds</span><span class="p">[:</span><span class="n">cutoff</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="APA102.show"><a class="viewcode-back" href="../../../robot.drivers.html#robot.drivers.apa102.APA102.show">[文档]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sends the content of the pixel buffer to the strip.</span>
+
+<span class="sd">        Todo: More than 1024 LEDs requires more than one xfer operation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clock_start_frame</span><span class="p">()</span>
+        <span class="c1"># xfer2 kills the list, unfortunately. So it must be copied first</span>
+        <span class="c1"># SPI takes up to 4096 Integers. So we are fine for up to 1024 LEDs.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spi</span><span class="o">.</span><span class="n">xfer2</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">leds</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clock_end_frame</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="APA102.cleanup"><a class="viewcode-back" href="../../../robot.drivers.html#robot.drivers.apa102.APA102.cleanup">[文档]</a>    <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Release the SPI device; Call this method at the end&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">spi</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>  <span class="c1"># Close SPI port</span></div>
+
+<div class="viewcode-block" id="APA102.combine_color"><a class="viewcode-back" href="../../../robot.drivers.html#robot.drivers.apa102.APA102.combine_color">[文档]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">combine_color</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Make one 3*8 byte color value.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">red</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">green</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">+</span> <span class="n">blue</span></div>
+
+
+<div class="viewcode-block" id="APA102.wheel"><a class="viewcode-back" href="../../../robot.drivers.html#robot.drivers.apa102.APA102.wheel">[文档]</a>    <span class="k">def</span> <span class="nf">wheel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wheel_pos</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a color from a color wheel; Green -&gt; Red -&gt; Blue -&gt; Green&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">wheel_pos</span> <span class="o">&gt;</span> <span class="mi">255</span><span class="p">:</span>
+            <span class="n">wheel_pos</span> <span class="o">=</span> <span class="mi">255</span> <span class="c1"># Safeguard</span>
+        <span class="k">if</span> <span class="n">wheel_pos</span> <span class="o">&lt;</span> <span class="mi">85</span><span class="p">:</span>  <span class="c1"># Green -&gt; Red</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">combine_color</span><span class="p">(</span><span class="n">wheel_pos</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">255</span> <span class="o">-</span> <span class="n">wheel_pos</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">wheel_pos</span> <span class="o">&lt;</span> <span class="mi">170</span><span class="p">:</span>  <span class="c1"># Red -&gt; Blue</span>
+            <span class="n">wheel_pos</span> <span class="o">-=</span> <span class="mi">85</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">combine_color</span><span class="p">(</span><span class="mi">255</span> <span class="o">-</span> <span class="n">wheel_pos</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wheel_pos</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="c1"># Blue -&gt; Green</span>
+        <span class="n">wheel_pos</span> <span class="o">-=</span> <span class="mi">170</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">combine_color</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">wheel_pos</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">255</span> <span class="o">-</span> <span class="n">wheel_pos</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="APA102.dump_array"><a class="viewcode-back" href="../../../robot.drivers.html#robot.drivers.apa102.APA102.dump_array">[文档]</a>    <span class="k">def</span> <span class="nf">dump_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;For debug purposes: Dump the LED array onto the console.&quot;&quot;&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">leds</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, wzpan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

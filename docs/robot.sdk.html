@@ -1,0 +1,501 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>robot.sdk package &mdash; wukong-robot 1.2.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> wukong-robot
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">robot.sdk package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-robot.sdk.AbstractPlugin">robot.sdk.AbstractPlugin module</a></li>
+<li><a class="reference internal" href="#module-robot.sdk.AliSpeech">robot.sdk.AliSpeech module</a></li>
+<li><a class="reference internal" href="#module-robot.sdk.RASRsdk">robot.sdk.RASRsdk module</a></li>
+<li><a class="reference internal" href="#module-robot.sdk.TencentSpeech">robot.sdk.TencentSpeech module</a></li>
+<li><a class="reference internal" href="#module-robot.sdk.unit">robot.sdk.unit module</a></li>
+<li><a class="reference internal" href="#module-robot.sdk">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">wukong-robot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>robot.sdk package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/robot.sdk.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="robot-sdk-package">
+<h1>robot.sdk package<a class="headerlink" href="#robot-sdk-package" title="永久链接至标题">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-robot.sdk.AbstractPlugin">
+<span id="robot-sdk-abstractplugin-module"></span><h2>robot.sdk.AbstractPlugin module<a class="headerlink" href="#module-robot.sdk.AbstractPlugin" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="robot.sdk.AbstractPlugin.AbstractPlugin">
+<em class="property">class </em><code class="descclassname">robot.sdk.AbstractPlugin.</code><code class="descname">AbstractPlugin</code><span class="sig-paren">(</span><em>con</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/AbstractPlugin.html#AbstractPlugin"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.AbstractPlugin.AbstractPlugin" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>技能插件基类</p>
+<dl class="attribute">
+<dt id="robot.sdk.AbstractPlugin.AbstractPlugin.IS_IMMERSIVE">
+<code class="descname">IS_IMMERSIVE</code><em class="property"> = False</em><a class="headerlink" href="#robot.sdk.AbstractPlugin.AbstractPlugin.IS_IMMERSIVE" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="robot.sdk.AbstractPlugin.AbstractPlugin.SLUG">
+<code class="descname">SLUG</code><em class="property"> = 'AbstractPlugin'</em><a class="headerlink" href="#robot.sdk.AbstractPlugin.AbstractPlugin.SLUG" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.sdk.AbstractPlugin.AbstractPlugin.activeListen">
+<code class="descname">activeListen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/AbstractPlugin.html#AbstractPlugin.activeListen"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.AbstractPlugin.AbstractPlugin.activeListen" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.sdk.AbstractPlugin.AbstractPlugin.handle">
+<code class="descname">handle</code><span class="sig-paren">(</span><em>query</em>, <em>parsed</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/AbstractPlugin.html#AbstractPlugin.handle"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.AbstractPlugin.AbstractPlugin.handle" title="永久链接至目标">¶</a></dt>
+<dd><p>处理逻辑</p>
+<p>参数：
+query – 用户的指令字符串
+parsed – 用户指令经过 NLU 解析后的结果</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="robot.sdk.AbstractPlugin.AbstractPlugin.isValid">
+<code class="descname">isValid</code><span class="sig-paren">(</span><em>query</em>, <em>parsed</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/AbstractPlugin.html#AbstractPlugin.isValid"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.AbstractPlugin.AbstractPlugin.isValid" title="永久链接至目标">¶</a></dt>
+<dd><p>是否适合由该插件处理</p>
+<p>参数：
+query – 用户的指令字符串
+parsed – 用户指令经过 NLU 解析后的结果</p>
+<p>返回：
+True: 适合由该插件处理
+False: 不适合由该插件处理</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="robot.sdk.AbstractPlugin.AbstractPlugin.isValidImmersive">
+<code class="descname">isValidImmersive</code><span class="sig-paren">(</span><em>query</em>, <em>parsed</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/AbstractPlugin.html#AbstractPlugin.isValidImmersive"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.AbstractPlugin.AbstractPlugin.isValidImmersive" title="永久链接至目标">¶</a></dt>
+<dd><p>是否适合在沉浸模式下处理，
+仅适用于有沉浸模式的插件（如音乐等）
+当用户唤醒时，可以响应更多指令集。
+例如：“”上一首”、”下一首” 等</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="robot.sdk.AbstractPlugin.AbstractPlugin.play">
+<code class="descname">play</code><span class="sig-paren">(</span><em>src</em>, <em>delete=False</em>, <em>onCompleted=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/AbstractPlugin.html#AbstractPlugin.play"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.AbstractPlugin.AbstractPlugin.play" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.sdk.AbstractPlugin.AbstractPlugin.restore">
+<code class="descname">restore</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/AbstractPlugin.html#AbstractPlugin.restore"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.AbstractPlugin.AbstractPlugin.restore" title="永久链接至目标">¶</a></dt>
+<dd><p>恢复当前插件，
+仅适用于有沉浸模式的插件（如音乐等）
+当用户误唤醒或者唤醒进行闲聊后，
+可以自动恢复当前插件的处理逻辑</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="robot.sdk.AbstractPlugin.AbstractPlugin.say">
+<code class="descname">say</code><span class="sig-paren">(</span><em>text</em>, <em>cache=False</em>, <em>onCompleted=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/AbstractPlugin.html#AbstractPlugin.say"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.AbstractPlugin.AbstractPlugin.say" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-robot.sdk.AliSpeech">
+<span id="robot-sdk-alispeech-module"></span><h2>robot.sdk.AliSpeech module<a class="headerlink" href="#module-robot.sdk.AliSpeech" title="永久链接至标题">¶</a></h2>
+<dl class="function">
+<dt id="robot.sdk.AliSpeech.asr">
+<code class="descclassname">robot.sdk.AliSpeech.</code><code class="descname">asr</code><span class="sig-paren">(</span><em>appKey</em>, <em>token</em>, <em>wave_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/AliSpeech.html#asr"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.AliSpeech.asr" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="robot.sdk.AliSpeech.process">
+<code class="descclassname">robot.sdk.AliSpeech.</code><code class="descname">process</code><span class="sig-paren">(</span><em>request</em>, <em>token</em>, <em>audioContent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/AliSpeech.html#process"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.AliSpeech.process" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="robot.sdk.AliSpeech.processGETRequest">
+<code class="descclassname">robot.sdk.AliSpeech.</code><code class="descname">processGETRequest</code><span class="sig-paren">(</span><em>appKey</em>, <em>token</em>, <em>voice</em>, <em>text</em>, <em>format</em>, <em>sampleRate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/AliSpeech.html#processGETRequest"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.AliSpeech.processGETRequest" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="robot.sdk.AliSpeech.processPOSTRequest">
+<code class="descclassname">robot.sdk.AliSpeech.</code><code class="descname">processPOSTRequest</code><span class="sig-paren">(</span><em>appKey</em>, <em>token</em>, <em>voice</em>, <em>text</em>, <em>format</em>, <em>sampleRate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/AliSpeech.html#processPOSTRequest"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.AliSpeech.processPOSTRequest" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="robot.sdk.AliSpeech.tts">
+<code class="descclassname">robot.sdk.AliSpeech.</code><code class="descname">tts</code><span class="sig-paren">(</span><em>appKey</em>, <em>token</em>, <em>voice</em>, <em>text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/AliSpeech.html#tts"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.AliSpeech.tts" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-robot.sdk.RASRsdk">
+<span id="robot-sdk-rasrsdk-module"></span><h2>robot.sdk.RASRsdk module<a class="headerlink" href="#module-robot.sdk.RASRsdk" title="永久链接至标题">¶</a></h2>
+<dl class="function">
+<dt id="robot.sdk.RASRsdk.formatSignString">
+<code class="descclassname">robot.sdk.RASRsdk.</code><code class="descname">formatSignString</code><span class="sig-paren">(</span><em>param</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/RASRsdk.html#formatSignString"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.RASRsdk.formatSignString" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="robot.sdk.RASRsdk.randstr">
+<code class="descclassname">robot.sdk.RASRsdk.</code><code class="descname">randstr</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/RASRsdk.html#randstr"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.RASRsdk.randstr" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="robot.sdk.RASRsdk.sendVoice">
+<code class="descclassname">robot.sdk.RASRsdk.</code><code class="descname">sendVoice</code><span class="sig-paren">(</span><em>secret_key</em>, <em>secretid</em>, <em>appid</em>, <em>engine_model_type</em>, <em>res_type</em>, <em>result_text_format</em>, <em>voice_format</em>, <em>filepath</em>, <em>cutlength</em>, <em>template_name=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/RASRsdk.html#sendVoice"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.RASRsdk.sendVoice" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="robot.sdk.RASRsdk.sign">
+<code class="descclassname">robot.sdk.RASRsdk.</code><code class="descname">sign</code><span class="sig-paren">(</span><em>signstr</em>, <em>secret_key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/RASRsdk.html#sign"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.RASRsdk.sign" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-robot.sdk.TencentSpeech">
+<span id="robot-sdk-tencentspeech-module"></span><h2>robot.sdk.TencentSpeech module<a class="headerlink" href="#module-robot.sdk.TencentSpeech" title="永久链接至标题">¶</a></h2>
+<p>Tencent ASR &amp;&amp; TTS API</p>
+<dl class="class">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech">
+<em class="property">class </em><code class="descclassname">robot.sdk.TencentSpeech.</code><code class="descname">tencentSpeech</code><span class="sig-paren">(</span><em>SECRET_KEY</em>, <em>SECRET_ID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/TencentSpeech.html#tencentSpeech"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.ASR">
+<code class="descname">ASR</code><span class="sig-paren">(</span><em>URL</em>, <em>voiceformat</em>, <em>sourcetype</em>, <em>region</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/TencentSpeech.html#tencentSpeech.ASR"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.ASR" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.PrimaryLanguage">
+<code class="descname">PrimaryLanguage</code><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.PrimaryLanguage" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.Region">
+<code class="descname">Region</code><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.Region" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.SECRET_ID">
+<code class="descname">SECRET_ID</code><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.SECRET_ID" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.SECRET_KEY">
+<code class="descname">SECRET_KEY</code><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.SECRET_KEY" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.SourceType">
+<code class="descname">SourceType</code><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.SourceType" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.TTS">
+<code class="descname">TTS</code><span class="sig-paren">(</span><em>text</em>, <em>voicetype</em>, <em>primarylanguage</em>, <em>region</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/TencentSpeech.html#tencentSpeech.TTS"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.TTS" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.Text">
+<code class="descname">Text</code><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.Text" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.URL">
+<code class="descname">URL</code><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.URL" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.VoiceFormat">
+<code class="descname">VoiceFormat</code><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.VoiceFormat" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.VoiceType">
+<code class="descname">VoiceType</code><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.VoiceType" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.encode_sign">
+<code class="descname">encode_sign</code><span class="sig-paren">(</span><em>signstr</em>, <em>SECRET_KEY</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/TencentSpeech.html#tencentSpeech.encode_sign"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.encode_sign" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.formatSignString">
+<code class="descname">formatSignString</code><span class="sig-paren">(</span><em>config_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/TencentSpeech.html#tencentSpeech.formatSignString"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.formatSignString" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.oneSentenceRecognition">
+<code class="descname">oneSentenceRecognition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/TencentSpeech.html#tencentSpeech.oneSentenceRecognition"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.oneSentenceRecognition" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.primarylanguage">
+<code class="descname">primarylanguage</code><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.primarylanguage" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.region">
+<code class="descname">region</code><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.region" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.secret_id">
+<code class="descname">secret_id</code><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.secret_id" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.secret_key">
+<code class="descname">secret_key</code><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.secret_key" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.source_type">
+<code class="descname">source_type</code><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.source_type" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.text">
+<code class="descname">text</code><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.text" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.textToSpeech">
+<code class="descname">textToSpeech</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/TencentSpeech.html#tencentSpeech.textToSpeech"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.textToSpeech" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.url">
+<code class="descname">url</code><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.url" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.voiceformat">
+<code class="descname">voiceformat</code><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.voiceformat" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="robot.sdk.TencentSpeech.tencentSpeech.voicetype">
+<code class="descname">voicetype</code><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.voicetype" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-robot.sdk.unit">
+<span id="robot-sdk-unit-module"></span><h2>robot.sdk.unit module<a class="headerlink" href="#module-robot.sdk.unit" title="永久链接至标题">¶</a></h2>
+<dl class="function">
+<dt id="robot.sdk.unit.getIntent">
+<code class="descclassname">robot.sdk.unit.</code><code class="descname">getIntent</code><span class="sig-paren">(</span><em>parsed</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/unit.html#getIntent"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.unit.getIntent" title="永久链接至目标">¶</a></dt>
+<dd><p>提取意图</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="robot.sdk.unit.getSay">
+<code class="descclassname">robot.sdk.unit.</code><code class="descname">getSay</code><span class="sig-paren">(</span><em>parsed</em>, <em>intent=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/unit.html#getSay"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.unit.getSay" title="永久链接至目标">¶</a></dt>
+<dd><p>提取意图</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="robot.sdk.unit.getSlots">
+<code class="descclassname">robot.sdk.unit.</code><code class="descname">getSlots</code><span class="sig-paren">(</span><em>parsed</em>, <em>intent=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/unit.html#getSlots"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.unit.getSlots" title="永久链接至目标">¶</a></dt>
+<dd><p>提取意图</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="robot.sdk.unit.getUnit">
+<code class="descclassname">robot.sdk.unit.</code><code class="descname">getUnit</code><span class="sig-paren">(</span><em>query</em>, <em>service_id</em>, <em>api_key</em>, <em>secret_key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/unit.html#getUnit"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.unit.getUnit" title="永久链接至目标">¶</a></dt>
+<dd><p>NLU 解析</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="robot.sdk.unit.get_token">
+<code class="descclassname">robot.sdk.unit.</code><code class="descname">get_token</code><span class="sig-paren">(</span><em>api_key</em>, <em>secret_key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/unit.html#get_token"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.unit.get_token" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="robot.sdk.unit.hasIntent">
+<code class="descclassname">robot.sdk.unit.</code><code class="descname">hasIntent</code><span class="sig-paren">(</span><em>parsed</em>, <em>intent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/unit.html#hasIntent"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.unit.hasIntent" title="永久链接至目标">¶</a></dt>
+<dd><p>提取意图</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-robot.sdk">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-robot.sdk" title="永久链接至标题">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, wzpan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

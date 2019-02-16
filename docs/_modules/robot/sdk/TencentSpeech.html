@@ -1,0 +1,400 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>robot.sdk.TencentSpeech &mdash; wukong-robot 1.2.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> wukong-robot
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">wukong-robot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">模块代码</a> &raquo;</li>
+        
+      <li>robot.sdk.TencentSpeech</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>robot.sdk.TencentSpeech 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding: utf-8</span>
+<span class="c1">#!/usr/bin/env python3</span>
+
+
+<span class="s1">&#39;Tencent ASR &amp;&amp; TTS API&#39;</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Charles Li, Joseph Pan&#39;</span>
+
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">hmac</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
+<span class="c1">#腾讯web API一句话识别请求</span>
+<div class="viewcode-block" id="tencentSpeech"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.TencentSpeech.tencentSpeech">[文档]</a><span class="k">class</span> <span class="nc">tencentSpeech</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="s1">&#39;SECRET_ID&#39;</span><span class="p">,</span> <span class="s1">&#39;SECRET_KEY&#39;</span><span class="p">,</span> <span class="s1">&#39;SourceType&#39;</span><span class="p">,</span> <span class="s1">&#39;URL&#39;</span><span class="p">,</span> <span class="s1">&#39;VoiceFormat&#39;</span><span class="p">,</span> <span class="s1">&#39;PrimaryLanguage&#39;</span><span class="p">,</span> <span class="s1">&#39;Text&#39;</span><span class="p">,</span> <span class="s1">&#39;VoiceType&#39;</span><span class="p">,</span> <span class="s1">&#39;Region&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">SECRET_KEY</span><span class="p">,</span> <span class="n">SECRET_ID</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SECRET_KEY</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">SECRET_ID</span> <span class="o">=</span> <span class="n">SECRET_KEY</span><span class="p">,</span> <span class="n">SECRET_ID</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">secret_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">SECRET_ID</span>
+    <span class="nd">@secret_id</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">secret_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">SECRET_ID</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">SECRET_ID</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;SecretId must be a string!&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">SecretId</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;SecretId can not be empty!&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SECRET_ID</span> <span class="o">=</span> <span class="n">SECRET_ID</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">secret_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">SECRET_KEY</span>
+    <span class="nd">@secret_key</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">secret_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">SECRET_KEY</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">SECRET_KEY</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;SecretKey must be a string!&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">SECRET_KEY</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;SecretKey can not be empty!&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="n">SECRET_KEY</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">source_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sourcetype</span>
+    <span class="nd">@source_type</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">source_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">SourceType</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">SourceType</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;SecretType must be an string!&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">SourceType</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;SourceType can not be empty!&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SourceType</span> <span class="o">=</span> <span class="n">SourceType</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">URL</span>
+    <span class="nd">@url</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">URL</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">URL</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;url must be an string!&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">URL</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;url can not be empty!&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">URL</span> <span class="o">=</span> <span class="n">URL</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">voiceformat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">VoiceFormat</span>
+    <span class="nd">@voiceformat</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">voiceformat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">VoiceFormat</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">VoiceFormat</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;voiceformat must be an string!&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">VoiceFormat</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;voiceformat can not be empty!&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">VoiceFormat</span> <span class="o">=</span> <span class="n">VoiceFormat</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">text</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Text</span>
+    <span class="nd">@text</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Text</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">Text</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;text must be an string!&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">Text</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;text can not be empty!&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Text</span> <span class="o">=</span> <span class="n">Text</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">region</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Region</span>
+    <span class="nd">@region</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Region</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">Region</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;region must be an string!&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">Region</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;region can not be empty!&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Region</span> <span class="o">=</span> <span class="n">Region</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">primarylanguage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">PrimaryLanguage</span>
+    <span class="nd">@primarylanguage</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">primarylanguage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">PrimaryLanguage</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PrimaryLanguage</span> <span class="o">=</span> <span class="n">PrimaryLanguage</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">voicetype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">VoiceType</span>
+    <span class="nd">@voicetype</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">voicetype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">VoiceType</span><span class="p">):</span>        
+        <span class="bp">self</span><span class="o">.</span><span class="n">VoiceType</span> <span class="o">=</span> <span class="n">VoiceType</span>
+<div class="viewcode-block" id="tencentSpeech.TTS"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.TencentSpeech.tencentSpeech.TTS">[文档]</a>    <span class="k">def</span> <span class="nf">TTS</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">voicetype</span><span class="p">,</span> <span class="n">primarylanguage</span><span class="p">,</span> <span class="n">region</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">voicetype</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">primarylanguage</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="n">text</span><span class="p">,</span> <span class="n">voicetype</span><span class="p">,</span> <span class="n">primarylanguage</span><span class="p">,</span> <span class="n">region</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">textToSpeech</span><span class="p">()</span></div>
+<div class="viewcode-block" id="tencentSpeech.textToSpeech"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.TencentSpeech.tencentSpeech.textToSpeech">[文档]</a>    <span class="k">def</span> <span class="nf">textToSpeech</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#生成body</span>
+        <span class="k">def</span> <span class="nf">make_body</span><span class="p">(</span><span class="n">config_dict</span><span class="p">,</span> <span class="n">sign_encode</span><span class="p">):</span>
+            <span class="c1">##注意URL编码的时候分str编码，整段编码会丢data</span>
+            <span class="n">body</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">config_dict</span><span class="p">:</span>
+                <span class="n">body</span> <span class="o">+=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;&amp;&#39;</span>
+            <span class="k">return</span> <span class="n">body</span> <span class="o">+</span> <span class="s1">&#39;Signature=&#39;</span> <span class="o">+</span> <span class="n">sign_encode</span>
+        <span class="n">HOST</span> <span class="o">=</span> <span class="s1">&#39;aai.tencentcloudapi.com&#39;</span>
+        <span class="n">config_dict</span><span class="o">=</span> <span class="p">{</span>
+                        <span class="s1">&#39;Action&#39;</span>         <span class="p">:</span> <span class="s1">&#39;TextToVoice&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;Version&#39;</span>        <span class="p">:</span> <span class="s1">&#39;2018-05-22&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;ProjectId&#39;</span>      <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                        <span class="s1">&#39;Region&#39;</span>         <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Region</span><span class="p">,</span>
+                        <span class="s1">&#39;VoiceType&#39;</span>      <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">VoiceType</span><span class="p">,</span>
+                        <span class="s1">&#39;Timestamp&#39;</span>      <span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()),</span>
+                        <span class="s1">&#39;Nonce&#39;</span>          <span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">100000</span><span class="p">,</span> <span class="mi">200000</span><span class="p">),</span>
+                        <span class="s1">&#39;SecretId&#39;</span>       <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">SECRET_ID</span><span class="p">,</span>
+                        <span class="s1">&#39;Text&#39;</span>           <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Text</span><span class="p">,</span>
+                        <span class="s1">&#39;PrimaryLanguage&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">PrimaryLanguage</span><span class="p">,</span>
+                        <span class="s1">&#39;ModelType&#39;</span>      <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="s1">&#39;SessionId&#39;</span>      <span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid1</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="c1">#按key排序</span>
+        <span class="n">config_dict</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">config_dict</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="n">signstr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">formatSignString</span><span class="p">(</span><span class="n">config_dict</span><span class="p">)</span>
+        <span class="n">sign_encode</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encode_sign</span><span class="p">(</span><span class="n">signstr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">SECRET_KEY</span><span class="p">))</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">make_body</span><span class="p">(</span><span class="n">config_dict</span><span class="p">,</span> <span class="n">sign_encode</span><span class="p">)</span>
+        <span class="c1">#Get URL</span>
+        <span class="n">req_url</span> <span class="o">=</span> <span class="s2">&quot;https://aai.tencentcloudapi.com&quot;</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;Host&#39;</span> <span class="p">:</span> <span class="n">HOST</span><span class="p">,</span>
+            <span class="s1">&#39;Content-Type&#39;</span> <span class="p">:</span> <span class="s1">&#39;application/x-www-form-urlencoded&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;Charset&#39;</span> <span class="p">:</span> <span class="s1">&#39;UTF-8&#39;</span>
+        <span class="p">}</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">req_url</span><span class="p">,</span> <span class="n">headers</span> <span class="o">=</span> <span class="n">header</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">body</span><span class="p">)</span>
+        <span class="c1">#有些音频utf8解码失败，存在编码错误</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf8&quot;</span><span class="p">,</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">s</span><span class="p">)</span></div>
+<div class="viewcode-block" id="tencentSpeech.ASR"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.TencentSpeech.tencentSpeech.ASR">[文档]</a>    <span class="k">def</span> <span class="nf">ASR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">URL</span><span class="p">,</span> <span class="n">voiceformat</span><span class="p">,</span> <span class="n">sourcetype</span><span class="p">,</span> <span class="n">region</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">voiceformat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="n">URL</span><span class="p">,</span> <span class="n">voiceformat</span><span class="p">,</span> <span class="n">sourcetype</span><span class="p">,</span> <span class="n">region</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">oneSentenceRecognition</span><span class="p">()</span></div>
+<div class="viewcode-block" id="tencentSpeech.oneSentenceRecognition"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.TencentSpeech.tencentSpeech.oneSentenceRecognition">[文档]</a>    <span class="k">def</span> <span class="nf">oneSentenceRecognition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#生成body</span>
+        <span class="k">def</span> <span class="nf">make_body</span><span class="p">(</span><span class="n">config_dict</span><span class="p">,</span> <span class="n">sign_encode</span><span class="p">):</span>
+            <span class="c1">##注意URL编码的时候分str编码，整段编码会丢data</span>
+            <span class="n">body</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">config_dict</span><span class="p">:</span>
+                <span class="n">body</span> <span class="o">+=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;&amp;&#39;</span>
+            <span class="k">return</span> <span class="n">body</span> <span class="o">+</span> <span class="s1">&#39;Signature=&#39;</span> <span class="o">+</span> <span class="n">sign_encode</span>
+        <span class="n">HOST</span> <span class="o">=</span> <span class="s1">&#39;aai.tencentcloudapi.com&#39;</span>
+        <span class="n">config_dict</span><span class="o">=</span> <span class="p">{</span>
+                        <span class="s1">&#39;Action&#39;</span>         <span class="p">:</span> <span class="s1">&#39;SentenceRecognition&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;Version&#39;</span>        <span class="p">:</span> <span class="s1">&#39;2018-05-22&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;Region&#39;</span>         <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Region</span><span class="p">,</span>
+                        <span class="s1">&#39;ProjectId&#39;</span>      <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                        <span class="s1">&#39;SubServiceType&#39;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                        <span class="s1">&#39;EngSerViceType&#39;</span> <span class="p">:</span> <span class="s1">&#39;16k&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;VoiceFormat&#39;</span>    <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">VoiceFormat</span><span class="p">,</span>
+                        <span class="s1">&#39;UsrAudioKey&#39;</span>    <span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+                        <span class="s1">&#39;Timestamp&#39;</span>      <span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()),</span>
+                        <span class="s1">&#39;Nonce&#39;</span>          <span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">100000</span><span class="p">,</span> <span class="mi">200000</span><span class="p">),</span>
+                        <span class="s1">&#39;SecretId&#39;</span>       <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">SECRET_ID</span><span class="p">,</span>
+                        <span class="s1">&#39;SourceType&#39;</span>     <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">SourceType</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">SourceType</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span>
+            <span class="n">config_dict</span><span class="p">[</span><span class="s1">&#39;Url&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#不能大于1M</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">URL</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="n">config_dict</span><span class="p">[</span><span class="s1">&#39;DataLen&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+            <span class="n">config_dict</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="c1">#config_dict[&#39;Data&#39;] = content</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="c1">#按key排序</span>
+        <span class="n">config_dict</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">config_dict</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="n">signstr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">formatSignString</span><span class="p">(</span><span class="n">config_dict</span><span class="p">)</span>
+        <span class="n">sign_encode</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encode_sign</span><span class="p">(</span><span class="n">signstr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">SECRET_KEY</span><span class="p">))</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">make_body</span><span class="p">(</span><span class="n">config_dict</span><span class="p">,</span> <span class="n">sign_encode</span><span class="p">)</span>
+        <span class="c1">#Get URL</span>
+        <span class="n">req_url</span> <span class="o">=</span> <span class="s2">&quot;https://aai.tencentcloudapi.com&quot;</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;Host&#39;</span> <span class="p">:</span> <span class="n">HOST</span><span class="p">,</span>
+            <span class="s1">&#39;Content-Type&#39;</span> <span class="p">:</span> <span class="s1">&#39;application/x-www-form-urlencoded&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;Charset&#39;</span> <span class="p">:</span> <span class="s1">&#39;UTF-8&#39;</span>
+        <span class="p">}</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">req_url</span><span class="p">,</span> <span class="n">headers</span> <span class="o">=</span> <span class="n">header</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">body</span><span class="p">)</span>
+        <span class="c1">#有些音频utf8解码失败，存在编码错误</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf8&quot;</span><span class="p">,</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s</span></div>
+    <span class="c1">#拼接url和参数</span>
+<div class="viewcode-block" id="tencentSpeech.formatSignString"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.TencentSpeech.tencentSpeech.formatSignString">[文档]</a>    <span class="k">def</span> <span class="nf">formatSignString</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_dict</span><span class="p">):</span>
+        <span class="n">signstr</span><span class="o">=</span><span class="s2">&quot;POSTaai.tencentcloudapi.com/?&quot;</span>
+        <span class="n">argArr</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">config_dict</span><span class="p">:</span>
+            <span class="n">argArr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+        <span class="n">config_str</span> <span class="o">=</span> <span class="s2">&quot;&amp;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">argArr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">signstr</span> <span class="o">+</span> <span class="n">config_str</span></div>
+    <span class="c1">#生成签名</span>
+<div class="viewcode-block" id="tencentSpeech.encode_sign"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.TencentSpeech.tencentSpeech.encode_sign">[文档]</a>    <span class="k">def</span> <span class="nf">encode_sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signstr</span><span class="p">,</span> <span class="n">SECRET_KEY</span><span class="p">):</span>
+        <span class="n">myhmac</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">SECRET_KEY</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">signstr</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">digestmod</span> <span class="o">=</span> <span class="s1">&#39;sha1&#39;</span><span class="p">)</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="n">myhmac</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
+        <span class="c1">#hmac() 完一定要decode()和 python 2 hmac不一样</span>
+        <span class="n">signature</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">code</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">signature</span></div></div>
+        
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, wzpan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

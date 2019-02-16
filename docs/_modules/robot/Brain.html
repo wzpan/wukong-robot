@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>robot.Brain &mdash; wukong-robot 1.2.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> wukong-robot
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">wukong-robot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">模块代码</a> &raquo;</li>
+        
+      <li>robot.Brain</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>robot.Brain 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8-*-</span>
+<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">logging</span>
+<span class="kn">from</span> <span class="nn">robot.sdk.unit</span> <span class="k">import</span> <span class="n">getUnit</span>
+<span class="kn">from</span> <span class="nn">robot.drivers.pixels</span> <span class="k">import</span> <span class="n">pixels</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">plugin_loader</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">config</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Brain"><a class="viewcode-back" href="../../robot.html#robot.Brain.Brain">[文档]</a><span class="k">class</span> <span class="nc">Brain</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conversation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        大脑模块，负责处理技能的匹配和响应</span>
+
+<span class="sd">        参数：</span>
+<span class="sd">        conversation -- 管理对话</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span> <span class="o">=</span> <span class="n">conversation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plugins</span> <span class="o">=</span> <span class="n">plugin_loader</span><span class="o">.</span><span class="n">get_plugins</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conversation</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">handling</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="Brain.isImmersive"><a class="viewcode-back" href="../../robot.html#robot.Brain.Brain.isImmersive">[文档]</a>    <span class="k">def</span> <span class="nf">isImmersive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plugin</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">parsed</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span><span class="o">.</span><span class="n">getImmersiveMode</span><span class="p">()</span> <span class="o">==</span> <span class="n">plugin</span><span class="o">.</span><span class="n">SLUG</span> <span class="ow">and</span> \
+            <span class="n">plugin</span><span class="o">.</span><span class="n">isValidImmersive</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">parsed</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Brain.printPlugins"><a class="viewcode-back" href="../../robot.html#robot.Brain.Brain.printPlugins">[文档]</a>    <span class="k">def</span> <span class="nf">printPlugins</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">plugin_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">plugin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugins</span><span class="p">:</span>
+            <span class="n">plugin_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plugin</span><span class="o">.</span><span class="n">SLUG</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;已激活插件：</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">plugin_list</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Brain.query"><a class="viewcode-back" href="../../robot.html#robot.Brain.Brain.query">[文档]</a>    <span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        query 模块</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">        text -- 用户输入</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
+
+        <span class="k">if</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s2">&quot;抱歉，刚刚没听清，能再说一遍吗？&quot;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="n">parsed</span> <span class="o">=</span> <span class="n">getUnit</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;S13442&quot;</span><span class="p">,</span>
+                         <span class="s1">&#39;w5v7gUV3iPGsGntcM84PtOOM&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;KffXwW6E1alcGplcabcNs63Li6GvvnfL&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">plugin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugins</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">plugin</span><span class="o">.</span><span class="n">isValid</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">parsed</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isImmersive</span><span class="p">(</span><span class="n">plugin</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">parsed</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39; 命中技能 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">plugin</span><span class="o">.</span><span class="n">SLUG</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">plugin</span><span class="o">.</span><span class="n">IS_IMMERSIVE</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span><span class="o">.</span><span class="n">setImmersiveMode</span><span class="p">(</span><span class="n">plugin</span><span class="o">.</span><span class="n">SLUG</span><span class="p">)</span>
+
+            <span class="n">continueHandle</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handling</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">continueHandle</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">handle</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">parsed</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handling</span> <span class="o">=</span> <span class="kc">False</span>                
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s1">&#39;Failed to execute plugin&#39;</span><span class="p">,</span>
+                                   <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">reply</span> <span class="o">=</span> <span class="sa">u</span><span class="s2">&quot;抱歉，插件</span><span class="si">{}</span><span class="s2">出故障了，晚点再试试吧&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">plugin</span><span class="o">.</span><span class="n">SLUG</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">reply</span><span class="p">,</span> <span class="n">plugin</span><span class="o">=</span><span class="n">plugin</span><span class="o">.</span><span class="n">SLUG</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Handling of phrase &#39;</span><span class="si">%s</span><span class="s2">&#39; by &quot;</span> <span class="o">+</span>
+                                   <span class="s2">&quot;plugin &#39;</span><span class="si">%s</span><span class="s2">&#39; completed&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span>
+                                   <span class="n">plugin</span><span class="o">.</span><span class="n">SLUG</span><span class="p">)</span>                    
+            <span class="k">finally</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">continueHandle</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;No plugin was able to handle phrase </span><span class="si">{}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Brain.restore"><a class="viewcode-back" href="../../robot.html#robot.Brain.Brain.restore">[文档]</a>    <span class="k">def</span> <span class="nf">restore</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; 恢复某个技能的处理 &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span><span class="o">.</span><span class="n">immersiveMode</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">for</span> <span class="n">plugin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugins</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">plugin</span><span class="o">.</span><span class="n">SLUG</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span><span class="o">.</span><span class="n">immersiveMode</span> <span class="ow">and</span> <span class="n">plugin</span><span class="o">.</span><span class="n">restore</span><span class="p">:</span>
+                <span class="n">plugin</span><span class="o">.</span><span class="n">restore</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Brain.understand"><a class="viewcode-back" href="../../robot.html#robot.Brain.Brain.understand">[文档]</a>    <span class="k">def</span> <span class="nf">understand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span><span class="o">.</span><span class="n">asr</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span><span class="o">.</span><span class="n">asr</span><span class="o">.</span><span class="n">transcribe</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Brain.say"><a class="viewcode-back" href="../../robot.html#robot.Brain.Brain.say">[文档]</a>    <span class="k">def</span> <span class="nf">say</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span><span class="o">.</span><span class="n">tts</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span><span class="o">.</span><span class="n">tts</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">cache</span><span class="p">)</span></div></div>
+
+    
+            
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, wzpan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

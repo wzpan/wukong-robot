@@ -1,0 +1,429 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>robot.drivers package &mdash; wukong-robot 1.2.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> wukong-robot
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">robot.drivers package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-robot.drivers.apa102">robot.drivers.apa102 module</a></li>
+<li><a class="reference internal" href="#module-robot.drivers.pixels">robot.drivers.pixels module</a></li>
+<li><a class="reference internal" href="#module-robot.drivers">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">wukong-robot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>robot.drivers package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/robot.drivers.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="robot-drivers-package">
+<h1>robot.drivers package<a class="headerlink" href="#robot-drivers-package" title="永久链接至标题">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-robot.drivers.apa102">
+<span id="robot-drivers-apa102-module"></span><h2>robot.drivers.apa102 module<a class="headerlink" href="#module-robot.drivers.apa102" title="永久链接至标题">¶</a></h2>
+<p>from <a class="reference external" href="https://github.com/tinue/APA102_Pi">https://github.com/tinue/APA102_Pi</a>
+This is the main driver module for APA102 LEDs</p>
+<dl class="class">
+<dt id="robot.drivers.apa102.APA102">
+<em class="property">class </em><code class="descclassname">robot.drivers.apa102.</code><code class="descname">APA102</code><span class="sig-paren">(</span><em>num_led</em>, <em>global_brightness=31</em>, <em>order='rgb'</em>, <em>bus=0</em>, <em>device=1</em>, <em>max_speed_hz=8000000</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/drivers/apa102.html#APA102"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.drivers.apa102.APA102" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Driver for APA102 LEDS (aka “DotStar”).</p>
+<ol class="loweralpha simple" start="3">
+<li>Martin Erzberger 2016-2017</li>
+</ol>
+<p>My very first Python code, so I am sure there is a lot to be optimized ;)</p>
+<dl class="docutils">
+<dt>Public methods are:</dt>
+<dd><ul class="first last simple">
+<li>set_pixel</li>
+<li>set_pixel_rgb</li>
+<li>show</li>
+<li>clear_strip</li>
+<li>cleanup</li>
+</ul>
+</dd>
+<dt>Helper methods for color manipulation are:</dt>
+<dd><ul class="first last simple">
+<li>combine_color</li>
+<li>wheel</li>
+</ul>
+</dd>
+</dl>
+<p>The rest of the methods are used internally and should not be used by the
+user of the library.</p>
+<p>Very brief overview of APA102: An APA102 LED is addressed with SPI. The bits
+are shifted in one by one, starting with the least significant bit.</p>
+<p>An LED usually just forwards everything that is sent to its data-in to
+data-out. While doing this, it remembers its own color and keeps glowing
+with that color as long as there is power.</p>
+<p>An LED can be switched to not forward the data, but instead use the data
+to change it’s own color. This is done by sending (at least) 32 bits of
+zeroes to data-in. The LED then accepts the next correct 32 bit LED
+frame (with color information) as its new color setting.</p>
+<p>After having received the 32 bit color frame, the LED changes color,
+and then resumes to just copying data-in to data-out.</p>
+<p>The really clever bit is this: While receiving the 32 bit LED frame,
+the LED sends zeroes on its data-out line. Because a color frame is
+32 bits, the LED sends 32 bits of zeroes to the next LED.
+As we have seen above, this means that the next LED is now ready
+to accept a color frame and update its color.</p>
+<p>So that’s really the entire protocol:
+- Start by sending 32 bits of zeroes. This prepares LED 1 to update</p>
+<blockquote>
+<div>its color.</div></blockquote>
+<ul class="simple">
+<li>Send color information one by one, starting with the color for LED 1,
+then LED 2 etc.</li>
+<li>Finish off by cycling the clock line a few times to get all data
+to the very last LED on the strip</li>
+</ul>
+<p>The last step is necessary, because each LED delays forwarding the data
+a bit. Imagine ten people in a row. When you yell the last color
+information, i.e. the one for person ten, to the first person in
+the line, then you are not finished yet. Person one has to turn around
+and yell it to person 2, and so on. So it takes ten additional “dummy”
+cycles until person ten knows the color. When you look closer,
+you will see that not even person 9 knows its own color yet. This
+information is still with person 2. Essentially the driver sends additional
+zeroes to LED 1 as long as it takes for the last color frame to make it
+down the line to the last LED.</p>
+<dl class="attribute">
+<dt id="robot.drivers.apa102.APA102.LED_START">
+<code class="descname">LED_START</code><em class="property"> = 224</em><a class="headerlink" href="#robot.drivers.apa102.APA102.LED_START" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="robot.drivers.apa102.APA102.MAX_BRIGHTNESS">
+<code class="descname">MAX_BRIGHTNESS</code><em class="property"> = 31</em><a class="headerlink" href="#robot.drivers.apa102.APA102.MAX_BRIGHTNESS" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.drivers.apa102.APA102.cleanup">
+<code class="descname">cleanup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/drivers/apa102.html#APA102.cleanup"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.drivers.apa102.APA102.cleanup" title="永久链接至目标">¶</a></dt>
+<dd><p>Release the SPI device; Call this method at the end</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="robot.drivers.apa102.APA102.clear_strip">
+<code class="descname">clear_strip</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/drivers/apa102.html#APA102.clear_strip"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.drivers.apa102.APA102.clear_strip" title="永久链接至目标">¶</a></dt>
+<dd><p>Turns off the strip and shows the result right away.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="robot.drivers.apa102.APA102.clock_end_frame">
+<code class="descname">clock_end_frame</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/drivers/apa102.html#APA102.clock_end_frame"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.drivers.apa102.APA102.clock_end_frame" title="永久链接至目标">¶</a></dt>
+<dd><p>Sends an end frame to the LED strip.</p>
+<p>As explained above, dummy data must be sent after the last real colour
+information so that all of the data can reach its destination down the line.
+The delay is not as bad as with the human example above.
+It is only 1/2 bit per LED. This is because the SPI clock line
+needs to be inverted.</p>
+<p>Say a bit is ready on the SPI data line. The sender communicates
+this by toggling the clock line. The bit is read by the LED
+and immediately forwarded to the output data line. When the clock goes
+down again on the input side, the LED will toggle the clock up
+on the output to tell the next LED that the bit is ready.</p>
+<p>After one LED the clock is inverted, and after two LEDs it is in sync
+again, but one cycle behind. Therefore, for every two LEDs, one bit
+of delay gets accumulated. For 300 LEDs, 150 additional bits must be fed to
+the input of LED one so that the data can reach the last LED.</p>
+<p>Ultimately, we need to send additional numLEDs/2 arbitrary data bits,
+in order to trigger numLEDs/2 additional clock changes. This driver
+sends zeroes, which has the benefit of getting LED one partially or
+fully ready for the next update to the strip. An optimized version
+of the driver could omit the “clockStartFrame” method if enough zeroes have
+been sent as part of “clockEndFrame”.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="robot.drivers.apa102.APA102.clock_start_frame">
+<code class="descname">clock_start_frame</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/drivers/apa102.html#APA102.clock_start_frame"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.drivers.apa102.APA102.clock_start_frame" title="永久链接至目标">¶</a></dt>
+<dd><p>Sends a start frame to the LED strip.</p>
+<p>This method clocks out a start frame, telling the receiving LED
+that it must update its own color now.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="robot.drivers.apa102.APA102.combine_color">
+<em class="property">static </em><code class="descname">combine_color</code><span class="sig-paren">(</span><em>red</em>, <em>green</em>, <em>blue</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/drivers/apa102.html#APA102.combine_color"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.drivers.apa102.APA102.combine_color" title="永久链接至目标">¶</a></dt>
+<dd><p>Make one 3*8 byte color value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="robot.drivers.apa102.APA102.dump_array">
+<code class="descname">dump_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/drivers/apa102.html#APA102.dump_array"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.drivers.apa102.APA102.dump_array" title="永久链接至目标">¶</a></dt>
+<dd><p>For debug purposes: Dump the LED array onto the console.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="robot.drivers.apa102.APA102.rotate">
+<code class="descname">rotate</code><span class="sig-paren">(</span><em>positions=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/drivers/apa102.html#APA102.rotate"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.drivers.apa102.APA102.rotate" title="永久链接至目标">¶</a></dt>
+<dd><p>Rotate the LEDs by the specified number of positions.</p>
+<p>Treating the internal LED array as a circular buffer, rotate it by
+the specified number of positions. The number could be negative,
+which means rotating in the opposite direction.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="robot.drivers.apa102.APA102.set_pixel">
+<code class="descname">set_pixel</code><span class="sig-paren">(</span><em>led_num</em>, <em>red</em>, <em>green</em>, <em>blue</em>, <em>bright_percent=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/drivers/apa102.html#APA102.set_pixel"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.drivers.apa102.APA102.set_pixel" title="永久链接至目标">¶</a></dt>
+<dd><p>Sets the color of one pixel in the LED stripe.</p>
+<p>The changed pixel is not shown yet on the Stripe, it is only
+written to the pixel buffer. Colors are passed individually.
+If brightness is not set the global brightness setting is used.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="robot.drivers.apa102.APA102.set_pixel_rgb">
+<code class="descname">set_pixel_rgb</code><span class="sig-paren">(</span><em>led_num</em>, <em>rgb_color</em>, <em>bright_percent=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/drivers/apa102.html#APA102.set_pixel_rgb"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.drivers.apa102.APA102.set_pixel_rgb" title="永久链接至目标">¶</a></dt>
+<dd><p>Sets the color of one pixel in the LED stripe.</p>
+<p>The changed pixel is not shown yet on the Stripe, it is only
+written to the pixel buffer.
+Colors are passed combined (3 bytes concatenated)
+If brightness is not set the global brightness setting is used.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="robot.drivers.apa102.APA102.show">
+<code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/drivers/apa102.html#APA102.show"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.drivers.apa102.APA102.show" title="永久链接至目标">¶</a></dt>
+<dd><p>Sends the content of the pixel buffer to the strip.</p>
+<p>Todo: More than 1024 LEDs requires more than one xfer operation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="robot.drivers.apa102.APA102.wheel">
+<code class="descname">wheel</code><span class="sig-paren">(</span><em>wheel_pos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/drivers/apa102.html#APA102.wheel"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.drivers.apa102.APA102.wheel" title="永久链接至目标">¶</a></dt>
+<dd><p>Get a color from a color wheel; Green -&gt; Red -&gt; Blue -&gt; Green</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-robot.drivers.pixels">
+<span id="robot-drivers-pixels-module"></span><h2>robot.drivers.pixels module<a class="headerlink" href="#module-robot.drivers.pixels" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="robot.drivers.pixels.Pixels">
+<em class="property">class </em><code class="descclassname">robot.drivers.pixels.</code><code class="descname">Pixels</code><a class="reference internal" href="_modules/robot/drivers/pixels.html#Pixels"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.drivers.pixels.Pixels" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="robot.drivers.pixels.Pixels.PIXELS_N">
+<code class="descname">PIXELS_N</code><em class="property"> = 3</em><a class="headerlink" href="#robot.drivers.pixels.Pixels.PIXELS_N" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.drivers.pixels.Pixels.listen">
+<code class="descname">listen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/drivers/pixels.html#Pixels.listen"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.drivers.pixels.Pixels.listen" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.drivers.pixels.Pixels.off">
+<code class="descname">off</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/drivers/pixels.html#Pixels.off"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.drivers.pixels.Pixels.off" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.drivers.pixels.Pixels.speak">
+<code class="descname">speak</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/drivers/pixels.html#Pixels.speak"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.drivers.pixels.Pixels.speak" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.drivers.pixels.Pixels.think">
+<code class="descname">think</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/drivers/pixels.html#Pixels.think"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.drivers.pixels.Pixels.think" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.drivers.pixels.Pixels.wakeup">
+<code class="descname">wakeup</code><span class="sig-paren">(</span><em>direction=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/drivers/pixels.html#Pixels.wakeup"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.drivers.pixels.Pixels.wakeup" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.drivers.pixels.Pixels.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>colors</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/drivers/pixels.html#Pixels.write"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.drivers.pixels.Pixels.write" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-robot.drivers">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-robot.drivers" title="永久链接至标题">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, wzpan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

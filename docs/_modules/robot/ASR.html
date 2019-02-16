@@ -1,0 +1,418 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>robot.ASR &mdash; wukong-robot 1.2.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> wukong-robot
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">wukong-robot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">模块代码</a> &raquo;</li>
+        
+      <li>robot.ASR</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>robot.ASR 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8-*-</span>
+<span class="kn">from</span> <span class="nn">aip</span> <span class="k">import</span> <span class="n">AipSpeech</span>
+<span class="kn">from</span> <span class="nn">.sdk</span> <span class="k">import</span> <span class="n">TencentSpeech</span><span class="p">,</span> <span class="n">AliSpeech</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">utils</span><span class="p">,</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">logging</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">import</span> <span class="nn">hmac</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AbstractASR"><a class="viewcode-back" href="../../robot.html#robot.ASR.AbstractASR">[文档]</a><span class="k">class</span> <span class="nc">AbstractASR</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generic parent class for all ASR engines</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ABCMeta</span>
+
+<div class="viewcode-block" id="AbstractASR.get_config"><a class="viewcode-back" href="../../robot.html#robot.ASR.AbstractASR.get_config">[文档]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{}</span></div>
+
+<div class="viewcode-block" id="AbstractASR.get_instance"><a class="viewcode-back" href="../../robot.html#robot.ASR.AbstractASR.get_instance">[文档]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_instance</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">profile</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">profile</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">instance</span></div>
+
+<div class="viewcode-block" id="AbstractASR.transcribe"><a class="viewcode-back" href="../../robot.html#robot.ASR.AbstractASR.transcribe">[文档]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">transcribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">):</span>
+        <span class="k">pass</span></div></div>
+
+
+<div class="viewcode-block" id="BaiduASR"><a class="viewcode-back" href="../../robot.html#robot.ASR.BaiduASR">[文档]</a><span class="k">class</span> <span class="nc">BaiduASR</span><span class="p">(</span><span class="n">AbstractASR</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    百度的语音识别API.</span>
+<span class="sd">    dev_pid:</span>
+<span class="sd">        - 1936: 普通话远场</span>
+<span class="sd">        - 1536：普通话(支持简单的英文识别)</span>
+<span class="sd">        - 1537：普通话(纯中文识别)</span>
+<span class="sd">        - 1737：英语</span>
+<span class="sd">        - 1637：粤语</span>
+<span class="sd">        - 1837：四川话</span>
+<span class="sd">    要使用本模块, 首先到 yuyin.baidu.com 注册一个开发者账号,</span>
+<span class="sd">    之后创建一个新应用, 然后在应用管理的&quot;查看key&quot;中获得 API Key 和 Secret Key</span>
+<span class="sd">    填入 config.xml 中.</span>
+<span class="sd">    ...</span>
+<span class="sd">        baidu_yuyin: </span>
+<span class="sd">            appid: &#39;9670645&#39;</span>
+<span class="sd">            api_key: &#39;qg4haN8b2bGvFtCbBGqhrmZy&#39;</span>
+<span class="sd">            secret_key: &#39;585d4eccb50d306c401d7df138bb02e7&#39;</span>
+<span class="sd">        ...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">SLUG</span> <span class="o">=</span> <span class="s2">&quot;baidu-asr&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">appid</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">,</span> <span class="n">dev_pid</span><span class="o">=</span><span class="mi">1936</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">AipSpeech</span><span class="p">(</span><span class="n">appid</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dev_pid</span> <span class="o">=</span> <span class="n">dev_pid</span>
+
+<div class="viewcode-block" id="BaiduASR.get_config"><a class="viewcode-back" href="../../robot.html#robot.ASR.BaiduASR.get_config">[文档]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="c1"># Try to get baidu_yuyin config from config</span>
+        <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;baidu_yuyin&#39;</span><span class="p">,</span> <span class="p">{})</span></div>
+
+<div class="viewcode-block" id="BaiduASR.transcribe"><a class="viewcode-back" href="../../robot.html#robot.ASR.BaiduASR.transcribe">[文档]</a>    <span class="k">def</span> <span class="nf">transcribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">):</span>
+        <span class="c1"># 识别本地文件</span>
+        <span class="n">pcm</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_pcm_from_wav</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">asr</span><span class="p">(</span><span class="n">pcm</span><span class="p">,</span> <span class="s1">&#39;pcm&#39;</span><span class="p">,</span> <span class="mi">16000</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s1">&#39;dev_pid&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev_pid</span><span class="p">,</span>
+        <span class="p">})</span>
+        <span class="k">if</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;err_no&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> 语音识别到了：</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]))</span>
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> 语音识别出错了: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;err_msg&#39;</span><span class="p">]))</span>
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span></div></div>
+
+
+<div class="viewcode-block" id="TencentASR"><a class="viewcode-back" href="../../robot.html#robot.ASR.TencentASR">[文档]</a><span class="k">class</span> <span class="nc">TencentASR</span><span class="p">(</span><span class="n">AbstractASR</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    腾讯的语音识别API.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">SLUG</span> <span class="o">=</span> <span class="s2">&quot;tencent-asr&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">appid</span><span class="p">,</span> <span class="n">secretid</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="s1">&#39;ap-guangzhou&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="n">TencentSpeech</span><span class="o">.</span><span class="n">tencentSpeech</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">secretid</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="n">region</span>
+
+<div class="viewcode-block" id="TencentASR.get_config"><a class="viewcode-back" href="../../robot.html#robot.ASR.TencentASR.get_config">[文档]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="c1"># Try to get tencent_yuyin config from config</span>
+        <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tencent_yuyin&#39;</span><span class="p">,</span> <span class="p">{})</span></div>
+
+<div class="viewcode-block" id="TencentASR.transcribe"><a class="viewcode-back" href="../../robot.html#robot.ASR.TencentASR.transcribe">[文档]</a>    <span class="k">def</span> <span class="nf">transcribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">):</span>
+        <span class="n">mp3_path</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">convert_wav_to_mp3</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">ASR</span><span class="p">(</span><span class="n">mp3_path</span><span class="p">,</span> <span class="s1">&#39;mp3&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">)</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">check_and_delete</span><span class="p">(</span><span class="n">mp3_path</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;Response&#39;</span> <span class="ow">in</span> <span class="n">res</span> <span class="ow">and</span> <span class="s1">&#39;Result&#39;</span> <span class="ow">in</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">]:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> 语音识别到了：</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">][</span><span class="s1">&#39;Result&#39;</span><span class="p">]))</span>
+            <span class="k">return</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">][</span><span class="s1">&#39;Result&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> 语音识别出错了&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">),</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span></div></div>
+
+
+<div class="viewcode-block" id="XunfeiASR"><a class="viewcode-back" href="../../robot.html#robot.ASR.XunfeiASR">[文档]</a><span class="k">class</span> <span class="nc">XunfeiASR</span><span class="p">(</span><span class="n">AbstractASR</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    科大讯飞的语音识别API.</span>
+<span class="sd">    外网ip查询：https://ip.51240.com/</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">SLUG</span> <span class="o">=</span> <span class="s2">&quot;xunfei-asr&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">appid</span><span class="p">,</span> <span class="n">api_key</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">appid</span> <span class="o">=</span> <span class="n">appid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="n">api_key</span>
+
+<div class="viewcode-block" id="XunfeiASR.get_config"><a class="viewcode-back" href="../../robot.html#robot.ASR.XunfeiASR.get_config">[文档]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="c1"># Try to get xunfei_yuyin config from config</span>
+        <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;xunfei_yuyin&#39;</span><span class="p">,</span> <span class="p">{})</span>     </div>
+
+<div class="viewcode-block" id="XunfeiASR.getHeader"><a class="viewcode-back" href="../../robot.html#robot.ASR.XunfeiASR.getHeader">[文档]</a>    <span class="k">def</span> <span class="nf">getHeader</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aue</span><span class="p">,</span> <span class="n">engineType</span><span class="p">):</span>
+        <span class="n">curTime</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()))</span>
+        <span class="c1"># curTime = &#39;1526542623&#39;</span>
+        <span class="n">param</span> <span class="o">=</span> <span class="s2">&quot;{</span><span class="se">\&quot;</span><span class="s2">aue</span><span class="se">\&quot;</span><span class="s2">:</span><span class="se">\&quot;</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">aue</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;,</span><span class="se">\&quot;</span><span class="s2">engine_type</span><span class="se">\&quot;</span><span class="s2">:</span><span class="se">\&quot;</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">engineType</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">}&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;param:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">param</span><span class="p">))</span>
+        <span class="n">paramBase64</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)),</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;x_param:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">paramBase64</span><span class="p">))</span>
+
+        <span class="n">m2</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">()</span>
+        <span class="n">m2</span><span class="o">.</span><span class="n">update</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">api_key</span> <span class="o">+</span> <span class="n">curTime</span> <span class="o">+</span> <span class="n">paramBase64</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+        <span class="n">checkSum</span> <span class="o">=</span> <span class="n">m2</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;X-CurTime&#39;</span><span class="p">:</span> <span class="n">curTime</span><span class="p">,</span>
+            <span class="s1">&#39;X-Param&#39;</span><span class="p">:</span> <span class="n">paramBase64</span><span class="p">,</span>
+            <span class="s1">&#39;X-Appid&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">appid</span><span class="p">,</span>
+            <span class="s1">&#39;X-CheckSum&#39;</span><span class="p">:</span> <span class="n">checkSum</span><span class="p">,</span>
+            <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/x-www-form-urlencoded; charset=utf-8&#39;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">header</span></div>
+
+<div class="viewcode-block" id="XunfeiASR.getBody"><a class="viewcode-back" href="../../robot.html#robot.ASR.XunfeiASR.getBody">[文档]</a>    <span class="k">def</span> <span class="nf">getBody</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="n">binfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;audio&#39;</span><span class="p">:</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">binfile</span><span class="o">.</span><span class="n">read</span><span class="p">())}</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+<div class="viewcode-block" id="XunfeiASR.transcribe"><a class="viewcode-back" href="../../robot.html#robot.ASR.XunfeiASR.transcribe">[文档]</a>    <span class="k">def</span> <span class="nf">transcribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">):</span>
+        <span class="n">URL</span> <span class="o">=</span> <span class="s2">&quot;http://api.xfyun.cn/v1/service/v1/iat&quot;</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">URL</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getHeader</span><span class="p">(</span><span class="s1">&#39;raw&#39;</span><span class="p">,</span> <span class="s1">&#39;sms16k&#39;</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getBody</span><span class="p">(</span><span class="n">fp</span><span class="p">))</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;code&#39;</span> <span class="ow">in</span> <span class="n">res</span> <span class="ow">and</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> 语音识别到了：</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]))</span>
+            <span class="k">return</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> 语音识别出错了&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">),</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span></div></div>
+
+
+<div class="viewcode-block" id="AliASR"><a class="viewcode-back" href="../../robot.html#robot.ASR.AliASR">[文档]</a><span class="k">class</span> <span class="nc">AliASR</span><span class="p">(</span><span class="n">AbstractASR</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    阿里的语音识别API.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">SLUG</span> <span class="o">=</span> <span class="s2">&quot;ali-asr&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">appKey</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">appKey</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">appKey</span><span class="p">,</span> <span class="n">token</span>
+
+<div class="viewcode-block" id="AliASR.get_config"><a class="viewcode-back" href="../../robot.html#robot.ASR.AliASR.get_config">[文档]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="c1"># Try to get ali_yuyin config from config</span>
+        <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ali_yuyin&#39;</span><span class="p">,</span> <span class="p">{})</span></div>
+
+<div class="viewcode-block" id="AliASR.transcribe"><a class="viewcode-back" href="../../robot.html#robot.ASR.AliASR.transcribe">[文档]</a>    <span class="k">def</span> <span class="nf">transcribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">AliSpeech</span><span class="o">.</span><span class="n">asr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">appKey</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">,</span> <span class="n">fp</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> 语音识别到了：</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">,</span> <span class="n">result</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">result</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> 语音识别出错了&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">),</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span></div></div>
+
+
+<div class="viewcode-block" id="get_engine_by_slug"><a class="viewcode-back" href="../../robot.html#robot.ASR.get_engine_by_slug">[文档]</a><span class="k">def</span> <span class="nf">get_engine_by_slug</span><span class="p">(</span><span class="n">slug</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        An ASR Engine implementation available on the current platform</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError if no speaker implementation is supported on this platform</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">slug</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">slug</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;无效的 ASR slug &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">slug</span><span class="p">)</span>
+
+    <span class="n">selected_engines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">engine</span><span class="p">:</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="s2">&quot;SLUG&quot;</span><span class="p">)</span> <span class="ow">and</span>
+                              <span class="n">engine</span><span class="o">.</span><span class="n">SLUG</span> <span class="o">==</span> <span class="n">slug</span><span class="p">,</span> <span class="n">get_engines</span><span class="p">()))</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_engines</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;错误：找不到名为 </span><span class="si">{}</span><span class="s2"> 的 ASR 引擎&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">slug</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_engines</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;注意: 有多个 ASR 名称与指定的引擎名 </span><span class="si">{}</span><span class="s2"> 匹配&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">slug</span><span class="p">)</span>        
+        <span class="n">engine</span> <span class="o">=</span> <span class="n">selected_engines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;使用 </span><span class="si">{}</span><span class="s2"> ASR引擎&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">SLUG</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">engine</span><span class="o">.</span><span class="n">get_instance</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="get_engines"><a class="viewcode-back" href="../../robot.html#robot.ASR.get_engines">[文档]</a><span class="k">def</span> <span class="nf">get_engines</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">get_subclasses</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">subclasses</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">subclass</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__subclasses__</span><span class="p">():</span>
+            <span class="n">subclasses</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">subclass</span><span class="p">)</span>
+            <span class="n">subclasses</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">get_subclasses</span><span class="p">(</span><span class="n">subclass</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">subclasses</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">engine</span> <span class="k">for</span> <span class="n">engine</span> <span class="ow">in</span>
+            <span class="nb">list</span><span class="p">(</span><span class="n">get_subclasses</span><span class="p">(</span><span class="n">AbstractASR</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="s1">&#39;SLUG&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">engine</span><span class="o">.</span><span class="n">SLUG</span><span class="p">]</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, wzpan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,320 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>robot.config &mdash; wukong-robot 1.2.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> wukong-robot
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">wukong-robot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">模块代码</a> &raquo;</li>
+        
+      <li>robot.config</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>robot.config 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8-*-</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">constants</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">_config</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">has_init</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="reload"><a class="viewcode-back" href="../../robot.html#robot.config.reload">[文档]</a><span class="k">def</span> <span class="nf">reload</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    重新加载配置</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;配置文件发生变更，重新加载配置文件&#39;</span><span class="p">)</span>
+    <span class="n">init</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="init"><a class="viewcode-back" href="../../robot.html#robot.config.init">[文档]</a><span class="k">def</span> <span class="nf">init</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_PATH</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;错误：</span><span class="si">{}</span><span class="s2"> 应该是个目录，而不应该是个文件&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_PATH</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_PATH</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_PATH</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getConfigPath</span><span class="p">()):</span>
+        <span class="n">yes_no</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;配置文件</span><span class="si">{}</span><span class="s2">不存在，要创建吗？(y/n)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getConfigPath</span><span class="p">()))</span>
+        <span class="k">if</span> <span class="n">yes_no</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">newConfig</span><span class="p">()</span>
+            <span class="n">doInit</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getConfigPath</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">doInit</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getDefaultConfigPath</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">doInit</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getConfigPath</span><span class="p">())</span>
+    <span class="n">has_init</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="doInit"><a class="viewcode-back" href="../../robot.html#robot.config.doInit">[文档]</a><span class="k">def</span> <span class="nf">doInit</span><span class="p">(</span><span class="n">config_file</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">getDefaultConfigPath</span><span class="p">()):</span>
+    <span class="c1"># Create config dir if it does not exist yet</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_PATH</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_PATH</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not create config dir: &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+                          <span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_PATH</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">raise</span>
+
+    <span class="c1"># Check if config dir is writable</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_PATH</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">W_OK</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Config dir </span><span class="si">%s</span><span class="s2"> is not writable. Dingdang &quot;</span> <span class="o">+</span>
+                         <span class="s2">&quot;won&#39;t work correctly.&quot;</span><span class="p">,</span>
+                         <span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_PATH</span><span class="p">)</span>
+
+    <span class="k">global</span> <span class="n">_config</span>
+
+    <span class="c1"># Read config</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Trying to read config file: &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">config_file</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;配置文件 </span><span class="si">{}</span><span class="s2"> 读取失败: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+        <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="get_path"><a class="viewcode-back" href="../../robot.html#robot.config.get_path">[文档]</a><span class="k">def</span> <span class="nf">get_path</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">_config</span>
+    <span class="n">curConfig</span> <span class="o">=</span> <span class="n">_config</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="n">items</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">curConfig</span><span class="p">:</span>
+            <span class="n">curConfig</span> <span class="o">=</span> <span class="n">curConfig</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;/</span><span class="si">%s</span><span class="s2"> not specified in profile, defaulting to &quot;</span>
+                            <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">items</span><span class="p">),</span> <span class="n">default</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">default</span>
+    <span class="k">return</span> <span class="n">curConfig</span></div>
+
+
+<div class="viewcode-block" id="has_path"><a class="viewcode-back" href="../../robot.html#robot.config.has_path">[文档]</a><span class="k">def</span> <span class="nf">has_path</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">_config</span>
+    <span class="n">curConfig</span> <span class="o">=</span> <span class="n">_config</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="n">items</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">curConfig</span><span class="p">:</span>
+            <span class="n">curConfig</span> <span class="o">=</span> <span class="n">curConfig</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="has"><a class="viewcode-back" href="../../robot.html#robot.config.has">[文档]</a><span class="k">def</span> <span class="nf">has</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    判断配置里是否包含某个配置项</span>
+<span class="sd">    :param item -- 配置项名</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">_config</span></div>
+
+
+<div class="viewcode-block" id="get"><a class="viewcode-back" href="../../robot.html#robot.config.get">[文档]</a><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    获取某个配置的值</span>
+<span class="sd">    :param item -- 配置项名。如果是多级配置，则以 /a/b 的形式提供</span>
+<span class="sd">    :param default -- 如果没有该配置，则提供一个默认值（可选）</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">has_init</span><span class="p">:</span>
+        <span class="n">init</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">item</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_config</span>
+    <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">get_path</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_config</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> not specified in profile, defaulting to &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+                        <span class="n">item</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">default</span></div>
+    
+<div class="viewcode-block" id="getConfig"><a class="viewcode-back" href="../../robot.html#robot.config.getConfig">[文档]</a><span class="k">def</span> <span class="nf">getConfig</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    返回全部配置数据</span>
+<span class="sd">    :return 全部配置数据（字典类型）</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_config</span></div>
+
+<div class="viewcode-block" id="getText"><a class="viewcode-back" href="../../robot.html#robot.config.getText">[文档]</a><span class="k">def</span> <span class="nf">getText</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getConfigPath</span><span class="p">()):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getConfigPath</span><span class="p">(),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="k">return</span> <span class="s1">&#39;&#39;</span></div>
+
+<div class="viewcode-block" id="dump"><a class="viewcode-back" href="../../robot.html#robot.config.dump">[文档]</a><span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="n">configStr</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getConfigPath</span><span class="p">(),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">configStr</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, wzpan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

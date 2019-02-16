@@ -1,0 +1,7 @@
+plugin\_loader module
+=====================
+
+.. automodule:: plugin_loader
+    :members:
+    :undoc-members:
+    :show-inheritance:

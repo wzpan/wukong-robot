@@ -1,0 +1,269 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>robot.plugin_loader &mdash; wukong-robot 1.2.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> wukong-robot
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">wukong-robot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">模块代码</a> &raquo;</li>
+        
+      <li>robot.plugin_loader</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>robot.plugin_loader 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8-*-</span>
+<span class="kn">import</span> <span class="nn">pkgutil</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">constants</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">logging</span>
+<span class="kn">from</span> <span class="nn">robot.sdk.AbstractPlugin</span> <span class="k">import</span> <span class="n">AbstractPlugin</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">_has_init</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># plugins run at query</span>
+<span class="n">_plugins_query</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="init_plugins"><a class="viewcode-back" href="../../robot.html#robot.plugin_loader.init_plugins">[文档]</a><span class="k">def</span> <span class="nf">init_plugins</span><span class="p">(</span><span class="n">con</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    动态加载技能插件</span>
+
+<span class="sd">    参数：</span>
+<span class="sd">    con -- 会话模块</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">global</span> <span class="n">_has_init</span>
+    <span class="n">locations</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">constants</span><span class="o">.</span><span class="n">PLUGIN_PATH</span><span class="p">,</span>
+        <span class="n">constants</span><span class="o">.</span><span class="n">CONTRIB_PATH</span><span class="p">,</span>
+        <span class="n">constants</span><span class="o">.</span><span class="n">CUSTOM_PATH</span>
+    <span class="p">]</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;检查插件目录：</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">locations</span><span class="p">))</span>
+
+    <span class="k">global</span> <span class="n">_plugins_query</span>
+    <span class="n">nameSet</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">finder</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ispkg</span> <span class="ow">in</span> <span class="n">pkgutil</span><span class="o">.</span><span class="n">walk_packages</span><span class="p">(</span><span class="n">locations</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">loader</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">find_module</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">mod</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">load_module</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;插件 </span><span class="si">{}</span><span class="s2"> 加载出错，跳过&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">),</span>
+                            <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="s1">&#39;Plugin&#39;</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;模块 </span><span class="si">{}</span><span class="s2"> 非插件，跳过&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># plugins run at query</span>
+        <span class="n">plugin</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">Plugin</span><span class="p">(</span><span class="n">con</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">plugin</span><span class="o">.</span><span class="n">SLUG</span> <span class="o">==</span> <span class="s1">&#39;AbstractPlugin&#39;</span><span class="p">:</span>
+            <span class="n">plugin</span><span class="o">.</span><span class="n">SLUG</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="c1"># check conflict</span>
+        <span class="k">if</span> <span class="n">plugin</span><span class="o">.</span><span class="n">SLUG</span> <span class="ow">in</span> <span class="n">nameSet</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;插件 </span><span class="si">{}</span><span class="s2"> SLUG(</span><span class="si">{}</span><span class="s2">) 重复，跳过&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span>
+                                                                 <span class="n">plugin</span><span class="o">.</span><span class="n">SLUG</span><span class="p">))</span>
+            <span class="k">continue</span>
+        <span class="n">nameSet</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">plugin</span><span class="o">.</span><span class="n">SLUG</span><span class="p">)</span>
+
+        <span class="c1"># whether a plugin is enabled</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has</span><span class="p">(</span><span class="n">plugin</span><span class="o">.</span><span class="n">SLUG</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;enable&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">plugin</span><span class="o">.</span><span class="n">SLUG</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">plugin</span><span class="o">.</span><span class="n">SLUG</span><span class="p">)[</span><span class="s1">&#39;enable&#39;</span><span class="p">]:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;插件 </span><span class="si">{}</span><span class="s2"> 已被禁用&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+                <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">mod</span><span class="o">.</span><span class="n">Plugin</span><span class="p">,</span> <span class="n">AbstractPlugin</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;插件 </span><span class="si">{}</span><span class="s2"> 加载成功 &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+            <span class="n">_plugins_query</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plugin</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">sort_priority</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s1">&#39;PRIORITY&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">PRIORITY</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="n">_plugins_query</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">sort_priority</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">_has_init</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="get_plugins"><a class="viewcode-back" href="../../robot.html#robot.plugin_loader.get_plugins">[文档]</a><span class="k">def</span> <span class="nf">get_plugins</span><span class="p">(</span><span class="n">con</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">_plugins_query</span>
+    <span class="n">_plugins_query</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">init_plugins</span><span class="p">(</span><span class="n">con</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_plugins_query</span></div>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, wzpan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
