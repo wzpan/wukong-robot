@@ -147,17 +147,15 @@ statistic: true # 是否开启上报
 # 在这里放第三方插件的配置
 # https://github.com/wzpan/wukong-contrib
 
-# 网易音乐
-netease_music:
-    account: '您的账号' # 只支持手机账户
-    password: '您的密码'
-    report: true    # 是否播报即将播放的音乐
-
+# 百度FM
+baidufm:
+    channel: 14
 
 # 天气
 # 使用心知天气的接口
 # https://www.seniverse.com/
 weather:
+    enable: false
     key: '心知天气 API Key'
     location: '深圳'
 
