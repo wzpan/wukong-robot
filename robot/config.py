@@ -10,6 +10,9 @@ _config = {}
 has_init = False
 
 def reload():
+    """
+    重新加载配置
+    """
     logger.info('配置文件发生变更，重新加载配置文件')
     init()
 
@@ -86,10 +89,19 @@ def has_path(items):
 
 
 def has(item):
+    """
+    判断配置里是否包含某个配置项
+    :param item -- 配置项名
+    """
     return item in _config
 
 
 def get(item='', default=None):
+    """
+    获取某个配置的值
+    :param item -- 配置项名。如果是多级配置，则以 /a/b 的形式提供
+    :param default -- 如果没有该配置，则提供一个默认值（可选）
+    """
     if not has_init:
         init()
     if not item:
@@ -104,6 +116,10 @@ def get(item='', default=None):
         return default
     
 def getConfig():
+    """
+    返回全部配置数据
+    :return 全部配置数据（字典类型）
+    """
     return _config
 
 def getText():

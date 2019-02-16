@@ -5,7 +5,7 @@ import shutil
 # Wukong main directory
 APP_PATH = os.path.normpath(os.path.join(
     os.path.dirname(os.path.abspath(__file__)), os.pardir))
-
+ 
 LIB_PATH = os.path.join(APP_PATH, "robot")
 DATA_PATH = os.path.join(APP_PATH, "static")
 TEMP_PATH = os.path.join(APP_PATH, "temp")
@@ -25,15 +25,29 @@ CUSTOM_PATH = os.path.expanduser(
 )
 
 def getConfigPath():
+    """
+    获取配置文件的路径
+    return: 配置文件的存储路径
+    """
     return os.path.join(CONFIG_PATH, CUSTOM_CONFIG_NAME)
 
 def getConfigData(*fname):
+    """
+    获取配置目录下的指定文件的路径
+    :param *fname -- 指定文件名。如果传多个，则自动拼接
+    :return 配置目录下的某个文件的存储路径
+    """
     return os.path.join(CONFIG_PATH, *fname)
 
 def getData(*fname):
+    """
+    获取资源目录下指定文件的路径
+    :param *fname -- 指定文件名。如果传多个，则自动拼接
+    :return 配置文件的存储路径
+    """
     return os.path.join(DATA_PATH, *fname)
 
-def getDefaultConfigPath():
+def getDefaultConfigPath():    
     return getData(DEFAULT_CONFIG_NAME)
 
 def newConfig():
