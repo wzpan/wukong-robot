@@ -33,6 +33,8 @@ wukong-robot 是一个简单、灵活、优雅的中文语音对话机器人/智
 
 ## 特性
 
+![wukong-robot](http://hahack-1253537070.file.myqcloud.com/images/wukong-docs/wukong-robot-mindmap.png)
+
 * 模块化。功能插件、语音识别、语音合成、对话机器人都做到了高度模块化，第三方插件单独维护，方便继承和开发自己的插件。
 * 中文支持。集成百度、科大讯飞、阿里、腾讯等多家中文语音识别和语音合成技术，且可以继续扩展。
 * 对话机器人支持。支持接入图灵机器人、Emotibot 等对话机器人。
@@ -42,6 +44,14 @@ wukong-robot 是一个简单、灵活、优雅的中文语音对话机器人/智
 * 后台配套支持。提供配套后台，可实现远程操控、修改配置和日志查看等功能。
 * 开放API。可利用后端开放的API，实现更丰富的功能。
 * 安装简单，支持更多平台。相比 dingdang-robot ，舍弃了 PocketSphinx 的离线唤醒方案，安装变得更加简单，代码量更少，更易于维护并且能在 Mac 以及更多 Linux 系统中运行。
+
+wukong-robot 的工作模式：
+
+![wukong-robot](http://hahack-1253537070.file.myqcloud.com/images/wukong-docs/wukong-robot.png)
+
+wukong-robot 被唤醒后，用户的语音指令先经过 ASR 引擎进行 ASR 识别成文本，然后对识别到的文本进行 NLU 解析，再将解析结果进行技能匹配，交给适合处理该指令的技能插件去处理。插件处理完成后，得到的结果再交给 TTS 引擎合成成语音，播放给用户。
+
+虽然一次交互可能包含多次网络请求，不过带来的好处是：每一个环节都可以被修改和定制。
 
 ## Demo
 
