@@ -171,23 +171,26 @@
 <div class="viewcode-block" id="getConfigPath"><a class="viewcode-back" href="../../robot.html#robot.constants.getConfigPath">[文档]</a><span class="k">def</span> <span class="nf">getConfigPath</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    获取配置文件的路径</span>
-<span class="sd">    return: 配置文件的存储路径</span>
+
+<span class="sd">    returns: 配置文件的存储路径</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CONFIG_PATH</span><span class="p">,</span> <span class="n">CUSTOM_CONFIG_NAME</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="getConfigData"><a class="viewcode-back" href="../../robot.html#robot.constants.getConfigData">[文档]</a><span class="k">def</span> <span class="nf">getConfigData</span><span class="p">(</span><span class="o">*</span><span class="n">fname</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    获取配置目录下的指定文件的路径</span>
-<span class="sd">    :param *fname -- 指定文件名。如果传多个，则自动拼接</span>
-<span class="sd">    :return 配置目录下的某个文件的存储路径</span>
+
+<span class="sd">    :param *fname: 指定文件名。如果传多个，则自动拼接</span>
+<span class="sd">    :returns: 配置目录下的某个文件的存储路径</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CONFIG_PATH</span><span class="p">,</span> <span class="o">*</span><span class="n">fname</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="getData"><a class="viewcode-back" href="../../robot.html#robot.constants.getData">[文档]</a><span class="k">def</span> <span class="nf">getData</span><span class="p">(</span><span class="o">*</span><span class="n">fname</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    获取资源目录下指定文件的路径</span>
-<span class="sd">    :param *fname -- 指定文件名。如果传多个，则自动拼接</span>
-<span class="sd">    :return 配置文件的存储路径</span>
+
+<span class="sd">    :param *fname: 指定文件名。如果传多个，则自动拼接</span>
+<span class="sd">    :returns: 配置文件的存储路径</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">,</span> <span class="o">*</span><span class="n">fname</span><span class="p">)</span></div>
 

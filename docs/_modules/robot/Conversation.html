@@ -145,7 +145,6 @@
 <span></span><span class="c1"># -*- coding: utf-8-*-</span>
 <span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">ASR</span><span class="p">,</span> <span class="n">TTS</span><span class="p">,</span> <span class="n">AI</span><span class="p">,</span> <span class="n">Player</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">constants</span><span class="p">,</span> <span class="n">utils</span><span class="p">,</span> <span class="n">statistic</span>
 <span class="kn">from</span> <span class="nn">robot.Brain</span> <span class="k">import</span> <span class="n">Brain</span>
-<span class="kn">from</span> <span class="nn">robot.drivers.pixels</span> <span class="k">import</span> <span class="n">pixels</span>
 <span class="kn">from</span> <span class="nn">snowboy</span> <span class="k">import</span> <span class="n">snowboydecoder</span>
 <span class="kn">import</span> <span class="nn">time</span> 
 <span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">logging</span>
@@ -184,18 +183,16 @@
 
 <div class="viewcode-block" id="Conversation.checkRestore"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.checkRestore">[文档]</a>    <span class="k">def</span> <span class="nf">checkRestore</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">immersiveMode</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="o">.</span><span class="n">restore</span><span class="p">()</span>        </div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="o">.</span><span class="n">restore</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Conversation.doResponse"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.doResponse">[文档]</a>    <span class="k">def</span> <span class="nf">doResponse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">UUID</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="n">statistic</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">interrupt</span><span class="p">()</span>
-        <span class="n">pixels</span><span class="o">.</span><span class="n">think</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">appendHistory</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">UUID</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
             <span class="c1"># 没命中技能，使用机器人回复</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ai</span><span class="o">.</span><span class="n">chat</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">onCompleted</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">checkRestore</span><span class="p">)</span>
-        <span class="n">pixels</span><span class="o">.</span><span class="n">off</span><span class="p">()</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">onCompleted</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">checkRestore</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Conversation.setImmersiveMode"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.setImmersiveMode">[文档]</a>    <span class="k">def</span> <span class="nf">setImmersiveMode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slug</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">immersiveMode</span> <span class="o">=</span> <span class="n">slug</span></div>
@@ -259,14 +256,13 @@
 <div class="viewcode-block" id="Conversation.activeListen"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.activeListen">[文档]</a>    <span class="k">def</span> <span class="nf">activeListen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; 主动问一个问题(适用于多轮对话) &quot;&quot;&quot;</span>
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">pixels</span><span class="o">.</span><span class="n">wakeup</span><span class="p">()</span>
         <span class="n">Player</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getData</span><span class="p">(</span><span class="s1">&#39;beep_hi.wav&#39;</span><span class="p">))</span>        
         <span class="n">listener</span> <span class="o">=</span> <span class="n">snowboydecoder</span><span class="o">.</span><span class="n">ActiveListener</span><span class="p">([</span><span class="n">constants</span><span class="o">.</span><span class="n">getHotwordModel</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hotword&#39;</span><span class="p">,</span> <span class="s1">&#39;wukong.pmdl&#39;</span><span class="p">))])</span>
         <span class="n">voice</span> <span class="o">=</span> <span class="n">listener</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span>
             <span class="n">silent_count_threshold</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;silent_threshold&#39;</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
             <span class="n">recording_timeout</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;recording_timeout&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span>
-        <span class="p">)</span>        
-        <span class="n">Player</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getData</span><span class="p">(</span><span class="s1">&#39;beep_lo.wav&#39;</span><span class="p">))</span>        
+        <span class="p">)</span>
+        <span class="n">Player</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getData</span><span class="p">(</span><span class="s1">&#39;beep_lo.wav&#39;</span><span class="p">))</span>
         <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">asr</span><span class="o">.</span><span class="n">transcribe</span><span class="p">(</span><span class="n">voice</span><span class="p">)</span>
         <span class="n">utils</span><span class="o">.</span><span class="n">check_and_delete</span><span class="p">(</span><span class="n">voice</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">query</span></div>

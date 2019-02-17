@@ -173,9 +173,9 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="robot.drivers.html">robot.drivers package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="robot.drivers.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="robot.drivers.html#module-robot.drivers.apa102">robot.drivers.apa102 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="robot.drivers.html#module-robot.drivers.pixels">robot.drivers.pixels module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="robot.drivers.html#module-robot.drivers">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robot.drivers.html#robot-drivers-apa102-module">robot.drivers.apa102 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robot.drivers.html#robot-drivers-pixels-module">robot.drivers.pixels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robot.drivers.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="robot.sdk.html">robot.sdk package</a><ul>
@@ -933,16 +933,36 @@ voice_name: <a class="reference external" href="https://www.xfyun.cn/services/on
 <dl class="function">
 <dt id="robot.config.get">
 <code class="descclassname">robot.config.</code><code class="descname">get</code><span class="sig-paren">(</span><em>item=''</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/config.html#get"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.config.get" title="永久链接至目标">¶</a></dt>
-<dd><p>获取某个配置的值
-:param item – 配置项名。如果是多级配置，则以 /a/b 的形式提供
-:param default – 如果没有该配置，则提供一个默认值（可选）</p>
+<dd><p>获取某个配置的值</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><ul class="first simple">
+<li><strong>item</strong> – 配置项名。如果是多级配置，则以 “/a/b” 的形式提供</li>
+<li><strong>default</strong> – 默认值（可选）</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body"><p class="first last">这个配置的值。如果没有该配置，则提供一个默认值</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="robot.config.getConfig">
 <code class="descclassname">robot.config.</code><code class="descname">getConfig</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/config.html#getConfig"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.config.getConfig" title="永久链接至目标">¶</a></dt>
-<dd><p>返回全部配置数据
-:return 全部配置数据（字典类型）</p>
+<dd><p>返回全部配置数据</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">返回:</th><td class="field-body">全部配置数据（字典类型）</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -958,8 +978,17 @@ voice_name: <a class="reference external" href="https://www.xfyun.cn/services/on
 <dl class="function">
 <dt id="robot.config.has">
 <code class="descclassname">robot.config.</code><code class="descname">has</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/config.html#has"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.config.has" title="永久链接至目标">¶</a></dt>
-<dd><p>判断配置里是否包含某个配置项
-:param item – 配置项名</p>
+<dd><p>判断配置里是否包含某个配置项</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><strong>item</strong> – 配置项名</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body">True: 包含; False: 不包含</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -984,24 +1013,42 @@ voice_name: <a class="reference external" href="https://www.xfyun.cn/services/on
 <dl class="function">
 <dt id="robot.constants.getConfigData">
 <code class="descclassname">robot.constants.</code><code class="descname">getConfigData</code><span class="sig-paren">(</span><em>*fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/constants.html#getConfigData"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.constants.getConfigData" title="永久链接至目标">¶</a></dt>
-<dd><p>获取配置目录下的指定文件的路径
-:param <a href="#id1"><span class="problematic" id="id2">*</span></a>fname – 指定文件名。如果传多个，则自动拼接
-:return 配置目录下的某个文件的存储路径</p>
+<dd><p>获取配置目录下的指定文件的路径</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><strong>*fname</strong> – <p>指定文件名。如果传多个，则自动拼接</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body">配置目录下的某个文件的存储路径</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="robot.constants.getConfigPath">
 <code class="descclassname">robot.constants.</code><code class="descname">getConfigPath</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/constants.html#getConfigPath"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.constants.getConfigPath" title="永久链接至目标">¶</a></dt>
-<dd><p>获取配置文件的路径
-return: 配置文件的存储路径</p>
+<dd><p>获取配置文件的路径</p>
+<p>returns: 配置文件的存储路径</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="robot.constants.getData">
 <code class="descclassname">robot.constants.</code><code class="descname">getData</code><span class="sig-paren">(</span><em>*fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/constants.html#getData"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.constants.getData" title="永久链接至目标">¶</a></dt>
-<dd><p>获取资源目录下指定文件的路径
-:param <a href="#id3"><span class="problematic" id="id4">*</span></a>fname – 指定文件名。如果传多个，则自动拼接
-:return 配置文件的存储路径</p>
+<dd><p>获取资源目录下指定文件的路径</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><strong>*fname</strong> – <p>指定文件名。如果传多个，则自动拼接</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body">配置文件的存储路径</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -1026,13 +1073,30 @@ return: 配置文件的存储路径</p>
 <dt id="robot.logging.getLogger">
 <code class="descclassname">robot.logging.</code><code class="descname">getLogger</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/logging.html#getLogger"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.logging.getLogger" title="永久链接至目标">¶</a></dt>
 <dd><p>作用同标准模块 logging.getLogger(name)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">返回:</th><td class="field-body">logger</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="robot.logging.readLog">
 <code class="descclassname">robot.logging.</code><code class="descname">readLog</code><span class="sig-paren">(</span><em>lines=200</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/logging.html#readLog"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.logging.readLog" title="永久链接至目标">¶</a></dt>
-<dd><p>获取最新的指定行数的 log
-:param lines – 最大的行数</p>
+<dd><p>获取最新的指定行数的 log</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><strong>lines</strong> – 最大的行数</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body">最新指定行数的 log</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -1077,6 +1141,14 @@ con – 会话模块</p>
 <dt id="robot.utils.check_and_delete">
 <code class="descclassname">robot.utils.</code><code class="descname">check_and_delete</code><span class="sig-paren">(</span><em>fp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/utils.html#check_and_delete"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.utils.check_and_delete" title="永久链接至目标">¶</a></dt>
 <dd><p>检查并删除文件</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><strong>fp</strong> – 文件路径</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -1089,23 +1161,53 @@ con – 会话模块</p>
 <dt id="robot.utils.convert_mp3_to_wav">
 <code class="descclassname">robot.utils.</code><code class="descname">convert_mp3_to_wav</code><span class="sig-paren">(</span><em>mp3_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/utils.html#convert_mp3_to_wav"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.utils.convert_mp3_to_wav" title="永久链接至目标">¶</a></dt>
 <dd><p>将 mp3 文件转成 wav</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><strong>mp3_path</strong> – mp3 文件路径</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body">wav 文件路径</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="robot.utils.convert_wav_to_mp3">
 <code class="descclassname">robot.utils.</code><code class="descname">convert_wav_to_mp3</code><span class="sig-paren">(</span><em>wav_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/utils.html#convert_wav_to_mp3"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.utils.convert_wav_to_mp3" title="永久链接至目标">¶</a></dt>
 <dd><p>将 wav 文件转成 mp3</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><strong>wav_path</strong> – wav 文件路径</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body">mp3 文件路径</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="robot.utils.emailUser">
 <code class="descclassname">robot.utils.</code><code class="descname">emailUser</code><span class="sig-paren">(</span><em>SUBJECT=''</em>, <em>BODY=''</em>, <em>ATTACH_LIST=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/utils.html#emailUser"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.utils.emailUser" title="永久链接至目标">¶</a></dt>
-<dd><p>sends an email.</p>
-<dl class="docutils">
-<dt>Arguments:</dt>
-<dd>SUBJECT – subject line of the email
-BODY – body text of the email</dd>
-</dl>
+<dd><p>给用户发送邮件</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><ul class="first simple">
+<li><strong>SUBJECT</strong> – subject line of the email</li>
+<li><strong>BODY</strong> – body text of the email</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body"><p class="first last">True: 发送成功; False: 发送失败</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -1135,13 +1237,33 @@ BODY – body text of the email</dd>
 <dl class="function">
 <dt id="robot.utils.get_file_content">
 <code class="descclassname">robot.utils.</code><code class="descname">get_file_content</code><span class="sig-paren">(</span><em>filePath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/utils.html#get_file_content"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.utils.get_file_content" title="永久链接至目标">¶</a></dt>
-<dd><p>读取文件</p>
+<dd><p>读取文件内容并返回</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><strong>filePath</strong> – 文件路径</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body">文件内容</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="robot.utils.get_pcm_from_wav">
 <code class="descclassname">robot.utils.</code><code class="descname">get_pcm_from_wav</code><span class="sig-paren">(</span><em>wav_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/utils.html#get_pcm_from_wav"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.utils.get_pcm_from_wav" title="永久链接至目标">¶</a></dt>
 <dd><p>从 wav 文件中读取 pcm</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><strong>wav_path</strong> – wav 文件路径</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body">pcm 数据</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -1159,13 +1281,50 @@ BODY – body text of the email</dd>
 <dl class="function">
 <dt id="robot.utils.sendEmail">
 <code class="descclassname">robot.utils.</code><code class="descname">sendEmail</code><span class="sig-paren">(</span><em>SUBJECT</em>, <em>BODY</em>, <em>ATTACH_LIST</em>, <em>TO</em>, <em>FROM</em>, <em>SENDER</em>, <em>PASSWORD</em>, <em>SMTP_SERVER</em>, <em>SMTP_PORT</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/utils.html#sendEmail"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.utils.sendEmail" title="永久链接至目标">¶</a></dt>
-<dd><p>Sends an email.</p>
+<dd><p>发送邮件</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><ul class="first simple">
+<li><strong>SUBJECT</strong> – 邮件标题</li>
+<li><strong>BODY</strong> – 邮件正文</li>
+<li><strong>ATTACH_LIST</strong> – 附件</li>
+<li><strong>TO</strong> – 收件人</li>
+<li><strong>FROM</strong> – 发件人</li>
+<li><strong>SENDER</strong> – 发件人信息</li>
+<li><strong>PASSWORD</strong> – 密码</li>
+<li><strong>SMTP_SERVER</strong> – smtp 服务器</li>
+<li><strong>SMTP_PORT</strong> – smtp 端口号</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body"><p class="first last">True: 发送成功; False: 发送失败</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="robot.utils.write_temp_file">
 <code class="descclassname">robot.utils.</code><code class="descname">write_temp_file</code><span class="sig-paren">(</span><em>data</em>, <em>suffix</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/utils.html#write_temp_file"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.utils.write_temp_file" title="永久链接至目标">¶</a></dt>
 <dd><p>二进制形式写入临时文件</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> – 二进制数据</li>
+<li><strong>suffix</strong> – 后缀名</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body"><p class="first last">文件保存后的路径</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>

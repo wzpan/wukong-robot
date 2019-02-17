@@ -148,7 +148,6 @@
 <span class="kn">from</span> <span class="nn">robot.Updater</span> <span class="k">import</span> <span class="n">Updater</span>
 <span class="kn">from</span> <span class="nn">robot.ConfigMonitor</span> <span class="k">import</span> <span class="n">ConfigMonitor</span>
 <span class="kn">from</span> <span class="nn">robot.Conversation</span> <span class="k">import</span> <span class="n">Conversation</span>
-<span class="kn">from</span> <span class="nn">robot.drivers.pixels</span> <span class="k">import</span> <span class="n">pixels</span>
 <span class="kn">from</span> <span class="nn">server</span> <span class="k">import</span> <span class="n">server</span>
 <span class="kn">from</span> <span class="nn">watchdog.observers</span> <span class="k">import</span> <span class="n">Observer</span>
 <span class="kn">from</span> <span class="nn">subprocess</span> <span class="k">import</span> <span class="n">call</span>
@@ -198,7 +197,6 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">utils</span><span class="o">.</span><span class="n">is_proper_time</span><span class="p">():</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;勿扰模式开启中&#39;</span><span class="p">)</span>
             <span class="k">return</span>
-        <span class="n">pixels</span><span class="o">.</span><span class="n">wakeup</span><span class="p">()</span>
         <span class="n">Player</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getData</span><span class="p">(</span><span class="s1">&#39;beep_hi.wav&#39;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_conversation</span><span class="o">.</span><span class="n">interrupt</span><span class="p">()</span>    
 

@@ -235,7 +235,9 @@
 <div class="viewcode-block" id="has"><a class="viewcode-back" href="../../robot.html#robot.config.has">[文档]</a><span class="k">def</span> <span class="nf">has</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    判断配置里是否包含某个配置项</span>
-<span class="sd">    :param item -- 配置项名</span>
+
+<span class="sd">    :param item: 配置项名</span>
+<span class="sd">    :returns: True: 包含; False: 不包含</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">_config</span></div>
 
@@ -243,8 +245,10 @@
 <div class="viewcode-block" id="get"><a class="viewcode-back" href="../../robot.html#robot.config.get">[文档]</a><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    获取某个配置的值</span>
-<span class="sd">    :param item -- 配置项名。如果是多级配置，则以 /a/b 的形式提供</span>
-<span class="sd">    :param default -- 如果没有该配置，则提供一个默认值（可选）</span>
+
+<span class="sd">    :param item: 配置项名。如果是多级配置，则以 &quot;/a/b&quot; 的形式提供</span>
+<span class="sd">    :param default: 默认值（可选）</span>
+<span class="sd">    :returns: 这个配置的值。如果没有该配置，则提供一个默认值</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">has_init</span><span class="p">:</span>
         <span class="n">init</span><span class="p">()</span>
@@ -262,7 +266,8 @@
 <div class="viewcode-block" id="getConfig"><a class="viewcode-back" href="../../robot.html#robot.config.getConfig">[文档]</a><span class="k">def</span> <span class="nf">getConfig</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    返回全部配置数据</span>
-<span class="sd">    :return 全部配置数据（字典类型）</span>
+
+<span class="sd">    :returns: 全部配置数据（字典类型）</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_config</span></div>
 

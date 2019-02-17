@@ -189,6 +189,8 @@
 <div class="viewcode-block" id="getLogger"><a class="viewcode-back" href="../../robot.html#robot.logging.getLogger">[文档]</a><span class="k">def</span> <span class="nf">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">    作用同标准模块 logging.getLogger(name) </span>
+<span class="sd">    </span>
+<span class="sd">    :returns: logger</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
 
@@ -210,7 +212,9 @@
 <div class="viewcode-block" id="readLog"><a class="viewcode-back" href="../../robot.html#robot.logging.readLog">[文档]</a><span class="k">def</span> <span class="nf">readLog</span><span class="p">(</span><span class="n">lines</span><span class="o">=</span><span class="mi">200</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">    获取最新的指定行数的 log</span>
-<span class="sd">    :param lines -- 最大的行数</span>
+
+<span class="sd">    :param lines: 最大的行数</span>
+<span class="sd">    :returns: 最新指定行数的 log</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">log_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">TEMP_PATH</span><span class="p">,</span> <span class="s1">&#39;wukong.log&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">log_path</span><span class="p">):</span>

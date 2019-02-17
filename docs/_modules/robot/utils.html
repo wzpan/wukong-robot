@@ -166,7 +166,20 @@
 
 <div class="viewcode-block" id="sendEmail"><a class="viewcode-back" href="../../robot.html#robot.utils.sendEmail">[文档]</a><span class="k">def</span> <span class="nf">sendEmail</span><span class="p">(</span><span class="n">SUBJECT</span><span class="p">,</span> <span class="n">BODY</span><span class="p">,</span> <span class="n">ATTACH_LIST</span><span class="p">,</span> <span class="n">TO</span><span class="p">,</span> <span class="n">FROM</span><span class="p">,</span> <span class="n">SENDER</span><span class="p">,</span>
               <span class="n">PASSWORD</span><span class="p">,</span> <span class="n">SMTP_SERVER</span><span class="p">,</span> <span class="n">SMTP_PORT</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Sends an email.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    发送邮件</span>
+
+<span class="sd">    :param SUBJECT: 邮件标题</span>
+<span class="sd">    :param BODY: 邮件正文</span>
+<span class="sd">    :param ATTACH_LIST: 附件</span>
+<span class="sd">    :param TO: 收件人</span>
+<span class="sd">    :param FROM: 发件人</span>
+<span class="sd">    :param SENDER: 发件人信息</span>
+<span class="sd">    :param PASSWORD: 密码</span>
+<span class="sd">    :param SMTP_SERVER: smtp 服务器</span>
+<span class="sd">    :param SMTP_PORT: smtp 端口号</span>
+<span class="sd">    :returns: True: 发送成功; False: 发送失败</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">txt</span> <span class="o">=</span> <span class="n">MIMEText</span><span class="p">(</span><span class="n">BODY</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="s1">&#39;html&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
     <span class="n">msg</span> <span class="o">=</span> <span class="n">MIMEMultipart</span><span class="p">()</span>
     <span class="n">msg</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>    
@@ -201,11 +214,11 @@
 
 <div class="viewcode-block" id="emailUser"><a class="viewcode-back" href="../../robot.html#robot.utils.emailUser">[文档]</a><span class="k">def</span> <span class="nf">emailUser</span><span class="p">(</span><span class="n">SUBJECT</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">BODY</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ATTACH_LIST</span><span class="o">=</span><span class="p">[]):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    sends an email.</span>
+<span class="sd">    给用户发送邮件</span>
 
-<span class="sd">    Arguments:</span>
-<span class="sd">        SUBJECT -- subject line of the email</span>
-<span class="sd">        BODY -- body text of the email</span>
+<span class="sd">    :param SUBJECT: subject line of the email</span>
+<span class="sd">    :param BODY: body text of the email</span>
+<span class="sd">    :returns: True: 发送成功; False: 发送失败</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># add footer</span>
     <span class="k">if</span> <span class="n">BODY</span><span class="p">:</span>
@@ -231,29 +244,54 @@
 
 
 <div class="viewcode-block" id="get_file_content"><a class="viewcode-back" href="../../robot.html#robot.utils.get_file_content">[文档]</a><span class="k">def</span> <span class="nf">get_file_content</span><span class="p">(</span><span class="n">filePath</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; 读取文件 &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    读取文件内容并返回</span>
+
+<span class="sd">    :param filePath: 文件路径</span>
+<span class="sd">    :returns: 文件内容</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filePath</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="check_and_delete"><a class="viewcode-back" href="../../robot.html#robot.utils.check_and_delete">[文档]</a><span class="k">def</span> <span class="nf">check_and_delete</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; 检查并删除文件 &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    检查并删除文件</span>
+
+<span class="sd">    :param fp: 文件路径</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="write_temp_file"><a class="viewcode-back" href="../../robot.html#robot.utils.write_temp_file">[文档]</a><span class="k">def</span> <span class="nf">write_temp_file</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">suffix</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; 二进制形式写入临时文件 &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    二进制形式写入临时文件</span>
+
+<span class="sd">    :param data: 二进制数据</span>
+<span class="sd">    :param suffix: 后缀名</span>
+<span class="sd">    :returns: 文件保存后的路径</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span>
     <span class="k">return</span> <span class="n">tmpfile</span></div>
 
 <div class="viewcode-block" id="get_pcm_from_wav"><a class="viewcode-back" href="../../robot.html#robot.utils.get_pcm_from_wav">[文档]</a><span class="k">def</span> <span class="nf">get_pcm_from_wav</span><span class="p">(</span><span class="n">wav_path</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; 从 wav 文件中读取 pcm &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    从 wav 文件中读取 pcm</span>
+<span class="sd">    </span>
+<span class="sd">    :param wav_path: wav 文件路径</span>
+<span class="sd">    :returns: pcm 数据</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">wav</span> <span class="o">=</span> <span class="n">wave</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">wav_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">wav</span><span class="o">.</span><span class="n">readframes</span><span class="p">(</span><span class="n">wav</span><span class="o">.</span><span class="n">getnframes</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="convert_wav_to_mp3"><a class="viewcode-back" href="../../robot.html#robot.utils.convert_wav_to_mp3">[文档]</a><span class="k">def</span> <span class="nf">convert_wav_to_mp3</span><span class="p">(</span><span class="n">wav_path</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; 将 wav 文件转成 mp3 &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    将 wav 文件转成 mp3</span>
+
+<span class="sd">    :param wav_path: wav 文件路径</span>
+<span class="sd">    :returns: mp3 文件路径</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">wav_path</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;文件错误 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">wav_path</span><span class="p">))</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -262,7 +300,12 @@
     <span class="k">return</span> <span class="n">mp3_path</span></div>
 
 <div class="viewcode-block" id="convert_mp3_to_wav"><a class="viewcode-back" href="../../robot.html#robot.utils.convert_mp3_to_wav">[文档]</a><span class="k">def</span> <span class="nf">convert_mp3_to_wav</span><span class="p">(</span><span class="n">mp3_path</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; 将 mp3 文件转成 wav &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    将 mp3 文件转成 wav</span>
+
+<span class="sd">    :param mp3_path: mp3 文件路径</span>
+<span class="sd">    :returns: wav 文件路径</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">target</span> <span class="o">=</span> <span class="n">mp3_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.mp3&quot;</span><span class="p">,</span> <span class="s2">&quot;.wav&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mp3_path</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;文件错误 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mp3_path</span><span class="p">))</span>

@@ -145,7 +145,6 @@
 <span></span><span class="c1"># -*- coding: utf-8-*-</span>
 <span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">logging</span>
 <span class="kn">from</span> <span class="nn">robot.sdk.unit</span> <span class="k">import</span> <span class="n">getUnit</span>
-<span class="kn">from</span> <span class="nn">robot.drivers.pixels</span> <span class="k">import</span> <span class="n">pixels</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">plugin_loader</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">config</span>
 
@@ -180,7 +179,7 @@
 
 <span class="sd">        Arguments:</span>
 <span class="sd">        text -- 用户输入</span>
-<span class="sd">        &quot;&quot;&quot;</span>        
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s2">&quot;抱歉，刚刚没听清，能再说一遍吗？&quot;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
