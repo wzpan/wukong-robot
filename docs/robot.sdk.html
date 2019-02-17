@@ -421,24 +421,81 @@ False: 不适合由该插件处理</p>
 <dt id="robot.sdk.unit.getIntent">
 <code class="descclassname">robot.sdk.unit.</code><code class="descname">getIntent</code><span class="sig-paren">(</span><em>parsed</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/unit.html#getIntent"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.unit.getIntent" title="永久链接至目标">¶</a></dt>
 <dd><p>提取意图</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><strong>parsed</strong> – UNIT 解析结果</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body">意图数组</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="robot.sdk.unit.getSay">
 <code class="descclassname">robot.sdk.unit.</code><code class="descname">getSay</code><span class="sig-paren">(</span><em>parsed</em>, <em>intent=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/unit.html#getSay"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.unit.getSay" title="永久链接至目标">¶</a></dt>
-<dd><p>提取意图</p>
+<dd><p>提取 UNIT 的回复文本</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><ul class="first simple">
+<li><strong>parsed</strong> – UNIT 解析结果</li>
+<li><strong>intent</strong> – 意图的名称</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body"><p class="first last">UNIT 的回复文本</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="robot.sdk.unit.getSlots">
 <code class="descclassname">robot.sdk.unit.</code><code class="descname">getSlots</code><span class="sig-paren">(</span><em>parsed</em>, <em>intent=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/unit.html#getSlots"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.unit.getSlots" title="永久链接至目标">¶</a></dt>
-<dd><p>提取意图</p>
+<dd><blockquote>
+<div><p>提取某个意图的所有词槽</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param parsed:</th><td class="field-body">UNIT 解析结果</td>
+</tr>
+<tr class="field-even field"><th class="field-name">param intent:</th><td class="field-body">意图的名称</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body">词槽列表。你可以通过 name 属性筛选词槽，</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>再通过 normalized_word 属性取出相应的值</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="robot.sdk.unit.getUnit">
 <code class="descclassname">robot.sdk.unit.</code><code class="descname">getUnit</code><span class="sig-paren">(</span><em>query</em>, <em>service_id</em>, <em>api_key</em>, <em>secret_key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/unit.html#getUnit"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.unit.getUnit" title="永久链接至目标">¶</a></dt>
 <dd><p>NLU 解析</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> – 用户的指令字符串</li>
+<li><strong>service_id</strong> – UNIT 的 service_id</li>
+<li><strong>api_key</strong> – UNIT apk_key</li>
+<li><strong>secret_key</strong> – UNIT secret_key</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body"><p class="first last">UNIT 解析结果。如果解析失败，返回 None</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -449,7 +506,22 @@ False: 不适合由该插件处理</p>
 <dl class="function">
 <dt id="robot.sdk.unit.hasIntent">
 <code class="descclassname">robot.sdk.unit.</code><code class="descname">hasIntent</code><span class="sig-paren">(</span><em>parsed</em>, <em>intent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/unit.html#hasIntent"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.unit.hasIntent" title="永久链接至目标">¶</a></dt>
-<dd><p>提取意图</p>
+<dd><p>判断是否包含某个意图</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><ul class="first simple">
+<li><strong>parsed</strong> – UNIT 解析结果</li>
+<li><strong>intent</strong> – 意图的名称</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body"><p class="first last">True: 包含; False: 不包含</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>

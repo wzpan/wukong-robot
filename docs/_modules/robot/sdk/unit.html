@@ -179,7 +179,15 @@
         <span class="k">return</span> <span class="s1">&#39;&#39;</span></div>
 
 <div class="viewcode-block" id="getUnit"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.unit.getUnit">[文档]</a><span class="k">def</span> <span class="nf">getUnit</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">service_id</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; NLU 解析 &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    NLU 解析</span>
+
+<span class="sd">    :param query: 用户的指令字符串</span>
+<span class="sd">    :param service_id: UNIT 的 service_id</span>
+<span class="sd">    :param api_key: UNIT apk_key</span>
+<span class="sd">    :param secret_key: UNIT secret_key</span>
+<span class="sd">    :returns: UNIT 解析结果。如果解析失败，返回 None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">access_token</span> <span class="o">=</span> <span class="n">get_token</span><span class="p">(</span><span class="n">api_key</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">)</span>
     <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://aip.baidubce.com/rpc/2.0/unit/service/chat?access_token=&#39;</span> <span class="o">+</span> <span class="n">access_token</span>
     <span class="n">request</span><span class="o">=</span><span class="p">{</span>
@@ -202,7 +210,12 @@
 
 
 <div class="viewcode-block" id="getIntent"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.unit.getIntent">[文档]</a><span class="k">def</span> <span class="nf">getIntent</span><span class="p">(</span><span class="n">parsed</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; 提取意图 &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    提取意图</span>
+
+<span class="sd">    :param parsed: UNIT 解析结果</span>
+<span class="sd">    :returns: 意图数组</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">parsed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">&#39;result&#39;</span> <span class="ow">in</span> <span class="n">parsed</span> <span class="ow">and</span> \
        <span class="s1">&#39;response_list&#39;</span> <span class="ow">in</span> <span class="n">parsed</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]:</span>
         <span class="k">return</span> <span class="n">parsed</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;response_list&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;schema&#39;</span><span class="p">][</span><span class="s1">&#39;intent&#39;</span><span class="p">]</span>
@@ -211,7 +224,13 @@
 
 
 <div class="viewcode-block" id="hasIntent"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.unit.hasIntent">[文档]</a><span class="k">def</span> <span class="nf">hasIntent</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; 提取意图 &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    判断是否包含某个意图</span>
+
+<span class="sd">    :param parsed: UNIT 解析结果</span>
+<span class="sd">    :param intent: 意图的名称</span>
+<span class="sd">    :returns: True: 包含; False: 不包含</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">parsed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">&#39;result&#39;</span> <span class="ow">in</span> <span class="n">parsed</span> <span class="ow">and</span> \
        <span class="s1">&#39;response_list&#39;</span> <span class="ow">in</span> <span class="n">parsed</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]:</span>
         <span class="n">response_list</span> <span class="o">=</span> <span class="n">parsed</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;response_list&#39;</span><span class="p">]</span>
@@ -224,7 +243,14 @@
 
 
 <div class="viewcode-block" id="getSlots"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.unit.getSlots">[文档]</a><span class="k">def</span> <span class="nf">getSlots</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; 提取意图 &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    提取某个意图的所有词槽</span>
+<span class="sd">    </span>
+<span class="sd">    :param parsed: UNIT 解析结果</span>
+<span class="sd">    :param intent: 意图的名称</span>
+<span class="sd">    :returns: 词槽列表。你可以通过 name 属性筛选词槽，</span>
+<span class="sd">再通过 normalized_word 属性取出相应的值</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">parsed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">&#39;result&#39;</span> <span class="ow">in</span> <span class="n">parsed</span> <span class="ow">and</span> \
        <span class="s1">&#39;response_list&#39;</span> <span class="ow">in</span> <span class="n">parsed</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]:</span>
         <span class="n">response_list</span> <span class="o">=</span> <span class="n">parsed</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;response_list&#39;</span><span class="p">]</span>
@@ -237,7 +263,13 @@
         <span class="k">return</span> <span class="p">[]</span></div>
 
 <div class="viewcode-block" id="getSay"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.unit.getSay">[文档]</a><span class="k">def</span> <span class="nf">getSay</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; 提取意图 &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    提取 UNIT 的回复文本</span>
+
+<span class="sd">    :param parsed: UNIT 解析结果</span>
+<span class="sd">    :param intent: 意图的名称</span>
+<span class="sd">    :returns: UNIT 的回复文本</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">parsed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">&#39;result&#39;</span> <span class="ow">in</span> <span class="n">parsed</span> <span class="ow">and</span> \
        <span class="s1">&#39;response_list&#39;</span> <span class="ow">in</span> <span class="n">parsed</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]:</span>
         <span class="n">response_list</span> <span class="o">=</span> <span class="n">parsed</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;response_list&#39;</span><span class="p">]</span>

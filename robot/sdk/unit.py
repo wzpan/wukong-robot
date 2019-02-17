@@ -35,7 +35,15 @@ def get_token(api_key, secret_key):
         return ''
 
 def getUnit(query, service_id, api_key, secret_key):
-    """ NLU 解析 """
+    """ 
+    NLU 解析
+
+    :param query: 用户的指令字符串
+    :param service_id: UNIT 的 service_id
+    :param api_key: UNIT apk_key
+    :param secret_key: UNIT secret_key
+    :returns: UNIT 解析结果。如果解析失败，返回 None
+    """
     access_token = get_token(api_key, secret_key)
     url = 'https://aip.baidubce.com/rpc/2.0/unit/service/chat?access_token=' + access_token
     request={
@@ -58,7 +66,12 @@ def getUnit(query, service_id, api_key, secret_key):
 
 
 def getIntent(parsed):
-    """ 提取意图 """
+    """ 
+    提取意图
+
+    :param parsed: UNIT 解析结果
+    :returns: 意图数组
+    """
     if parsed is not None and 'result' in parsed and \
        'response_list' in parsed['result']:
         return parsed['result']['response_list'][0]['schema']['intent']
@@ -67,7 +80,13 @@ def getIntent(parsed):
 
 
 def hasIntent(parsed, intent):
-    """ 提取意图 """
+    """ 
+    判断是否包含某个意图
+
+    :param parsed: UNIT 解析结果
+    :param intent: 意图的名称
+    :returns: True: 包含; False: 不包含
+    """
     if parsed is not None and 'result' in parsed and \
        'response_list' in parsed['result']:
         response_list = parsed['result']['response_list']
@@ -80,7 +99,14 @@ def hasIntent(parsed, intent):
 
 
 def getSlots(parsed, intent=''):
-    """ 提取意图 """
+    """ 
+    提取某个意图的所有词槽
+    
+    :param parsed: UNIT 解析结果
+    :param intent: 意图的名称
+    :returns: 词槽列表。你可以通过 name 属性筛选词槽，
+再通过 normalized_word 属性取出相应的值
+    """
     if parsed is not None and 'result' in parsed and \
        'response_list' in parsed['result']:
         response_list = parsed['result']['response_list']
@@ -93,7 +119,13 @@ def getSlots(parsed, intent=''):
         return []
 
 def getSay(parsed, intent=''):
-    """ 提取意图 """
+    """
+    提取 UNIT 的回复文本
+
+    :param parsed: UNIT 解析结果
+    :param intent: 意图的名称
+    :returns: UNIT 的回复文本
+    """
     if parsed is not None and 'result' in parsed and \
        'response_list' in parsed['result']:
         response_list = parsed['result']['response_list']
