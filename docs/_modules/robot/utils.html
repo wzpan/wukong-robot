@@ -244,11 +244,12 @@
 
 
 <div class="viewcode-block" id="get_file_content"><a class="viewcode-back" href="../../robot.html#robot.utils.get_file_content">[文档]</a><span class="k">def</span> <span class="nf">get_file_content</span><span class="p">(</span><span class="n">filePath</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; </span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    读取文件内容并返回</span>
 
 <span class="sd">    :param filePath: 文件路径</span>
 <span class="sd">    :returns: 文件内容</span>
+<span class="sd">    :raises IOError: 读取失败则抛出 IOError</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filePath</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span></div>

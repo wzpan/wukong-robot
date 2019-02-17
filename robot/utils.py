@@ -100,11 +100,12 @@ def emailUser(SUBJECT="", BODY="", ATTACH_LIST=[]):
 
 
 def get_file_content(filePath):
-    """ 
+    """
     读取文件内容并返回
 
     :param filePath: 文件路径
     :returns: 文件内容
+    :raises IOError: 读取失败则抛出 IOError
     """
     with open(filePath, 'rb') as fp:
         return fp.read()
