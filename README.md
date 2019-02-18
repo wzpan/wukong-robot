@@ -1,18 +1,16 @@
 # wukong-robot
 
-[![wukong-project](https://img.shields.io/badge/project-wukong-informational.svg)](https://github.com/users/wzpan/projects/1)
-[![docker-pulls](https://img.shields.io/docker/pulls/wzpan/wukong-robot.svg?style=flat)](https://hub.docker.com/r/wzpan/wukong-robot)
-[![Python3](https://img.shields.io/pypi/pyversions/Django.svg?style=flat)](#)
-[![GitHub issues](https://img.shields.io/github/issues/wzpan/wukong-robot.svg)](https://github.com/wzpan/wukong-robot/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/wzpan/wukong-robot.svg)](https://github.com/wzpan/wukong-robot/pulls)
-[![Licence](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/wzpan/wukong-robot/blob/master/LICENSE)
-[![QQ群](https://img.shields.io/badge/QQ%E7%BE%A4-580447290-red.svg)](http://hahack-1253537070.file.myqcloud.com/images/A10EA78A01ED46D5BD0FF83D459E2748.png)
+<h1 align="center">
+<img width="128" src="http://hahack-1253537070.file.myqcloud.com/images/wukong-icons/256_256.png" alt="wukong-robot">
+</h1>
 
 wukong-robot 是一个简单、灵活、优雅的中文语音对话机器人/智能音箱项目，目的是让中国的 Maker 和 Haker 们也能快速打造个性化的智能音箱。
 
-<h1 align="center">
-<img width="250" src="http://hahack-1253537070.file.myqcloud.com/images/wukong-icons/256_256.png" alt="wukong-robot">
-</h1>
+[![wukong-project](https://img.shields.io/badge/project-wukong-informational.svg?style=flat-square)](https://github.com/users/wzpan/projects/1)
+[![docker-pulls](https://img.shields.io/docker/pulls/wzpan/wukong-robot.svg?style=flat-square)](https://hub.docker.com/r/wzpan/wukong-robot)
+[![Python3](https://img.shields.io/pypi/pyversions/Django.svg?style=flat-square)](#)
+[![donate](https://img.shields.io/badge/%EF%BF%A5-%E6%8D%90%E8%B5%A0-red.svg?style=flat-square)](https://wukong.hahack.com/#/donate)
+[![QQ群](https://img.shields.io/badge/QQ%E7%BE%A4-580447290-red.svg?style=flat-square)](http://hahack-1253537070.file.myqcloud.com/images/A10EA78A01ED46D5BD0FF83D459E2748.png)
 
 ## Table of Contents
 
@@ -25,6 +23,7 @@ wukong-robot 是一个简单、灵活、优雅的中文语音对话机器人/智
 * [配置](#配置)
 * [技能插件](#插件)
 * [API接口](#api-接口)
+* [捐赠](#捐赠)
 * [贡献](#贡献)
 * [联系](#联系)
 * [感谢](#感谢)
@@ -133,18 +132,23 @@ python3 wukong.py
 
 wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式调用，见 [后台API](https://www.hahack.com/wukong-contrib/#/api)。
 
+## 捐赠
+
+您的捐赠将鼓励我继续完善 wukong-robot。
+
+* 对于个人用户，可以使用支付宝或者微信进行捐赠，单笔超过 50 元的捐赠者，您的 ID 将可以出现在 wukong-robot 后台管理端的捐赠页面中。
+* 对于企业用户，建议[成为这个项目的 sponsor](https://opencollective.com/wukong-robot#sponsor)，您将可以把一个带链接的 logo 放在 wukong-robot 后台管理端的首页、捐赠页面以及 Github 项目首页中。
+
+| 支付宝 | 微信支付 |
+| ------ | --------- |
+| <img src="http://hahack.com/images/misc/alipay.png" height="248px" width="164px" title="支付宝" style="display:inherit;"/> | <img src="http://hahack.com/images/misc/wechatpay.jpeg" height="248px" width="164px" title="微信支付" style="display:inherit;"/> |
+
 ## 贡献
 
 * 喜欢本项目请先打一颗星；
 * 提 bug 请到 [issue 页面](https://github.com/wzpan/wukong-robot/issues)；
 * 要贡献代码，欢迎 fork 之后再提 pull request；
 * 插件请提交到 [wukong-contrib](https://github.com/wzpan/wukong-contrib) ；
-* 您的捐赠将鼓励我继续完善 wukong-robot，支持支付宝、微信等捐赠形式。
-
-| 支付宝 | 微信支付 |
-| ------ | --------- |
-| <img src="http://hahack.com/images/misc/alipay.png" height="248px" width="164px" title="支付宝" style="display:inherit;"/> | <img src="http://hahack.com/images/misc/wechatpay.jpeg" height="248px" width="164px" title="微信支付" style="display:inherit;"/> |
-
 
 ## 联系
 
@@ -156,6 +160,7 @@ wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式�
 * 悟空的前身是 [dingdang-robot](https://github.com/dingdang-robot/dingdang-robot) 项目和 [jasper-client](https://github.com/jasperproject/jasper-client) 项目。感谢 [Shubhro Saha](http://www.shubhro.com/), [Charles Marsh](http://www.crmarsh.com/) and [Jan Holthuis](http://homepage.ruhr-uni-bochum.de/Jan.Holthuis/) 在 Jasper 项目上做出的优秀贡献；
 * 感谢三咲智子提供了备选的后台管理端 Demo 体验地址。
 * 感谢 aliciacai 贡献的 wukong-robot 图标。
+* 感谢所有为[本项目](https://github.com/wzpan/wukong-robot/graphs/contributors)、 [wukong-contrib](https://github.com/wzpan/wukong-contrib/graphs/contributors) 项目以及[dingdang-robot](https://github.com/dingdang-robot/dingdang-robot/graphs/contributors) 项目做出过贡献的人！
 
 ## FAQ
 
