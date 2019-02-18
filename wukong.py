@@ -16,6 +16,9 @@ import hashlib
 import os
 import fire
 
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 logger = logging.getLogger(__name__)
 
 class Wukong(object):
@@ -71,10 +74,10 @@ class Wukong(object):
 
     def run(self):
         self.init()
-        
+
         # capture SIGINT signal, e.g., Ctrl+C
         signal.signal(signal.SIGINT, self._signal_handler)
-        
+
         # site
         server.run(self._conversation, self)
 
