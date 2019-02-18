@@ -2,6 +2,7 @@ import json
 from datetime import timedelta
 from robot import config, utils, logging, constants, Updater
 import base64
+import requests
 import tornado.web
 import tornado.ioloop
 from tornado import gen
@@ -16,6 +17,7 @@ import time
 import yaml
 import markdown
 import random
+import requests
 
 from tornado.websocket import WebSocketHandler
 
@@ -55,7 +57,7 @@ class MainHandler(BaseHandler):
             suggestion = random.choice(suggestions)
             self.render('index.html', history=conversation.getHistory(), update_info=info, suggestion=suggestion)
         else:
-            self.render('index.html', history=[])    
+            self.render('index.html', history=[])
 
 class ChatHandler(BaseHandler):
 
@@ -198,6 +200,26 @@ class ConfigHandler(BaseHandler):
             res = {'code': 1, 'message': 'illegal visit'}
             self.write(json.dumps(res))
         self.finish()
+
+
+class DonateHandler(BaseHandler):
+
+    @tornado.web.asynchronous
+    @gen.coroutine
+    def get(self):
+        if not self.isValidated():
+            self.redirect("/login")
+            return
+        r = requests.get('https://raw.githubusercontent.com/wzpan/wukong-contrib/master/docs/donate.md')
+        content = markdown.markdown(r.text, extensions=['codehilite',
+                                               'tables',
+                                               'fenced_code',
+                                               'meta',
+                                               'nl2br',
+                                               'toc'
+        ])
+        self.render('donate.html', content=content)        
+
     
 
 class APIHandler(BaseHandler):
@@ -294,7 +316,8 @@ application = tornado.web.Application([
     (r"/log", LogHandler),
     (r"/logout", LogoutHandler),
     (r"/api", APIHandler),
-    (r"/upgrade", UpdateHandler)
+    (r"/upgrade", UpdateHandler),
+    (r"/donate", DonateHandler)
 ], **settings)
 
 
