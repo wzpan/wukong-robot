@@ -19,7 +19,7 @@
 </p>
 
 <p align="center">
-  <object type="image/svg+xml" data="https://opencollective.com/wukong-robot/tiers/backer.svg?avatarHeight=36&width=600"></object>
+  <a href="https://opencollective.com/wukong-robot/contribute/tier/8131-sponsor" target="_blank"><img src="https://opencollective.com/wukong-robot/sponsors.svg?avatarHeight=36"></a>
 </p>
 
 ## Table of Contents
