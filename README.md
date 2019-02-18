@@ -1,16 +1,22 @@
 # wukong-robot
 
-<h1 align="center">
-<img width="128" src="http://hahack-1253537070.file.myqcloud.com/images/wukong-icons/256_256.png" alt="wukong-robot">
-</h1>
+<p align="center">
+    <a href="https://wukong.hahack.com" target="_blank">
+        <img width="128" src="http://hahack-1253537070.file.myqcloud.com/images/wukong-icons/256_256.png" alt="wukong-robot">
+    </a>
+</p>
 
-wukong-robot 是一个简单、灵活、优雅的中文语音对话机器人/智能音箱项目，目的是让中国的 Maker 和 Haker 们也能快速打造个性化的智能音箱。
+<p align="center">
+    wukong-robot 是一个简单、灵活、优雅的中文语音对话机器人/智能音箱项目，目的是让中国的 Maker 和 Haker 们也能快速打造个性化的智能音箱。
+</p>
 
+<p align="center">
 [![wukong-project](https://img.shields.io/badge/project-wukong-informational.svg?style=flat-square)](https://github.com/users/wzpan/projects/1)
 [![docker-pulls](https://img.shields.io/docker/pulls/wzpan/wukong-robot.svg?style=flat-square)](https://hub.docker.com/r/wzpan/wukong-robot)
 [![Python3](https://img.shields.io/pypi/pyversions/Django.svg?style=flat-square)](#)
 [![donate](https://img.shields.io/badge/%EF%BF%A5-%E6%8D%90%E8%B5%A0-red.svg?style=flat-square)](https://wukong.hahack.com/#/donate)
 [![QQ群](https://img.shields.io/badge/QQ%E7%BE%A4-580447290-red.svg?style=flat-square)](http://hahack-1253537070.file.myqcloud.com/images/A10EA78A01ED46D5BD0FF83D459E2748.png)
+</p>
 
 ## Table of Contents
 
