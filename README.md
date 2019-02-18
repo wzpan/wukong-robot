@@ -18,6 +18,10 @@
   <a href="http://hahack-1253537070.file.myqcloud.com/images/A10EA78A01ED46D5BD0FF83D459E2748.png"><img alt="QQ群" src="https://img.shields.io/badge/QQ%E7%BE%A4-580447290-red.svg?style=flat-square"></a>
 </p>
 
+<p align="center">
+  <object type="image/svg+xml" data="https://opencollective.com/wukong-robot/tiers/backer.svg?avatarHeight=36&width=600"></object>
+</p>
+
 ## Table of Contents
 
 * [特性](#特性)
@@ -142,8 +146,8 @@ wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式�
 
 您的捐赠将鼓励我继续完善 wukong-robot。
 
-* 对于个人用户，可以使用支付宝或者微信进行捐赠，单笔超过 50 元的捐赠者，您的 ID 将可以出现在 wukong-robot 后台管理端的捐赠页面中。
-* 对于企业用户，建议[成为这个项目的 sponsor](https://opencollective.com/wukong-robot#sponsor)，您将可以把一个带链接的 logo 放在 wukong-robot 后台管理端的首页、捐赠页面以及 Github 项目首页中。
+* 对于个人用户，可以使用支付宝或者微信进行捐赠，单笔超过 20 元的捐赠者，您的 ID 将可以出现在 wukong-robot 后台管理端的捐赠页面中。
+* 对于企业用户，建议[成为这个项目的 sponsor](https://opencollective.com/wukong-robot/contribute/tier/8131-sponsor)，您将可以把一个带链接的 logo 放在 wukong-robot 后台管理端的首页、捐赠页面以及 Github 项目首页中。
 
 | 支付宝 | 微信支付 |
 | ------ | --------- |
