@@ -56,8 +56,13 @@ class Wukong(object):
         if not utils.is_proper_time():
             logger.warning('勿扰模式开启中')
             return
+        if self._conversation.isRecording:
+            logger.warning('正在录音中，跳过')
+            return
         Player.play(constants.getData('beep_hi.wav'))
-        self._conversation.interrupt()    
+        logger.info('开始录音')
+        self._conversation.interrupt()
+        self._conversation.isRecording = True;
 
     def _do_not_bother_on_callback(self):
         utils.do_not_bother = True

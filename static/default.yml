@@ -157,5 +157,5 @@ baidufm:
 weather:
     enable: false
     key: '心知天气 API Key'
-    location: '深圳'
+
 
