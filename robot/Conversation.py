@@ -16,6 +16,7 @@ class Conversation(object):
         self.history = []
         # 沉浸模式，处于这个模式下，被打断后将自动恢复这个技能
         self.immersiveMode = None
+        self.isRecording = False
 
     def getHistory(self):
         return self.history
@@ -59,6 +60,8 @@ class Conversation(object):
     def converse(self, fp, callback=None):
         """ 核心对话逻辑 """
         Player.play(constants.getData('beep_lo.wav'))
+        logger.info('结束录音')
+        self.isRecording = False
         self.doConverse(fp, callback)
 
     def doConverse(self, fp, callback=None):
