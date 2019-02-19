@@ -112,12 +112,15 @@ def get_file_content(filePath):
 
 def check_and_delete(fp):
     """ 
-    检查并删除文件
+    检查并删除文件/文件夹
 
     :param fp: 文件路径
     """
     if isinstance(fp, str) and os.path.exists(fp):
-        os.remove(fp)
+        if os.path.isfile(fp):
+            os.remove(fp)
+        else:
+            shutil.rmtree(fp)
 
 def write_temp_file(data, suffix):
     """ 

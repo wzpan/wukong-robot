@@ -1,8 +1,7 @@
 # -*- coding: utf-8-*-
 
 import os
-import shutil
-from robot import constants
+from robot import constants, utils
 from robot.sdk.AbstractPlugin import AbstractPlugin
 
 class Plugin(AbstractPlugin):
@@ -12,10 +11,8 @@ class Plugin(AbstractPlugin):
     def handle(self, text, parsed):
         temp = constants.TEMP_PATH
         for f in os.listdir(temp):
-            if os.path.isfile(os.path.join(temp, f)):
-                os.remove(os.path.join(temp, f))
-            else:
-                shutil.rmtree(os.path.join(temp, f))
+            if f != 'DIR':
+                utils.check_and_delete(os.path.join(temp, f))
         self.say(u'缓存目录已清空', cache=True)
 
     def isValid(self, text, parsed):
