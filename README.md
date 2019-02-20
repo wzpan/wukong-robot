@@ -42,7 +42,9 @@
 
 ## 特性
 
-![wukong-robot](http://hahack-1253537070.file.myqcloud.com/images/wukong-docs/wukong-robot-mindmap.png)
+<p align="center">
+  <img src="http://hahack-1253537070.file.myqcloud.com/images/wukong-docs/wukong-robot-mindmap.png" alt="wukong-robot">
+</p>
 
 * 模块化。功能插件、语音识别、语音合成、对话机器人都做到了高度模块化，第三方插件单独维护，方便继承和开发自己的插件。
 * 中文支持。集成百度、科大讯飞、阿里、腾讯等多家中文语音识别和语音合成技术，且可以继续扩展。
@@ -56,7 +58,9 @@
 
 wukong-robot 的工作模式：
 
-![wukong-robot](http://hahack-1253537070.file.myqcloud.com/images/wukong-docs/wukong-robot.png)
+<p align="center">
+  <img src="http://hahack-1253537070.file.myqcloud.com/images/wukong-docs/wukong-robot.png" alt="wukong-robot 的工作模式">
+</p>
 
 wukong-robot 被唤醒后，用户的语音指令先经过 ASR 引擎进行 ASR 识别成文本，然后对识别到的文本进行 NLU 解析，再将解析结果进行技能匹配，交给适合处理该指令的技能插件去处理。插件处理完成后，得到的结果再交给 TTS 引擎合成成语音，播放给用户。
 
@@ -64,8 +68,9 @@ wukong-robot 被唤醒后，用户的语音指令先经过 ASR 引擎进行 ASR 
 
 ## Demo
 
-* Demo视频 - coming soon
-* 后台管理端Demo
+* 直接交互的视频 Demo
+  - coming soon
+* 后台管理端 Demo
   - 体验地址：https://bot.hahack.com/  （体验用户名：wukong；体验密码：wukong@2019）
   - 备选体验地址：https://bot.sxzz.moe/ （体验用户名：wukong；体验密码：wukong@2019）
 
