@@ -108,9 +108,12 @@ class Conversation(object):
             logger.info("命中缓存，播放缓存语音")
             voice = utils.getCache(msg)
         else:
-            voice = self.tts.get_speech(msg)
-            if cache:
-                utils.saveCache(voice, msg)
+            try:
+                voice = self.tts.get_speech(msg)
+                if cache:
+                    utils.saveCache(voice, msg)
+            except Exception as e:
+                logger.error('保存缓存失败！')
         if onCompleted is None:
             onCompleted = lambda: self._onCompleted(msg)
         self.player = Player.SoxPlayer()
