@@ -360,7 +360,7 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_engines</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;注意: 有多个 ASR 名称与指定的引擎名 </span><span class="si">{}</span><span class="s2"> 匹配&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">slug</span><span class="p">)</span>        
         <span class="n">engine</span> <span class="o">=</span> <span class="n">selected_engines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;使用 </span><span class="si">{}</span><span class="s2"> ASR引擎&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">SLUG</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;使用 </span><span class="si">{}</span><span class="s2"> ASR 引擎&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">SLUG</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">engine</span><span class="o">.</span><span class="n">get_instance</span><span class="p">()</span></div>
 
 

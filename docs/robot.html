@@ -89,6 +89,7 @@
 <li><a class="reference internal" href="#module-robot.Brain">robot.Brain module</a></li>
 <li><a class="reference internal" href="#module-robot.ConfigMonitor">robot.ConfigMonitor module</a></li>
 <li><a class="reference internal" href="#module-robot.Conversation">robot.Conversation module</a></li>
+<li><a class="reference internal" href="#module-robot.NLU">robot.NLU module</a></li>
 <li><a class="reference internal" href="#module-robot.Player">robot.Player module</a></li>
 <li><a class="reference internal" href="#module-robot.TTS">robot.TTS module</a></li>
 <li><a class="reference internal" href="#module-robot.Updater">robot.Updater module</a></li>
@@ -171,13 +172,6 @@
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="永久链接至标题">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="robot.drivers.html">robot.drivers package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="robot.drivers.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="robot.drivers.html#robot-drivers-apa102-module">robot.drivers.apa102 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="robot.drivers.html#robot-drivers-pixels-module">robot.drivers.pixels module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="robot.drivers.html#module-contents">Module contents</a></li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="robot.sdk.html">robot.sdk package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="robot.sdk.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot.sdk.html#module-robot.sdk.AbstractPlugin">robot.sdk.AbstractPlugin module</a></li>
@@ -540,6 +534,11 @@ text – 用户输入</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="robot.Conversation.Conversation.doParse">
+<code class="descname">doParse</code><span class="sig-paren">(</span><em>query</em>, <em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Conversation.html#Conversation.doParse"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Conversation.Conversation.doParse" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="robot.Conversation.Conversation.doResponse">
 <code class="descname">doResponse</code><span class="sig-paren">(</span><em>query</em>, <em>UUID=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Conversation.html#Conversation.doResponse"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Conversation.Conversation.doResponse" title="永久链接至目标">¶</a></dt>
 <dd></dd></dl>
@@ -583,6 +582,218 @@ text – 用户输入</p>
 <dd></dd></dl>
 
 </dd></dl>
+
+</div>
+<div class="section" id="module-robot.NLU">
+<span id="robot-nlu-module"></span><h2>robot.NLU module<a class="headerlink" href="#module-robot.NLU" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="robot.NLU.AbstractNLU">
+<em class="property">class </em><code class="descclassname">robot.NLU.</code><code class="descname">AbstractNLU</code><a class="reference internal" href="_modules/robot/NLU.html#AbstractNLU"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.NLU.AbstractNLU" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Generic parent class for all NLU engines</p>
+<dl class="method">
+<dt id="robot.NLU.AbstractNLU.getIntent">
+<code class="descname">getIntent</code><span class="sig-paren">(</span><em>parsed</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/NLU.html#AbstractNLU.getIntent"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.NLU.AbstractNLU.getIntent" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.NLU.AbstractNLU.getSay">
+<code class="descname">getSay</code><span class="sig-paren">(</span><em>parsed</em>, <em>intent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/NLU.html#AbstractNLU.getSay"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.NLU.AbstractNLU.getSay" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.NLU.AbstractNLU.getSlotWord">
+<code class="descname">getSlotWord</code><span class="sig-paren">(</span><em>parsed</em>, <em>intent</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/NLU.html#AbstractNLU.getSlotWord"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.NLU.AbstractNLU.getSlotWord" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.NLU.AbstractNLU.getSlots">
+<code class="descname">getSlots</code><span class="sig-paren">(</span><em>parsed</em>, <em>intent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/NLU.html#AbstractNLU.getSlots"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.NLU.AbstractNLU.getSlots" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="robot.NLU.AbstractNLU.get_config">
+<em class="property">classmethod </em><code class="descname">get_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/NLU.html#AbstractNLU.get_config"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.NLU.AbstractNLU.get_config" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="robot.NLU.AbstractNLU.get_instance">
+<em class="property">classmethod </em><code class="descname">get_instance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/NLU.html#AbstractNLU.get_instance"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.NLU.AbstractNLU.get_instance" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.NLU.AbstractNLU.hasIntent">
+<code class="descname">hasIntent</code><span class="sig-paren">(</span><em>parsed</em>, <em>intent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/NLU.html#AbstractNLU.hasIntent"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.NLU.AbstractNLU.hasIntent" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.NLU.AbstractNLU.parse">
+<code class="descname">parse</code><span class="sig-paren">(</span><em>query</em>, <em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/NLU.html#AbstractNLU.parse"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.NLU.AbstractNLU.parse" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="robot.NLU.UnitNLU">
+<em class="property">class </em><code class="descclassname">robot.NLU.</code><code class="descname">UnitNLU</code><a class="reference internal" href="_modules/robot/NLU.html#UnitNLU"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.NLU.UnitNLU" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#robot.NLU.AbstractNLU" title="robot.NLU.AbstractNLU"><code class="xref py py-class docutils literal notranslate"><span class="pre">robot.NLU.AbstractNLU</span></code></a></p>
+<p>百度UNIT的NLU API.</p>
+<dl class="attribute">
+<dt id="robot.NLU.UnitNLU.SLUG">
+<code class="descname">SLUG</code><em class="property"> = 'unit'</em><a class="headerlink" href="#robot.NLU.UnitNLU.SLUG" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.NLU.UnitNLU.getIntent">
+<code class="descname">getIntent</code><span class="sig-paren">(</span><em>parsed</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/NLU.html#UnitNLU.getIntent"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.NLU.UnitNLU.getIntent" title="永久链接至目标">¶</a></dt>
+<dd><p>提取意图</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><strong>parsed</strong> – 解析结果</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body">意图数组</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="robot.NLU.UnitNLU.getSay">
+<code class="descname">getSay</code><span class="sig-paren">(</span><em>parsed</em>, <em>intent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/NLU.html#UnitNLU.getSay"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.NLU.UnitNLU.getSay" title="永久链接至目标">¶</a></dt>
+<dd><p>提取 UNIT 的回复文本</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><ul class="first simple">
+<li><strong>parsed</strong> – UNIT 解析结果</li>
+<li><strong>intent</strong> – 意图的名称</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body"><p class="first last">UNIT 的回复文本</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="robot.NLU.UnitNLU.getSlotWords">
+<code class="descname">getSlotWords</code><span class="sig-paren">(</span><em>parsed</em>, <em>intent</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/NLU.html#UnitNLU.getSlotWords"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.NLU.UnitNLU.getSlotWords" title="永久链接至目标">¶</a></dt>
+<dd><p>找出命中某个词槽的内容</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><ul class="first simple">
+<li><strong>parsed</strong> – UNIT 解析结果</li>
+<li><strong>intent</strong> – 意图的名称</li>
+<li><strong>name</strong> – 词槽名</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body"><p class="first last">命中该词槽的值的列表。</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="robot.NLU.UnitNLU.getSlots">
+<code class="descname">getSlots</code><span class="sig-paren">(</span><em>parsed</em>, <em>intent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/NLU.html#UnitNLU.getSlots"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.NLU.UnitNLU.getSlots" title="永久链接至目标">¶</a></dt>
+<dd><p>提取某个意图的所有词槽</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><ul class="first simple">
+<li><strong>parsed</strong> – UNIT 解析结果</li>
+<li><strong>intent</strong> – 意图的名称</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body"><p class="first last">词槽列表。你可以通过 name 属性筛选词槽，</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>再通过 normalized_word 属性取出相应的值</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="robot.NLU.UnitNLU.get_config">
+<em class="property">classmethod </em><code class="descname">get_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/NLU.html#UnitNLU.get_config"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.NLU.UnitNLU.get_config" title="永久链接至目标">¶</a></dt>
+<dd><p>百度UNIT的配置</p>
+<p>无需配置，所以返回 {}</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="robot.NLU.UnitNLU.hasIntent">
+<code class="descname">hasIntent</code><span class="sig-paren">(</span><em>parsed</em>, <em>intent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/NLU.html#UnitNLU.hasIntent"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.NLU.UnitNLU.hasIntent" title="永久链接至目标">¶</a></dt>
+<dd><p>判断是否包含某个意图</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><ul class="first simple">
+<li><strong>parsed</strong> – UNIT 解析结果</li>
+<li><strong>intent</strong> – 意图的名称</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body"><p class="first last">True: 包含; False: 不包含</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="robot.NLU.UnitNLU.parse">
+<code class="descname">parse</code><span class="sig-paren">(</span><em>query</em>, <em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/NLU.html#UnitNLU.parse"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.NLU.UnitNLU.parse" title="永久链接至目标">¶</a></dt>
+<dd><p>使用百度 UNIT 进行 NLU 解析</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> – 用户的指令字符串</li>
+<li><strong>**args</strong> – <p>UNIT 的相关参数
+- service_id: UNIT 的 service_id
+- api_key: UNIT apk_key
+- secret_key: UNIT secret_key</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body"><p class="first last">UNIT 解析结果。如果解析失败，返回 None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="robot.NLU.get_engine_by_slug">
+<code class="descclassname">robot.NLU.</code><code class="descname">get_engine_by_slug</code><span class="sig-paren">(</span><em>slug=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/NLU.html#get_engine_by_slug"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.NLU.get_engine_by_slug" title="永久链接至目标">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Returns:</dt>
+<dd>An NLU Engine implementation available on the current platform</dd>
+<dt>Raises:</dt>
+<dd>ValueError if no speaker implementation is supported on this platform</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="robot.NLU.get_engines">
+<code class="descclassname">robot.NLU.</code><code class="descname">get_engines</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/NLU.html#get_engines"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.NLU.get_engines" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 <div class="section" id="module-robot.Player">
@@ -1140,7 +1351,7 @@ con – 会话模块</p>
 <dl class="function">
 <dt id="robot.utils.check_and_delete">
 <code class="descclassname">robot.utils.</code><code class="descname">check_and_delete</code><span class="sig-paren">(</span><em>fp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/utils.html#check_and_delete"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.utils.check_and_delete" title="永久链接至目标">¶</a></dt>
-<dd><p>检查并删除文件</p>
+<dd><p>检查并删除文件/文件夹</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

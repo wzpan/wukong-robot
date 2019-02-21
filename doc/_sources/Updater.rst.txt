@@ -1,7 +1,0 @@
-Updater module
-==============
-
-.. automodule:: Updater
-    :members:
-    :undoc-members:
-    :show-inheritance:

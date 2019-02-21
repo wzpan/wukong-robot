@@ -144,7 +144,6 @@
   <h1>robot.Brain 源代码</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8-*-</span>
 <span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">logging</span>
-<span class="kn">from</span> <span class="nn">robot.sdk.unit</span> <span class="k">import</span> <span class="n">getUnit</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">plugin_loader</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">config</span>
 
@@ -185,9 +184,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s2">&quot;抱歉，刚刚没听清，能再说一遍吗？&quot;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">True</span>
 
-        <span class="n">parsed</span> <span class="o">=</span> <span class="n">getUnit</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;S13442&quot;</span><span class="p">,</span>
-                         <span class="s1">&#39;w5v7gUV3iPGsGntcM84PtOOM&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;KffXwW6E1alcGplcabcNs63Li6GvvnfL&#39;</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;service_id&quot;</span><span class="p">:</span> <span class="s2">&quot;S13442&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;api_key&quot;</span><span class="p">:</span> <span class="s1">&#39;w5v7gUV3iPGsGntcM84PtOOM&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;secret_key&quot;</span><span class="p">:</span> <span class="s1">&#39;KffXwW6E1alcGplcabcNs63Li6GvvnfL&#39;</span>
+        <span class="p">}</span>
+        <span class="n">parsed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span><span class="o">.</span><span class="n">doParse</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">plugin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugins</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">plugin</span><span class="o">.</span><span class="n">isValid</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">parsed</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isImmersive</span><span class="p">(</span><span class="n">plugin</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">parsed</span><span class="p">):</span>

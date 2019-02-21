@@ -1,6 +1,5 @@
 # -*- coding: utf-8-*-
 from robot import logging
-from robot.sdk.unit import getUnit
 from . import plugin_loader
 from . import config
 
@@ -41,9 +40,12 @@ class Brain(object):
             self.conversation.say("抱歉，刚刚没听清，能再说一遍吗？", cache=True)
             return True
 
-        parsed = getUnit(text, "S13442",
-                         'w5v7gUV3iPGsGntcM84PtOOM',
-                         'KffXwW6E1alcGplcabcNs63Li6GvvnfL')
+        args = {
+            "service_id": "S13442",
+            "api_key": 'w5v7gUV3iPGsGntcM84PtOOM',
+            "secret_key": 'KffXwW6E1alcGplcabcNs63Li6GvvnfL'
+        }
+        parsed = self.conversation.doParse(text, **args)
 
         for plugin in self.plugins:
             if not plugin.isValid(text, parsed) and not self.isImmersive(plugin, text, parsed):

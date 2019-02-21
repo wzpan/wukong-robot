@@ -26,7 +26,7 @@ class tencentSpeech(object):
     def secret_id(self, SECRET_ID):
         if not isinstance(SECRET_ID, str):
             raise ValueError('SecretId must be a string!')
-        if len(SecretId)==0:
+        if len(SECRET_ID)==0:
             raise ValueError('SecretId can not be empty!')
         self.SECRET_ID = SECRET_ID
     @property

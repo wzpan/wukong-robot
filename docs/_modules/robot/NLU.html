@@ -1,0 +1,363 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>robot.NLU &mdash; wukong-robot 1.2.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> wukong-robot
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">wukong-robot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">模块代码</a> &raquo;</li>
+        
+      <li>robot.NLU</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>robot.NLU 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8-*-</span>
+<span class="kn">from</span> <span class="nn">.sdk</span> <span class="k">import</span> <span class="n">unit</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">utils</span><span class="p">,</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">logging</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AbstractNLU"><a class="viewcode-back" href="../../robot.html#robot.NLU.AbstractNLU">[文档]</a><span class="k">class</span> <span class="nc">AbstractNLU</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generic parent class for all NLU engines</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ABCMeta</span>
+
+<div class="viewcode-block" id="AbstractNLU.get_config"><a class="viewcode-back" href="../../robot.html#robot.NLU.AbstractNLU.get_config">[文档]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{}</span></div>
+
+<div class="viewcode-block" id="AbstractNLU.get_instance"><a class="viewcode-back" href="../../robot.html#robot.NLU.AbstractNLU.get_instance">[文档]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_instance</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">profile</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">profile</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">instance</span></div>
+
+<div class="viewcode-block" id="AbstractNLU.parse"><a class="viewcode-back" href="../../robot.html#robot.NLU.AbstractNLU.parse">[文档]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>        </div>
+
+<div class="viewcode-block" id="AbstractNLU.getIntent"><a class="viewcode-back" href="../../robot.html#robot.NLU.AbstractNLU.getIntent">[文档]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">getIntent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="AbstractNLU.hasIntent"><a class="viewcode-back" href="../../robot.html#robot.NLU.AbstractNLU.hasIntent">[文档]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">hasIntent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="AbstractNLU.getSlots"><a class="viewcode-back" href="../../robot.html#robot.NLU.AbstractNLU.getSlots">[文档]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">getSlots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="AbstractNLU.getSlotWord"><a class="viewcode-back" href="../../robot.html#robot.NLU.AbstractNLU.getSlotWord">[文档]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">getSlotWord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="AbstractNLU.getSay"><a class="viewcode-back" href="../../robot.html#robot.NLU.AbstractNLU.getSay">[文档]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">getSay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span></div></div>
+
+
+<div class="viewcode-block" id="UnitNLU"><a class="viewcode-back" href="../../robot.html#robot.NLU.UnitNLU">[文档]</a><span class="k">class</span> <span class="nc">UnitNLU</span><span class="p">(</span><span class="n">AbstractNLU</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    百度UNIT的NLU API.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">SLUG</span> <span class="o">=</span> <span class="s2">&quot;unit&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="UnitNLU.get_config"><a class="viewcode-back" href="../../robot.html#robot.NLU.UnitNLU.get_config">[文档]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        百度UNIT的配置</span>
+
+<span class="sd">        无需配置，所以返回 {}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{}</span></div>
+
+<div class="viewcode-block" id="UnitNLU.parse"><a class="viewcode-back" href="../../robot.html#robot.NLU.UnitNLU.parse">[文档]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        使用百度 UNIT 进行 NLU 解析</span>
+
+<span class="sd">        :param query: 用户的指令字符串</span>
+<span class="sd">        :param **args: UNIT 的相关参数</span>
+<span class="sd">            - service_id: UNIT 的 service_id</span>
+<span class="sd">            - api_key: UNIT apk_key</span>
+<span class="sd">            - secret_key: UNIT secret_key</span>
+<span class="sd">        :returns: UNIT 解析结果。如果解析失败，返回 None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;service_id&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">args</span> <span class="ow">or</span> \
+           <span class="s1">&#39;api_key&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">args</span> <span class="ow">or</span> \
+           <span class="s1">&#39;secret_key&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> NLU 失败：参数错误！&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">unit</span><span class="o">.</span><span class="n">getUnit</span><span class="p">(</span><span class="n">query</span><span class="p">,</span>
+                            <span class="n">args</span><span class="p">[</span><span class="s1">&#39;service_id&#39;</span><span class="p">],</span>
+                            <span class="n">args</span><span class="p">[</span><span class="s1">&#39;api_key&#39;</span><span class="p">],</span>
+                            <span class="n">args</span><span class="p">[</span><span class="s1">&#39;secret_key&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="UnitNLU.getIntent"><a class="viewcode-back" href="../../robot.html#robot.NLU.UnitNLU.getIntent">[文档]</a>    <span class="k">def</span> <span class="nf">getIntent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        提取意图</span>
+
+<span class="sd">        :param parsed: 解析结果</span>
+<span class="sd">        :returns: 意图数组</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">unit</span><span class="o">.</span><span class="n">getIntent</span><span class="p">(</span><span class="n">parsed</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UnitNLU.hasIntent"><a class="viewcode-back" href="../../robot.html#robot.NLU.UnitNLU.hasIntent">[文档]</a>    <span class="k">def</span> <span class="nf">hasIntent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        判断是否包含某个意图</span>
+
+<span class="sd">        :param parsed: UNIT 解析结果</span>
+<span class="sd">        :param intent: 意图的名称</span>
+<span class="sd">        :returns: True: 包含; False: 不包含</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">unit</span><span class="o">.</span><span class="n">hasIntent</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UnitNLU.getSlots"><a class="viewcode-back" href="../../robot.html#robot.NLU.UnitNLU.getSlots">[文档]</a>    <span class="k">def</span> <span class="nf">getSlots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        提取某个意图的所有词槽</span>
+<span class="sd">    </span>
+<span class="sd">        :param parsed: UNIT 解析结果</span>
+<span class="sd">        :param intent: 意图的名称</span>
+<span class="sd">        :returns: 词槽列表。你可以通过 name 属性筛选词槽，</span>
+<span class="sd">        再通过 normalized_word 属性取出相应的值</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">unit</span><span class="o">.</span><span class="n">getSlots</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UnitNLU.getSlotWords"><a class="viewcode-back" href="../../robot.html#robot.NLU.UnitNLU.getSlotWords">[文档]</a>    <span class="k">def</span> <span class="nf">getSlotWords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        找出命中某个词槽的内容</span>
+<span class="sd">    </span>
+<span class="sd">        :param parsed: UNIT 解析结果</span>
+<span class="sd">        :param intent: 意图的名称</span>
+<span class="sd">        :param name: 词槽名</span>
+<span class="sd">        :returns: 命中该词槽的值的列表。</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">unit</span><span class="o">.</span><span class="n">getSlotWords</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UnitNLU.getSay"><a class="viewcode-back" href="../../robot.html#robot.NLU.UnitNLU.getSay">[文档]</a>    <span class="k">def</span> <span class="nf">getSay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        提取 UNIT 的回复文本</span>
+
+<span class="sd">        :param parsed: UNIT 解析结果</span>
+<span class="sd">        :param intent: 意图的名称</span>
+<span class="sd">        :returns: UNIT 的回复文本</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">unit</span><span class="o">.</span><span class="n">getSay</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="get_engine_by_slug"><a class="viewcode-back" href="../../robot.html#robot.NLU.get_engine_by_slug">[文档]</a><span class="k">def</span> <span class="nf">get_engine_by_slug</span><span class="p">(</span><span class="n">slug</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        An NLU Engine implementation available on the current platform</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError if no speaker implementation is supported on this platform</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">slug</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">slug</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;无效的 NLU slug &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">slug</span><span class="p">)</span>
+
+    <span class="n">selected_engines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">engine</span><span class="p">:</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="s2">&quot;SLUG&quot;</span><span class="p">)</span> <span class="ow">and</span>
+                              <span class="n">engine</span><span class="o">.</span><span class="n">SLUG</span> <span class="o">==</span> <span class="n">slug</span><span class="p">,</span> <span class="n">get_engines</span><span class="p">()))</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_engines</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;错误：找不到名为 </span><span class="si">{}</span><span class="s2"> 的 NLU 引擎&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">slug</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_engines</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;注意: 有多个 NLU 名称与指定的引擎名 </span><span class="si">{}</span><span class="s2"> 匹配&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">slug</span><span class="p">)</span>        
+        <span class="n">engine</span> <span class="o">=</span> <span class="n">selected_engines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;使用 </span><span class="si">{}</span><span class="s2"> NLU 引擎&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">SLUG</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">engine</span><span class="o">.</span><span class="n">get_instance</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="get_engines"><a class="viewcode-back" href="../../robot.html#robot.NLU.get_engines">[文档]</a><span class="k">def</span> <span class="nf">get_engines</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">get_subclasses</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">subclasses</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">subclass</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__subclasses__</span><span class="p">():</span>
+            <span class="n">subclasses</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">subclass</span><span class="p">)</span>
+            <span class="n">subclasses</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">get_subclasses</span><span class="p">(</span><span class="n">subclass</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">subclasses</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">engine</span> <span class="k">for</span> <span class="n">engine</span> <span class="ow">in</span>
+            <span class="nb">list</span><span class="p">(</span><span class="n">get_subclasses</span><span class="p">(</span><span class="n">AbstractNLU</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="s1">&#39;SLUG&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">engine</span><span class="o">.</span><span class="n">SLUG</span><span class="p">]</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, wzpan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

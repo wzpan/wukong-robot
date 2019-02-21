@@ -1,5 +1,5 @@
 # -*- coding: utf-8-*-
-from robot import ASR, TTS, AI, Player, config, constants, utils, statistic
+from robot import ASR, TTS, NLU, AI, Player, config, constants, utils, statistic
 from robot.Brain import Brain
 from snowboy import snowboydecoder
 import time 
@@ -32,6 +32,7 @@ class Conversation(object):
             self.asr = ASR.get_engine_by_slug(config.get('asr_engine', 'tencent-asr'))
             self.ai = AI.get_robot_by_slug(config.get('robot', 'tuling'))
             self.tts = TTS.get_engine_by_slug(config.get('tts_engine', 'baidu-tts'))
+            self.nlu = NLU.get_engine_by_slug(config.get('nlu_engine', 'unit'))
             self.player = None
             self.brain = Brain(self)
             self.brain.printPlugins()
@@ -50,6 +51,9 @@ class Conversation(object):
             # 没命中技能，使用机器人回复
             msg = self.ai.chat(query)
             self.say(msg, True, onCompleted=self.checkRestore)
+
+    def doParse(self, query, **args):
+        return self.nlu.parse(query, **args)
 
     def setImmersiveMode(self, slug):
         self.immersiveMode = slug

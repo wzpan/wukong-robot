@@ -143,7 +143,7 @@
             
   <h1>robot.Conversation 源代码</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8-*-</span>
-<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">ASR</span><span class="p">,</span> <span class="n">TTS</span><span class="p">,</span> <span class="n">AI</span><span class="p">,</span> <span class="n">Player</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">constants</span><span class="p">,</span> <span class="n">utils</span><span class="p">,</span> <span class="n">statistic</span>
+<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">ASR</span><span class="p">,</span> <span class="n">TTS</span><span class="p">,</span> <span class="n">NLU</span><span class="p">,</span> <span class="n">AI</span><span class="p">,</span> <span class="n">Player</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">constants</span><span class="p">,</span> <span class="n">utils</span><span class="p">,</span> <span class="n">statistic</span>
 <span class="kn">from</span> <span class="nn">robot.Brain</span> <span class="k">import</span> <span class="n">Brain</span>
 <span class="kn">from</span> <span class="nn">snowboy</span> <span class="k">import</span> <span class="n">snowboydecoder</span>
 <span class="kn">import</span> <span class="nn">time</span> 
@@ -160,6 +160,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># 沉浸模式，处于这个模式下，被打断后将自动恢复这个技能</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">immersiveMode</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">isRecording</span> <span class="o">=</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="Conversation.getHistory"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.getHistory">[文档]</a>    <span class="k">def</span> <span class="nf">getHistory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span></div>
@@ -175,6 +176,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">asr</span> <span class="o">=</span> <span class="n">ASR</span><span class="o">.</span><span class="n">get_engine_by_slug</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;asr_engine&#39;</span><span class="p">,</span> <span class="s1">&#39;tencent-asr&#39;</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ai</span> <span class="o">=</span> <span class="n">AI</span><span class="o">.</span><span class="n">get_robot_by_slug</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;robot&#39;</span><span class="p">,</span> <span class="s1">&#39;tuling&#39;</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tts</span> <span class="o">=</span> <span class="n">TTS</span><span class="o">.</span><span class="n">get_engine_by_slug</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tts_engine&#39;</span><span class="p">,</span> <span class="s1">&#39;baidu-tts&#39;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nlu</span> <span class="o">=</span> <span class="n">NLU</span><span class="o">.</span><span class="n">get_engine_by_slug</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;nlu_engine&#39;</span><span class="p">,</span> <span class="s1">&#39;unit&#39;</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">player</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">brain</span> <span class="o">=</span> <span class="n">Brain</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="o">.</span><span class="n">printPlugins</span><span class="p">()</span>
@@ -194,6 +196,9 @@
             <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ai</span><span class="o">.</span><span class="n">chat</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">onCompleted</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">checkRestore</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Conversation.doParse"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.doParse">[文档]</a>    <span class="k">def</span> <span class="nf">doParse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlu</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Conversation.setImmersiveMode"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.setImmersiveMode">[文档]</a>    <span class="k">def</span> <span class="nf">setImmersiveMode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slug</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">immersiveMode</span> <span class="o">=</span> <span class="n">slug</span></div>
 
@@ -203,6 +208,8 @@
 <div class="viewcode-block" id="Conversation.converse"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.converse">[文档]</a>    <span class="k">def</span> <span class="nf">converse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; 核心对话逻辑 &quot;&quot;&quot;</span>
         <span class="n">Player</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getData</span><span class="p">(</span><span class="s1">&#39;beep_lo.wav&#39;</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;结束录音&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">isRecording</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">doConverse</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Conversation.doConverse"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.doConverse">[文档]</a>    <span class="k">def</span> <span class="nf">doConverse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>

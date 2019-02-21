@@ -150,42 +150,26 @@
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">config</span>
-<span class="kn">from</span> <span class="nn">robot.sdk</span> <span class="k">import</span> <span class="n">unit</span>
+<span class="kn">from</span> <span class="nn">robot.sdk.AbstractPlugin</span> <span class="k">import</span> <span class="n">AbstractPlugin</span>
 
-<span class="n">SLUG</span> <span class="o">=</span> <span class="s2">&quot;poem&quot;</span>
 <span class="n">INTENT</span> <span class="o">=</span> <span class="s2">&quot;BUILT_POEM&quot;</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
+<div class="viewcode-block" id="Plugin"><a class="viewcode-back" href="../../plugins.html#plugins.Poem.Plugin">[文档]</a><span class="k">class</span> <span class="nc">Plugin</span><span class="p">(</span><span class="n">AbstractPlugin</span><span class="p">):</span>
 
-<div class="viewcode-block" id="handle"><a class="viewcode-back" href="../../plugins.html#plugins.Poem.handle">[文档]</a><span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">mic</span><span class="p">,</span> <span class="n">parsed</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Responds to user-input, typically speech text</span>
+    <span class="n">SLUG</span> <span class="o">=</span> <span class="s2">&quot;poem&quot;</span>
 
-<span class="sd">    Arguments:</span>
-<span class="sd">        text -- user-input, typically transcribed speech</span>
-<span class="sd">        mic -- used to interact with the user (for both input and output)        </span>
-<span class="sd">        parsed -- NLU structure parsed by Baidu UNIT</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Plugin.handle"><a class="viewcode-back" href="../../plugins.html#plugins.Poem.Plugin.handle">[文档]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">parsed</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">responds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlu</span><span class="o">.</span><span class="n">getSay</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">INTENT</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">responds</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;抱歉，写诗插件出问题了，请稍后再试&#39;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">responds</span> <span class="o">=</span> <span class="n">unit</span><span class="o">.</span><span class="n">getSay</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">INTENT</span><span class="p">)</span>
-        <span class="n">mic</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">responds</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plugin</span><span class="o">=</span><span class="vm">__name__</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-        <span class="n">mic</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;抱歉，写诗插件出问题了，请稍后再试&#39;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plugin</span><span class="o">=</span><span class="vm">__name__</span><span class="p">)</span></div>
-        
-
-<div class="viewcode-block" id="isValid"><a class="viewcode-back" href="../../plugins.html#plugins.Poem.isValid">[文档]</a><span class="k">def</span> <span class="nf">isValid</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">parsed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">immersiveMode</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns True if the input is related to weather.</span>
-
-<span class="sd">        Arguments:</span>
-<span class="sd">        text -- user-input, typically transcribed speech</span>
-<span class="sd">        parsed -- NLU structure parsed by Baidu UNIT</span>
-<span class="sd">        immersiveMode -- current immersive mode</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">unit</span><span class="o">.</span><span class="n">hasIntent</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">INTENT</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;写&#39;</span> <span class="ow">in</span> <span class="n">text</span> <span class="ow">and</span> <span class="s1">&#39;诗&#39;</span> <span class="ow">in</span> <span class="n">text</span></div>
+<div class="viewcode-block" id="Plugin.isValid"><a class="viewcode-back" href="../../plugins.html#plugins.Poem.Plugin.isValid">[文档]</a>    <span class="k">def</span> <span class="nf">isValid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">parsed</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlu</span><span class="o">.</span><span class="n">hasIntent</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">INTENT</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;写&#39;</span> <span class="ow">in</span> <span class="n">text</span> <span class="ow">and</span> <span class="s1">&#39;诗&#39;</span> <span class="ow">in</span> <span class="n">text</span></div></div>
         
         
 </pre></div>

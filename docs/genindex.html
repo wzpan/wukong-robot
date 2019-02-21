@@ -175,6 +175,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="robot.html#robot.ASR.AbstractASR">AbstractASR (robot.ASR 中的类)</a>
 </li>
+      <li><a href="robot.html#robot.NLU.AbstractNLU">AbstractNLU (robot.NLU 中的类)</a>
+</li>
       <li><a href="robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin">AbstractPlugin (robot.sdk.AbstractPlugin 中的类)</a>
 </li>
       <li><a href="robot.html#robot.AI.AbstractRobot">AbstractRobot (robot.AI 中的类)</a>
@@ -273,6 +275,8 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="robot.html#robot.Conversation.Conversation.doParse">doParse() (robot.Conversation.Conversation 方法)</a>
+</li>
       <li><a href="robot.html#robot.Conversation.Conversation.doResponse">doResponse() (robot.Conversation.Conversation 方法)</a>
 </li>
       <li><a href="robot.html#robot.config.dump">dump() (在 robot.config 模块中)</a>
@@ -344,6 +348,10 @@
 </li>
         <li><a href="robot.html#robot.ASR.XunfeiASR.get_config">(robot.ASR.XunfeiASR 类方法)</a>
 </li>
+        <li><a href="robot.html#robot.NLU.AbstractNLU.get_config">(robot.NLU.AbstractNLU 类方法)</a>
+</li>
+        <li><a href="robot.html#robot.NLU.UnitNLU.get_config">(robot.NLU.UnitNLU 类方法)</a>
+</li>
         <li><a href="robot.html#robot.TTS.AbstractTTS.get_config">(robot.TTS.AbstractTTS 类方法)</a>
 </li>
         <li><a href="robot.html#robot.TTS.AliTTS.get_config">(robot.TTS.AliTTS 类方法)</a>
@@ -362,12 +370,16 @@
       <li><a href="robot.html#robot.ASR.get_engine_by_slug">get_engine_by_slug() (在 robot.ASR 模块中)</a>
 
       <ul>
+        <li><a href="robot.html#robot.NLU.get_engine_by_slug">(在 robot.NLU 模块中)</a>
+</li>
         <li><a href="robot.html#robot.TTS.get_engine_by_slug">(在 robot.TTS 模块中)</a>
 </li>
       </ul></li>
       <li><a href="robot.html#robot.ASR.get_engines">get_engines() (在 robot.ASR 模块中)</a>
 
       <ul>
+        <li><a href="robot.html#robot.NLU.get_engines">(在 robot.NLU 模块中)</a>
+</li>
         <li><a href="robot.html#robot.TTS.get_engines">(在 robot.TTS 模块中)</a>
 </li>
       </ul></li>
@@ -377,6 +389,8 @@
 
       <ul>
         <li><a href="robot.html#robot.ASR.AbstractASR.get_instance">(robot.ASR.AbstractASR 类方法)</a>
+</li>
+        <li><a href="robot.html#robot.NLU.AbstractNLU.get_instance">(robot.NLU.AbstractNLU 类方法)</a>
 </li>
         <li><a href="robot.html#robot.TTS.AbstractTTS.get_instance">(robot.TTS.AbstractTTS 类方法)</a>
 </li>
@@ -439,22 +453,48 @@
 </li>
       <li><a href="robot.html#robot.Conversation.Conversation.getImmersiveMode">getImmersiveMode() (robot.Conversation.Conversation 方法)</a>
 </li>
-      <li><a href="robot.sdk.html#robot.sdk.unit.getIntent">getIntent() (在 robot.sdk.unit 模块中)</a>
+      <li><a href="robot.html#robot.NLU.AbstractNLU.getIntent">getIntent() (robot.NLU.AbstractNLU 方法)</a>
+
+      <ul>
+        <li><a href="robot.html#robot.NLU.UnitNLU.getIntent">(robot.NLU.UnitNLU 方法)</a>
 </li>
+        <li><a href="robot.sdk.html#robot.sdk.unit.getIntent">(在 robot.sdk.unit 模块中)</a>
+</li>
+      </ul></li>
       <li><a href="robot.html#robot.logging.getLogger">getLogger() (在 robot.logging 模块中)</a>
 </li>
       <li><a href="plugins.html#plugins.Email.Plugin.getMostRecentDate">getMostRecentDate() (plugins.Email.Plugin 方法)</a>
 </li>
       <li><a href="robot.html#robot.Player.getPlayerByFileName">getPlayerByFileName() (在 robot.Player 模块中)</a>
 </li>
-      <li><a href="robot.sdk.html#robot.sdk.unit.getSay">getSay() (在 robot.sdk.unit 模块中)</a>
+      <li><a href="robot.html#robot.NLU.AbstractNLU.getSay">getSay() (robot.NLU.AbstractNLU 方法)</a>
+
+      <ul>
+        <li><a href="robot.html#robot.NLU.UnitNLU.getSay">(robot.NLU.UnitNLU 方法)</a>
 </li>
+        <li><a href="robot.sdk.html#robot.sdk.unit.getSay">(在 robot.sdk.unit 模块中)</a>
+</li>
+      </ul></li>
       <li><a href="plugins.html#plugins.Email.Plugin.getSender">getSender() (plugins.Email.Plugin 方法)</a>
 </li>
       <li><a href="snowboy.html#snowboy.snowboydetect.SnowboyDetect.GetSensitivity">GetSensitivity() (snowboy.snowboydetect.SnowboyDetect 方法)</a>
 </li>
-      <li><a href="robot.sdk.html#robot.sdk.unit.getSlots">getSlots() (在 robot.sdk.unit 模块中)</a>
+      <li><a href="robot.html#robot.NLU.AbstractNLU.getSlots">getSlots() (robot.NLU.AbstractNLU 方法)</a>
+
+      <ul>
+        <li><a href="robot.html#robot.NLU.UnitNLU.getSlots">(robot.NLU.UnitNLU 方法)</a>
 </li>
+        <li><a href="robot.sdk.html#robot.sdk.unit.getSlots">(在 robot.sdk.unit 模块中)</a>
+</li>
+      </ul></li>
+      <li><a href="robot.html#robot.NLU.AbstractNLU.getSlotWord">getSlotWord() (robot.NLU.AbstractNLU 方法)</a>
+</li>
+      <li><a href="robot.html#robot.NLU.UnitNLU.getSlotWords">getSlotWords() (robot.NLU.UnitNLU 方法)</a>
+
+      <ul>
+        <li><a href="robot.sdk.html#robot.sdk.unit.getSlotWords">(在 robot.sdk.unit 模块中)</a>
+</li>
+      </ul></li>
       <li><a href="plugins.html#plugins.Email.Plugin.getSubject">getSubject() (plugins.Email.Plugin 方法)</a>
 </li>
       <li><a href="robot.html#robot.config.getText">getText() (在 robot.config 模块中)</a>
@@ -478,9 +518,11 @@
 </li>
         <li><a href="plugins.html#plugins.Email.Plugin.handle">(plugins.Email.Plugin 方法)</a>
 </li>
-        <li><a href="robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin.handle">(robot.sdk.AbstractPlugin.AbstractPlugin 方法)</a>
+        <li><a href="plugins.html#plugins.LocalPlayer.Plugin.handle">(plugins.LocalPlayer.Plugin 方法)</a>
 </li>
-        <li><a href="plugins.html#plugins.Poem.handle">(在 plugins.Poem 模块中)</a>
+        <li><a href="plugins.html#plugins.Poem.Plugin.handle">(plugins.Poem.Plugin 方法)</a>
+</li>
+        <li><a href="robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin.handle">(robot.sdk.AbstractPlugin.AbstractPlugin 方法)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -489,8 +531,14 @@
 </li>
       <li><a href="robot.html#robot.config.has_path">has_path() (在 robot.config 模块中)</a>
 </li>
-      <li><a href="robot.sdk.html#robot.sdk.unit.hasIntent">hasIntent() (在 robot.sdk.unit 模块中)</a>
+      <li><a href="robot.html#robot.NLU.AbstractNLU.hasIntent">hasIntent() (robot.NLU.AbstractNLU 方法)</a>
+
+      <ul>
+        <li><a href="robot.html#robot.NLU.UnitNLU.hasIntent">(robot.NLU.UnitNLU 方法)</a>
 </li>
+        <li><a href="robot.sdk.html#robot.sdk.unit.hasIntent">(在 robot.sdk.unit 模块中)</a>
+</li>
+      </ul></li>
       <li><a href="snowboy.html#snowboy.snowboydecoder.HotwordDetector">HotwordDetector (snowboy.snowboydecoder 中的类)</a>
 </li>
   </ul></td>
@@ -511,8 +559,12 @@
 </li>
       <li><a href="robot.html#robot.Conversation.Conversation.interrupt">interrupt() (robot.Conversation.Conversation 方法)</a>
 </li>
-      <li><a href="robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin.IS_IMMERSIVE">IS_IMMERSIVE (robot.sdk.AbstractPlugin.AbstractPlugin 属性)</a>
+      <li><a href="plugins.html#plugins.LocalPlayer.Plugin.IS_IMMERSIVE">IS_IMMERSIVE (plugins.LocalPlayer.Plugin 属性)</a>
+
+      <ul>
+        <li><a href="robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin.IS_IMMERSIVE">(robot.sdk.AbstractPlugin.AbstractPlugin 属性)</a>
 </li>
+      </ul></li>
       <li><a href="robot.html#robot.Player.AbstractSoundPlayer.is_playing">is_playing() (robot.Player.AbstractSoundPlayer 方法)</a>
 
       <ul>
@@ -538,9 +590,11 @@
 </li>
         <li><a href="plugins.html#plugins.Email.Plugin.isValid">(plugins.Email.Plugin 方法)</a>
 </li>
-        <li><a href="robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin.isValid">(robot.sdk.AbstractPlugin.AbstractPlugin 方法)</a>
+        <li><a href="plugins.html#plugins.LocalPlayer.Plugin.isValid">(plugins.LocalPlayer.Plugin 方法)</a>
 </li>
-        <li><a href="plugins.html#plugins.Poem.isValid">(在 plugins.Poem 模块中)</a>
+        <li><a href="plugins.html#plugins.Poem.Plugin.isValid">(plugins.Poem.Plugin 方法)</a>
+</li>
+        <li><a href="robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin.isValid">(robot.sdk.AbstractPlugin.AbstractPlugin 方法)</a>
 </li>
       </ul></li>
       <li><a href="robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin.isValidImmersive">isValidImmersive() (robot.sdk.AbstractPlugin.AbstractPlugin 方法)</a>
@@ -603,6 +657,12 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="robot.html#robot.NLU.AbstractNLU.parse">parse() (robot.NLU.AbstractNLU 方法)</a>
+
+      <ul>
+        <li><a href="robot.html#robot.NLU.UnitNLU.parse">(robot.NLU.UnitNLU 方法)</a>
+</li>
+      </ul></li>
       <li><a href="robot.html#robot.Conversation.Conversation.play">play() (robot.Conversation.Conversation 方法)</a>
 
       <ul>
@@ -634,6 +694,10 @@
 </li>
         <li><a href="plugins.html#plugins.Email.Plugin">(plugins.Email 中的类)</a>
 </li>
+        <li><a href="plugins.html#plugins.LocalPlayer.Plugin">(plugins.LocalPlayer 中的类)</a>
+</li>
+        <li><a href="plugins.html#plugins.Poem.Plugin">(plugins.Poem 中的类)</a>
+</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -644,6 +708,8 @@
       <li><a href="plugins.html#module-plugins.CleanCache">plugins.CleanCache (模块)</a>
 </li>
       <li><a href="plugins.html#module-plugins.Email">plugins.Email (模块)</a>
+</li>
+      <li><a href="plugins.html#module-plugins.LocalPlayer">plugins.LocalPlayer (模块)</a>
 </li>
       <li><a href="plugins.html#module-plugins.Poem">plugins.Poem (模块)</a>
 </li>
@@ -723,13 +789,15 @@
 </li>
       <li><a href="robot.html#module-robot.ConfigMonitor">robot.ConfigMonitor (模块)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="robot.html#module-robot.constants">robot.constants (模块)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="robot.html#module-robot.Conversation">robot.Conversation (模块)</a>
 </li>
       <li><a href="robot.html#module-robot.logging">robot.logging (模块)</a>
+</li>
+      <li><a href="robot.html#module-robot.NLU">robot.NLU (模块)</a>
 </li>
       <li><a href="robot.html#module-robot.Player">robot.Player (模块)</a>
 </li>
@@ -828,6 +896,8 @@
 </li>
         <li><a href="plugins.html#plugins.Email.Plugin.SLUG">(plugins.Email.Plugin 属性)</a>
 </li>
+        <li><a href="plugins.html#plugins.Poem.Plugin.SLUG">(plugins.Poem.Plugin 属性)</a>
+</li>
         <li><a href="robot.html#robot.AI.Emotibot.SLUG">(robot.AI.Emotibot 属性)</a>
 </li>
         <li><a href="robot.html#robot.AI.TulingRobot.SLUG">(robot.AI.TulingRobot 属性)</a>
@@ -839,6 +909,8 @@
         <li><a href="robot.html#robot.ASR.TencentASR.SLUG">(robot.ASR.TencentASR 属性)</a>
 </li>
         <li><a href="robot.html#robot.ASR.XunfeiASR.SLUG">(robot.ASR.XunfeiASR 属性)</a>
+</li>
+        <li><a href="robot.html#robot.NLU.UnitNLU.SLUG">(robot.NLU.UnitNLU 属性)</a>
 </li>
         <li><a href="robot.html#robot.Player.SoxPlayer.SLUG">(robot.Player.SoxPlayer 属性)</a>
 </li>
@@ -932,6 +1004,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="robot.html#robot.Brain.Brain.understand">understand() (robot.Brain.Brain 方法)</a>
+</li>
+      <li><a href="robot.html#robot.NLU.UnitNLU">UnitNLU (robot.NLU 中的类)</a>
 </li>
       <li><a href="robot.html#robot.Updater.Updater.update">update() (robot.Updater.Updater 方法)</a>
 

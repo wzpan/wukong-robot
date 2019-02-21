@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>robot.statistic &mdash; wukong-robot 1.2.0 文档</title>
+  <title>plugins.LocalPlayer &mdash; wukong-robot 1.2.0 文档</title>
   
 
   
@@ -126,7 +126,7 @@
         
           <li><a href="../index.html">模块代码</a> &raquo;</li>
         
-      <li>robot.statistic</li>
+      <li>plugins.LocalPlayer</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -141,29 +141,28 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>robot.statistic 源代码</h1><div class="highlight"><pre>
+  <h1>plugins.LocalPlayer 源代码</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8-*-</span>
+<span class="c1"># 本地音乐播放器插件</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">config</span>
-<span class="kn">import</span> <span class="nn">uuid</span>
-<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">constants</span><span class="p">,</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">robot.sdk.AbstractPlugin</span> <span class="k">import</span> <span class="n">AbstractPlugin</span>
 
+<div class="viewcode-block" id="Plugin"><a class="viewcode-back" href="../../plugins.html#plugins.LocalPlayer.Plugin">[文档]</a><span class="k">class</span> <span class="nc">Plugin</span><span class="p">(</span><span class="n">AbstractPlugin</span><span class="p">):</span>
 
-<div class="viewcode-block" id="getUUID"><a class="viewcode-back" href="../../robot.html#robot.statistic.getUUID">[文档]</a><span class="k">def</span> <span class="nf">getUUID</span><span class="p">():</span>
-    <span class="n">mac</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">(</span><span class="nb">int</span><span class="o">=</span><span class="n">uuid</span><span class="o">.</span><span class="n">getnode</span><span class="p">())</span><span class="o">.</span><span class="n">hex</span><span class="p">[</span><span class="o">-</span><span class="mi">12</span><span class="p">:]</span>
-    <span class="k">return</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">mac</span><span class="p">[</span><span class="n">e</span><span class="p">:</span><span class="n">e</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">2</span><span class="p">)])</span></div>
+    <span class="n">IS_IMMERSIVE</span> <span class="o">=</span> <span class="kc">True</span>
 
+<div class="viewcode-block" id="Plugin.handle"><a class="viewcode-back" href="../../plugins.html#plugins.LocalPlayer.Plugin.handle">[文档]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">parsed</span><span class="p">):</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">TEMP_PATH</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">temp</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">f</span> <span class="o">!=</span> <span class="s1">&#39;DIR&#39;</span><span class="p">:</span>
+                <span class="n">utils</span><span class="o">.</span><span class="n">check_and_delete</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;缓存目录已清空&#39;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="report"><a class="viewcode-back" href="../../robot.html#robot.statistic.report">[文档]</a><span class="k">def</span> <span class="nf">report</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
-    <span class="n">to_report</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;statistic&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">to_report</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">persona</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;robot_name_cn&quot;</span><span class="p">,</span> <span class="s1">&#39;孙悟空&#39;</span><span class="p">)</span>
-            <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;http://livecv.hahack.com:8022/statistic&#39;</span>
-            <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="s1">&#39;uuid&#39;</span><span class="p">:</span> <span class="n">getUUID</span><span class="p">(),</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">persona</span><span class="p">,</span> <span class="s1">&#39;project&#39;</span><span class="p">:</span> <span class="s1">&#39;wukong&#39;</span><span class="p">}</span>
-            <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="k">return</span></div>
+<div class="viewcode-block" id="Plugin.isValid"><a class="viewcode-back" href="../../plugins.html#plugins.LocalPlayer.Plugin.isValid">[文档]</a>    <span class="k">def</span> <span class="nf">isValid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">parsed</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;本地音乐&#39;</span> <span class="ow">in</span> <span class="n">text</span></div></div>
 </pre></div>
 
            </div>

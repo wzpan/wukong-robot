@@ -235,7 +235,7 @@
             <span class="c1"># send to user</span>
             <span class="k">if</span> <span class="n">send_to_user</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">sound</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;拍照成功！正在发送照片到您的邮箱&#39;</span> <span class="o">%</span> <span class="n">target</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;拍照成功！正在发送照片到您的邮箱&#39;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">emailUser</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;这是刚刚为您拍摄的照片&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">dest_file</span><span class="p">]):</span>
                     <span class="k">if</span> <span class="n">sound</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;发送成功&#39;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>

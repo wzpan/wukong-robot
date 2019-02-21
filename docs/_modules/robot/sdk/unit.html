@@ -148,6 +148,7 @@
 <span class="kn">import</span> <span class="nn">uuid</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">dateutil</span> <span class="k">import</span> <span class="n">parser</span> <span class="k">as</span> <span class="n">dparser</span>
 <span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">constants</span><span class="p">,</span> <span class="n">logging</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -261,6 +262,22 @@
                 <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;schema&#39;</span><span class="p">][</span><span class="s1">&#39;slots&#39;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="getSlotWords"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.unit.getSlotWords">[文档]</a><span class="k">def</span> <span class="nf">getSlotWords</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    找出命中某个词槽的内容</span>
+<span class="sd">    </span>
+<span class="sd">    :param parsed: UNIT 解析结果</span>
+<span class="sd">    :param intent: 意图的名称</span>
+<span class="sd">    :param name: 词槽名</span>
+<span class="sd">    :returns: 命中该词槽的值的列表。</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">slots</span> <span class="o">=</span> <span class="n">getSlots</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="p">)</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="n">slots</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">slot</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">slot</span><span class="p">[</span><span class="s1">&#39;normalized_word&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">words</span></div>
 
 <div class="viewcode-block" id="getSay"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.unit.getSay">[文档]</a><span class="k">def</span> <span class="nf">getSay</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>

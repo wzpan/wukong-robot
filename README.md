@@ -59,7 +59,7 @@
 wukong-robot 的工作模式：
 
 <p align="center">
-  <img src="http://hahack-1253537070.file.myqcloud.com/images/wukong-docs/wukong-robot.png" alt="wukong-robot 的工作模式">
+  <img src="http://hahack-1253537070.file.myqcloud.com/images/wukong-docs/wukong-robot-flow.png" alt="wukong-robot 的工作模式">
 </p>
 
 wukong-robot 被唤醒后，用户的语音指令先经过 ASR 引擎进行 ASR 识别成文本，然后对识别到的文本进行 NLU 解析，再将解析结果进行技能匹配，交给适合处理该指令的技能插件去处理。插件处理完成后，得到的结果再交给 TTS 引擎合成成语音，播放给用户。

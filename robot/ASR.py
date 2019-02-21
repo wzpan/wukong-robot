@@ -216,7 +216,7 @@ def get_engine_by_slug(slug=None):
         if len(selected_engines) > 1:
             logger.warning("注意: 有多个 ASR 名称与指定的引擎名 {} 匹配").format(slug)        
         engine = selected_engines[0]
-        logger.info("使用 {} ASR引擎".format(engine.SLUG))
+        logger.info("使用 {} ASR 引擎".format(engine.SLUG))
         return engine.get_instance()
 
 

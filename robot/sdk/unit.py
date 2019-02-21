@@ -1,10 +1,10 @@
 # encoding:utf-8
-import datetime
 import urllib
 import requests
 import uuid
 import json
 import os
+from dateutil import parser as dparser
 from robot import constants, logging
 
 logger = logging.getLogger(__name__)
@@ -118,6 +118,22 @@ def getSlots(parsed, intent=''):
                 return response['schema']['slots']
     else:
         return []
+
+def getSlotWords(parsed, intent, name):
+    """ 
+    找出命中某个词槽的内容
+    
+    :param parsed: UNIT 解析结果
+    :param intent: 意图的名称
+    :param name: 词槽名
+    :returns: 命中该词槽的值的列表。
+    """
+    slots = getSlots(parsed, intent)
+    words = []
+    for slot in slots:
+        if slot['name'] == name:
+            words.append(slot['normalized_word'])
+    return words
 
 def getSay(parsed, intent=''):
     """

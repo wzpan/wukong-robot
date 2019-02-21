@@ -28,6 +28,14 @@ plugins.Email module
     :undoc-members:
     :show-inheritance:
 
+plugins.LocalPlayer module
+--------------------------
+
+.. automodule:: plugins.LocalPlayer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 plugins.Poem module
 -------------------
 

@@ -1,7 +1,0 @@
-Conversation module
-===================
-
-.. automodule:: Conversation
-    :members:
-    :undoc-members:
-    :show-inheritance:

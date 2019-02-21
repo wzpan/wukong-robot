@@ -95,6 +95,11 @@ tencent_yuyin:
     voiceType: 0            # 0: 女声1；1：男生1；2：男生2
     language: 1             # 1: 中文；2：英文
 
+# NLU 引擎
+# 可选值：
+# unit      - 百度 UNIT
+nlu_engine: unit
+
 # 聊天机器人
 # 可选值：
 # tuling    - 图灵机器人

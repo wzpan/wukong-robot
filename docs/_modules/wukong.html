@@ -160,6 +160,9 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">fire</span>
 
+<span class="kn">import</span> <span class="nn">urllib3</span>
+<span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">urllib3</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
+
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Wukong"><a class="viewcode-back" href="../wukong.html#wukong.Wukong">[文档]</a><span class="k">class</span> <span class="nc">Wukong</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -197,8 +200,13 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">utils</span><span class="o">.</span><span class="n">is_proper_time</span><span class="p">():</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;勿扰模式开启中&#39;</span><span class="p">)</span>
             <span class="k">return</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conversation</span><span class="o">.</span><span class="n">isRecording</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;正在录音中，跳过&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
         <span class="n">Player</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getData</span><span class="p">(</span><span class="s1">&#39;beep_hi.wav&#39;</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_conversation</span><span class="o">.</span><span class="n">interrupt</span><span class="p">()</span>    
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;开始录音&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conversation</span><span class="o">.</span><span class="n">interrupt</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conversation</span><span class="o">.</span><span class="n">isRecording</span> <span class="o">=</span> <span class="kc">True</span><span class="p">;</span>
 
     <span class="k">def</span> <span class="nf">_do_not_bother_on_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">utils</span><span class="o">.</span><span class="n">do_not_bother</span> <span class="o">=</span> <span class="kc">True</span>
@@ -215,10 +223,10 @@
 
 <div class="viewcode-block" id="Wukong.run"><a class="viewcode-back" href="../wukong.html#wukong.Wukong.run">[文档]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
-        
+
         <span class="c1"># capture SIGINT signal, e.g., Ctrl+C</span>
         <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGINT</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_signal_handler</span><span class="p">)</span>
-        
+
         <span class="c1"># site</span>
         <span class="n">server</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_conversation</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 

@@ -6,7 +6,6 @@ Subpackages
 
 .. toctree::
 
-    robot.drivers
     robot.sdk
 
 Submodules
@@ -48,6 +47,14 @@ robot.Conversation module
 -------------------------
 
 .. automodule:: robot.Conversation
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+robot.NLU module
+----------------
+
+.. automodule:: robot.NLU
     :members:
     :undoc-members:
     :show-inheritance:

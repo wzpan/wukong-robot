@@ -13,6 +13,7 @@ class AbstractPlugin(metaclass=ABCMeta):
             self.isImmersive = False
         self.priority = 0
         self.con = con
+        self.nlu = self.con.nlu
 
     def play(self, src, delete=False, onCompleted=None):
         self.con.play(src, delete, onCompleted)
