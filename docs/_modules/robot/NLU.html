@@ -169,26 +169,68 @@
 
 <div class="viewcode-block" id="AbstractNLU.parse"><a class="viewcode-back" href="../../robot.html#robot.NLU.AbstractNLU.parse">[文档]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
-        <span class="k">return</span> <span class="kc">None</span>        </div>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        进行 NLU 解析</span>
+
+<span class="sd">        :param query: 用户的指令字符串</span>
+<span class="sd">        :param **args: 可选的参数</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="AbstractNLU.getIntent"><a class="viewcode-back" href="../../robot.html#robot.NLU.AbstractNLU.getIntent">[文档]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">getIntent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        提取意图</span>
+
+<span class="sd">        :param parsed: 解析结果</span>
+<span class="sd">        :returns: 意图数组</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="AbstractNLU.hasIntent"><a class="viewcode-back" href="../../robot.html#robot.NLU.AbstractNLU.hasIntent">[文档]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">hasIntent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        判断是否包含某个意图</span>
+
+<span class="sd">        :param parsed: 解析结果</span>
+<span class="sd">        :param intent: 意图的名称</span>
+<span class="sd">        :returns: True: 包含; False: 不包含</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="AbstractNLU.getSlots"><a class="viewcode-back" href="../../robot.html#robot.NLU.AbstractNLU.getSlots">[文档]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">getSlots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        提取某个意图的所有词槽</span>
+<span class="sd">    </span>
+<span class="sd">        :param parsed: 解析结果</span>
+<span class="sd">        :param intent: 意图的名称</span>
+<span class="sd">        :returns: 词槽列表。你可以通过 name 属性筛选词槽，</span>
+<span class="sd">        再通过 normalized_word 属性取出相应的值</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="AbstractNLU.getSlotWord"><a class="viewcode-back" href="../../robot.html#robot.NLU.AbstractNLU.getSlotWord">[文档]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">getSlotWord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractNLU.getSlotWords"><a class="viewcode-back" href="../../robot.html#robot.NLU.AbstractNLU.getSlotWords">[文档]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">getSlotWords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        找出命中某个词槽的内容</span>
+<span class="sd">    </span>
+<span class="sd">        :param parsed: 解析结果</span>
+<span class="sd">        :param intent: 意图的名称</span>
+<span class="sd">        :param name: 词槽名</span>
+<span class="sd">        :returns: 命中该词槽的值的列表。</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="AbstractNLU.getSay"><a class="viewcode-back" href="../../robot.html#robot.NLU.AbstractNLU.getSay">[文档]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">getSay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        提取回复文本</span>
+
+<span class="sd">        :param parsed: 解析结果</span>
+<span class="sd">        :param intent: 意图的名称</span>
+<span class="sd">        :returns: 回复文本</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;&quot;</span></div></div>
 
 
