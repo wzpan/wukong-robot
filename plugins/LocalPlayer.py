@@ -5,7 +5,7 @@ from robot.sdk.AbstractPlugin import AbstractPlugin
 
 logger = logging.getLogger(__name__)
 
-class MusicPlayer():
+class MusicPlayer(object):
 
     def __init__(self, playlist, plugin):
         super(MusicPlayer, self).__init__()
@@ -72,7 +72,7 @@ class Plugin(AbstractPlugin):
     def handle(self, text, parsed):
         if not self.player:
             self.player = self.init_music_player()
-        if self.nlu.hasIntent(parsed, 'MUSICRANK') or any(word in text for word in [u"百度音乐", u"百度电台"]):
+        if self.nlu.hasIntent(parsed, 'MUSICRANK'):
             self.player.play()
         elif self.nlu.hasIntent(parsed, 'CHANGE_TO_NEXT'):
             self.say('下一首歌')
