@@ -36,10 +36,15 @@
   <p class="lead">wukong-robot 是一个简单灵活的中文语音对话机器人。</p>
   <hr class="my-4">
   <p><i class="fas fa-info-circle"></i> 本站点是 wukong-robot 的后台管理端，仅供远程交互，不支持离线唤醒。</p>
+  {% if notices %}
+    {% for notice in notices %}
+      <p><i class="fas fa-bell"></i> {% raw notice %}</p>
+    {% end %}
+  {% end %}
 </div>
 
 <div class="container">
-{% if update_info and update_info != {} %}
+{% if update_info and 'main' in update_info or 'contrib' in update_info %}
 <div class="alert update-alert alert-success alert-dismissible fade show" role="alert">
   有新的更新可用，<a href="#" id="check-update" data-toggle="modal" data-target="#updateModal">快看看吧</a> 。
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">

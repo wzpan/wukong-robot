@@ -133,10 +133,10 @@ class Conversation(object):
         utils.check_and_delete(voice)
         return query
 
-    def play(self, src, delete=False, onCompleted=None):
+    def play(self, src, delete=False, onCompleted=None, volume=1):
         """ 播放一个音频 """
         if self.player:
             self.interrupt()
         self.player = Player.SoxPlayer()
-        self.player.play(src, delete, onCompleted=onCompleted)
+        self.player.play(src, delete, onCompleted=onCompleted, volume=volume)
     

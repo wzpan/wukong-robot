@@ -55,7 +55,10 @@ class MainHandler(BaseHandler):
         if conversation:
             info = Updater.fetch()
             suggestion = random.choice(suggestions)
-            self.render('index.html', history=conversation.getHistory(), update_info=info, suggestion=suggestion)
+            notices = None
+            if 'notices' in info:
+                notices=info['notices']
+            self.render('index.html', history=conversation.getHistory(), update_info=info, suggestion=suggestion, notices=notices)
         else:
             self.render('index.html', history=[])
 

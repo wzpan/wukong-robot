@@ -15,14 +15,17 @@ class AbstractPlugin(metaclass=ABCMeta):
         self.con = con
         self.nlu = self.con.nlu
 
-    def play(self, src, delete=False, onCompleted=None):
-        self.con.play(src, delete, onCompleted)
+    def play(self, src, delete=False, onCompleted=None, volume=1):
+        self.con.play(src, delete, onCompleted, volume)
 
     def say(self, text, cache=False, onCompleted=None):
         self.con.say(text, cache=cache, plugin=self.SLUG, onCompleted=onCompleted)
 
     def activeListen(self):
         return self.con.activeListen()
+
+    def clearImmersive(self):
+        self.con.setImmersiveMode(None)
 
     @abstractmethod
     def isValid(self, query, parsed):

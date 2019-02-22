@@ -63,8 +63,8 @@ class Updater(object):
     def fetch(self):
         global URL
         now = datetime.now()
-        if (now - self.last_check).days <= 0:
-            logger.debug('当天已检查过更新，使用上次的检查结果：{}'.format(self.update_info))            
+        if (now - self.last_check).seconds <= 1800:
+            logger.debug('30 分钟内已检查过更新，使用上次的检查结果：{}'.format(self.update_info))            
             return self.update_info
         try:
             self.last_check = now
@@ -81,6 +81,8 @@ class Updater(object):
             if semver.compare(contrib_version, current_contrib_version) > 0:
                 logger.info('插件库检查到更新：{}'.format(info['contrib']))
                 self.update_info['contrib'] = info['contrib']
+            if 'notices' in info:
+                self.update_info['notices'] = info['notices']
             return self.update_info
         except Exception as e:
             logger.error("检查更新失败：", e)

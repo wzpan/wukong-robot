@@ -67,6 +67,9 @@ function upgrade() {
             if (res.code == 0) {
                 toastr.success('更新成功，3秒后将自动重启')
                 $('#updateModal').modal('hide')
+                setTimeout(()=>{
+                    location.reload();
+                }, 3000);
             } else {
                 toastr.error(res.message, '更新失败');
                 $('#updateModal').modal('hide')
@@ -92,7 +95,7 @@ $(function() {
     autoRefresh(5000);  // 每5秒轮询一次历史消息
 
     $('.CHAT').on('click', function(e) {
-        e.preventDefault();        
+        e.preventDefault();
         var uuid = 'chat' + guid();
         var query = $("input#query")[0].value;
         appendHistory(0, query, uuid);

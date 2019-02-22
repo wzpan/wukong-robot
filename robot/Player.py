@@ -71,9 +71,10 @@ class SoxPlayer(AbstractSoundPlayer):
         self.playing = False
         self.pipe = None
         self.delete = False
+        self.volume = 1
 
     def run(self):
-        cmd = ['play', str(self.src)]
+        cmd = ['play', '-v', str(self.volume), str(self.src)]
         logger.debug('Executing %s', ' '.join(cmd))
 
         with tempfile.TemporaryFile() as f:
@@ -90,11 +91,12 @@ class SoxPlayer(AbstractSoundPlayer):
         if self.onCompleted:
             self.onCompleted()
 
-    def play(self, src, delete=False, onCompleted=None):
-        self.src = src
-        self.start()
+    def play(self, src, delete=False, onCompleted=None, volume=1):
+        self.src = src        
         self.delete = delete
         self.onCompleted = onCompleted
+        self.volume = volume
+        self.start()
 
     def play_block(self):
         self.run()

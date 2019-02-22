@@ -142,6 +142,11 @@ camera:
     sound: true             # 是否有拍照音效
     usb_camera: false       # 是否是 USB 摄像头
 
+## 本地音乐插件
+
+LocalPlayer:
+    path: "/home/pi/musics"
+
 
 statistic: true # 是否开启上报
 
