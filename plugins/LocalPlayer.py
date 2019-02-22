@@ -33,8 +33,7 @@ class MusicPlayer(object):
         self.play()
 
     def stop(self):
-        logger.debug('MusicPlayer stop')
-        self.plugin.clearImmersive()  # 去掉沉浸式
+        logger.debug('MusicPlayer stop')        
 
     def turnUp(self):
         if self.volume < 0.2:
@@ -90,9 +89,10 @@ class Plugin(AbstractPlugin):
                 self.player.turnDown()
         elif self.nlu.hasIntent(parsed, 'CLOSE_MUSIC') or self.nlu.hasIntent(parsed, 'PAUSE'):
             self.player.stop()
+            self.clearImmersive()  # 去掉沉浸式
             self.say('退出播放')
         else:
-            self.say('没听懂你的意思呢，要退出播放，请说退出播放')
+            self.say('没听懂你的意思呢，要停止播放，请说停止播放')
             self.player.play()
 
     def restore(self):
