@@ -18,6 +18,7 @@ class Plugin(AbstractPlugin):
         quality = 100
         count_down = 3
         dest_path = os.path.expanduser('~/pictures')
+        device = '/dev/video0'
         vertical_flip = False
         horizontal_flip = False
         send_to_user = True
@@ -36,6 +37,9 @@ class Plugin(AbstractPlugin):
             if 'dest_path' in profile[self.SLUG] and \
                profile[self.SLUG]['dest_path'] != '':
                 dest_path = profile[self.SLUG]['dest_path']
+            if 'device' in profile[self.SLUG] and \
+               profile[self.SLUG]['device'] != '':
+                device = profile[self.SLUG]['device']
             if 'vertical_flip' in profile[self.SLUG] and \
                profile[self.SLUG]['vertical_flip']:
                 vertical_flip = True
@@ -61,7 +65,7 @@ class Plugin(AbstractPlugin):
                 return
             dest_file = os.path.join(dest_path, "%s.jpg" % time.time())
             if usb_camera:
-                command = "fswebcam --no-banner -r 1024x765 -q "
+                command = "fswebcam --no-banner -r 1024x765 -q -d %s" % (device)
                 if vertical_flip:
                     command = command+' -s v '
                 if horizontal_flip:
