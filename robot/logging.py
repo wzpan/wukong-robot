@@ -1,8 +1,8 @@
 import logging
 import sys
 import os
-from robot import config, constants
-from logging.handlers import RotatingFileHandler, HTTPHandler
+from robot import constants
+from logging.handlers import RotatingFileHandler
 
 PAGE = 4096
 

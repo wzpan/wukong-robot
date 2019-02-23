@@ -1,5 +1,4 @@
 import json
-from datetime import timedelta
 from robot import config, utils, logging, constants, Updater
 import base64
 import requests
@@ -17,9 +16,6 @@ import time
 import yaml
 import markdown
 import random
-import requests
-
-from tornado.websocket import WebSocketHandler
 
 logger = logging.getLogger(__name__)
 
@@ -83,7 +79,7 @@ class ChatHandler(BaseHandler):
                 # downsampling
                 soxCall = 'sox ' + tmpfile + \
                           ' ' + nfile + ' rate 16k'
-                p = subprocess.call([soxCall], shell=True, close_fds=True)
+                subprocess.call([soxCall], shell=True, close_fds=True)
                 utils.check_and_delete(tmpfile)
                 conversation.doConverse(nfile)
                 res = {'code': 0, 'message': 'ok'}
@@ -329,7 +325,6 @@ def start_server(con, wk):
     conversation = con
     wukong = wk
     if config.get('/server/enable', False):
-        host = config.get('/server/host', '0.0.0.0')
         port = config.get('/server/port', '5000')
         try:
             asyncio.set_event_loop(asyncio.new_event_loop())

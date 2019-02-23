@@ -7,9 +7,9 @@ from robot import utils, logging
 import time
 import wave
 import os
-from ctypes import *
+from ctypes import CFUNCTYPE, c_char_p, c_int, cdll
 from contextlib import contextmanager
-from robot import constants, Conversation
+from robot import constants
 
 
 logger = logging.getLogger("snowboy")

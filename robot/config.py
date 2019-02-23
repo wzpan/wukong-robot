@@ -17,6 +17,7 @@ def reload():
     init()
 
 def init():
+    global has_init
     if os.path.isfile(constants.CONFIG_PATH):
         logger.critical("错误：{} 应该是个目录，而不应该是个文件".format(constants.CONFIG_PATH))
     if not os.path.exists(constants.CONFIG_PATH):
@@ -106,6 +107,7 @@ def get(item='', default=None):
     :param default: 默认值（可选）
     :returns: 这个配置的值。如果没有该配置，则提供一个默认值
     """
+    global has_init
     if not has_init:
         init()
     if not item:

@@ -113,7 +113,7 @@ class Conversation(object):
                 if cache:
                     utils.saveCache(voice, msg)
             except Exception as e:
-                logger.error('保存缓存失败！')
+                logger.error('保存缓存失败：{}'.format(e))
         if onCompleted is None:
             onCompleted = lambda: self._onCompleted(msg)
         self.player = Player.SoxPlayer()

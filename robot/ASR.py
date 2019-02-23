@@ -5,8 +5,6 @@ from . import utils, config
 from robot import logging
 import requests
 import base64
-import urllib
-import hmac
 import hashlib
 import time
 import json
@@ -160,7 +158,7 @@ class XunfeiASR(AbstractASR):
         URL = "http://api.xfyun.cn/v1/service/v1/iat"
         r = requests.post(URL, headers=self.getHeader('raw', 'sms16k'), data=self.getBody(fp))
         res = json.loads(r.content.decode('utf-8'))
-        logger.info(res)
+        logger.debug(res)
         if 'code' in res and res['code'] == '0':
             logger.info('{} 语音识别到了：{}'.format(self.SLUG, res['data']))
             return res['data']

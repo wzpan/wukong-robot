@@ -3,7 +3,6 @@
 import os
 import tempfile
 import wave
-import struct
 import shutil
 import re
 import time
@@ -170,7 +169,7 @@ def convert_mp3_to_wav(mp3_path):
     if not os.path.exists(mp3_path):
         logger.critical("文件错误 {}".format(mp3_path))
         return None
-    voice = AudioSegment.from_mp3(mp3_path).export(target, format="wav")
+    AudioSegment.from_mp3(mp3_path).export(target, format="wav")
     return target        
 
 def clean():

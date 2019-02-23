@@ -3,7 +3,6 @@ from aip import AipSpeech
 from .sdk import TencentSpeech, AliSpeech
 from . import utils, config
 from robot import logging
-import tempfile
 import base64
 import time
 import requests
@@ -159,7 +158,6 @@ class XunfeiTTS(AbstractTTS):
         r = requests.post(URL, headers=self.getHeader('lame'), data=self.getBody(phrase))
         contentType = r.headers['Content-Type']
         if contentType == "audio/mpeg":
-            sid = r.headers['sid']
             tmpfile = utils.write_temp_file(r.content, '.mp3')
             logger.info('{} 语音合成成功，合成路径：{}'.format(self.SLUG, tmpfile))
             return tmpfile

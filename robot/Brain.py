@@ -1,7 +1,6 @@
 # -*- coding: utf-8-*-
 from robot import logging
 from . import plugin_loader
-from . import config
 
 logger = logging.getLogger(__name__)
 

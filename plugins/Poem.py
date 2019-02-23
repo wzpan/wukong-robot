@@ -3,9 +3,6 @@
 # 写诗
 
 import logging
-import requests
-import json
-from robot import config
 from robot.sdk.AbstractPlugin import AbstractPlugin
 
 INTENT = "BUILT_POEM"

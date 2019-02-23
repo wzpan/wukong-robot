@@ -1,7 +1,7 @@
 # -*- coding: utf-8-*-
 
 from robot import config
-from watchdog.events import *
+from watchdog.events import FileSystemEventHandler
 
 class ConfigMonitor(FileSystemEventHandler):
     def __init__(self, conversation):

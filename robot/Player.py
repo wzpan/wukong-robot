@@ -1,6 +1,5 @@
 # -*- coding: utf-8-*-
 import subprocess
-import time
 import tempfile
 import threading
 import os
@@ -8,7 +7,7 @@ import wave
 from . import utils
 import pyaudio
 from robot import logging
-from ctypes import *
+from ctypes import CFUNCTYPE, c_char_p, c_int, cdll
 from contextlib import contextmanager
 
 logger = logging.getLogger(__name__)

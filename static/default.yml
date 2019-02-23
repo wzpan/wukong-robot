@@ -143,9 +143,8 @@ camera:
     usb_camera: false       # 是否是 USB 摄像头
 
 ## 本地音乐插件
-
 LocalPlayer:
-    path: "/home/pi/musics"
+    path: "/Users/panweizhou/Music"  # 本地音乐存放路径
 
 
 statistic: true # 是否开启上报

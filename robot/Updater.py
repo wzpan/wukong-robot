@@ -86,7 +86,7 @@ class Updater(object):
             return self.update_info
         except Exception as e:
             logger.error("检查更新失败：", e)
-            res = {}
+            return {}
 
 def fetch():
     global _updater

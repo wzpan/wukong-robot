@@ -6,14 +6,10 @@ from robot.ConfigMonitor import ConfigMonitor
 from robot.Conversation import Conversation
 from server import server
 from watchdog.observers import Observer
-from subprocess import call
 import sys
 import os
 import signal
-import yaml
-import requests
 import hashlib
-import os
 import fire
 
 import urllib3

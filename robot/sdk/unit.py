@@ -1,6 +1,6 @@
 # encoding:utf-8
-import urllib
 import requests
+import datetime
 import uuid
 import json
 import os
@@ -62,7 +62,7 @@ def getUnit(query, service_id, api_key, secret_key):
         headers = {'Content-Type': 'application/json'}
         request = requests.post(url, json=body, headers=headers)
         return json.loads(request.text)
-    except Exception as e:
+    except Exception:
         return None
 
 

@@ -1,6 +1,5 @@
 # -*- coding: utf-8-*-
 from .sdk import unit
-from . import utils, config
 from robot import logging
 from abc import ABCMeta, abstractmethod
 

@@ -5,7 +5,6 @@ import urllib.parse
 import json
 from robot import utils
 from robot import logging
-import wave
 
 logger = logging.getLogger(__name__)
 
