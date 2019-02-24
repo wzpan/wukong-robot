@@ -122,6 +122,7 @@ class Wukong(object):
 
     def restart(self):
         logger.critical('程序重启...')
+        self.detector.terminate()
         python = sys.executable
         os.execl(python, python, * sys.argv)
 
