@@ -96,6 +96,7 @@ wukong-robot 支持运行在以下的设备和系统中：
 * 全系列的树莓派（Raspbian 系统）
 * Pine 64 with Debian Jessie 8.5（3.10.102）
 * Intel Edison with Ubilinux （Debian Wheezy 7.8）
+* 装有 WSL（Windows Subsystem for Linux） 的 Windows
 
 ## 安装 ##
 
