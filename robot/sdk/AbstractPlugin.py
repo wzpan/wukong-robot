@@ -5,7 +5,7 @@ import sys
 try:
     sys.path.append(constants.CONTRIB_PATH)
 except Exception as e:
-    print("未检测到插件目录")
+    print("未检测到插件目录,Error:{}".format(e))
     
 class AbstractPlugin(metaclass=ABCMeta):
     """ 技能插件基类 """
