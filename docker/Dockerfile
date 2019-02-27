@@ -1,4 +1,4 @@
-# Docker file for Hexo 2
+# Docker file for wukong-robot
 FROM twylahelps/ubuntu-python36-swig:2
 MAINTAINER wzpan
 # use aliyun's mirror for faster download speed
