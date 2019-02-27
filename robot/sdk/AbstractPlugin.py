@@ -1,5 +1,12 @@
 from abc import ABCMeta, abstractmethod
+from robot import constants
+import sys
 
+try:
+    sys.path.append(constants.CONTRIB_PATH)
+except Exception as e:
+    print("未检测到插件目录")
+    
 class AbstractPlugin(metaclass=ABCMeta):
     """ 技能插件基类 """
 
