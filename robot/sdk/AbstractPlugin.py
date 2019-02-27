@@ -1,11 +1,14 @@
 from abc import ABCMeta, abstractmethod
 from robot import constants
+from robot import logging
 import sys
+
+logger = logging.getLogger(__name__)
 
 try:
     sys.path.append(constants.CONTRIB_PATH)
 except Exception as e:
-    print("未检测到插件目录,Error:{}".format(e))
+    logger.debug("未检测到插件目录,Error:{}".format(e))
     
 class AbstractPlugin(metaclass=ABCMeta):
     """ 技能插件基类 """
