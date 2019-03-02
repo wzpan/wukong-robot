@@ -61,14 +61,16 @@ class Wukong(object):
         self._conversation.isRecording = True;
 
     def _do_not_bother_on_callback(self):
-        utils.do_not_bother = True
-        Player.play(constants.getData('off.wav'))
-        logger.info('勿扰模式打开')
+        if config.get('/hotword/hotword_switch', False):
+            utils.do_not_bother = True
+            Player.play(constants.getData('off.wav'))
+            logger.info('勿扰模式打开')
 
     def _do_not_bother_off_callback(self):
-        utils.do_not_bother = False
-        Player.play(constants.getData('on.wav'))
-        logger.info('勿扰模式关闭')
+        if config.get('/hotword/hotword_switch', False):
+            utils.do_not_bother = False
+            Player.play(constants.getData('on.wav'))
+            logger.info('勿扰模式关闭')
 
     def _interrupt_callback(self):
         return self._interrupted
