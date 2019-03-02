@@ -25,6 +25,8 @@ class Conversation(object):
         if self.player is not None and self.player.is_playing():
             self.player.stop()
             self.player = None
+        if self.immersiveMode:
+            self.brain.pause()
 
     def reload(self):
         """ 重新初始化 """

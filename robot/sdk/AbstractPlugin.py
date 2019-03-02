@@ -72,6 +72,15 @@ class AbstractPlugin(metaclass=ABCMeta):
         """
         return False
 
+    def pause(self):
+        """
+        暂停当前正在处理的任务，
+        当处于该沉浸模式下且被唤醒时，
+        将自动触发这个方法，
+        可以用于强制暂停一个耗时的操作        
+        """
+        return
+
     def restore(self):
         """
         恢复当前插件，

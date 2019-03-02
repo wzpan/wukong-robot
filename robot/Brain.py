@@ -83,6 +83,14 @@ class Brain(object):
             if plugin.SLUG == self.conversation.immersiveMode and plugin.restore:
                 plugin.restore()
 
+    def pause(self):
+        """ 暂停某个技能的处理 """
+        if not self.conversation.immersiveMode:
+            return
+        for plugin in self.plugins:
+            if plugin.SLUG == self.conversation.immersiveMode and plugin.pause:
+                plugin.pause()
+
     def understand(self, fp):
         if self.conversation and self.conversation.asr:
             return self.conversation.asr.transcribe(fp)
