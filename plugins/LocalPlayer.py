@@ -85,13 +85,26 @@ class Plugin(AbstractPlugin):
             self.say('上一首歌')
             self.player.prev()
         elif self.nlu.hasIntent(parsed, 'CHANGE_VOL'):
-            word = self.nlu.getSlotWords(parsed, 'CHANGE_VOL', 'user_vd')[0]
-            if word == '--LOUDER--':
-                self.say('大声一点')
-                self.player.turnUp()
-            else:
-                self.say('小声一点')
-                self.player.turnDown()
+            slots = self.nlu.getSlots(parsed, 'CHANGE_VOL')
+            for slot in slots:
+                if slot['name'] == 'user_d':
+                    word = self.nlu.getSlotWords(parsed, 'CHANGE_VOL', 'user_d')[0]
+                    if word == '--HIGHER--':
+                        self.say('调大音量')
+                        self.player.turnUp()
+                    else:
+                        self.say('调小音量')
+                        self.player.turnDown()
+                    return
+                elif slot['name'] == 'user_vd':
+                    word = self.nlu.getSlotWords(parsed, 'CHANGE_VOL', 'user_vd')[0]
+                    if word == '--LOUDER--':
+                        self.say('大声一点')
+                        self.player.turnUp()
+                    else:
+                        self.say('小声一点')
+                        self.player.turnDown()
+            
         elif self.nlu.hasIntent(parsed, 'CLOSE_MUSIC') or self.nlu.hasIntent(parsed, 'PAUSE'):
             self.player.stop()
             self.clearImmersive()  # 去掉沉浸式
