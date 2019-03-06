@@ -49,6 +49,11 @@ class Conversation(object):
         statistic.report(1)
         self.interrupt()
         self.appendHistory(0, query, UUID)
+
+        if query.strip() == '':
+            self.say("抱歉，刚刚没听清，能再说一遍吗？", cache=True, onCompleted=self.checkRestore)
+            return
+        
         if not self.brain.query(query):
             # 没命中技能，使用机器人回复
             msg = self.ai.chat(query)
