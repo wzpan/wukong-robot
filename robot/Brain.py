@@ -35,10 +35,6 @@ class Brain(object):
         text -- 用户输入
         """
 
-        if text.strip() == '':
-            self.conversation.say("抱歉，刚刚没听清，能再说一遍吗？", cache=True)
-            return True
-
         args = {
             "service_id": "S13442",
             "api_key": 'w5v7gUV3iPGsGntcM84PtOOM',

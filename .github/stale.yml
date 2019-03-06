@@ -1,0 +1,16 @@
+# Number of days of inactivity before an issue becomes stale
+daysUntilStale: 7
+# Number of days of inactivity before a stale issue is closed
+daysUntilClose: 3
+# Issues with these labels will never be considered stale
+exemptLabels:
+  - pinned
+  - security
+  - bug
+# Label to use when marking an issue as stale
+staleLabel: wontfix
+# Comment to post when marking an issue as stale. Set to `false` to disable
+markComment: >
+  由于久无进展，这个 issue 已被标为过期。如果还没有后续进展，这个 issue 将被关闭。谢谢你的反馈！
+# Comment to post when closing a stale issue. Set to `false` to disable
+closeComment: false

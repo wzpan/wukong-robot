@@ -53,24 +53,29 @@ class Plugin(AbstractPlugin):
     def __init__(self, con):
         super(Plugin, self).__init__(con)
         self.player = None
+        self.song_list = None
 
     def get_song_list(self, path):
         if not os.path.exists(path) or \
            not os.path.isdir(path):
             return []
-        song_list = list(filter(lambda d: d.endswith('.mp3'), os.listdir(path)))        
+        song_list = list(filter(lambda d: d.endswith('.mp3'), os.listdir(path)))
         return [os.path.join(path, song) for song in song_list]
 
     def init_music_player(self):
-        song_list = self.get_song_list(config.get('/LocalPlayer/path'))
-        if song_list == None:
+        self.song_list = self.get_song_list(config.get('/LocalPlayer/path'))
+        if self.song_list == None:
             logger.error('{} 插件配置有误'.format(self.SLUG))
-        logger.info(song_list)
-        return MusicPlayer(song_list, self)
+        logger.info(self.song_list)
+        return MusicPlayer(self.song_list, self)
 
     def handle(self, text, parsed):
         if not self.player:
-            self.player = self.init_music_player()
+            self.player = self.init_music_player()    
+        if len(self.song_list) == 0:
+            self.clearImmersive()  # 去掉沉浸式
+            self.say('本地音乐目录并没有音乐文件，播放失败')
+            return
         if self.nlu.hasIntent(parsed, 'MUSICRANK'):
             self.player.play()
         elif self.nlu.hasIntent(parsed, 'CHANGE_TO_NEXT'):
