@@ -210,3 +210,33 @@ wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式�
 
 * wukong-robot 只用作个人学习研究，如因使用 wukong-robot 导致任何损失，本人概不负责。
 * 本开源项目与腾讯叮当助手及优必选悟空项目没有任何关系。
+
+## Contributors
+
+This project exists thanks to all the people who contribute. 
+<a href="https://github.com/wzpan/wukong-robot/graphs/contributors"><img src="https://opencollective.com/wukong-robot/contributors.svg?width=890&button=false" /></a>
+
+
+## Backers
+
+Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/wukong-robot#backer)]
+
+<a href="https://opencollective.com/wukong-robot#backers" target="_blank"><img src="https://opencollective.com/wukong-robot/backers.svg?width=890"></a>
+
+
+## Sponsors
+
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/wukong-robot#sponsor)]
+
+<a href="https://opencollective.com/wukong-robot/sponsor/0/website" target="_blank"><img src="https://opencollective.com/wukong-robot/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/wukong-robot/sponsor/1/website" target="_blank"><img src="https://opencollective.com/wukong-robot/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/wukong-robot/sponsor/2/website" target="_blank"><img src="https://opencollective.com/wukong-robot/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/wukong-robot/sponsor/3/website" target="_blank"><img src="https://opencollective.com/wukong-robot/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/wukong-robot/sponsor/4/website" target="_blank"><img src="https://opencollective.com/wukong-robot/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/wukong-robot/sponsor/5/website" target="_blank"><img src="https://opencollective.com/wukong-robot/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/wukong-robot/sponsor/6/website" target="_blank"><img src="https://opencollective.com/wukong-robot/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/wukong-robot/sponsor/7/website" target="_blank"><img src="https://opencollective.com/wukong-robot/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/wukong-robot/sponsor/8/website" target="_blank"><img src="https://opencollective.com/wukong-robot/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/wukong-robot/sponsor/9/website" target="_blank"><img src="https://opencollective.com/wukong-robot/sponsor/9/avatar.svg"></a>
+
+
