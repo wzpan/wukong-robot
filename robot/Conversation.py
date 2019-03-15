@@ -4,7 +4,6 @@ import uuid
 import cProfile
 import pstats
 import io
-from pstats import SortKey
 from robot.Brain import Brain
 from snowboy import snowboydecoder
 from robot import logging, ASR, TTS, NLU, AI, Player, config, constants, utils, statistic
@@ -85,7 +84,7 @@ class Conversation(object):
             self.doConverse(fp, callback)
             pr.disable()
             s = io.StringIO()
-            sortby = SortKey.CUMULATIVE
+            sortby = 'cumulative'
             ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
             ps.print_stats()
             print(s.getvalue())
