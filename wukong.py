@@ -11,18 +11,19 @@ import os
 import signal
 import hashlib
 import fire
-
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 logger = logging.getLogger(__name__)
 
 class Wukong(object):
+
+    _profiling = False
     
     def init(self):
         global conversation
         self.detector = None
-        self._interrupted = False
+        self._interrupted = False        
         print('''
 ********************************************************
 *          wukong-robot - 中文语音对话机器人           *
@@ -35,7 +36,7 @@ class Wukong(object):
 ''')
         
         config.init()
-        self._conversation = Conversation()
+        self._conversation = Conversation(self._profiling)
         self._conversation.say('{} 你好！试试对我喊唤醒词叫醒我吧'.format(config.get('first_name', '主人')), True)
         self._observer = Observer()
         event_handler = ConfigMonitor(self._conversation)
@@ -127,6 +128,11 @@ class Wukong(object):
         self.detector.terminate()
         python = sys.executable
         os.execl(python, python, * sys.argv)
+
+    def profiling(self):
+        logger.info('性能调优')
+        self._profiling = True
+        self.run()
 
 
 if __name__ == '__main__':

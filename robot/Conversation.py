@@ -1,22 +1,27 @@
 # -*- coding: utf-8-*-
-from robot import ASR, TTS, NLU, AI, Player, config, constants, utils, statistic
+import time 
+import uuid
+import cProfile
+import pstats
+import io
+from pstats import SortKey
 from robot.Brain import Brain
 from snowboy import snowboydecoder
-import time 
-from robot import logging
-import uuid
+from robot import logging, ASR, TTS, NLU, AI, Player, config, constants, utils, statistic
+
 
 logger = logging.getLogger(__name__)
 
 class Conversation(object):
 
-    def __init__(self):
+    def __init__(self, profiling=False):
         self.reload()
         # 历史会话消息
         self.history = []
         # 沉浸模式，处于这个模式下，被打断后将自动恢复这个技能
         self.immersiveMode = None
         self.isRecording = False
+        self.profiling = profiling
 
     def getHistory(self):
         return self.history
@@ -73,7 +78,19 @@ class Conversation(object):
         Player.play(constants.getData('beep_lo.wav'))
         logger.info('结束录音')
         self.isRecording = False
-        self.doConverse(fp, callback)
+        if self.profiling:
+            logger.info('性能调试已打开')
+            pr = cProfile.Profile()
+            pr.enable()
+            self.doConverse(fp, callback)
+            pr.disable()
+            s = io.StringIO()
+            sortby = SortKey.CUMULATIVE
+            ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+            ps.print_stats()
+            print(s.getvalue())
+        else:
+            self.doConverse(fp, callback)
 
     def doConverse(self, fp, callback=None):
         try:
