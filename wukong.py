@@ -87,7 +87,11 @@ class Wukong(object):
 
         statistic.report(0)
 
-        self.initDetector()
+        try:
+            self.initDetector()
+        except AttributeError:
+            logger.error('初始化离线唤醒功能失败')
+            pass
 
     def initDetector(self):
         if self.detector is not None:
@@ -125,7 +129,10 @@ class Wukong(object):
 
     def restart(self):
         logger.critical('程序重启...')
-        self.detector.terminate()
+        try:
+            self.detector.terminate()
+        except AttributeError:
+            pass
         python = sys.executable
         os.execl(python, python, * sys.argv)
 
