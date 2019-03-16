@@ -55,6 +55,10 @@ function autoRefresh( t ) {
     setInterval("getHistory();", t);
 }
 
+function showProgress() {
+    progressJs().increase();
+}
+
 function upgrade() {
     $.ajax({
         url: '/upgrade',
@@ -65,11 +69,16 @@ function upgrade() {
             $('.UPDATE')[0].disabled = false;
             res = JSON.parse(res);
             if (res.code == 0) {
-                toastr.success('更新成功，3秒后将自动重启')
+                toastr.success('更新成功，5秒后将自动重启')
+                
                 $('#updateModal').modal('hide')
+                progressJs().start();
+                setInterval("showProgress()", 1000);
                 setTimeout(()=>{
+                    progressJs().end();
+                    clearInterval();
                     location.reload();
-                }, 3000);
+                }, 5000);
             } else {
                 toastr.error(res.message, '更新失败');
                 $('#updateModal').modal('hide')
