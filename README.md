@@ -75,7 +75,6 @@ wukong-robot 被唤醒后，用户的语音指令先经过 ASR 引擎进行 ASR 
 
 * 直接交互的视频 Demo
   - coming soon
-  - :movie_camera: 征集大家的作品视频中，请参见[近期公告](https://github.com/wzpan/wukong-robot/wiki/notice-board)。
   - 在视频 Demo 出来前，你可以先看看有类似交互的 [dingdang-robot 的视频 Demo](https://github.com/dingdang-robot/dingdang-robot/wiki/demo)。
 * 后台管理端 Demo
   - 体验地址：https://bot.hahack.com/  （体验用户名：wukong；体验密码：wukong@2019）
