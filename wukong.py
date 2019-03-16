@@ -68,7 +68,7 @@ class Wukong(object):
             logger.info('勿扰模式打开')
 
     def _do_not_bother_off_callback(self):
-        if config.get('/hotword/hotword_switch', False):
+        if config.get('/do_not_bother/hotword_switch', False):
             utils.do_not_bother = False
             Player.play(constants.getData('on.wav'))
             logger.info('勿扰模式关闭')
