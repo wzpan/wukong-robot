@@ -49,7 +49,7 @@ class MainHandler(BaseHandler):
             self.redirect("/login")
             return
         if conversation:
-            info = Updater.fetch()
+            info = Updater.fetch(wukong.dev)
             suggestion = random.choice(suggestions)
             notices = None
             if 'notices' in info:

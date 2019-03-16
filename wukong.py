@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 class Wukong(object):
 
     _profiling = False
+    _dev = False
     
     def init(self):
         global conversation
@@ -141,6 +142,10 @@ class Wukong(object):
         self._profiling = True
         self.run()
 
+    def dev(self):
+        logger.info('使用测试环境')
+        self.dev = True
+        self.run()
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:

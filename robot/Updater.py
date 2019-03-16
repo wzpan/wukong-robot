@@ -11,6 +11,7 @@ logger.setLevel(level=logging.INFO)
 
 _updater = None
 URL = 'https://service-e32kknxi-1253537070.ap-hongkong.apigateway.myqcloud.com/release/wukong'
+DEV_URL = 'https://service-e32kknxi-1253537070.ap-hongkong.apigateway.myqcloud.com/release/wukong-dev'
 
 class Updater(object):
 
@@ -60,15 +61,18 @@ class Updater(object):
         else:
             return current
 
-    def fetch(self):
-        global URL
+    def fetch(self, dev=False):
+        global URL, DEV_URL
+        url = URL
+        if dev:
+            url = DEV_URL
         now = datetime.now()
         if (now - self.last_check).seconds <= 1800:
             logger.debug('30 分钟内已检查过更新，使用上次的检查结果：{}'.format(self.update_info))            
             return self.update_info
         try:
             self.last_check = now
-            r = requests.get(URL, timeout=3)
+            r = requests.get(url, timeout=3)
             info = json.loads(r.text)
             main_version = info['main']['version']
             contrib_version = info['contrib']['version']
@@ -88,11 +92,11 @@ class Updater(object):
             logger.error("检查更新失败：", e)
             return {}
 
-def fetch():
+def fetch(dev):
     global _updater
     if not _updater:
         _updater = Updater()
-    return _updater.fetch()
+    return _updater.fetch(dev)
     
     
 if __name__ == '__main__':
