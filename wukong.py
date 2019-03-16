@@ -144,7 +144,7 @@ class Wukong(object):
 
     def dev(self):
         logger.info('使用测试环境')
-        self.dev = True
+        self._dev = True
         self.run()
 
 if __name__ == '__main__':
