@@ -151,7 +151,7 @@ class Plugin(AbstractPlugin):
             self.say(response, cache=True)
             return
 
-        senders = [self.getSender(e) for e in msgs]
+        senders = [str(self.getSender(e)) for e in msgs]
 
         if not senders:
             self.say(u"您没有未读邮件，真棒！", cache=True)
