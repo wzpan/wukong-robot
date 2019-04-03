@@ -10,9 +10,10 @@ try:
 except Exception as e:
     logger.debug("未检测到插件目录,Error:{}".format(e))
     
-class AbstractPlugin(metaclass=ABCMeta):
+class AbstractPlugin(object):
     """ 技能插件基类 """
 
+    __metaclass__ = ABCMeta
     SLUG = 'AbstractPlugin'
     IS_IMMERSIVE = False
 
