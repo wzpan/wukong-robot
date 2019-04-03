@@ -4,6 +4,7 @@ from robot import config, utils, constants, logging, statistic, Player
 from robot.Updater import Updater
 from robot.ConfigMonitor import ConfigMonitor
 from robot.Conversation import Conversation
+from robot.drivers.pixels import pixels
 from server import server
 from watchdog.observers import Observer
 import sys
@@ -57,6 +58,7 @@ class Wukong(object):
         if self._conversation.isRecording:
             logger.warning('正在录音中，跳过')
             return
+        pixels.wakeup()
         Player.play(constants.getData('beep_hi.wav'))
         logger.info('开始录音')
         self._conversation.interrupt()

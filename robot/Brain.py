@@ -1,5 +1,7 @@
 # -*- coding: utf-8-*-
 from robot import logging
+from robot.sdk.unit import getUnit
+from robot.drivers.pixels import pixels
 from . import plugin_loader
 
 logger = logging.getLogger(__name__)
@@ -33,7 +35,7 @@ class Brain(object):
 
         Arguments:
         text -- 用户输入
-        """
+        """        
 
         args = {
             "service_id": "S13442",
