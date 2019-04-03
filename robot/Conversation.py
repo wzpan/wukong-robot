@@ -5,8 +5,9 @@ import cProfile
 import pstats
 import io
 import re
-from robot.Brain import Brain
 from snowboy import snowboydecoder
+from robot.Brain import Brain
+from robot.drivers.pixels import pixels
 from robot import logging, ASR, TTS, NLU, AI, Player, config, constants, utils, statistic
 
 
@@ -50,11 +51,12 @@ class Conversation(object):
 
     def checkRestore(self):
         if self.immersiveMode:
-            self.brain.restore()
+            self.brain.restore()        
 
     def doResponse(self, query, UUID='', onSay=None):
         statistic.report(1)
         self.interrupt()
+        pixels.think()
         self.appendHistory(0, query, UUID)
 
         if onSay:
@@ -79,6 +81,7 @@ class Conversation(object):
                 else:
                     logger.debug('checkRestore')
                     self.checkRestore()
+        pixels.off()
 
     def doParse(self, query, **args):
         return self.nlu.parse(query, **args)
@@ -186,6 +189,8 @@ class Conversation(object):
 
     def activeListen(self, silent=False):
         """ 主动问一个问题(适用于多轮对话) """
+        time.sleep(1)
+        pixels.wakeup()
         logger.debug('activeListen')
         try:
             if not silent:
@@ -201,7 +206,7 @@ class Conversation(object):
                 query = self.asr.transcribe(voice)
                 utils.check_and_delete(voice)
                 return query
-        except Exception as e:            
+        except Exception as e:
             logger.error(e)
             return ''        
 

@@ -33,7 +33,7 @@ class Brain(object):
 
         Arguments:
         text -- 用户输入
-        """
+        """        
 
         args = {
             "service_id": "S13442",
