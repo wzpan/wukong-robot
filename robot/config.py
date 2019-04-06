@@ -96,7 +96,7 @@ def has(item):
     :param item: 配置项名
     :returns: True: 包含; False: 不包含
     """
-    return item in _config
+    return has_path(item)
 
 
 def get(item='', default=None):

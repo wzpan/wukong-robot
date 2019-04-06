@@ -52,12 +52,7 @@ def getLogger(name):
 
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
-    # StreamHandler
-    stream_handler = logging.StreamHandler(sys.stdout)
-    stream_handler.setLevel(level=logging.INFO)
-    stream_handler.setFormatter(formatter)
-    logger.addHandler(stream_handler)
-
+    
     # FileHandler
     file_handler = RotatingFileHandler(os.path.join(constants.TEMP_PATH, 'wukong.log'), maxBytes=1024*1024,backupCount=5)
     file_handler.setLevel(level=logging.DEBUG)
