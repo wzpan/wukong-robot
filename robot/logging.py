@@ -1,5 +1,4 @@
 import logging
-import sys
 import os
 from robot import constants
 from logging.handlers import RotatingFileHandler
@@ -8,6 +7,7 @@ PAGE = 4096
 
 DEBUG = logging.DEBUG
 INFO = logging.INFO
+WARNING = logging.WARNING
 ERROR = logging.ERROR
 
 def tail(filepath, n=10):

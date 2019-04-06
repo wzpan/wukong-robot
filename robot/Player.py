@@ -1,6 +1,5 @@
 # -*- coding: utf-8-*-
 import subprocess
-import tempfile
 import threading
 import os
 import wave
@@ -76,15 +75,10 @@ class SoxPlayer(AbstractSoundPlayer):
         cmd = ['play', '-v', str(self.volume), str(self.src)]
         logger.debug('Executing %s', ' '.join(cmd))
 
-        with tempfile.TemporaryFile() as f:
-            self.pipe = subprocess.Popen(cmd, stdout=f, stderr=f)
-            self.playing = True
-            self.pipe.wait()
-            self.playing = False
-            f.seek(0)
-            output = f.read()
-            if output:
-                logger.debug("play Output was: '%s'", output)
+        self.proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        self.playing = True
+        self.proc.wait()
+        self.playing = False
         if self.delete:
             utils.check_and_delete(self.src)
         if self.onCompleted:
@@ -101,9 +95,9 @@ class SoxPlayer(AbstractSoundPlayer):
         self.run()
 
     def stop(self):
-        if self.pipe:
+        if self.proc:
             self.onCompleted = None
-            self.pipe.kill()
+            self.proc.terminate()
             if self.delete:
                 utils.check_and_delete(self.src)
 
