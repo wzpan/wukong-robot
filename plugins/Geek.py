@@ -14,6 +14,7 @@ class Plugin(AbstractPlugin):
 
     def handle(self, text, parsed):
         if any (word in text for word in ['开启', '激活', '开始', '进入', '打开']):
+            self.silent_count = 0
             self.say('进入极客模式', cache=True, onCompleted=lambda: self.onAsk(self.activeListen(silent=True)))
         else:
             self.say('退出极客模式', cache=True)
@@ -37,11 +38,11 @@ class Plugin(AbstractPlugin):
 
     def isValidImmersive(self, text, parsed):
         return '模式' in text and \
-            any(word in text for word in ['即刻', '即可', '极客', '集客']) and \
+            any(word in text for word in ['即刻', '即可', '极客', '即客', '集团', '集客']) and \
             any(word in text for word in ['退出', '结束', '停止'])
 
-    def isValid(self, text, parsed):
+    def isValid(self, text, parsed):        
         return '模式' in text and \
-            any(word in text for word in ['即刻', '即可', '极客', '集客']) and \
+            any(word in text for word in ['即刻', '即可', '即客', '集团', '极客', '集客']) and \
             any (word in text for word in ['开启', '激活', '开始', '进入', '打开'])
 
