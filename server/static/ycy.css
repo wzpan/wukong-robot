@@ -41,14 +41,3 @@
     border-color: #F86A92!important;
 }
 
-
-pre {
-    margin: 0 80% 1em 0;
-    background: rgba(0,0,0,0.3);
-    color: #fff;
-    padding: 8px 10px;
-    border-radius: .4em;
-    -moz-border-radius: .4em;
-    -webkit-border-radius: .4em;
-    overflow-x: auto;
-}
