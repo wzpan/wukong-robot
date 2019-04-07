@@ -186,10 +186,10 @@ class Conversation(object):
             if voice:
                 query = self.asr.transcribe(voice)
                 utils.check_and_delete(voice)
+                return query
         except Exception as e:            
             logger.error(e)
-            query = ''
-        return query
+            return ''        
 
     def play(self, src, delete=False, onCompleted=None, volume=1):
         """ 播放一个音频 """
