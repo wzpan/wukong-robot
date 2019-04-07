@@ -1,6 +1,5 @@
 # -*- coding: utf-8-*-
-import os
-from robot import config, logging
+from robot import logging
 from robot.sdk.AbstractPlugin import AbstractPlugin
 
 logger = logging.getLogger(__name__)
