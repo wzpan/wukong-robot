@@ -130,7 +130,7 @@ class Conversation(object):
             url_pattern = r'^https?://.+'
             imgs = re.findall(pattern, text)
             for img in imgs:
-                text = text.replace(img, '<img src={} class="img"/>'.format(img))
+                text = text.replace(img, '<img src={} class="bubbleimg"/>'.format(img))
             urls = re.findall(url_pattern, text)
             for url in urls:
                 text = text.replace(url, '<a href={} target="_blank">{}</a>'.format(url, url))

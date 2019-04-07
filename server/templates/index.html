@@ -3,8 +3,9 @@
 <link rel="stylesheet" href="{{static_url('starter-template.css')}}" crossorigin="anonymous">
 <link rel="stylesheet" href="{{static_url('bubble.css')}}" crossorigin="anonymous">
 <link rel="stylesheet" href="{{static_url('progressjs.min.css')}}" crossorigin="anonymous">
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-  <a class="navbar-brand" href="/">wukong-robot</a>
+<link rel="stylesheet" href="{{static_url('ycy.css')}}" crossorigin="anonymous">
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">  
+  <a class="navbar-brand" href="/">ycy-robot</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -33,10 +34,9 @@
 </nav>
 
 <div class="jumbotron">
-  <h1 class="display-4"><image src="./static/robot.png" width=128px attr="wukong-robot"/> wukong-robot</h1>
-  <p class="lead">wukong-robot 是一个简单灵活的中文语音对话机器人。</p>
+  <h1 class="display-4"><image src="./static/ycy2.png" width=128px attr="wukong-robot"/> ycy-robot</h1>
+  <p class="lead">ycy-robot 是一个月芽特别定制版中文对话机器人。</p>
   <hr class="my-4">
-  <p><i class="fas fa-info-circle"></i> 本站点是 wukong-robot 的后台管理端，仅供远程交互，不支持离线唤醒。</p>
   {% if notices %}
     {% for notice in notices %}
       <p><i class="fas fa-bell"></i> {% raw notice %}</p>
@@ -89,7 +89,7 @@
 <div class="container history" id="container">  
   {% if not history or len(history) == 0 %}
   <center>
-    <p> 无聊天记录，请先和 wukong-robot 聊会天吧~ </p>
+    <p> 无聊天记录，请先和 ycy-robot 聊会天吧~ </p>
   </center>
   {% else %}
       {% for h in history %}
@@ -103,7 +103,7 @@
           {% else %}
               <div class="left">
                 <div class="bubble bubble-white">
-                  <div class="bubble-avatar"><image src="./static/robot.png" width=32px attr="robot" /></div>
+                  <div class="bubble-avatar"><image src="./static/ycy.png" width=32px attr="robot" /></div>
                   <p style="text-align: left" id="{{ h['uuid'] }}">{% raw h['text'] %}</p>
                 </div>
               </div>

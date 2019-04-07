@@ -22,14 +22,11 @@ logger = logging.getLogger(__name__)
 conversation, wukong = None, None
 
 suggestions = [
-    '现在几点',
-    '你吃饭了吗',
-    '上海的天气',
-    '写一首关于大海的诗',
-    '来玩成语接龙',
-    '我有多少邮件',
-    '你叫什么名字',
-    '讲个笑话'
+    '写一首关于超越的诗',
+    '超越最近的微博',
+    '来张超越的美图',
+    '讲个笑话',
+    '成语接龙'
 ]
 
 class BaseHandler(tornado.web.RequestHandler):

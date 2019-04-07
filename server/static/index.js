@@ -13,8 +13,8 @@ function appendHistory(type, query, uuid) {
     } else {
         $('.history').append(`
               <div class="left">
-                 <div class="bubble bubble-white">
-                   <div class="bubble-avatar"><image src="./static/robot.png" width=32px attr="robot" /></div>
+                 <div class="bubble-white">
+                   <div class="bubble-avatar"><image src="./static/ycy.png" width=32px attr="robot" /></div>
                    <p style="text-align: left" id="${uuid}">${query}</p>
                  </div>
               </div>

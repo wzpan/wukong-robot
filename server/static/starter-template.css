@@ -42,7 +42,7 @@ body {
     min-height: 15px;
 }
 
-.bubble img {
+img.bubbleimg {
     width:auto;
     max-width: 100%;
 }

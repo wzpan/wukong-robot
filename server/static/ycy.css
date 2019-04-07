@@ -1,0 +1,42 @@
+.jumbotron {
+    background-color: #FBF0F1!important;
+}
+
+.bg-dark {
+    background-color: #F86A92!important;
+}
+
+.btn-outline-success {
+    color: #F1B8C8!important;
+    border-color: #F1B8C8!important;
+}
+
+.bubble-white {
+    background: #fff!important;
+}
+
+.left .bubble-white:after {
+    border-color: transparent #fff;
+}
+
+.bubble-green {
+    background: #EBB2C0!important;
+}
+
+.bubble-green:after {
+    border-color: #EBB2C0 transparent !important;
+}
+
+.right .bubble-green:after {
+    border-color: transparent #EBB2C0 !important;
+}
+
+.container.history {
+    background-color: #FAF5F6!important;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #F86A92!important;
+    border-color: #F86A92!important;
+}

@@ -1,6 +1,6 @@
-robot_name_cn: '孙悟空'
-first_name: '师父'
-last_name: '唐'
+robot_name_cn: '超超越越'
+first_name: '月芽'
+last_name: '小'
 timezone: HKT
 location: '深圳'
 
@@ -9,16 +9,16 @@ server:
     enable: true
     host: '0.0.0.0'  # ip 地址
     port: '5000'     # 端口号    
-    username: 'wukong'  # 用户名
+    username: 'ycy'  # 用户名
     # 密码的 md5，可以用 python3 wukong.py md5 "密码" 获得
-    # 初始密码为 wukong@2019
-    validate: 'f4bde2a342c7c75aa276f78b26cfbd8a'
+    # 初始密码为 ycy@2019
+    validate: 'bd6007516fa2fef468f2e22a37fc0e9a'
 
 # snowboy 离线唤醒
 # https://snowboy.kitt.ai/dashboard
 # 建议到 https://snowboy.kitt.ai/hotword/32768
 # 使用相同环境录入你的语音，以提升唤醒成功率和准确率
-hotword: 'wukong.pmdl'  # 唤醒词模型，如要自定义请放到 $HOME/.wukong 目录中
+hotword: 'ccyy.pmdl'  # 唤醒词模型，默认为“超超越越”，如要自定义请放到 $HOME/.wukong 目录中
 sensitivity: 0.4  # 灵敏度
 silent_threshold: 15 # 判断为静音的阈值。环境比较吵杂的地方可以适当调大
 recording_timeout: 5 # 录制的语音最大长度（秒）

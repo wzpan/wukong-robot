@@ -27,8 +27,8 @@ class Wukong(object):
         self._interrupted = False        
         print('''
 ********************************************************
-*          wukong-robot - 中文语音对话机器人           *
-*          (c) 2019 潘伟洲 <m@hahack.com>              *
+*          ycy-robot - 月芽特别定制版中文对话机器人        *
+*          (c) 2019 潘伟洲 <m@hahack.com>               *
 *     https://github.com/wzpan/wukong-robot.git        *
 ********************************************************
 
