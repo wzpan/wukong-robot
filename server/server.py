@@ -60,6 +60,11 @@ class MainHandler(BaseHandler):
 
 class ChatHandler(BaseHandler):
 
+    def onResp(self, msg):
+        logger.debug('response msg: {}'.format(msg))
+        res = {'code': 0, 'message': 'ok', 'resp': msg}
+        self.write(json.dumps(res))
+
     @tornado.web.asynchronous
     @gen.coroutine
     def post(self):
@@ -68,9 +73,8 @@ class ChatHandler(BaseHandler):
             if self.get_argument('type') == 'text':
                 query = self.get_argument('query')
                 uuid = self.get_argument('uuid')
-                conversation.doResponse(query, uuid)
-                res = {'code': 0, 'message': 'ok'}
-                self.write(json.dumps(res))
+                conversation.doResponse(query, uuid, onSay=lambda msg: self.onResp(msg))
+                
             elif self.get_argument('type') == 'voice':
                 voice_data = self.get_argument('voice')
                 tmpfile = utils.write_temp_file(base64.b64decode(voice_data), '.wav')
@@ -81,9 +85,7 @@ class ChatHandler(BaseHandler):
                           ' ' + nfile + ' rate 16k'
                 subprocess.call([soxCall], shell=True, close_fds=True)
                 utils.check_and_delete(tmpfile)
-                conversation.doConverse(nfile)
-                res = {'code': 0, 'message': 'ok'}
-                self.write(json.dumps(res))
+                conversation.doConverse(nfile, onSay=lambda msg: self.onResp(msg))
             else:
                 res = {'code': 1, 'message': 'illegal type'}
                 self.write(json.dumps(res))

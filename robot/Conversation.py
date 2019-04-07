@@ -21,6 +21,7 @@ class Conversation(object):
         self.immersiveMode = None
         self.isRecording = False
         self.profiling = profiling
+        self.onSay = None
 
     def getHistory(self):
         return self.history
@@ -49,10 +50,13 @@ class Conversation(object):
         if self.immersiveMode:
             self.brain.restore()
 
-    def doResponse(self, query, UUID=''):
+    def doResponse(self, query, UUID='', onSay=None):
         statistic.report(1)
         self.interrupt()
         self.appendHistory(0, query, UUID)
+
+        if onSay:
+            self.onSay = onSay
 
         if query.strip() == '':
             self.say("抱歉，刚刚没听清，能再说一遍吗？", cache=True, onCompleted=self.checkRestore)
@@ -91,12 +95,12 @@ class Conversation(object):
         else:
             self.doConverse(fp, callback)
 
-    def doConverse(self, fp, callback=None):
+    def doConverse(self, fp, callback=None, onSay=None):
         try:
             self.interrupt()
             query = self.asr.transcribe(fp)
             utils.check_and_delete(fp)
-            self.doResponse(query, callback)
+            self.doResponse(query, callback, onSay)
         except Exception as e:
             logger.critical(e)
             utils.clean()
@@ -122,6 +126,13 @@ class Conversation(object):
 
     def say(self, msg, cache=False, plugin='', onCompleted=None):
         """ 说一句话 """
+        if self.onSay:
+            logger.info('onSay: {}'.format(msg))
+            if plugin != '':
+                self.onSay("[{}] {}".format(plugin, msg))
+            else:
+                self.onSay(msg)
+            self.onSay = None
         if plugin != '':
             self.appendHistory(1, "[{}] {}".format(plugin, msg))
         else:
