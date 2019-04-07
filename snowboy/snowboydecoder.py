@@ -81,6 +81,7 @@ class ActiveListener(object):
     """ Active Listening with VAD """
     def __init__(self, decoder_model,
                  resource=RESOURCE_FILE):
+        logger.debug("activeListen __init__()")
         self.recordedData = []
         model_str = ",".join(decoder_model)
         self.detector = snowboydetect.SnowboyDetect(
@@ -99,6 +100,8 @@ class ActiveListener(object):
         :param recording_timeout: limits the maximum length of a recording.
         :return: recorded file path
         """
+        logger.debug("activeListen listen()")
+
         self._running = True
 
         def audio_callback(in_data, frame_count, time_info, status):
@@ -108,15 +111,28 @@ class ActiveListener(object):
 
         with no_alsa_error():            
             self.audio = pyaudio.PyAudio()
+        
+        try:
+            self.audio.close()
+        except:
+            pass
 
-        self.stream_in = self.audio.open(
-            input=True, output=False,
-            format=self.audio.get_format_from_width(
-                self.detector.BitsPerSample() / 8),
-            channels=self.detector.NumChannels(),
-            rate=self.detector.SampleRate(),
-            frames_per_buffer=2048,
-            stream_callback=audio_callback)
+        logger.debug('opening audio stream')
+
+        try:
+            self.stream_in = self.audio.open(
+                input=True, output=False,
+                format=self.audio.get_format_from_width(
+                    self.detector.BitsPerSample() / 8),
+                channels=self.detector.NumChannels(),
+                rate=self.detector.SampleRate(),
+                frames_per_buffer=2048,
+                stream_callback=audio_callback)
+        except Exception as e:
+            logger.critical(e)
+            return 
+
+        logger.debug('audio stream opened')
 
         if interrupt_check():
             logger.debug("detect voice return")
@@ -124,6 +140,9 @@ class ActiveListener(object):
 
         silentCount = 0
         recordingCount = 0
+
+        logger.debug("begin activeListen loop")
+        
         while self._running is True:
 
             if interrupt_check():

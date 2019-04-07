@@ -18,6 +18,7 @@ class Conversation(object):
         # 历史会话消息
         self.history = []
         # 沉浸模式，处于这个模式下，被打断后将自动恢复这个技能
+        self.matchPlugin = None
         self.immersiveMode = None
         self.isRecording = False
         self.profiling = profiling
@@ -59,13 +60,24 @@ class Conversation(object):
             self.onSay = onSay
 
         if query.strip() == '':
-            self.say("抱歉，刚刚没听清，能再说一遍吗？", cache=True, onCompleted=self.checkRestore)
+            self.pardon()
             return
-        
+
+        lastImmersiveMode = self.immersiveMode
+
         if not self.brain.query(query):
             # 没命中技能，使用机器人回复
             msg = self.ai.chat(query)
             self.say(msg, True, onCompleted=self.checkRestore)
+        else:
+            if lastImmersiveMode is not None and lastImmersiveMode != self.matchPlugin:
+                time.sleep(1)
+                if self.player is not None and self.player.is_playing():
+                    logger.debug('等说完再checkRestore')
+                    self.player.appendOnCompleted(lambda: self.checkRestore())
+                else:
+                    logger.debug('checkRestore')
+                    self.checkRestore()
 
     def doParse(self, query, **args):
         return self.nlu.parse(query, **args)
@@ -124,6 +136,11 @@ class Conversation(object):
             query = self.activeListen()
             self.doResponse(query)
 
+    def pardon(self):
+        self.say("抱歉，刚刚没听清，能再说一遍吗？")
+        query = self.activeListen()
+        self.doResponse(query)
+
     def say(self, msg, cache=False, plugin='', onCompleted=None):
         """ 说一句话 """
         if self.onSay:
@@ -153,18 +170,25 @@ class Conversation(object):
         self.player = Player.SoxPlayer()
         self.player.play(voice, not cache, onCompleted)
 
-    def activeListen(self):
+    def activeListen(self, silent=False):
         """ 主动问一个问题(适用于多轮对话) """
-        time.sleep(1)
-        Player.play(constants.getData('beep_hi.wav'))        
-        listener = snowboydecoder.ActiveListener([constants.getHotwordModel(config.get('hotword', 'wukong.pmdl'))])
-        voice = listener.listen(
-            silent_count_threshold=config.get('silent_threshold', 15),
-            recording_timeout=config.get('recording_timeout', 5) * 4
-        )
-        Player.play(constants.getData('beep_lo.wav'))
-        query = self.asr.transcribe(voice)
-        utils.check_and_delete(voice)
+        logger.debug('activeListen')
+        try:
+            if not silent:
+                Player.play(constants.getData('beep_hi.wav'))
+            listener = snowboydecoder.ActiveListener([constants.getHotwordModel(config.get('hotword', 'wukong.pmdl'))])
+            voice = listener.listen(
+                silent_count_threshold=config.get('silent_threshold', 15),
+                recording_timeout=config.get('recording_timeout', 5) * 4
+            )
+            if not silent:
+                Player.play(constants.getData('beep_lo.wav'))
+            if voice:
+                query = self.asr.transcribe(voice)
+                utils.check_and_delete(voice)
+        except Exception as e:            
+            logger.error(e)
+            query = ''
         return query
 
     def play(self, src, delete=False, onCompleted=None, volume=1):

@@ -70,6 +70,7 @@ class SoxPlayer(AbstractSoundPlayer):
         self.pipe = None
         self.delete = False
         self.volume = 1
+        self.onCompleteds = []
 
     def run(self):
         cmd = ['play', '-v', str(self.volume), str(self.src)]
@@ -81,22 +82,29 @@ class SoxPlayer(AbstractSoundPlayer):
         self.playing = False
         if self.delete:
             utils.check_and_delete(self.src)
-        if self.onCompleted:
-            self.onCompleted()
+        logger.debug('play completed')
+        for onCompleted in self.onCompleteds:
+            if onCompleted:                
+                onCompleted()
+        self.onCompleteds = []
 
     def play(self, src, delete=False, onCompleted=None, volume=1):
         self.src = src        
         self.delete = delete
-        self.onCompleted = onCompleted
+        self.onCompleteds.append(onCompleted)
         self.volume = volume
         self.start()
+
+    def appendOnCompleted(self, onCompleted):
+        if onCompleted:
+            self.onCompleteds.append(onCompleted)
 
     def play_block(self):
         self.run()
 
     def stop(self):
         if self.proc:
-            self.onCompleted = None
+            self.onCompleteds = []
             self.proc.terminate()
             if self.delete:
                 utils.check_and_delete(self.src)
@@ -142,8 +150,10 @@ class WavPlayer(AbstractSoundPlayer):
         stream.stop_stream()
         stream.close()
         audio.terminate()
-        if self.onCompleted:
-            self.onCompleted()
+        if self.onCompleteds:
+            for onCompleted in self.onCompleteds:
+                if onCompleted:
+                    onCompleted()
 
     def play(self, src, onCompleted=None):
         self.src = src

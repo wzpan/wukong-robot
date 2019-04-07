@@ -47,6 +47,8 @@ class Brain(object):
                 continue
 
             logger.info("'{}' 命中技能 {}".format(text, plugin.SLUG))
+            self.conversation.matchPlugin = plugin.SLUG
+
             if plugin.IS_IMMERSIVE:
                 self.conversation.setImmersiveMode(plugin.SLUG)
 

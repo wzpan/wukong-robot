@@ -31,8 +31,8 @@ class AbstractPlugin(metaclass=ABCMeta):
     def say(self, text, cache=False, onCompleted=None):
         self.con.say(text, cache=cache, plugin=self.SLUG, onCompleted=onCompleted)
 
-    def activeListen(self):
-        return self.con.activeListen()
+    def activeListen(self, silent=False):
+        return self.con.activeListen(silent)
 
     def clearImmersive(self):
         self.con.setImmersiveMode(None)

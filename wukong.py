@@ -97,17 +97,24 @@ class Wukong(object):
     def initDetector(self):
         if self.detector is not None:
             self.detector.terminate()
-        models = [
-            constants.getHotwordModel(config.get('hotword', 'wukong.pmdl')),
-            constants.getHotwordModel(utils.get_do_not_bother_on_hotword()),
-            constants.getHotwordModel(utils.get_do_not_bother_off_hotword())
-        ]
+        if config.get('/do_not_bother/hotword_switch', False):
+            models = [
+                constants.getHotwordModel(config.get('hotword', 'wukong.pmdl')),
+                constants.getHotwordModel(utils.get_do_not_bother_on_hotword()),
+                constants.getHotwordModel(utils.get_do_not_bother_off_hotword())
+            ]
+        else:
+            models = constants.getHotwordModel(config.get('hotword', 'wukong.pmdl'))
         self.detector = snowboydecoder.HotwordDetector(models, sensitivity=config.get('sensitivity', 0.5))
         # main loop
         try:
-            self.detector.start(detected_callback=[self._detected_callback,
-                                                   self._do_not_bother_on_callback,
-                                                   self._do_not_bother_off_callback],
+            if config.get('/do_not_bother/hotword_switch', False):
+                callbacks = [self._detected_callback,
+                             self._do_not_bother_on_callback,
+                             self._do_not_bother_off_callback]
+            else:
+                callbacks = self._detected_callback
+            self.detector.start(detected_callback=callbacks,
                                 audio_recorder_callback=self._conversation.converse,
                                 interrupt_check=self._interrupt_callback,
                                 silent_count_threshold=config.get('silent_threshold', 15),
