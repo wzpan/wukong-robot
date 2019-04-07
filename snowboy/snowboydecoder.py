@@ -112,11 +112,6 @@ class ActiveListener(object):
         with no_alsa_error():            
             self.audio = pyaudio.PyAudio()
         
-        try:
-            self.audio.close()
-        except:
-            pass
-
         logger.debug('opening audio stream')
 
         try:
@@ -193,6 +188,11 @@ class ActiveListener(object):
         wf.writeframes(data)
         wf.close()
         logger.debug("finished saving: " + filename)
+
+        self.stream_in.stop_stream()
+        self.stream_in.close()
+        self.audio.terminate()
+        
         return filename
     
     
