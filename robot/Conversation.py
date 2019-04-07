@@ -189,6 +189,7 @@ class Conversation(object):
         logger.debug('activeListen')
         try:
             if not silent:
+                time.sleep(1)
                 Player.play(constants.getData('beep_hi.wav'))
             listener = snowboydecoder.ActiveListener([constants.getHotwordModel(config.get('hotword', 'wukong.pmdl'))])
             voice = listener.listen(
