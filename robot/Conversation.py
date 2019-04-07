@@ -4,6 +4,7 @@ import uuid
 import cProfile
 import pstats
 import io
+import re
 from robot.Brain import Brain
 from snowboy import snowboydecoder
 from robot import logging, ASR, TTS, NLU, AI, Player, config, constants, utils, statistic
@@ -124,6 +125,17 @@ class Conversation(object):
                 text = text[:-1]
             if UUID == '' or UUID == None or UUID == 'null':
                 UUID = str(uuid.uuid1())
+            # 将图片处理成HTML
+            pattern = r'https?://.+\.(?:png|jpg|jpeg|bmp|gif|JPG|PNG|JPEG|BMP|GIF)'
+            url_pattern = r'^https?://.+'
+            if re.match(pattern, text):
+                imgs = re.findall(pattern, text)
+                for img in imgs:
+                    text = text.replace(img, '<img src={} class="img"/>'.format(img))
+            elif re.match(url_pattern, text):
+                urls = re.findall(url_pattern, text)
+                for url in urls:
+                    text = text.replace(url, '<a href={} target="_blank">{}</a>'.format(url, url))
             self.history.append({'type': t, 'text': text, 'time': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), 'uuid': UUID})
 
     def _onCompleted(self, msg):
@@ -154,6 +166,10 @@ class Conversation(object):
             self.appendHistory(1, "[{}] {}".format(plugin, msg))
         else:
             self.appendHistory(1, msg)
+        pattern = r'^https?://.+'
+        if re.match(pattern, msg):
+            logger.info("内容包含URL，所以不读出来")
+            return
         voice = ''
         if utils.getCache(msg):
             logger.info("命中缓存，播放缓存语音")

@@ -33,6 +33,7 @@ Dual licensed under MIT and GNU GPLv2 © Nicolas Gallagher
   padding:15px 15px 20px;
   margin:0.5em 0 0.5em;
   background: #f3961c;
+  word-break: break-all;
   color:#fff;
   /* css3 */
   -webkit-border-radius:10px;
@@ -114,6 +115,7 @@ Dual licensed under MIT and GNU GPLv2 © Nicolas Gallagher
 .bubble-white {
   width:auto;
   max-width:40%;
+  word-break: break-all;
   position:relative;
   padding:15px 15px 5px;
   margin:0.5em 0 0.5em;
@@ -196,6 +198,7 @@ Dual licensed under MIT and GNU GPLv2 © Nicolas Gallagher
 .bubble-blue {
   width:auto;
   max-width:50%;
+  word-break: break-all;
   position:relative;
   padding:15px;
   margin:0.5em 0 0.5em;
@@ -279,6 +282,7 @@ Dual licensed under MIT and GNU GPLv2 © Nicolas Gallagher
 .bubble-red {
   width:auto;
   max-width:30%;
+  word-break: break-all;
   position:relative;
   padding:15px;
   margin:0.5em 0 0.5em;
@@ -362,6 +366,7 @@ Dual licensed under MIT and GNU GPLv2 © Nicolas Gallagher
 .bubble-green {
   width:auto;
   max-width:40%;
+  word-break: break-all;
   position:relative;
   padding:15px 15px 5px;
   margin:0.5em 0 0.5em;

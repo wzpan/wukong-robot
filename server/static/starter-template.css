@@ -41,3 +41,8 @@ body {
     padding-bottom: 10px;
     min-height: 15px;
 }
+
+.bubble img {
+    width:auto;
+    max-width: 100%;
+}

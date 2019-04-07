@@ -4,7 +4,7 @@ function appendHistory(type, query, uuid) {
         // 用户消息
         $('.history').append(`
               <div class="right">
-                 <div class="bubble-green">
+                 <div class="bubble bubble-green">
                    <div class="bubble-avatar"><i class="fas fa-user"></i></div>
                    <p style="text-align: left" id="${uuid}">${query}</p>
                  </div>
@@ -13,7 +13,7 @@ function appendHistory(type, query, uuid) {
     } else {
         $('.history').append(`
               <div class="left">
-                 <div class="bubble-white">
+                 <div class="bubble bubble-white">
                    <div class="bubble-avatar"><image src="./static/robot.png" width=32px attr="robot" /></div>
                    <p style="text-align: left" id="${uuid}">${query}</p>
                  </div>
