@@ -299,7 +299,7 @@ settings = {
     "cookie_secret" : b'*\xc4bZv0\xd7\xf9\xb2\x8e\xff\xbcL\x1c\xfa\xfeh\xe1\xb8\xdb\xd1y_\x1a',
     "template_path": "server/templates",
     "static_path": "server/static",
-    "debug": False
+    "debug": True
 }
 
 application = tornado.web.Application([
