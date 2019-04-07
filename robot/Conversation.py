@@ -128,14 +128,12 @@ class Conversation(object):
             # 将图片处理成HTML
             pattern = r'https?://.+\.(?:png|jpg|jpeg|bmp|gif|JPG|PNG|JPEG|BMP|GIF)'
             url_pattern = r'^https?://.+'
-            if re.match(pattern, text):
-                imgs = re.findall(pattern, text)
-                for img in imgs:
-                    text = text.replace(img, '<img src={} class="img"/>'.format(img))
-            elif re.match(url_pattern, text):
-                urls = re.findall(url_pattern, text)
-                for url in urls:
-                    text = text.replace(url, '<a href={} target="_blank">{}</a>'.format(url, url))
+            imgs = re.findall(pattern, text)
+            for img in imgs:
+                text = text.replace(img, '<img src={} class="img"/>'.format(img))
+            urls = re.findall(url_pattern, text)
+            for url in urls:
+                text = text.replace(url, '<a href={} target="_blank">{}</a>'.format(url, url))
             self.history.append({'type': t, 'text': text, 'time': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), 'uuid': UUID})
 
     def _onCompleted(self, msg):
