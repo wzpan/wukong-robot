@@ -147,9 +147,7 @@ class Conversation(object):
             self.doResponse(query)
 
     def pardon(self):
-        self.say("抱歉，刚刚没听清，能再说一遍吗？")
-        query = self.activeListen()
-        self.doResponse(query)
+        self.say("抱歉，刚刚没听清，能再说一遍吗？", onCompleted=lambda: self.doResponse(self.activeListen()))
 
     def say(self, msg, cache=False, plugin='', onCompleted=None):
         """ 说一句话 """
