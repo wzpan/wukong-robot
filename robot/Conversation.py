@@ -64,6 +64,10 @@ class Conversation(object):
             self.pardon()
             return
 
+        # dirty fix to assure 超越 stands for 杨超越
+        if '超越' in query and not '杨超越' in query:
+            query = query.replace('超越', '杨超越')
+
         lastImmersiveMode = self.immersiveMode
 
         if not self.brain.query(query):
