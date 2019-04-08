@@ -6,7 +6,8 @@ RUN git pull origin
 RUN git checkout ycy
 RUN git pull origin ycy # force
 RUN pip3 install -r requirements.txt
-RUN apt-get install emacs
+RUN apt-get update
+RUN apt-get install -y emacs --fix-missing
 WORKDIR /root/.wukong/contrib
 RUN git pull
 RUN wget http://hahack-1253537070.coscd.myqcloud.com/misc/photos.py
