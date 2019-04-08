@@ -4,10 +4,12 @@ MAINTAINER wzpan
 WORKDIR /root/wukong-robot
 RUN git pull origin
 RUN git checkout ycy
-RUN git pull origin ycy
+RUN git pull origin ycy # force
 RUN pip3 install -r requirements.txt
+RUN apt-get install emacs
 WORKDIR /root/.wukong/contrib
 RUN git pull
+RUN wget http://hahack-1253537070.coscd.myqcloud.com/misc/photos.py
 RUN pip3 install -r requirements.txt
 WORKDIR /root/wukong-robot
 EXPOSE 5000

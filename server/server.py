@@ -23,7 +23,7 @@ conversation, wukong = None, None
 
 suggestions = [
     '写一首关于超越的诗',
-    '超越最近的微博',
+    '超越的微博',
     '来张超越的美图',
     '讲个笑话',
     '成语接龙'
