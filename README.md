@@ -12,7 +12,7 @@ docker pull wzpan/wukong-robot:ycy
 
 ## Demo ##
 
-https://bot.hahack.com:4999
+http://bot.hahack.com:4999
 
 * 账户名：ycy
 * 密码：ycy@2019
