@@ -63,7 +63,7 @@ class Conversation(object):
             self.onSay = onSay
 
         if query.strip() == '':
-            self.pardon()
+            #self.pardon() #注释掉这条语句如果没有识别出语音，不会重复死循环beep。
             return
 
         lastImmersiveMode = self.immersiveMode
