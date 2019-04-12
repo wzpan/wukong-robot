@@ -74,9 +74,9 @@ wukong-robot 被唤醒后，用户的语音指令先经过 ASR 引擎进行 ASR 
   <img src="http://hahack-1253537070.file.myqcloud.com/images/wukong-docs/user-demo.jpg" alt="demo">
 </p>
 
-* 直接交互的视频 Demo
+* Demo视频1
   - coming soon
-  - 在视频 Demo 出来前，你可以先看看有类似交互的 [dingdang-robot 的视频 Demo](https://github.com/dingdang-robot/dingdang-robot/wiki/demo)。
+* Demo视频2：[ycy-robot 月芽特别定制版](https://www.bilibili.com/video/av48873736?from=search&seid=2193314296981067836)
 * 后台管理端 Demo
   - 体验地址：https://bot.hahack.com/  （体验用户名：wukong；体验密码：wukong@2019）
   - 月芽特别定制版体验地址：http://bot.hahack.com:4999/ （体验用户名：ycy；体验密码：ycy@2019）
