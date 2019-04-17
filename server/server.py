@@ -4,7 +4,6 @@ import base64
 import requests
 import tornado.web
 import tornado.ioloop
-from tornado import gen
 import tornado.httpserver
 import tornado.options
 import hashlib
@@ -41,8 +40,6 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class MainHandler(BaseHandler):
 
-    @tornado.web.asynchronous
-    @gen.coroutine
     def get(self):
         global conversation, wukong, suggestions
         if not self.isValidated():
@@ -65,8 +62,6 @@ class ChatHandler(BaseHandler):
         res = {'code': 0, 'message': 'ok', 'resp': msg}
         self.write(json.dumps(res))
 
-    @tornado.web.asynchronous
-    @gen.coroutine
     def post(self):
         global conversation        
         if self.validate(self.get_argument('validate')):
@@ -97,8 +92,6 @@ class ChatHandler(BaseHandler):
         
 class GetHistoryHandler(BaseHandler):
 
-    @tornado.web.asynchronous
-    @gen.coroutine
     def get(self):
         global conversation
         if not self.validate(self.get_argument('validate')):
@@ -112,8 +105,6 @@ class GetHistoryHandler(BaseHandler):
 
 class GetConfigHandler(BaseHandler):
 
-    @tornado.web.asynchronous
-    @gen.coroutine
     def get(self):
         if not self.validate(self.get_argument('validate')):
             res = {'code': 1, 'message': 'illegal visit'}
@@ -131,8 +122,6 @@ class GetConfigHandler(BaseHandler):
 
 class GetLogHandler(BaseHandler):
 
-    @tornado.web.asynchronous
-    @gen.coroutine
     def get(self):
         if not self.validate(self.get_argument('validate')):
             res = {'code': 1, 'message': 'illegal visit'}
@@ -146,8 +135,6 @@ class GetLogHandler(BaseHandler):
 
 class LogHandler(BaseHandler):
 
-    @tornado.web.asynchronous
-    @gen.coroutine
     def get(self):
         if not self.isValidated():
             self.redirect("/login")
@@ -177,8 +164,6 @@ class OperateHandler(BaseHandler):
 
 class ConfigHandler(BaseHandler):
 
-    @tornado.web.asynchronous
-    @gen.coroutine
     def get(self):
         if not self.isValidated():
             self.redirect("/login")
@@ -205,8 +190,6 @@ class ConfigHandler(BaseHandler):
 
 class DonateHandler(BaseHandler):
 
-    @tornado.web.asynchronous
-    @gen.coroutine
     def get(self):
         if not self.isValidated():
             self.redirect("/login")
@@ -225,8 +208,6 @@ class DonateHandler(BaseHandler):
 
 class APIHandler(BaseHandler):
     
-    @tornado.web.asynchronous
-    @gen.coroutine
     def get(self):
         if not self.isValidated():
             self.redirect("/login")
@@ -246,8 +227,6 @@ class APIHandler(BaseHandler):
 
 class UpdateHandler(BaseHandler):
     
-    @tornado.web.asynchronous
-    @gen.coroutine
     def post(self):
         global wukong
         if self.validate(self.get_argument('validate')):            
@@ -268,16 +247,12 @@ class UpdateHandler(BaseHandler):
         
 class LoginHandler(BaseHandler):
     
-    @tornado.web.asynchronous
-    @gen.coroutine
     def get(self):
         if self.isValidated():
             self.redirect('/')
         else:
             self.render('login.html', error=None)
 
-    @tornado.web.asynchronous
-    @gen.coroutine
     def post(self):
         if self.get_argument('username') == config.get('/server/username') and \
            hashlib.md5(self.get_argument('password').encode('utf-8')).hexdigest() \
@@ -290,8 +265,6 @@ class LoginHandler(BaseHandler):
 
 class LogoutHandler(BaseHandler):
     
-    @tornado.web.asynchronous
-    @gen.coroutine
     def get(self):
         if self.isValidated():
             self.set_cookie("validation", '')
