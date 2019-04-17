@@ -39,6 +39,7 @@
 * [联系](#联系)
 * [感谢](#感谢)
 * [FAQ](#faq)
+* [教学视频](#教学视频)
 * [免责声明](#免责声明)
 
 ## 特性
@@ -205,6 +206,15 @@ wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式�
 - 我能否更换成其他唤醒词，而不是叫“孙悟空”？
 
   - 能。到 [snowboy官网](http://snowboy.kitt.ai/) 训练一个自己的唤醒词，然后将生成的 pmdl 文件放到 ~/.wukong 中，然后修改配置文件中的 `hotword` 配置即可。
+  
+## 教学视频
+
+想了解全栈项目 wukong-robot 是怎么开发出来的吗？那就不能错过我们在腾讯课堂NEXT学院的视频课程。
+
+这套视频课程将从零开始，一步步教你如何使用 Python 开发出 wukong-robot 。涉及 Python 的基础语法，以及离线唤醒（KWS）、静音检测（VAD）、语音识别（ASR）、语音合成（TTS）、对话机器人等知识背景的介绍及相关sdk和服务的接入，并在这个基础上如何通过一步步的重构优化，开发出一个灵活可配置的 wukong-robot 。另外，还介绍了如何使用 tornado + twitter bootstrap + jQuery + Ajax 开发后台管理端及前端页面。进阶版中还包括了爬虫技术及 Flask 等技术的相关实战。
+
+* 基础篇：https://ke.qq.com/course/387931?tuin=1b8113f4
+* 完整篇：https://ke.qq.com/course/384790?tuin=1b8113f4
 
 ## 免责声明
 
