@@ -216,6 +216,8 @@ wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式�
 * 基础篇：https://ke.qq.com/course/387931?tuin=1b8113f4
 * 完整篇：https://ke.qq.com/course/384790?tuin=1b8113f4
 
+> 优惠信息：加QQ群（580447290）联系小木鱼可以领取课程优惠券。
+
 ## 免责声明
 
 * wukong-robot 只用作个人学习研究，如因使用 wukong-robot 导致任何损失，本人概不负责。
