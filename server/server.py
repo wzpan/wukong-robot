@@ -272,7 +272,7 @@ class LogoutHandler(BaseHandler):
 
 
 settings = {
-    "cookie_secret" : b'*\xc4bZv0\xd7\xf9\xb2\x8e\xff\xbcL\x1c\xfa\xfeh\xe1\xb8\xdb\xd1y_\x1a',
+    "cookie_secret" : '__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__',
     "template_path": "server/templates",
     "static_path": "server/static",
     "debug": False
