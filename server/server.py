@@ -260,6 +260,7 @@ class LoginHandler(BaseHandler):
         if self.get_argument('username') == config.get('/server/username') and \
            hashlib.md5(self.get_argument('password').encode('utf-8')).hexdigest() \
            == config.get('/server/validate'):
+            print('success')
             self.set_secure_cookie("validation", config.get('/server/validate'))
             self.redirect("/")
         else:
@@ -275,7 +276,7 @@ class LogoutHandler(BaseHandler):
 
 
 settings = {
-    "cookie_secret": config.get('cookie_secret', "__GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__"),
+    "cookie_secret": config.get('/server/cookie_secret', "__GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__"),
     "template_path": "server/templates",
     "static_path": "server/static",
     "login_url": "/login",

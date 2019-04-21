@@ -4,11 +4,11 @@ $(function() {
         e.preventDefault();
         var username = $("input#username")[0].value;
         var password = $("input#password")[0].value;
-        args = {'_xsrf': getCookie('_xsrf'), 'username': username, "password": password}
+        args = {'username': username, "password": password}
         $.ajax({
             url: '/login',
             type: "POST",
-            data: $.param(args),
+            data: args,
             success: function(res) {
                 var data = JSON.parse(res);
                 if (data.code == 0) {
