@@ -297,7 +297,9 @@ application = tornado.web.Application([
     (r"/logout", LogoutHandler),
     (r"/api", APIHandler),
     (r"/upgrade", UpdateHandler),
-    (r"/donate", DonateHandler)
+    (r"/donate", DonateHandler),
+    (r"/photo/(.+\.(?:png|jpg|jpeg|bmp|gif|JPG|PNG|JPEG|BMP|GIF))", tornado.web.StaticFileHandler, {'path': config.get('/camera/dest_path', 'server/static')}),
+    (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': 'server/static'})
 ], **settings)
 
 

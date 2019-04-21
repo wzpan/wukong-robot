@@ -3,107 +3,75 @@
 import os
 import subprocess
 import time
-import sys
-from robot import config, constants
+from robot import config, constants, logging
 from robot.sdk.AbstractPlugin import AbstractPlugin
+
+logger = logging.getLogger(__name__)
 
 class Plugin(AbstractPlugin):
 
     SLUG = "camera"
 
     def handle(self, text, parsed):
-        sys.path.append(constants.LIB_PATH)
-        from robot.utils import emailUser
-
-        quality = 100
-        count_down = 3
-        dest_path = os.path.expanduser('~/pictures')
-        device = '/dev/video0'
-        vertical_flip = False
-        horizontal_flip = False
-        send_to_user = True
-        sound = True
-        usb_camera = False
-        # read config
-        profile = config.get()
-        if profile[self.SLUG] and 'enable' in profile[self.SLUG] and \
-           profile[self.SLUG]['enable']:
-            if 'count_down' in profile[self.SLUG] and \
-               profile[self.SLUG]['count_down'] > 0:
-                count_down = profile[self.SLUG]['count_down']
-            if 'quality' in profile[self.SLUG] and \
-               profile[self.SLUG]['quality'] > 0:
-                quality = profile[self.SLUG]['quality']
-            if 'dest_path' in profile[self.SLUG] and \
-               profile[self.SLUG]['dest_path'] != '':
-                dest_path = profile[self.SLUG]['dest_path']
-            if 'device' in profile[self.SLUG] and \
-               profile[self.SLUG]['device'] != '':
-                device = profile[self.SLUG]['device']
-            if 'vertical_flip' in profile[self.SLUG] and \
-               profile[self.SLUG]['vertical_flip']:
-                vertical_flip = True
-            if 'horizontal_flip' in profile[self.SLUG] and \
-               profile[self.SLUG]['horizontal_flip']:
-                horizontal_flip = True
-            if 'send_to_user' in profile[self.SLUG] and \
-               not profile[self.SLUG]['send_to_user']:
-                send_to_user = False
-            if 'sound' in profile[self.SLUG] and \
-               not profile[self.SLUG]['sound']:
-                sound = False
-            if 'usb_camera' in profile[self.SLUG] and \
-                    profile[self.SLUG]['usb_camera']:
-                usb_camera = True
-            if any(word in text for word in [u"安静", u"偷偷", u"悄悄"]):
-                sound = False
-            try:
-                if not os.path.exists(dest_path):
-                    os.makedirs(dest_path)
-            except Exception:
-                self.say(u"抱歉，照片目录创建失败", cache=True)
-                return
-            dest_file = os.path.join(dest_path, "%s.jpg" % time.time())
-            if usb_camera:
-                command = "fswebcam --no-banner -r 1024x765 -q -d %s" % (device)
-                if vertical_flip:
-                    command = command+' -s v '
-                if horizontal_flip:
-                    command = command+'-s h '
-                command = command+dest_file
-            else:
-                command = ['raspistill', '-o', dest_file, '-q', str(quality)]
-                if count_down > 0 and sound:
-                    command.extend(['-t', str(count_down*1000)])
-                if vertical_flip:
-                    command.append('-vf')
-                if horizontal_flip:
-                    command.append('-hf')
-            if sound and count_down > 0:
-                self.say(u"收到，%d秒后启动拍照" % (count_down), cache=True)
-                if usb_camera:
-                    time.sleep(count_down)
-
-            process = subprocess.Popen(command, shell=usb_camera)
-            res = process.wait()
-            if res != 0:
-                if sound:
-                    self.say(u"拍照失败，请检查相机是否连接正确", cache=True)
-                return
-            if sound:
-                self.play(constants.getData('camera.wav'))
-            # send to user
-            if send_to_user:
-                if sound:
-                    self.say(u'拍照成功！正在发送照片到您的邮箱', cache=True)
-                if emailUser(u"这是刚刚为您拍摄的照片", "", [dest_file]):
-                    if sound:
-                        self.say(u'发送成功', cache=True)
-                else:
-                    if sound:
-                        self.say(u'发送失败了', cache=True)
+        quality = config.get('/camera/quality', 100)
+        count_down = config.get('/camera/count_down', 3)
+        dest_path = config.get('/camera/dest_path', os.path.expanduser('~/pictures'))
+        device = config.get('/camera/device', '/dev/video0')
+        vertical_flip = config.get('/camera/verical_flip', False)
+        horizontal_flip = config.get('/camera/horizontal_flip', False)
+        sound = config.get('/camera/sound', True)
+        camera_type = config.get('/camera/type', 0)
+        if config.has('/camera/usb_camera') and config.get('/camera/usb_camera'):
+            camera_type = 0
+        if any(word in text for word in [u"安静", u"偷偷", u"悄悄"]):
+            sound = False
+        try:
+            if not os.path.exists(dest_path):
+                os.makedirs(dest_path)
+        except Exception:
+            self.say(u"抱歉，照片目录创建失败", cache=True)
+            return
+        dest_file = os.path.join(dest_path, "%s.jpg" % time.time())
+        if camera_type == 0:
+            # usb camera
+            logger.info('usb camera')
+            command = ['fswebcam', '--no-banner', '-r', '1024x765', '-q', '-d', device]
+            if vertical_flip:
+                command = command+' -s v '
+            if horizontal_flip:
+                command = command+'-s h '
+            command = command+dest_file
+        elif camera_type == 1:
+            # Raspberry Pi 5MP
+            logger.info('Raspberry Pi 5MP camera')
+            command = ['raspistill', '-o', dest_file, '-q', str(quality)]
+            if count_down > 0 and sound:
+                command.extend(['-t', str(count_down*1000)])
+            if vertical_flip:
+                command.append('-vf')
+            if horizontal_flip:
+                command.append('-hf')
         else:
-            self.say(u"请先在配置文件中开启相机拍照功能", cache=True)
+            # notebook camera
+            logger.info('notebook camera')
+            command = ['imagesnap', dest_file]
+            if count_down > 0 and sound:
+                command.extend(['-w', str(count_down)])
+        if sound and count_down > 0:
+            self.say(u"收到，%d秒后启动拍照" % (count_down), cache=True)
+            if camera_type == 0:
+                time.sleep(count_down)
+
+        try:
+            subprocess.run(command, shell=False, check=True)
+            if sound:                
+                self.play(constants.getData('camera.wav'))
+                photo_url = 'http://{}:{}/photo/{}'.format(config.get('/server/host'), config.get('/server/port'), os.path.basename(dest_file))
+                self.say(u'拍照成功：{}'.format(photo_url), cache=True)
+        except subprocess.CalledProcessError as e:
+            logger.error(e)
+            if sound:
+                self.say(u"拍照失败，请检查相机是否连接正确", cache=True)        
 
 
     def isValid(self, text, parsed):

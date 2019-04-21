@@ -136,17 +136,17 @@ email:
 
 # 拍照
 # 需接入摄像头才能使用
-# 注意：本插件只在树莓派5MP摄像头或者USB摄像头上测试过
 camera:
     enable: false
-    dest_path: "/home/pi/camera" # 保存目录
-    quality: 5              # 成像质量（0~100）
-    vertical_flip: true     # 竖直翻转
-    horizontal_flip: false  # 水平翻转
+    type: 2                 # 摄像头类型 0：usb_camera，1：树莓派 5MP 摄像头，2：笔记本摄像头
+                            # 对于笔记本摄像头，请先安装 imagesnap 。例如 Mac OSX： brew install imagesnap
+    dest_path: "/Users/panweizhou/Pictures/" # 保存目录
+    quality: 5              # 成像质量（0~100），不支持 imagesnap
+    vertical_flip: true     # 竖直翻转，不支持 imagesnap
+    horizontal_flip: false  # 水平翻转，不支持 imagesnap
     count_down: 3           # 倒计时（秒），仅当开启倒计时时有效
-    sendToUser: true        # 拍完照是否发送到邮箱
     sound: true             # 是否有拍照音效
-    usb_camera: false       # 是否是 USB 摄像头
+    usb_camera: false       # 是否是 USB 摄像头（已废弃，请使用 type）
 
 ## 本地音乐插件
 LocalPlayer:
