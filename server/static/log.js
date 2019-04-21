@@ -2,7 +2,7 @@ function refresh(msg) {
     $.ajax({
         url: '/getlog',
         type: "GET",
-        data: {'_xsrf': getCookie('_xsrf')},
+        data: $.param({'validate': getCookie('validation')}),
         success: function(res) {
             var data = JSON.parse(res);            
             if (data.code == 0) {

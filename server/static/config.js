@@ -2,7 +2,7 @@ function saveConfig(msg) {
     $.ajax({
         url: '/config',
         type: "POST",
-        data: {"config": $('#config-input').val(), '_xsrf': getCookie('_xsrf')},
+        data: {"config": $('#config-input').val(), 'validate': getCookie('validation')},
         success: function(res) {
             var data = JSON.parse(res);
             if (!msg) msg='';
@@ -22,7 +22,7 @@ $(function() {
     $.ajax({
         url: '/getconfig',
         type: "GET",
-        data: {'_xsrf': getCookie('_xsrf')},
+        data: {'validate': getCookie('validation')},
         success: function(res) {
             var data = JSON.parse(res);            
             if (data.code == 0) {

@@ -4,7 +4,7 @@ function restart() {
     $.ajax({
         url: '/operate',
         type: "POST",
-        data: {"type": "restart", "_xsrf": getCookie("_xsrf")},
+        data: {"type": "restart", "validate": getCookie("validation")},
         success: function(res) {
             var data = JSON.parse(res);
             if (data.code == 0) {
@@ -142,7 +142,7 @@ $(function() {
             $.ajax({
                 url: '/chat',
                 type: "POST",
-                data: {"type": "voice", "voice": data, "_xsrf": getCookie("_xsrf")},
+                data: {"type": "voice", "voice": data, "validate": getCookie("validation")},
                 success: function(res) {
                     var data = JSON.parse(res);
                     if (data.code == 0) {

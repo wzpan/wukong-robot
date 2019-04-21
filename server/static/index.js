@@ -26,7 +26,7 @@ function appendHistory(type, query, uuid) {
 }
 
 function getHistory () {
-    args = {'_xsrf': getCookie('_xsrf')}
+    args = {'validate': getCookie('validation')}
     $.ajax({
         url: '/gethistory',
         type: "GET",
@@ -61,7 +61,7 @@ function showProgress() {
 }
 
 function upgrade() {
-    args = {'_xsrf': getCookie('_xsrf')}
+    args = {'validate': getCookie('validation')}
     $.ajax({
         url: '/upgrade',
         type: "POST",
@@ -111,7 +111,7 @@ $(function() {
         var query = $("input#query")[0].value;
         appendHistory(0, query, uuid);
         $('input#query').val('');
-        args = {"type": "text", "query": query, '_xsrf': getCookie('_xsrf'), "uuid": uuid}
+        args = {"type": "text", "query": query, 'validate': getCookie('validation'), "uuid": uuid}
         $.ajax({
             url: '/chat',
             type: "POST",
