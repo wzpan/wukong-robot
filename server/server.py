@@ -1,5 +1,5 @@
 import json
-from robot import config, utils, logging, constants, Updater
+from robot import config, utils, logging, Updater
 import base64
 import requests
 import tornado.web
