@@ -98,7 +98,7 @@ class GetHistoryHandler(BaseHandler):
 
     def get(self):
         global conversation
-        if not self.validate(self.get_argument('validate', None), self.get_argument('_xsrf', None)):
+        if not self.validate(self.get_argument('validate', default=None), self.get_argument('_xsrf', default=None)):
             res = {'code': 1, 'message': 'illegal visit'}
             self.write(json.dumps(res))
         else:
@@ -110,7 +110,7 @@ class GetHistoryHandler(BaseHandler):
 class GetConfigHandler(BaseHandler):
 
     def get(self):
-        if not self.validate(self.get_argument('validate', None), self.get_argument('_xsrf', None)):
+        if not self.validate(self.get_argument('validate', default=None), self.get_argument('_xsrf', default=None)):
             res = {'code': 1, 'message': 'illegal visit'}
             self.write(json.dumps(res))
         else:
@@ -127,7 +127,7 @@ class GetConfigHandler(BaseHandler):
 class GetLogHandler(BaseHandler):
 
     def get(self):
-        if not self.validate(self.get_argument('validate', None), self.get_argument('_xsrf', None)):
+        if not self.validate(self.get_argument('validate', default=None), self.get_argument('_xsrf', default=None)):
             res = {'code': 1, 'message': 'illegal visit'}
             self.write(json.dumps(res))
         else:
@@ -150,7 +150,7 @@ class OperateHandler(BaseHandler):
 
     def post(self):
         global wukong
-        if self.validate(self.get_argument('validate', None), self.get_argument('_xsrf', None)):
+        if self.validate(self.get_argument('validate', default=None), self.get_argument('_xsrf', default=None)):
             if self.get_argument('type') == 'restart':
                 res = {'code': 0, 'message': 'ok'}
                 self.write(json.dumps(res))
@@ -176,7 +176,7 @@ class ConfigHandler(BaseHandler):
 
     def post(self):
         global conversation        
-        if self.validate(self.get_argument('validate', None), self.get_argument('_xsrf', None)):
+        if self.validate(self.get_argument('validate', default=None), self.get_argument('_xsrf', default=None)):
             configStr = self.get_argument('config')
             try:
                 yaml.load(configStr)
@@ -232,7 +232,7 @@ class UpdateHandler(BaseHandler):
     
     def post(self):
         global wukong
-        if self.validate(self.get_argument('validate', None), self.get_argument('_xsrf', None)):
+        if self.validate(self.get_argument('validate', default=None), self.get_argument('_xsrf', default=None)):
             if wukong.update():
                 res = {'code': 0, 'message': 'ok'}
                 self.write(json.dumps(res))
