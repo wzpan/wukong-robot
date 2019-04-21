@@ -19,6 +19,12 @@ assignees: wzpan
 
 （例如 Raspbian Stretch、Ubuntu 16.04）
 
+**离线唤醒相关**
+
+如果是离线唤醒相关的问题，是否已确保 `arecord temp.wav`、`aplay temp.wav` (Linux) 或 `rec temp.wav`、`play temp.wav` （Mac）已正常工作？（注意要求不能带任何其他参数）如果不能，请先配置好麦克风和音响再尝试。
+
+—— 我已确保录音、播放都正常工作才尝试 wukong-robot 。
+
 **问题描述**
 
 具体说明下问题
