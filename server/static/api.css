@@ -39,3 +39,7 @@ h1,h2,h3,h4,h5,h6{
     text-rendering:optimizelegibility;
     font-weight:bold
 }
+pre {
+    word-break: break-all;
+    white-space: pre-wrap;
+}

@@ -2,18 +2,21 @@
 {% block body %}
 <link href="{{static_url('signin.css')}}" rel="stylesheet">
   <div class="container">
-  <form action="/login" class="form-signin" method=post>
+  <form action="#" class="form-signin">
     <center>
       <h1 class="h3 mb-3 font-weight-normal">Please login</h1>
       <label for="username" class="sr-only">User Name</label>
-      <input type="text" name="username" class="form-control" placeholder="User Name" required autofocus>
+      <input type="text" name="username" id="username" class="form-control" placeholder="User Name" required autofocus>
       <label for="password" class="sr-only">Password</label>
-      <input type="password" name="password" class="form-control" placeholder="Password" required>
-      <p><input class="btn btn-lg btn-primary btn-block" type=submit value=Login></p>
+      <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+      <p><input class="btn btn-lg btn-primary btn-block LOGIN" type=submit value=Login></p>
       {% if error %}
       <p style="color:#ff0000">{{ error }}</p>
       {% end %}
     </center>
   </form>
   </div>
+
+<script src="{{static_url('main.js')}}" crossorigin="anonymous"></script>
+<script src="{{static_url('login.js')}}" crossorigin="anonymous"></script>
 {% end %}

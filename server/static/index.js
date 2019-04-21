@@ -26,10 +26,11 @@ function appendHistory(type, query, uuid) {
 }
 
 function getHistory () {
+    args = {'_xsrf': getCookie('_xsrf')}
     $.ajax({
         url: '/gethistory',
         type: "GET",
-        data: {'validate': getCookie('validation')},
+        data: $.param(args),
         success: function(res) {            
             res = JSON.parse(res);
             if (res.code == 0) {
@@ -60,10 +61,11 @@ function showProgress() {
 }
 
 function upgrade() {
+    args = {'_xsrf': getCookie('_xsrf')}
     $.ajax({
         url: '/upgrade',
         type: "POST",
-        data: {'validate': getCookie('validation')},
+        data: $.param(args),        
         success: function(res) {
             $('.UPDATE-SPIN')[0].hidden = true;
             $('.UPDATE')[0].disabled = false;
@@ -109,10 +111,11 @@ $(function() {
         var query = $("input#query")[0].value;
         appendHistory(0, query, uuid);
         $('input#query').val('');
+        args = {"type": "text", "query": query, '_xsrf': getCookie('_xsrf'), "uuid": uuid}
         $.ajax({
             url: '/chat',
             type: "POST",
-            data: {"type": "text", "query": query, "validate": getCookie("validation"), "uuid": uuid},
+            data: $.param(args),
             success: function(res) {
                 var data = JSON.parse(res);
                 if (data.code == 0) {

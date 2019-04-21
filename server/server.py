@@ -33,8 +33,12 @@ suggestions = [
 
 class BaseHandler(tornado.web.RequestHandler):
     def isValidated(self):
-        return self.get_cookie("validation") == config.get('/server/validate', '')
-    def validate(self, validation):
+        if not self.get_secure_cookie('validation'):
+            return False
+        return str(self.get_secure_cookie("validation"), encoding='utf-8') == config.get('/server/validate', '')
+    def validate(self, validation, _xsrf):
+        if _xsrf:
+            return _xsrf == self.get_cookie('_xsrf')
         return validation == config.get('/server/validate', '')
 
 
@@ -63,8 +67,8 @@ class ChatHandler(BaseHandler):
         self.write(json.dumps(res))
 
     def post(self):
-        global conversation        
-        if self.validate(self.get_argument('validate')):
+        global conversation
+        if self.validate(self.get_argument('validate', default=None), self.get_argument('_xsrf', default=None)):
             if self.get_argument('type') == 'text':
                 query = self.get_argument('query')
                 uuid = self.get_argument('uuid')
@@ -94,7 +98,7 @@ class GetHistoryHandler(BaseHandler):
 
     def get(self):
         global conversation
-        if not self.validate(self.get_argument('validate')):
+        if not self.validate(self.get_argument('validate', None), self.get_argument('_xsrf', None)):
             res = {'code': 1, 'message': 'illegal visit'}
             self.write(json.dumps(res))
         else:
@@ -106,7 +110,7 @@ class GetHistoryHandler(BaseHandler):
 class GetConfigHandler(BaseHandler):
 
     def get(self):
-        if not self.validate(self.get_argument('validate')):
+        if not self.validate(self.get_argument('validate', None), self.get_argument('_xsrf', None)):
             res = {'code': 1, 'message': 'illegal visit'}
             self.write(json.dumps(res))
         else:
@@ -123,7 +127,7 @@ class GetConfigHandler(BaseHandler):
 class GetLogHandler(BaseHandler):
 
     def get(self):
-        if not self.validate(self.get_argument('validate')):
+        if not self.validate(self.get_argument('validate', None), self.get_argument('_xsrf', None)):
             res = {'code': 1, 'message': 'illegal visit'}
             self.write(json.dumps(res))
         else:
@@ -146,7 +150,7 @@ class OperateHandler(BaseHandler):
 
     def post(self):
         global wukong
-        if self.validate(self.get_argument('validate')):
+        if self.validate(self.get_argument('validate', None), self.get_argument('_xsrf', None)):
             if self.get_argument('type') == 'restart':
                 res = {'code': 0, 'message': 'ok'}
                 self.write(json.dumps(res))
@@ -172,7 +176,7 @@ class ConfigHandler(BaseHandler):
 
     def post(self):
         global conversation        
-        if self.validate(self.get_argument('validate')):            
+        if self.validate(self.get_argument('validate', None), self.get_argument('_xsrf', None)):
             configStr = self.get_argument('config')
             try:
                 yaml.load(configStr)
@@ -213,9 +217,8 @@ class APIHandler(BaseHandler):
             self.redirect("/login")
         else:
             content = ''
-            with open(os.path.join(constants.TEMPLATE_PATH, "api.md"), 'r') as f:
-                content = f.read()
-            content = markdown.markdown(content, extensions=['codehilite',
+            r = requests.get('https://raw.githubusercontent.com/wzpan/wukong-contrib/master/docs/api.md')
+            content = markdown.markdown(r.text, extensions=['codehilite',
                                                'tables',
                                                'fenced_code',
                                                'meta',
@@ -229,7 +232,7 @@ class UpdateHandler(BaseHandler):
     
     def post(self):
         global wukong
-        if self.validate(self.get_argument('validate')):            
+        if self.validate(self.get_argument('validate', None), self.get_argument('_xsrf', None)):
             if wukong.update():
                 res = {'code': 0, 'message': 'ok'}
                 self.write(json.dumps(res))
@@ -257,7 +260,7 @@ class LoginHandler(BaseHandler):
         if self.get_argument('username') == config.get('/server/username') and \
            hashlib.md5(self.get_argument('password').encode('utf-8')).hexdigest() \
            == config.get('/server/validate'):
-            self.set_cookie("validation", config.get('/server/validate'))
+            self.set_secure_cookie("validation", config.get('/server/validate'))
             self.redirect("/")
         else:
             self.render('login.html', error="登录失败")
@@ -267,14 +270,16 @@ class LogoutHandler(BaseHandler):
     
     def get(self):
         if self.isValidated():
-            self.set_cookie("validation", '')
+            self.set_secure_cookie("validation", '')
         self.redirect("/login")
 
 
 settings = {
-    "cookie_secret" : '__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__',
+    "cookie_secret": config.get('cookie_secret', "__GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__"),
     "template_path": "server/templates",
     "static_path": "server/static",
+    "login_url": "/login",
+    "xsrf_cookies": True,
     "debug": False
 }
 
