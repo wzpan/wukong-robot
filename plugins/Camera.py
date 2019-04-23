@@ -37,10 +37,10 @@ class Plugin(AbstractPlugin):
             logger.info('usb camera')
             command = ['fswebcam', '--no-banner', '-r', '1024x765', '-q', '-d', device]
             if vertical_flip:
-                command = command+' -s v '
+                command.extend(['-s', 'v'])
             if horizontal_flip:
-                command = command+'-s h '
-            command = command+dest_file
+                command.extend(['-s', 'h'])
+            command.append(dest_file)
         elif camera_type == 1:
             # Raspberry Pi 5MP
             logger.info('Raspberry Pi 5MP camera')
