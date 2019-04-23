@@ -39,7 +39,6 @@ class BaseHandler(tornado.web.RequestHandler):
     def validate(self, validation):
         if '"' in validation:
             validation = validation.replace('"', '')
-        print(str(self.get_cookie('validation')))
         return validation == config.get('/server/validate', '') or validation == str(self.get_cookie('validation'))
 
 
