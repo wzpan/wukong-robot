@@ -138,7 +138,7 @@ email:
 # 需接入摄像头才能使用
 camera:
     enable: false
-    type: 2                 # 摄像头类型 0：usb_camera，1：树莓派 5MP 摄像头，2：Mac OSX 摄像头
+    type: 0                 # 摄像头类型 0：usb_camera，1：树莓派 5MP 摄像头，2：Mac OSX 摄像头
                             # 对于 Mac OSX 摄像头，请先安装 imagesnap 。例如 Mac OSX： brew install imagesnap
     dest_path: "/Users/panweizhou/Pictures/" # 保存目录
     quality: 5              # 成像质量（0~100），不支持 imagesnap
