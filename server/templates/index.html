@@ -39,7 +39,7 @@
   <p><i class="fas fa-info-circle"></i> 本站点是 wukong-robot 的后台管理端，仅供远程交互，不支持离线唤醒。</p>
   {% if notices %}
     {% for notice in notices %}
-      <p><i class="fas fa-bell"></i> {% raw notice %}</p>
+      <p><i class="fas fa-bell"></i> {{ linkify(notice) }}</p>
     {% end %}
   {% end %}
 </div>
