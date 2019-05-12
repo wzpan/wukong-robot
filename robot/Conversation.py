@@ -24,6 +24,7 @@ class Conversation(object):
         self.isRecording = False
         self.profiling = profiling
         self.onSay = None
+        self.hasPardon = False
 
     def getHistory(self):
         return self.history
@@ -147,7 +148,12 @@ class Conversation(object):
             self.doResponse(query)
 
     def pardon(self):
-        self.say("抱歉，刚刚没听清，能再说一遍吗？", onCompleted=lambda: self.doResponse(self.activeListen()))
+        if not self.hasPardon:
+            self.say("抱歉，刚刚没听清，能再说一遍吗？", onCompleted=lambda: self.doResponse(self.activeListen()))
+            self.hasPardon = True
+        else:
+            self.say("没听清呢")
+            self.hasPardon = False
 
     def say(self, msg, cache=False, plugin='', onCompleted=None):
         """ 说一句话 """
