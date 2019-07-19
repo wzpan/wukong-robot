@@ -81,6 +81,8 @@ def has_path(items):
     curConfig = _config
     if isinstance(items, str) and items[0] == '/':
         items = items.split('/')[1:]
+    else:
+        items = [items]
     for key in items:
         if key in curConfig:
             curConfig = curConfig[key]

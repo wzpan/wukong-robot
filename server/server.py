@@ -280,7 +280,7 @@ settings = {
     "template_path": "server/templates",
     "static_path": "server/static",
     "login_url": "/login",    
-    "debug": False
+    "debug": True
 }
 
 application = tornado.web.Application([

@@ -87,12 +87,13 @@
 {% end %}
 </div>
 
-<div class="container history" id="container">  
-  {% if not history or len(history) == 0 %}
-  <center>
-    <p> 无聊天记录，请先和 wukong-robot 聊会天吧~ </p>
-  </center>
-  {% else %}
+<div class="container" id="container">
+  <div class="history">
+    {% if not history or len(history) == 0 %}
+    <center>
+      <p> 无聊天记录，请先和 wukong-robot 聊会天吧~ </p>
+    </center>
+    {% else %}
       {% for h in history %}
           {% if h['type'] == 0 %}
               <div class="right">
@@ -110,22 +111,47 @@
               </div>
           {% end %}
       {% end %}
-  {% end %}
+    {% end %}
+  </div><!-- <div class="history"> -->
+
+  <div class="query-form">
+    <center>
+      <form class="form-row" action="#">
+        <label for="query" class="col-sm-2 col-form-label col-form-label-lg">说句话：</label>
+        <div class="col-7">
+          <input type="text" class="form-control" name="query" id="query" placeholder="{{suggestion}}" required autofocus>    </div>
+        &nbsp;
+        <button type="submit" class="btn btn-primary mb-2 CHAT"><i class="fas fa-comment"></i> 发送</button>
+      </form>
+    </center>
+  </div><!-- <div class="query-form"> -->
+
+
+  <hr class="divider">
+
+  <div class="sponsors">
+        <h2 class="featurette-heading">赞助商</h2>
+        <p class="lead">感谢以下企业/组织对本项目的赞助：</p>
+      <p align="center">
+  <a href="https://opencollective.com/wukong-robot/sponsor/0/website" target="_blank"><img src="https://opencollective.com/wukong-robot/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/wukong-robot/sponsor/1/website" target="_blank"><img src="https://opencollective.com/wukong-robot/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/wukong-robot/sponsor/2/website" target="_blank"><img src="https://opencollective.com/wukong-robot/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/wukong-robot/sponsor/3/website" target="_blank"><img src="https://opencollective.com/wukong-robot/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/wukong-robot/sponsor/4/website" target="_blank"><img src="https://opencollective.com/wukong-robot/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/wukong-robot/sponsor/5/website" target="_blank"><img src="https://opencollective.com/wukong-robot/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/wukong-robot/sponsor/6/website" target="_blank"><img src="https://opencollective.com/wukong-robot/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/wukong-robot/sponsor/7/website" target="_blank"><img src="https://opencollective.com/wukong-robot/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/wukong-robot/sponsor/8/website" target="_blank"><img src="https://opencollective.com/wukong-robot/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/wukong-robot/sponsor/9/website" target="_blank"><img src="https://opencollective.com/wukong-robot/sponsor/9/avatar.svg"></a>
+      </p>
+      <blockquote>
+        <p class="text-muted quote">欢迎<a href="https://opencollective.com/wukong-robot/contribute/tier/8131-sponsor" target="_blank">成为这个项目的赞助商（sponsor）</a>，您将可以把一个带链接的 logo 放在 wukong-robot 后台管理端的首页、捐赠页面以及 Github 项目首页中。</p>
+      </blockquote>
+    </div>
+
 </div>
 
 <br/>
-
-<div class="container query-form">
-  <center>
-<form class="form-row" action="#">
-    <label for="query" class="col-sm-2 col-form-label col-form-label-lg">说句话：</label>
-    <div class="col-7">
-      <input type="text" class="form-control" name="query" id="query" placeholder="{{suggestion}}" required autofocus>    </div>
-    &nbsp;
-    <button type="submit" class="btn btn-primary mb-2 CHAT"><i class="fas fa-comment"></i> 发送</button>
-</form>
-</center>
-</div>
 
 <ul id="recorder" class="mfb-component--br mfb-zoomin" data-mfb-toggle="hover">
       <li class="mfb-component__wrap">
