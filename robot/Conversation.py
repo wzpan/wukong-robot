@@ -184,9 +184,10 @@ class Conversation(object):
             except Exception as e:
                 logger.error('保存缓存失败：{}'.format(e))
         if onCompleted is None:
-            onCompleted = lambda: self._onCompleted(msg)
+            onCompleted = lambda: self._onCompleted(msg)        
         self.player = Player.SoxPlayer()
         self.player.play(voice, not cache, onCompleted)
+        utils.lruCache()  # 清理缓存
 
     def activeListen(self, silent=False):
         """ 主动问一个问题(适用于多轮对话) """
