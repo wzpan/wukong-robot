@@ -1,5 +1,5 @@
 import json
-from robot import config, utils, logging, Updater
+from robot import config, utils, logging, Updater, constants
 import base64
 import requests
 import tornado.web
@@ -61,9 +61,9 @@ class MainHandler(BaseHandler):
 
 class ChatHandler(BaseHandler):
 
-    def onResp(self, msg):
+    def onResp(self, msg, audio):
         logger.debug('response msg: {}'.format(msg))
-        res = {'code': 0, 'message': 'ok', 'resp': msg}
+        res = {'code': 0, 'message': 'ok', 'resp': msg, 'audio': audio}
         self.write(json.dumps(res))
 
     def post(self):
@@ -72,7 +72,7 @@ class ChatHandler(BaseHandler):
             if self.get_argument('type') == 'text':
                 query = self.get_argument('query')
                 uuid = self.get_argument('uuid')
-                conversation.doResponse(query, uuid, onSay=lambda msg: self.onResp(msg))
+                conversation.doResponse(query, uuid, onSay=lambda msg, audio: self.onResp(msg, audio))
                 
             elif self.get_argument('type') == 'voice':
                 voice_data = self.get_argument('voice')
@@ -84,7 +84,7 @@ class ChatHandler(BaseHandler):
                           ' ' + nfile + ' rate 16k'
                 subprocess.call([soxCall], shell=True, close_fds=True)
                 utils.check_and_delete(tmpfile)
-                conversation.doConverse(nfile, onSay=lambda msg: self.onResp(msg))
+                conversation.doConverse(nfile, onSay=lambda msg, audio: self.onResp(msg, audio))
             else:
                 res = {'code': 1, 'message': 'illegal type'}
                 self.write(json.dumps(res))
@@ -298,6 +298,7 @@ application = tornado.web.Application([
     (r"/upgrade", UpdateHandler),
     (r"/donate", DonateHandler),
     (r"/photo/(.+\.(?:png|jpg|jpeg|bmp|gif|JPG|PNG|JPEG|BMP|GIF))", tornado.web.StaticFileHandler, {'path': config.get('/camera/dest_path', 'server/static')}),
+    (r"/audio/(.+\.(?:mp3|wav|pcm))", tornado.web.StaticFileHandler, {'path': constants.TEMP_PATH}),
     (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': 'server/static'})
 ], **settings)
 

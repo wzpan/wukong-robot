@@ -112,17 +112,23 @@ def get_file_content(filePath):
     with open(filePath, 'rb') as fp:
         return fp.read()
 
-def check_and_delete(fp):
+def check_and_delete(fp, wait=0):
     """ 
     检查并删除文件/文件夹
 
     :param fp: 文件路径
     """
-    if isinstance(fp, str) and os.path.exists(fp):
-        if os.path.isfile(fp):
-            os.remove(fp)
-        else:
-            shutil.rmtree(fp)
+    def run():
+        if wait > 0:
+            time.sleep(wait)
+        if isinstance(fp, str) and os.path.exists(fp):
+            if os.path.isfile(fp):
+                os.remove(fp)
+            else:
+                shutil.rmtree(fp)
+    
+    thread.start_new_thread(run, ())
+
 
 def write_temp_file(data, suffix):
     """ 
@@ -228,12 +234,11 @@ def getCache(msg):
 
 def saveCache(voice, msg):
     """ 获取缓存的语音 """
-    def run(*args):
-        foo, ext = os.path.splitext(voice)
-        md5 = hashlib.md5(msg.encode('utf-8')).hexdigest()
-        shutil.copyfile(voice, os.path.join(constants.TEMP_PATH, md5+ext))
-
-    thread.start_new_thread(run, ())
+    foo, ext = os.path.splitext(voice)
+    md5 = hashlib.md5(msg.encode('utf-8')).hexdigest()
+    target = os.path.join(constants.TEMP_PATH, md5+ext)
+    shutil.copyfile(voice, target)
+    return target
     
 
 def lruCache():

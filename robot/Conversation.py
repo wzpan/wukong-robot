@@ -5,6 +5,7 @@ import cProfile
 import pstats
 import io
 import re
+import os
 from robot.Brain import Brain
 from snowboy import snowboydecoder
 from robot import logging, ASR, TTS, NLU, AI, Player, config, constants, utils, statistic
@@ -157,13 +158,6 @@ class Conversation(object):
 
     def say(self, msg, cache=False, plugin='', onCompleted=None):
         """ 说一句话 """
-        if self.onSay:
-            logger.info('onSay: {}'.format(msg))
-            if plugin != '':
-                self.onSay("[{}] {}".format(plugin, msg))
-            else:
-                self.onSay(msg)
-            self.onSay = None
         if plugin != '':
             self.appendHistory(1, "[{}] {}".format(plugin, msg))
         else:
@@ -173,20 +167,32 @@ class Conversation(object):
             logger.info("内容包含URL，所以不读出来")
             return
         voice = ''
+        cache_path = ''
         if utils.getCache(msg):
             logger.info("命中缓存，播放缓存语音")
             voice = utils.getCache(msg)
+            cache_path = utils.getCache(msg)
         else:
             try:
                 voice = self.tts.get_speech(msg)
-                if cache:
-                    utils.saveCache(voice, msg)
+                cache_path = utils.saveCache(voice, msg)
             except Exception as e:
                 logger.error('保存缓存失败：{}'.format(e))
+        if self.onSay:
+            logger.info(cache)
+            audio = 'http://{}:{}/audio/{}'.format(config.get('/server/host'), config.get('/server/port'), os.path.basename(cache_path))
+            logger.info('onSay: {}, {}'.format(msg, audio))
+            if plugin != '':
+                self.onSay("[{}] {}".format(plugin, msg), audio)
+            else:
+                self.onSay(msg, audio)
+            self.onSay = None
         if onCompleted is None:
             onCompleted = lambda: self._onCompleted(msg)        
         self.player = Player.SoxPlayer()
         self.player.play(voice, not cache, onCompleted)
+        if not cache:
+            utils.check_and_delete(cache_path)
         utils.lruCache()  # 清理缓存
 
     def activeListen(self, silent=False):
