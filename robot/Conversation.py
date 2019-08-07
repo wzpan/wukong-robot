@@ -192,7 +192,7 @@ class Conversation(object):
         self.player = Player.SoxPlayer()
         self.player.play(voice, not cache, onCompleted)
         if not cache:
-            utils.check_and_delete(cache_path)
+            utils.check_and_delete(cache_path, 60) # 60秒后将自动清理不缓存的音频
         utils.lruCache()  # 清理缓存
 
     def activeListen(self, silent=False):

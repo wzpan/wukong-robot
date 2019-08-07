@@ -81,7 +81,7 @@ class SoxPlayer(AbstractSoundPlayer):
         self.proc.wait()
         self.playing = False
         if self.delete:
-            utils.check_and_delete(self.src, 10) # 10秒后再删除
+            utils.check_and_delete(self.src)
         logger.debug('play completed')
         for onCompleted in self.onCompleteds:
             if onCompleted:                
@@ -107,7 +107,7 @@ class SoxPlayer(AbstractSoundPlayer):
             self.onCompleteds = []
             self.proc.terminate()
             if self.delete:
-                utils.check_and_delete(self.src, 10)                
+                utils.check_and_delete(self.src)                
 
     def is_playing(self):
         return self.playing
@@ -165,7 +165,7 @@ class WavPlayer(AbstractSoundPlayer):
 
     def stop(self):
         self.stop = True
-        utils.check_and_delete(self.src, 10)
+        utils.check_and_delete(self.src)
 
     def is_playing(self):
         return self.playing
