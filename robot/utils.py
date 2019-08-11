@@ -245,7 +245,7 @@ def lruCache():
     """ 清理最近未使用的缓存 """
     def run(*args):
         if config.get('/lru_cache/enable', True):            
-            days = config.get('/lru_cache/days')
+            days = config.get('/lru_cache/days', 7)
             subprocess.run('find . -name "*.mp3" -atime +%d -exec rm {} \;' % days, cwd=constants.TEMP_PATH, shell=True)
 
     thread.start_new_thread(run, ())
