@@ -33,7 +33,13 @@ class Plugin(AbstractPlugin):
             sender = fromname[0][0]
         else:
             sender = msg['From']
-        return sender
+        if isinstance(sender, bytes):
+            try:
+                return sender.decode('utf-8')
+            except UnicodeDecodeError:
+                return sender.decode('gbk')
+        else:
+            return sender
 
     def isSelfEmail(self, msg):
         """ Whether the email is sent by the user """
@@ -53,7 +59,13 @@ class Plugin(AbstractPlugin):
             Title of the email.
         """
         subject = email.header.decode_header(msg['subject'])
-        sub = subject[0][0].decode('utf-8')
+        if isinstance(subject[0][0], bytes):
+            try:
+                sub = subject[0][0].decode('utf-8')
+            except UnicodeDecodeError:
+                sub = subject[0][0].decode('gbk')
+        else:
+            sub = subject[0][0]
         to_read = False
         if sub.strip() == '':
             return ''
@@ -117,7 +129,7 @@ class Plugin(AbstractPlugin):
             logger.warning("抱歉，您的邮箱账户验证失败了，请检查下配置")
             return None
 
-        if retcode == 'OK' and messages != ['']:
+        if retcode == 'OK' and messages != [b'']:
             numUnread = len(messages[0].split(b' '))
             if limit and numUnread > limit:
                 return numUnread
