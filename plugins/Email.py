@@ -36,7 +36,7 @@ class Plugin(AbstractPlugin):
         if isinstance(sender, bytes):
             try:
                 return sender.decode('utf-8')
-            except UnicodeDecodeError as e:
+            except UnicodeDecodeError:
                 return sender.decode('gbk')
         else:
             return sender
@@ -62,7 +62,7 @@ class Plugin(AbstractPlugin):
         if isinstance(subject[0][0], bytes):
             try:
                 sub = subject[0][0].decode('utf-8')
-            except UnicodeDecodeError as e:
+            except UnicodeDecodeError:
                 sub = subject[0][0].decode('gbk')
         else:
             sub = subject[0][0]
