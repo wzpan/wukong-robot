@@ -277,9 +277,9 @@ class LogoutHandler(BaseHandler):
 
 settings = {
     "cookie_secret": config.get('/server/cookie_secret', "__GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__"),
-    "template_path": "server/templates",
-    "static_path": "server/static",
-    "login_url": "/login",    
+    "template_path": os.path.join(constants.APP_PATH, "server/templates"),
+    "static_path": os.path.join(constants.APP_PATH, "server/static"),
+    "login_url": "/login",
     "debug": False
 }
 

@@ -77,11 +77,11 @@ baidu_yuyin:
 # 然后将外网ip地址添加进ip白名单（外网ip查询：https://ip.51240.com/），
 # 或者使用白名单ip中转服务器
 xunfei_yuyin:
-    appid: '5c540c39'
-    asr_api_key: '859bc21e90c64d97fae77695579eb05e'  # 语音听写
+    appid: '5d45a9e9'
+    asr_api_key: 'f6a501fc4e355737ab26672e28d115f9'  # 语音听写
+    asr_api_secret: '5e004bc07f46d18805a90479f75a55cf'
     tts_api_key: '680c0eba7c1752503fa0a6ac971ce2cd'  # 在线语音合成
-    voice: 'xiaoyan'  # 全部可选：http://suo.im/51dhCS
-    url: 'http://api.musiiot.top/stt.php' # 白名单ip中转服务器（可选）
+    voice: 'xiaoyan'  # 全部可选：http://suo.im/51dhCS    
 
 # 阿里云语音
 # appKey及token需前往

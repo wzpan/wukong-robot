@@ -1,6 +1,6 @@
 # -*- coding: utf-8-*-
 from aip import AipSpeech
-from .sdk import TencentSpeech, AliSpeech
+from .sdk import TencentSpeech, AliSpeech, XunfeiSpeech
 from . import utils, config
 from robot import logging
 import requests
@@ -119,52 +119,19 @@ class XunfeiASR(AbstractASR):
 
     SLUG = "xunfei-asr"
 
-    def __init__(self, appid, api_key):
+    def __init__(self, appid, asr_api_key, asr_api_secret, tts_api_key, voice='xiaoyan'):
         super(self.__class__, self).__init__()
         self.appid = appid
-        self.api_key = api_key
+        self.api_key = asr_api_key
+        self.api_secret = asr_api_secret
 
     @classmethod
     def get_config(cls):
         # Try to get xunfei_yuyin config from config
-        return config.get('xunfei_yuyin', {})     
-
-    def getHeader(self, aue, engineType):
-        curTime = str(int(time.time()))
-        # curTime = '1526542623'
-        param = "{\"aue\":\"" + aue + "\"" + ",\"engine_type\":\"" + engineType + "\"}"
-        logger.debug("param:{}".format(param))
-        paramBase64 = str(base64.b64encode(param.encode('utf-8')), 'utf-8')
-        logger.debug("x_param:{}".format(paramBase64))
-
-        m2 = hashlib.md5()
-        m2.update((self.api_key + curTime + paramBase64).encode('utf-8'))
-        checkSum = m2.hexdigest()
-        header = {
-            'X-CurTime': curTime,
-            'X-Param': paramBase64,
-            'X-Appid': self.appid,
-            'X-CheckSum': checkSum,
-            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-        }
-        return header
-
-    def getBody(self, filepath):
-        binfile = open(filepath, 'rb')
-        data = {'audio': base64.b64encode(binfile.read())}
-        return data
+        return config.get('xunfei_yuyin', {})
 
     def transcribe(self, fp):
-        URL = "http://api.xfyun.cn/v1/service/v1/iat"
-        r = requests.post(URL, headers=self.getHeader('raw', 'sms16k'), data=self.getBody(fp))
-        res = json.loads(r.content.decode('utf-8'))
-        logger.debug(res)
-        if 'code' in res and res['code'] == '0':
-            logger.info('{} 语音识别到了：{}'.format(self.SLUG, res['data']))
-            return res['data']
-        else:
-            logger.critical('{} 语音识别出错了'.format(self.SLUG), exc_info=True)
-            return ''
+        return XunfeiSpeech.transcribe(fp, self.appid, self.api_key, self.api_secret)
 
 
 class AliASR(AbstractASR):
@@ -212,7 +179,7 @@ def get_engine_by_slug(slug=None):
         raise ValueError("错误：找不到名为 {} 的 ASR 引擎".format(slug))
     else:
         if len(selected_engines) > 1:
-            logger.warning("注意: 有多个 ASR 名称与指定的引擎名 {} 匹配").format(slug)        
+            logger.warning("注意: 有多个 ASR 名称与指定的引擎名 {} 匹配").format(slug)
         engine = selected_engines[0]
         logger.info("使用 {} ASR 引擎".format(engine.SLUG))
         return engine.get_instance()

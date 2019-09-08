@@ -119,9 +119,9 @@ class XunfeiTTS(AbstractTTS):
 
     SLUG = "xunfei-tts"
 
-    def __init__(self, appid, api_key, voice_name='xiaoyan'):
+    def __init__(self, appid, asr_api_key, asr_api_secret, tts_api_key, voice='xiaoyan'):
         super(self.__class__, self).__init__()
-        self.appid, self.api_key, self.voice_name = appid, api_key, voice_name
+        self.appid, self.api_key, self.voice_name = appid, tts_api_key, voice
 
     @classmethod
     def get_config(cls):
