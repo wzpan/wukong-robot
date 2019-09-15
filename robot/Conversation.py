@@ -6,6 +6,7 @@ import pstats
 import io
 import re
 import os
+from multiprocessing import Process
 from robot.Brain import Brain
 from snowboy import snowboydecoder
 from robot import logging, ASR, TTS, NLU, AI, Player, config, constants, utils, statistic
@@ -26,6 +27,7 @@ class Conversation(object):
         self.profiling = profiling
         self.onSay = None
         self.hasPardon = False
+        self.conversationPool = set([])
 
     def getHistory(self):
         return self.history
@@ -100,7 +102,7 @@ class Conversation(object):
             logger.info('性能调试已打开')
             pr = cProfile.Profile()
             pr.enable()
-            self.doConverse(fp, callback)
+            self.startConverse(fp, callback)
             pr.disable()
             s = io.StringIO()
             sortby = 'cumulative'
@@ -108,7 +110,17 @@ class Conversation(object):
             ps.print_stats()
             print(s.getvalue())
         else:
-            self.doConverse(fp, callback)
+            self.startConverse(fp, callback)
+
+    def startConverse(self, fp, callback=None, onSay=None):
+        # stop all the other conversation thread
+        for process in self.conversationPool:
+            process.kill()
+        self.conversationPool.clear()
+        # create new conversation process
+        p = Process(target=self.doConverse, args=(fp, callback, onSay))
+        self.conversationPool.add(p)
+        p.start()
 
     def doConverse(self, fp, callback=None, onSay=None):
         try:

@@ -33,7 +33,7 @@ class MusicPlayer(object):
         self.play()
 
     def stop(self):
-        logger.debug('MusicPlayer stop')        
+        logger.debug('MusicPlayer stop')
 
     def turnUp(self):
         if self.volume < 0.2:

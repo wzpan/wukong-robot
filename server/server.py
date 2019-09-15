@@ -84,7 +84,7 @@ class ChatHandler(BaseHandler):
                           ' ' + nfile + ' rate 16k'
                 subprocess.call([soxCall], shell=True, close_fds=True)
                 utils.check_and_delete(tmpfile)
-                conversation.doConverse(nfile, onSay=lambda msg, audio: self.onResp(msg, audio))
+                conversation.startConverse(nfile, onSay=lambda msg, audio: self.onResp(msg, audio))
             else:
                 res = {'code': 1, 'message': 'illegal type'}
                 self.write(json.dumps(res))

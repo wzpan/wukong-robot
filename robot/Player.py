@@ -30,23 +30,18 @@ def no_alsa_error():
         pass
 
 def play(fname, onCompleted=None):
-    # WavPlayer does not work well on my Macbook,
-    # henceforce I choose SoxPlayer
-    #player = getPlayerByFileName(fname)
-    player = SoxPlayer()
+    player = getPlayerByFileName(fname)
     player.play(fname, onCompleted)
 
 def getPlayerByFileName(fname):
     foo, ext = os.path.splitext(fname)
-    if ext == '.mp3':
-        return SoxPlayer()
-    elif ext == '.wav':
-        return WavPlayer()
+    if ext in ['.mp3', '.wav']:
+        return SoxPlayer()    
 
-class AbstractSoundPlayer(threading.Thread):
+class AbstractPlayer(threading.Thread):
 
     def __init__(self, **kwargs):
-        super(AbstractSoundPlayer, self).__init__()
+        super(AbstractPlayer, self).__init__()
 
     def play(self):
         pass
@@ -61,7 +56,7 @@ class AbstractSoundPlayer(threading.Thread):
         return False
     
 
-class SoxPlayer(AbstractSoundPlayer):
+class SoxPlayer(AbstractPlayer):
     SLUG = 'SoxPlayer'
 
     def __init__(self, **kwargs):
@@ -107,65 +102,9 @@ class SoxPlayer(AbstractSoundPlayer):
             self.onCompleteds = []
             self.proc.terminate()
             if self.delete:
-                utils.check_and_delete(self.src)                
+                utils.check_and_delete(self.src)
 
     def is_playing(self):
         return self.playing
 
 
-class WavPlayer(AbstractSoundPlayer):
-    SLUG = 'WavPlayer'
-
-    def __init__(self, **kwargs):
-        super(WavPlayer, self).__init__(**kwargs)
-        self.playing = False
-        self.stop = False        
-
-    def run(self):
-        # play a voice
-        CHUNK = 1024
-
-        logger.debug("playing wave %s", self.src)
-        f = wave.open(self.src, "rb")
-
-        with no_alsa_error():
-            audio = pyaudio.PyAudio()
-
-        stream = audio.open(
-            format=audio.get_format_from_width(f.getsampwidth()),
-            channels=f.getnchannels(),
-            rate=f.getframerate(),
-            input=False,
-            output=True)
-        
-        self.playing = True
-        stream.start_stream()
-        data = f.readframes(CHUNK)
-        while data != '' and not self.stop:
-            stream.write(data)
-            data = f.readframes(CHUNK)
-            print('data=="": {}, self.stop: {}'.format(data == '', self.stop))
-
-        self.playing = False
-        stream.stop_stream()
-        stream.close()
-        audio.terminate()
-        if self.onCompleteds:
-            for onCompleted in self.onCompleteds:
-                if onCompleted:
-                    onCompleted()
-
-    def play(self, src, onCompleted=None):
-        self.src = src
-        self.onCompleted = onCompleted
-        self.start()
-
-    def play_block(self):
-        self.run()
-
-    def stop(self):
-        self.stop = True
-        utils.check_and_delete(self.src)
-
-    def is_playing(self):
-        return self.playing
