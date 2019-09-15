@@ -182,14 +182,23 @@ class MusicPlayer(SoxPlayer):
         if system == 'Darwin':
             res = subprocess.run(['osascript', '-e', 'output volume of (get volume settings)'], shell=False, capture_output=True, text=True)
             volume = int(res.stdout.strip())
-            if volume + 20 <= 100:
-                volume += 20
-            else:
-                self.plugin.say('音量已经最大啦', wait=True)
+            volume += 20
+            if volume >= 100:
                 volume = 100
+                self.plugin.say('音量已经最大啦', wait=True)
             subprocess.run(['osascript', '-e', 'set volume output volume {}'.format(volume)])
         elif system == 'Linux':
-            subprocess.run(['amixer', 'set', 'Master', '20%+'])
+            res = subprocess.run(["amixer sget Master | grep 'Mono:' | awk -F'[][]' '{ print $2 }'"], shell=True, capture_output=True, text=True)
+            print(res.stdout)
+            if res.stdout != '' and res.stdout.strip().endswith('%'):
+                volume = int(res.stdout.strip().replace('%', ''))
+                volume += 20
+                if volume >= 100:
+                    volume = 100
+                    self.plugin.say('音量已经最大啦', wait=True)
+                subprocess.run(['amixer', 'set', 'Master', '{}%'.format(volume)])
+            else:
+                subprocess.run(['amixer', 'set', 'Master', '20%+'])
         else:
             self.plugin.say('当前系统不支持调节音量')
         self.resume()
@@ -199,14 +208,22 @@ class MusicPlayer(SoxPlayer):
         if system == 'Darwin':
             res = subprocess.run(['osascript', '-e', 'output volume of (get volume settings)'], shell=False, capture_output=True, text=True)
             volume = int(res.stdout.strip())
-            if volume - 20 >= 20:
-                volume -= 20
-            else:
+            volume -= 20
+            if volume <= 20:
                 volume = 20
                 self.plugin.say('音量已经很小啦', wait=True)
             subprocess.run(['osascript', '-e', 'set volume output volume {}'.format(volume)])
         elif system == 'Linux':
-            subprocess.run(['amixer', 'set', 'Master', '20%-'])
+            res = subprocess.run(["amixer sget Master | grep 'Mono:' | awk -F'[][]' '{ print $2 }'"], shell=True, capture_output=True, text=True)
+            if res.stdout != '' and res.stdout.endswith('%'):
+                volume = int(res.stdout.replace('%', '').strip())
+                volume -= 20
+                if volume <= 20:
+                    volume = 20
+                    self.plugin.say('音量已经最小啦', wait=True)
+                subprocess.run(['amixer', 'set', 'Master', '{}%'.format(volume)])
+            else:
+                subprocess.run(['amixer', 'set', 'Master', '20%-'])
         else:
             self.plugin.say('当前系统不支持调节音量')
         self.resume()
