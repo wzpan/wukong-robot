@@ -147,7 +147,6 @@
 <span class="kn">from</span> <span class="nn">.sdk</span> <span class="k">import</span> <span class="n">TencentSpeech</span><span class="p">,</span> <span class="n">AliSpeech</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">utils</span><span class="p">,</span> <span class="n">config</span>
 <span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">logging</span>
-<span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">import</span> <span class="nn">base64</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">requests</span>
@@ -264,9 +263,9 @@
 
     <span class="n">SLUG</span> <span class="o">=</span> <span class="s2">&quot;xunfei-tts&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">appid</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span> <span class="n">voice_name</span><span class="o">=</span><span class="s1">&#39;xiaoyan&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">appid</span><span class="p">,</span> <span class="n">asr_api_key</span><span class="p">,</span> <span class="n">asr_api_secret</span><span class="p">,</span> <span class="n">tts_api_key</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="s1">&#39;xiaoyan&#39;</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">appid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">voice_name</span> <span class="o">=</span> <span class="n">appid</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span> <span class="n">voice_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">appid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">voice_name</span> <span class="o">=</span> <span class="n">appid</span><span class="p">,</span> <span class="n">tts_api_key</span><span class="p">,</span> <span class="n">voice</span>
 
 <div class="viewcode-block" id="XunfeiTTS.get_config"><a class="viewcode-back" href="../../robot.html#robot.TTS.XunfeiTTS.get_config">[文档]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
@@ -303,7 +302,6 @@
         <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">URL</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getHeader</span><span class="p">(</span><span class="s1">&#39;lame&#39;</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getBody</span><span class="p">(</span><span class="n">phrase</span><span class="p">))</span>
         <span class="n">contentType</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">contentType</span> <span class="o">==</span> <span class="s2">&quot;audio/mpeg&quot;</span><span class="p">:</span>
-            <span class="n">sid</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;sid&#39;</span><span class="p">]</span>
             <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">write_temp_file</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="s1">&#39;.mp3&#39;</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> 语音合成成功，合成路径：</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">,</span> <span class="n">tmpfile</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">tmpfile</span>

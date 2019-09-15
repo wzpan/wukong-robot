@@ -150,27 +150,25 @@
 <span class="kn">from</span> <span class="nn">robot.Conversation</span> <span class="k">import</span> <span class="n">Conversation</span>
 <span class="kn">from</span> <span class="nn">server</span> <span class="k">import</span> <span class="n">server</span>
 <span class="kn">from</span> <span class="nn">watchdog.observers</span> <span class="k">import</span> <span class="n">Observer</span>
-<span class="kn">from</span> <span class="nn">subprocess</span> <span class="k">import</span> <span class="n">call</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">signal</span>
-<span class="kn">import</span> <span class="nn">yaml</span>
-<span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
-<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">fire</span>
-
 <span class="kn">import</span> <span class="nn">urllib3</span>
 <span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">urllib3</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Wukong"><a class="viewcode-back" href="../wukong.html#wukong.Wukong">[文档]</a><span class="k">class</span> <span class="nc">Wukong</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="n">_profiling</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">_dev</span> <span class="o">=</span> <span class="kc">False</span>
     
 <div class="viewcode-block" id="Wukong.init"><a class="viewcode-back" href="../wukong.html#wukong.Wukong.init">[文档]</a>    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">global</span> <span class="n">conversation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">detector</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_interrupted</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_interrupted</span> <span class="o">=</span> <span class="kc">False</span>        
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
 <span class="s1">********************************************************</span>
 <span class="s1">*          wukong-robot - 中文语音对话机器人           *</span>
@@ -183,7 +181,7 @@
 <span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
         
         <span class="n">config</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_conversation</span> <span class="o">=</span> <span class="n">Conversation</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conversation</span> <span class="o">=</span> <span class="n">Conversation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_profiling</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_conversation</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> 你好！试试对我喊唤醒词叫醒我吧&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;first_name&#39;</span><span class="p">,</span> <span class="s1">&#39;主人&#39;</span><span class="p">)),</span> <span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_observer</span> <span class="o">=</span> <span class="n">Observer</span><span class="p">()</span>
         <span class="n">event_handler</span> <span class="o">=</span> <span class="n">ConfigMonitor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_conversation</span><span class="p">)</span>
@@ -209,14 +207,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_conversation</span><span class="o">.</span><span class="n">isRecording</span> <span class="o">=</span> <span class="kc">True</span><span class="p">;</span>
 
     <span class="k">def</span> <span class="nf">_do_not_bother_on_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">utils</span><span class="o">.</span><span class="n">do_not_bother</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">Player</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getData</span><span class="p">(</span><span class="s1">&#39;off.wav&#39;</span><span class="p">))</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;勿扰模式打开&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/do_not_bother/hotword_switch&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">utils</span><span class="o">.</span><span class="n">do_not_bother</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">Player</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getData</span><span class="p">(</span><span class="s1">&#39;off.wav&#39;</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;勿扰模式打开&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_do_not_bother_off_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">utils</span><span class="o">.</span><span class="n">do_not_bother</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">Player</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getData</span><span class="p">(</span><span class="s1">&#39;on.wav&#39;</span><span class="p">))</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;勿扰模式关闭&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/do_not_bother/hotword_switch&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">utils</span><span class="o">.</span><span class="n">do_not_bother</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">Player</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getData</span><span class="p">(</span><span class="s1">&#39;on.wav&#39;</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;勿扰模式关闭&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_interrupt_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interrupted</span>
@@ -232,22 +232,33 @@
 
         <span class="n">statistic</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">initDetector</span><span class="p">()</span></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initDetector</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;初始化离线唤醒功能失败&#39;</span><span class="p">)</span>
+            <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Wukong.initDetector"><a class="viewcode-back" href="../wukong.html#wukong.Wukong.initDetector">[文档]</a>    <span class="k">def</span> <span class="nf">initDetector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">detector</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
-        <span class="n">models</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">constants</span><span class="o">.</span><span class="n">getHotwordModel</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hotword&#39;</span><span class="p">,</span> <span class="s1">&#39;wukong.pmdl&#39;</span><span class="p">)),</span>
-            <span class="n">constants</span><span class="o">.</span><span class="n">getHotwordModel</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">get_do_not_bother_on_hotword</span><span class="p">()),</span>
-            <span class="n">constants</span><span class="o">.</span><span class="n">getHotwordModel</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">get_do_not_bother_off_hotword</span><span class="p">())</span>
-        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/do_not_bother/hotword_switch&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">models</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">getHotwordModel</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hotword&#39;</span><span class="p">,</span> <span class="s1">&#39;wukong.pmdl&#39;</span><span class="p">)),</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">getHotwordModel</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">get_do_not_bother_on_hotword</span><span class="p">()),</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">getHotwordModel</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">get_do_not_bother_off_hotword</span><span class="p">())</span>
+            <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">models</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">getHotwordModel</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hotword&#39;</span><span class="p">,</span> <span class="s1">&#39;wukong.pmdl&#39;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">detector</span> <span class="o">=</span> <span class="n">snowboydecoder</span><span class="o">.</span><span class="n">HotwordDetector</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">sensitivity</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sensitivity&#39;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
         <span class="c1"># main loop</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">detected_callback</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_detected_callback</span><span class="p">,</span>
-                                                   <span class="bp">self</span><span class="o">.</span><span class="n">_do_not_bother_on_callback</span><span class="p">,</span>
-                                                   <span class="bp">self</span><span class="o">.</span><span class="n">_do_not_bother_off_callback</span><span class="p">],</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/do_not_bother/hotword_switch&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                <span class="n">callbacks</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_detected_callback</span><span class="p">,</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">_do_not_bother_on_callback</span><span class="p">,</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">_do_not_bother_off_callback</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">callbacks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detected_callback</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">detected_callback</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
                                 <span class="n">audio_recorder_callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_conversation</span><span class="o">.</span><span class="n">converse</span><span class="p">,</span>
                                 <span class="n">interrupt_check</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_interrupt_callback</span><span class="p">,</span>
                                 <span class="n">silent_count_threshold</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;silent_threshold&#39;</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
@@ -270,9 +281,22 @@
 
 <div class="viewcode-block" id="Wukong.restart"><a class="viewcode-back" href="../wukong.html#wukong.Wukong.restart">[文档]</a>    <span class="k">def</span> <span class="nf">restart</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s1">&#39;程序重启...&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>
         <span class="n">python</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">executable</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">execl</span><span class="p">(</span><span class="n">python</span><span class="p">,</span> <span class="n">python</span><span class="p">,</span> <span class="o">*</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span></div></div>
+        <span class="n">os</span><span class="o">.</span><span class="n">execl</span><span class="p">(</span><span class="n">python</span><span class="p">,</span> <span class="n">python</span><span class="p">,</span> <span class="o">*</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Wukong.profiling"><a class="viewcode-back" href="../wukong.html#wukong.Wukong.profiling">[文档]</a>    <span class="k">def</span> <span class="nf">profiling</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;性能调优&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_profiling</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Wukong.dev"><a class="viewcode-back" href="../wukong.html#wukong.Wukong.dev">[文档]</a>    <span class="k">def</span> <span class="nf">dev</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;使用测试环境&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dev</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div></div>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>

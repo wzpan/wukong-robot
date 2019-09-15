@@ -145,7 +145,6 @@
 <span></span><span class="c1"># -*- coding: utf-8-*-</span>
 <span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">logging</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">plugin_loader</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">config</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -180,10 +179,6 @@
 <span class="sd">        text -- 用户输入</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s2">&quot;抱歉，刚刚没听清，能再说一遍吗？&quot;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">True</span>
-
         <span class="n">args</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;service_id&quot;</span><span class="p">:</span> <span class="s2">&quot;S13442&quot;</span><span class="p">,</span>
             <span class="s2">&quot;api_key&quot;</span><span class="p">:</span> <span class="s1">&#39;w5v7gUV3iPGsGntcM84PtOOM&#39;</span><span class="p">,</span>
@@ -196,6 +191,8 @@
                 <span class="k">continue</span>
 
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39; 命中技能 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">plugin</span><span class="o">.</span><span class="n">SLUG</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span><span class="o">.</span><span class="n">matchPlugin</span> <span class="o">=</span> <span class="n">plugin</span><span class="o">.</span><span class="n">SLUG</span>
+
             <span class="k">if</span> <span class="n">plugin</span><span class="o">.</span><span class="n">IS_IMMERSIVE</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span><span class="o">.</span><span class="n">setImmersiveMode</span><span class="p">(</span><span class="n">plugin</span><span class="o">.</span><span class="n">SLUG</span><span class="p">)</span>
 
@@ -227,6 +224,14 @@
         <span class="k">for</span> <span class="n">plugin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugins</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">plugin</span><span class="o">.</span><span class="n">SLUG</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span><span class="o">.</span><span class="n">immersiveMode</span> <span class="ow">and</span> <span class="n">plugin</span><span class="o">.</span><span class="n">restore</span><span class="p">:</span>
                 <span class="n">plugin</span><span class="o">.</span><span class="n">restore</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Brain.pause"><a class="viewcode-back" href="../../robot.html#robot.Brain.Brain.pause">[文档]</a>    <span class="k">def</span> <span class="nf">pause</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; 暂停某个技能的处理 &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span><span class="o">.</span><span class="n">immersiveMode</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">for</span> <span class="n">plugin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugins</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">plugin</span><span class="o">.</span><span class="n">SLUG</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span><span class="o">.</span><span class="n">immersiveMode</span> <span class="ow">and</span> <span class="n">plugin</span><span class="o">.</span><span class="n">pause</span><span class="p">:</span>
+                <span class="n">plugin</span><span class="o">.</span><span class="n">pause</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Brain.understand"><a class="viewcode-back" href="../../robot.html#robot.Brain.Brain.understand">[文档]</a>    <span class="k">def</span> <span class="nf">understand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversation</span><span class="o">.</span><span class="n">asr</span><span class="p">:</span>

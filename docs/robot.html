@@ -178,6 +178,7 @@
 <li class="toctree-l2"><a class="reference internal" href="robot.sdk.html#module-robot.sdk.AliSpeech">robot.sdk.AliSpeech module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot.sdk.html#module-robot.sdk.RASRsdk">robot.sdk.RASRsdk module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot.sdk.html#module-robot.sdk.TencentSpeech">robot.sdk.TencentSpeech module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robot.sdk.html#module-robot.sdk.XunfeiSpeech">robot.sdk.XunfeiSpeech module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot.sdk.html#module-robot.sdk.unit">robot.sdk.unit module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot.sdk.html#module-robot.sdk">Module contents</a></li>
 </ul>
@@ -385,23 +386,13 @@ secret_key: ‘585d4eccb50d306c401d7df138bb02e7’</dd>
 
 <dl class="class">
 <dt id="robot.ASR.XunfeiASR">
-<em class="property">class </em><code class="descclassname">robot.ASR.</code><code class="descname">XunfeiASR</code><span class="sig-paren">(</span><em>appid</em>, <em>api_key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/ASR.html#XunfeiASR"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.ASR.XunfeiASR" title="永久链接至目标">¶</a></dt>
+<em class="property">class </em><code class="descclassname">robot.ASR.</code><code class="descname">XunfeiASR</code><span class="sig-paren">(</span><em>appid</em>, <em>asr_api_key</em>, <em>asr_api_secret</em>, <em>tts_api_key</em>, <em>voice='xiaoyan'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/ASR.html#XunfeiASR"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.ASR.XunfeiASR" title="永久链接至目标">¶</a></dt>
 <dd><p>基类：<a class="reference internal" href="#robot.ASR.AbstractASR" title="robot.ASR.AbstractASR"><code class="xref py py-class docutils literal notranslate"><span class="pre">robot.ASR.AbstractASR</span></code></a></p>
 <p>科大讯飞的语音识别API.
 外网ip查询：<a class="reference external" href="https://ip.51240.com/">https://ip.51240.com/</a></p>
 <dl class="attribute">
 <dt id="robot.ASR.XunfeiASR.SLUG">
 <code class="descname">SLUG</code><em class="property"> = 'xunfei-asr'</em><a class="headerlink" href="#robot.ASR.XunfeiASR.SLUG" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="robot.ASR.XunfeiASR.getBody">
-<code class="descname">getBody</code><span class="sig-paren">(</span><em>filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/ASR.html#XunfeiASR.getBody"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.ASR.XunfeiASR.getBody" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="robot.ASR.XunfeiASR.getHeader">
-<code class="descname">getHeader</code><span class="sig-paren">(</span><em>aue</em>, <em>engineType</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/ASR.html#XunfeiASR.getHeader"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.ASR.XunfeiASR.getHeader" title="永久链接至目标">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="classmethod">
@@ -443,6 +434,12 @@ secret_key: ‘585d4eccb50d306c401d7df138bb02e7’</dd>
 <dt id="robot.Brain.Brain.isImmersive">
 <code class="descname">isImmersive</code><span class="sig-paren">(</span><em>plugin</em>, <em>text</em>, <em>parsed</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Brain.html#Brain.isImmersive"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Brain.Brain.isImmersive" title="永久链接至目标">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.Brain.Brain.pause">
+<code class="descname">pause</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Brain.html#Brain.pause"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Brain.Brain.pause" title="永久链接至目标">¶</a></dt>
+<dd><p>暂停某个技能的处理</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="robot.Brain.Brain.printPlugins">
@@ -503,11 +500,11 @@ text – 用户输入</p>
 <span id="robot-conversation-module"></span><h2>robot.Conversation module<a class="headerlink" href="#module-robot.Conversation" title="永久链接至标题">¶</a></h2>
 <dl class="class">
 <dt id="robot.Conversation.Conversation">
-<em class="property">class </em><code class="descclassname">robot.Conversation.</code><code class="descname">Conversation</code><a class="reference internal" href="_modules/robot/Conversation.html#Conversation"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Conversation.Conversation" title="永久链接至目标">¶</a></dt>
+<em class="property">class </em><code class="descclassname">robot.Conversation.</code><code class="descname">Conversation</code><span class="sig-paren">(</span><em>profiling=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Conversation.html#Conversation"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Conversation.Conversation" title="永久链接至目标">¶</a></dt>
 <dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="method">
 <dt id="robot.Conversation.Conversation.activeListen">
-<code class="descname">activeListen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Conversation.html#Conversation.activeListen"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Conversation.Conversation.activeListen" title="永久链接至目标">¶</a></dt>
+<code class="descname">activeListen</code><span class="sig-paren">(</span><em>silent=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Conversation.html#Conversation.activeListen"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Conversation.Conversation.activeListen" title="永久链接至目标">¶</a></dt>
 <dd><p>主动问一个问题(适用于多轮对话)</p>
 </dd></dl>
 
@@ -530,7 +527,7 @@ text – 用户输入</p>
 
 <dl class="method">
 <dt id="robot.Conversation.Conversation.doConverse">
-<code class="descname">doConverse</code><span class="sig-paren">(</span><em>fp</em>, <em>callback=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Conversation.html#Conversation.doConverse"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Conversation.Conversation.doConverse" title="永久链接至目标">¶</a></dt>
+<code class="descname">doConverse</code><span class="sig-paren">(</span><em>fp</em>, <em>callback=None</em>, <em>onSay=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Conversation.html#Conversation.doConverse"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Conversation.Conversation.doConverse" title="永久链接至目标">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -540,7 +537,7 @@ text – 用户输入</p>
 
 <dl class="method">
 <dt id="robot.Conversation.Conversation.doResponse">
-<code class="descname">doResponse</code><span class="sig-paren">(</span><em>query</em>, <em>UUID=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Conversation.html#Conversation.doResponse"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Conversation.Conversation.doResponse" title="永久链接至目标">¶</a></dt>
+<code class="descname">doResponse</code><span class="sig-paren">(</span><em>query</em>, <em>UUID=''</em>, <em>onSay=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Conversation.html#Conversation.doResponse"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Conversation.Conversation.doResponse" title="永久链接至目标">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -559,8 +556,13 @@ text – 用户输入</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="robot.Conversation.Conversation.pardon">
+<code class="descname">pardon</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Conversation.html#Conversation.pardon"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Conversation.Conversation.pardon" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="robot.Conversation.Conversation.play">
-<code class="descname">play</code><span class="sig-paren">(</span><em>src</em>, <em>delete=False</em>, <em>onCompleted=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Conversation.html#Conversation.play"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Conversation.Conversation.play" title="永久链接至目标">¶</a></dt>
+<code class="descname">play</code><span class="sig-paren">(</span><em>src</em>, <em>delete=False</em>, <em>onCompleted=None</em>, <em>volume=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Conversation.html#Conversation.play"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Conversation.Conversation.play" title="永久链接至目标">¶</a></dt>
 <dd><p>播放一个音频</p>
 </dd></dl>
 
@@ -572,8 +574,13 @@ text – 用户输入</p>
 
 <dl class="method">
 <dt id="robot.Conversation.Conversation.say">
-<code class="descname">say</code><span class="sig-paren">(</span><em>msg</em>, <em>cache=False</em>, <em>plugin=''</em>, <em>onCompleted=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Conversation.html#Conversation.say"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Conversation.Conversation.say" title="永久链接至目标">¶</a></dt>
-<dd><p>说一句话</p>
+<code class="descname">say</code><span class="sig-paren">(</span><em>msg</em>, <em>cache=False</em>, <em>plugin=''</em>, <em>onCompleted=None</em>, <em>wait=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Conversation.html#Conversation.say"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Conversation.Conversation.say" title="永久链接至目标">¶</a></dt>
+<dd><p>说一句话
+:param msg: 内容
+:param cache: 是否缓存这句话的音频
+:param plugin: 来自哪个插件的消息（将带上插件的说明）
+:param onCompleted: 完成的回调
+:param wait: 是否要等待说完（为True将阻塞主线程直至说完这句话）</p>
 </dd></dl>
 
 <dl class="method">
@@ -890,27 +897,96 @@ text – 用户输入</p>
 <div class="section" id="module-robot.Player">
 <span id="robot-player-module"></span><h2>robot.Player module<a class="headerlink" href="#module-robot.Player" title="永久链接至标题">¶</a></h2>
 <dl class="class">
-<dt id="robot.Player.AbstractSoundPlayer">
-<em class="property">class </em><code class="descclassname">robot.Player.</code><code class="descname">AbstractSoundPlayer</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#AbstractSoundPlayer"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.AbstractSoundPlayer" title="永久链接至目标">¶</a></dt>
-<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">threading.Thread</span></code></p>
+<dt id="robot.Player.AbstractPlayer">
+<em class="property">class </em><code class="descclassname">robot.Player.</code><code class="descname">AbstractPlayer</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#AbstractPlayer"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.AbstractPlayer" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="method">
-<dt id="robot.Player.AbstractSoundPlayer.is_playing">
-<code class="descname">is_playing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#AbstractSoundPlayer.is_playing"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.AbstractSoundPlayer.is_playing" title="永久链接至目标">¶</a></dt>
+<dt id="robot.Player.AbstractPlayer.is_playing">
+<code class="descname">is_playing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#AbstractPlayer.is_playing"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.AbstractPlayer.is_playing" title="永久链接至目标">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="robot.Player.AbstractSoundPlayer.play">
-<code class="descname">play</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#AbstractSoundPlayer.play"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.AbstractSoundPlayer.play" title="永久链接至目标">¶</a></dt>
+<dt id="robot.Player.AbstractPlayer.play">
+<code class="descname">play</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#AbstractPlayer.play"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.AbstractPlayer.play" title="永久链接至目标">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="robot.Player.AbstractSoundPlayer.play_block">
-<code class="descname">play_block</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#AbstractSoundPlayer.play_block"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.AbstractSoundPlayer.play_block" title="永久链接至目标">¶</a></dt>
+<dt id="robot.Player.AbstractPlayer.play_block">
+<code class="descname">play_block</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#AbstractPlayer.play_block"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.AbstractPlayer.play_block" title="永久链接至目标">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="robot.Player.AbstractSoundPlayer.stop">
-<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#AbstractSoundPlayer.stop"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.AbstractSoundPlayer.stop" title="永久链接至目标">¶</a></dt>
+<dt id="robot.Player.AbstractPlayer.stop">
+<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#AbstractPlayer.stop"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.AbstractPlayer.stop" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="robot.Player.MusicPlayer">
+<em class="property">class </em><code class="descclassname">robot.Player.</code><code class="descname">MusicPlayer</code><span class="sig-paren">(</span><em>playlist</em>, <em>plugin</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#MusicPlayer"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.MusicPlayer" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#robot.Player.SoxPlayer" title="robot.Player.SoxPlayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">robot.Player.SoxPlayer</span></code></a></p>
+<p>给音乐播放器插件使用的，
+在 SOXPlayer 的基础上增加了列表的支持，
+并支持暂停和恢复播放</p>
+<dl class="attribute">
+<dt id="robot.Player.MusicPlayer.SLUG">
+<code class="descname">SLUG</code><em class="property"> = 'MusicPlayer'</em><a class="headerlink" href="#robot.Player.MusicPlayer.SLUG" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.Player.MusicPlayer.is_pausing">
+<code class="descname">is_pausing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#MusicPlayer.is_pausing"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.MusicPlayer.is_pausing" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.Player.MusicPlayer.is_playing">
+<code class="descname">is_playing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#MusicPlayer.is_playing"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.MusicPlayer.is_playing" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.Player.MusicPlayer.next">
+<code class="descname">next</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#MusicPlayer.next"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.MusicPlayer.next" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.Player.MusicPlayer.pause">
+<code class="descname">pause</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#MusicPlayer.pause"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.MusicPlayer.pause" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.Player.MusicPlayer.play">
+<code class="descname">play</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#MusicPlayer.play"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.MusicPlayer.play" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.Player.MusicPlayer.prev">
+<code class="descname">prev</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#MusicPlayer.prev"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.MusicPlayer.prev" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.Player.MusicPlayer.resume">
+<code class="descname">resume</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#MusicPlayer.resume"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.MusicPlayer.resume" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.Player.MusicPlayer.stop">
+<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#MusicPlayer.stop"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.MusicPlayer.stop" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.Player.MusicPlayer.turnDown">
+<code class="descname">turnDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#MusicPlayer.turnDown"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.MusicPlayer.turnDown" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.Player.MusicPlayer.turnUp">
+<code class="descname">turnUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#MusicPlayer.turnUp"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.MusicPlayer.turnUp" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.Player.MusicPlayer.update_playlist">
+<code class="descname">update_playlist</code><span class="sig-paren">(</span><em>playlist</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#MusicPlayer.update_playlist"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.MusicPlayer.update_playlist" title="永久链接至目标">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -918,10 +994,20 @@ text – 用户输入</p>
 <dl class="class">
 <dt id="robot.Player.SoxPlayer">
 <em class="property">class </em><code class="descclassname">robot.Player.</code><code class="descname">SoxPlayer</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#SoxPlayer"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.SoxPlayer" title="永久链接至目标">¶</a></dt>
-<dd><p>基类：<a class="reference internal" href="#robot.Player.AbstractSoundPlayer" title="robot.Player.AbstractSoundPlayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">robot.Player.AbstractSoundPlayer</span></code></a></p>
+<dd><p>基类：<a class="reference internal" href="#robot.Player.AbstractPlayer" title="robot.Player.AbstractPlayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">robot.Player.AbstractPlayer</span></code></a></p>
 <dl class="attribute">
 <dt id="robot.Player.SoxPlayer.SLUG">
 <code class="descname">SLUG</code><em class="property"> = 'SoxPlayer'</em><a class="headerlink" href="#robot.Player.SoxPlayer.SLUG" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.Player.SoxPlayer.appendOnCompleted">
+<code class="descname">appendOnCompleted</code><span class="sig-paren">(</span><em>onCompleted</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#SoxPlayer.appendOnCompleted"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.SoxPlayer.appendOnCompleted" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.Player.SoxPlayer.doPlay">
+<code class="descname">doPlay</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#SoxPlayer.doPlay"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.SoxPlayer.doPlay" title="永久链接至目标">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -931,7 +1017,7 @@ text – 用户输入</p>
 
 <dl class="method">
 <dt id="robot.Player.SoxPlayer.play">
-<code class="descname">play</code><span class="sig-paren">(</span><em>src</em>, <em>delete=False</em>, <em>onCompleted=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#SoxPlayer.play"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.SoxPlayer.play" title="永久链接至目标">¶</a></dt>
+<code class="descname">play</code><span class="sig-paren">(</span><em>src</em>, <em>delete=False</em>, <em>onCompleted=None</em>, <em>wait=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#SoxPlayer.play"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.SoxPlayer.play" title="永久链接至目标">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -940,59 +1026,8 @@ text – 用户输入</p>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="robot.Player.SoxPlayer.run">
-<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#SoxPlayer.run"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.SoxPlayer.run" title="永久链接至目标">¶</a></dt>
-<dd><p>Method representing the thread’s activity.</p>
-<p>You may override this method in a subclass. The standard run() method
-invokes the callable object passed to the object’s constructor as the
-target argument, if any, with sequential and keyword arguments taken
-from the args and kwargs arguments, respectively.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="robot.Player.SoxPlayer.stop">
 <code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#SoxPlayer.stop"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.SoxPlayer.stop" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="robot.Player.WavPlayer">
-<em class="property">class </em><code class="descclassname">robot.Player.</code><code class="descname">WavPlayer</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#WavPlayer"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.WavPlayer" title="永久链接至目标">¶</a></dt>
-<dd><p>基类：<a class="reference internal" href="#robot.Player.AbstractSoundPlayer" title="robot.Player.AbstractSoundPlayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">robot.Player.AbstractSoundPlayer</span></code></a></p>
-<dl class="attribute">
-<dt id="robot.Player.WavPlayer.SLUG">
-<code class="descname">SLUG</code><em class="property"> = 'WavPlayer'</em><a class="headerlink" href="#robot.Player.WavPlayer.SLUG" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="robot.Player.WavPlayer.is_playing">
-<code class="descname">is_playing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#WavPlayer.is_playing"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.WavPlayer.is_playing" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="robot.Player.WavPlayer.play">
-<code class="descname">play</code><span class="sig-paren">(</span><em>src</em>, <em>onCompleted=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#WavPlayer.play"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.WavPlayer.play" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="robot.Player.WavPlayer.play_block">
-<code class="descname">play_block</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#WavPlayer.play_block"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.WavPlayer.play_block" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="robot.Player.WavPlayer.run">
-<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#WavPlayer.run"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.WavPlayer.run" title="永久链接至目标">¶</a></dt>
-<dd><p>Method representing the thread’s activity.</p>
-<p>You may override this method in a subclass. The standard run() method
-invokes the callable object passed to the object’s constructor as the
-target argument, if any, with sequential and keyword arguments taken
-from the args and kwargs arguments, respectively.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="robot.Player.WavPlayer.stop">
-<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Player.html#WavPlayer.stop"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Player.WavPlayer.stop" title="永久链接至目标">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1147,7 +1182,7 @@ region: 服务地域，挑个离自己最近的区域有助于提升速度。</p
 
 <dl class="class">
 <dt id="robot.TTS.XunfeiTTS">
-<em class="property">class </em><code class="descclassname">robot.TTS.</code><code class="descname">XunfeiTTS</code><span class="sig-paren">(</span><em>appid</em>, <em>api_key</em>, <em>voice_name='xiaoyan'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/TTS.html#XunfeiTTS"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.TTS.XunfeiTTS" title="永久链接至目标">¶</a></dt>
+<em class="property">class </em><code class="descclassname">robot.TTS.</code><code class="descname">XunfeiTTS</code><span class="sig-paren">(</span><em>appid</em>, <em>asr_api_key</em>, <em>asr_api_secret</em>, <em>tts_api_key</em>, <em>voice='xiaoyan'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/TTS.html#XunfeiTTS"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.TTS.XunfeiTTS" title="永久链接至目标">¶</a></dt>
 <dd><p>基类：<a class="reference internal" href="#robot.TTS.AbstractTTS" title="robot.TTS.AbstractTTS"><code class="xref py py-class docutils literal notranslate"><span class="pre">robot.TTS.AbstractTTS</span></code></a></p>
 <p>科大讯飞的语音识别API.
 外网ip查询：<a class="reference external" href="https://ip.51240.com/">https://ip.51240.com/</a>
@@ -1204,7 +1239,7 @@ voice_name: <a class="reference external" href="https://www.xfyun.cn/services/on
 <dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="method">
 <dt id="robot.Updater.Updater.fetch">
-<code class="descname">fetch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Updater.html#Updater.fetch"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Updater.Updater.fetch" title="永久链接至目标">¶</a></dt>
+<code class="descname">fetch</code><span class="sig-paren">(</span><em>dev=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Updater.html#Updater.fetch"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Updater.Updater.fetch" title="永久链接至目标">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1216,7 +1251,7 @@ voice_name: <a class="reference external" href="https://www.xfyun.cn/services/on
 
 <dl class="function">
 <dt id="robot.Updater.fetch">
-<code class="descclassname">robot.Updater.</code><code class="descname">fetch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Updater.html#fetch"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Updater.fetch" title="永久链接至目标">¶</a></dt>
+<code class="descclassname">robot.Updater.</code><code class="descname">fetch</code><span class="sig-paren">(</span><em>dev</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/Updater.html#fetch"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.Updater.fetch" title="永久链接至目标">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -1224,7 +1259,7 @@ voice_name: <a class="reference external" href="https://www.xfyun.cn/services/on
 <span id="robot-config-module"></span><h2>robot.config module<a class="headerlink" href="#module-robot.config" title="永久链接至标题">¶</a></h2>
 <dl class="function">
 <dt id="robot.config.doInit">
-<code class="descclassname">robot.config.</code><code class="descname">doInit</code><span class="sig-paren">(</span><em>config_file='/home/pi/wukong-robot/static/default.yml'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/config.html#doInit"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.config.doInit" title="永久链接至目标">¶</a></dt>
+<code class="descclassname">robot.config.</code><code class="descname">doInit</code><span class="sig-paren">(</span><em>config_file='/Users/panweizhou/Documents/projects/wukong-robot/static/default.yml'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/config.html#doInit"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.config.doInit" title="永久链接至目标">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -1426,6 +1461,22 @@ con – 会话模块</p>
 </div>
 <div class="section" id="module-robot.statistic">
 <span id="robot-statistic-module"></span><h2>robot.statistic module<a class="headerlink" href="#module-robot.statistic" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="robot.statistic.ReportThread">
+<em class="property">class </em><code class="descclassname">robot.statistic.</code><code class="descname">ReportThread</code><span class="sig-paren">(</span><em>t</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/statistic.html#ReportThread"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.statistic.ReportThread" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">threading.Thread</span></code></p>
+<dl class="method">
+<dt id="robot.statistic.ReportThread.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/statistic.html#ReportThread.run"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.statistic.ReportThread.run" title="永久链接至目标">¶</a></dt>
+<dd><p>Method representing the thread’s activity.</p>
+<p>You may override this method in a subclass. The standard run() method
+invokes the callable object passed to the object’s constructor as the
+target argument, if any, with sequential and keyword arguments taken
+from the args and kwargs arguments, respectively.</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="function">
 <dt id="robot.statistic.getUUID">
 <code class="descclassname">robot.statistic.</code><code class="descname">getUUID</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/statistic.html#getUUID"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.statistic.getUUID" title="永久链接至目标">¶</a></dt>
@@ -1441,7 +1492,7 @@ con – 会话模块</p>
 <span id="robot-utils-module"></span><h2>robot.utils module<a class="headerlink" href="#module-robot.utils" title="永久链接至标题">¶</a></h2>
 <dl class="function">
 <dt id="robot.utils.check_and_delete">
-<code class="descclassname">robot.utils.</code><code class="descname">check_and_delete</code><span class="sig-paren">(</span><em>fp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/utils.html#check_and_delete"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.utils.check_and_delete" title="永久链接至目标">¶</a></dt>
+<code class="descclassname">robot.utils.</code><code class="descname">check_and_delete</code><span class="sig-paren">(</span><em>fp</em>, <em>wait=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/utils.html#check_and_delete"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.utils.check_and_delete" title="永久链接至目标">¶</a></dt>
 <dd><p>检查并删除文件/文件夹</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1577,6 +1628,12 @@ con – 会话模块</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="robot.utils.lruCache">
+<code class="descclassname">robot.utils.</code><code class="descname">lruCache</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/utils.html#lruCache"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.utils.lruCache" title="永久链接至目标">¶</a></dt>
+<dd><p>清理最近未使用的缓存</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="robot.utils.saveCache">
 <code class="descclassname">robot.utils.</code><code class="descname">saveCache</code><span class="sig-paren">(</span><em>voice</em>, <em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/utils.html#saveCache"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.utils.saveCache" title="永久链接至目标">¶</a></dt>
 <dd><p>获取缓存的语音</p>
@@ -1612,15 +1669,16 @@ con – 会话模块</p>
 
 <dl class="function">
 <dt id="robot.utils.write_temp_file">
-<code class="descclassname">robot.utils.</code><code class="descname">write_temp_file</code><span class="sig-paren">(</span><em>data</em>, <em>suffix</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/utils.html#write_temp_file"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.utils.write_temp_file" title="永久链接至目标">¶</a></dt>
-<dd><p>二进制形式写入临时文件</p>
+<code class="descclassname">robot.utils.</code><code class="descname">write_temp_file</code><span class="sig-paren">(</span><em>data</em>, <em>suffix</em>, <em>mode='w+b'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/utils.html#write_temp_file"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.utils.write_temp_file" title="永久链接至目标">¶</a></dt>
+<dd><p>写入临时文件</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><ul class="first simple">
-<li><strong>data</strong> – 二进制数据</li>
+<li><strong>data</strong> – 数据</li>
 <li><strong>suffix</strong> – 后缀名</li>
+<li><strong>mode</strong> – 写入模式，默认为 w+b</li>
 </ul>
 </td>
 </tr>

@@ -36,6 +36,14 @@ robot.sdk.TencentSpeech module
     :undoc-members:
     :show-inheritance:
 
+robot.sdk.XunfeiSpeech module
+-----------------------------
+
+.. automodule:: robot.sdk.XunfeiSpeech
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 robot.sdk.unit module
 ---------------------
 

@@ -143,7 +143,17 @@
             
   <h1>robot.sdk.AbstractPlugin 源代码</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">constants</span>
+<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">logging</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">CONTRIB_PATH</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;未检测到插件目录,Error:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+    
 <div class="viewcode-block" id="AbstractPlugin"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin">[文档]</a><span class="k">class</span> <span class="nc">AbstractPlugin</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; 技能插件基类 &quot;&quot;&quot;</span>
 
@@ -159,14 +169,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">con</span> <span class="o">=</span> <span class="n">con</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nlu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">nlu</span>
 
-<div class="viewcode-block" id="AbstractPlugin.play"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin.play">[文档]</a>    <span class="k">def</span> <span class="nf">play</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">onCompleted</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">delete</span><span class="p">,</span> <span class="n">onCompleted</span><span class="p">)</span></div>
+<div class="viewcode-block" id="AbstractPlugin.play"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin.play">[文档]</a>    <span class="k">def</span> <span class="nf">play</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">onCompleted</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">delete</span><span class="p">,</span> <span class="n">onCompleted</span><span class="p">,</span> <span class="n">volume</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractPlugin.say"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin.say">[文档]</a>    <span class="k">def</span> <span class="nf">say</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">onCompleted</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="n">cache</span><span class="p">,</span> <span class="n">plugin</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">,</span> <span class="n">onCompleted</span><span class="o">=</span><span class="n">onCompleted</span><span class="p">)</span></div>
+<div class="viewcode-block" id="AbstractPlugin.say"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin.say">[文档]</a>    <span class="k">def</span> <span class="nf">say</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">onCompleted</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="n">cache</span><span class="p">,</span> <span class="n">plugin</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">,</span> <span class="n">onCompleted</span><span class="o">=</span><span class="n">onCompleted</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="n">wait</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractPlugin.activeListen"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin.activeListen">[文档]</a>    <span class="k">def</span> <span class="nf">activeListen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">activeListen</span><span class="p">()</span></div>
+<div class="viewcode-block" id="AbstractPlugin.activeListen"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin.activeListen">[文档]</a>    <span class="k">def</span> <span class="nf">activeListen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">silent</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">activeListen</span><span class="p">(</span><span class="n">silent</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractPlugin.clearImmersive"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin.clearImmersive">[文档]</a>    <span class="k">def</span> <span class="nf">clearImmersive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">setImmersiveMode</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AbstractPlugin.isValid"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin.isValid">[文档]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">isValid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">parsed</span><span class="p">):</span>
@@ -202,6 +215,15 @@
 <span class="sd">        例如：“&quot;上一首&quot;、&quot;下一首&quot; 等</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="AbstractPlugin.pause"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin.pause">[文档]</a>    <span class="k">def</span> <span class="nf">pause</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        暂停当前正在处理的任务，</span>
+<span class="sd">        当处于该沉浸模式下且被唤醒时，</span>
+<span class="sd">        将自动触发这个方法，</span>
+<span class="sd">        可以用于强制暂停一个耗时的操作        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
 
 <div class="viewcode-block" id="AbstractPlugin.restore"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.AbstractPlugin.AbstractPlugin.restore">[文档]</a>    <span class="k">def</span> <span class="nf">restore</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

@@ -143,24 +143,33 @@
             
   <h1>robot.Conversation 源代码</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8-*-</span>
-<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">ASR</span><span class="p">,</span> <span class="n">TTS</span><span class="p">,</span> <span class="n">NLU</span><span class="p">,</span> <span class="n">AI</span><span class="p">,</span> <span class="n">Player</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">constants</span><span class="p">,</span> <span class="n">utils</span><span class="p">,</span> <span class="n">statistic</span>
+<span class="kn">import</span> <span class="nn">time</span> 
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">cProfile</span>
+<span class="kn">import</span> <span class="nn">pstats</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">robot.Brain</span> <span class="k">import</span> <span class="n">Brain</span>
 <span class="kn">from</span> <span class="nn">snowboy</span> <span class="k">import</span> <span class="n">snowboydecoder</span>
-<span class="kn">import</span> <span class="nn">time</span> 
-<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">logging</span>
-<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">logging</span><span class="p">,</span> <span class="n">ASR</span><span class="p">,</span> <span class="n">TTS</span><span class="p">,</span> <span class="n">NLU</span><span class="p">,</span> <span class="n">AI</span><span class="p">,</span> <span class="n">Player</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">constants</span><span class="p">,</span> <span class="n">utils</span><span class="p">,</span> <span class="n">statistic</span>
+
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Conversation"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation">[文档]</a><span class="k">class</span> <span class="nc">Conversation</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profiling</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reload</span><span class="p">()</span>
         <span class="c1"># 历史会话消息</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># 沉浸模式，处于这个模式下，被打断后将自动恢复这个技能</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matchPlugin</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">immersiveMode</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">isRecording</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profiling</span> <span class="o">=</span> <span class="n">profiling</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onSay</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hasPardon</span> <span class="o">=</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="Conversation.getHistory"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.getHistory">[文档]</a>    <span class="k">def</span> <span class="nf">getHistory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span></div>
@@ -168,7 +177,9 @@
 <div class="viewcode-block" id="Conversation.interrupt"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.interrupt">[文档]</a>    <span class="k">def</span> <span class="nf">interrupt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">is_playing</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">player</span> <span class="o">=</span> <span class="kc">None</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">player</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">immersiveMode</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="o">.</span><span class="n">pause</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Conversation.reload"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.reload">[文档]</a>    <span class="k">def</span> <span class="nf">reload</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; 重新初始化 &quot;&quot;&quot;</span>
@@ -187,14 +198,33 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">immersiveMode</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="o">.</span><span class="n">restore</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Conversation.doResponse"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.doResponse">[文档]</a>    <span class="k">def</span> <span class="nf">doResponse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">UUID</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="Conversation.doResponse"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.doResponse">[文档]</a>    <span class="k">def</span> <span class="nf">doResponse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">UUID</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">onSay</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">statistic</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">interrupt</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">appendHistory</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">UUID</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">onSay</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">onSay</span> <span class="o">=</span> <span class="n">onSay</span>
+
+        <span class="k">if</span> <span class="n">query</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pardon</span><span class="p">()</span>
+            <span class="k">return</span>
+
+        <span class="n">lastImmersiveMode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">immersiveMode</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">brain</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
             <span class="c1"># 没命中技能，使用机器人回复</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ai</span><span class="o">.</span><span class="n">chat</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">onCompleted</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">checkRestore</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">onCompleted</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">checkRestore</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">lastImmersiveMode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">lastImmersiveMode</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matchPlugin</span><span class="p">:</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">is_playing</span><span class="p">():</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;等说完再checkRestore&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">appendOnCompleted</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkRestore</span><span class="p">())</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;checkRestore&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">checkRestore</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Conversation.doParse"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.doParse">[文档]</a>    <span class="k">def</span> <span class="nf">doParse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlu</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span></div>
@@ -210,25 +240,46 @@
         <span class="n">Player</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getData</span><span class="p">(</span><span class="s1">&#39;beep_lo.wav&#39;</span><span class="p">))</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;结束录音&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">isRecording</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">doConverse</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">profiling</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;性能调试已打开&#39;</span><span class="p">)</span>
+            <span class="n">pr</span> <span class="o">=</span> <span class="n">cProfile</span><span class="o">.</span><span class="n">Profile</span><span class="p">()</span>
+            <span class="n">pr</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">doConverse</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span>
+            <span class="n">pr</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+            <span class="n">sortby</span> <span class="o">=</span> <span class="s1">&#39;cumulative&#39;</span>
+            <span class="n">ps</span> <span class="o">=</span> <span class="n">pstats</span><span class="o">.</span><span class="n">Stats</span><span class="p">(</span><span class="n">pr</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">sort_stats</span><span class="p">(</span><span class="n">sortby</span><span class="p">)</span>
+            <span class="n">ps</span><span class="o">.</span><span class="n">print_stats</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">doConverse</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Conversation.doConverse"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.doConverse">[文档]</a>    <span class="k">def</span> <span class="nf">doConverse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Conversation.doConverse"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.doConverse">[文档]</a>    <span class="k">def</span> <span class="nf">doConverse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">onSay</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">interrupt</span><span class="p">()</span>
             <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">asr</span><span class="o">.</span><span class="n">transcribe</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
             <span class="n">utils</span><span class="o">.</span><span class="n">check_and_delete</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">doResponse</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">doResponse</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">onSay</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
             <span class="n">utils</span><span class="o">.</span><span class="n">clean</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Conversation.appendHistory"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.appendHistory">[文档]</a>    <span class="k">def</span> <span class="nf">appendHistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">UUID</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; 将会话历史加进历史记录 &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="n">text</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="n">text</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">text</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">text</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">text</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;，&#39;</span><span class="p">):</span>
                 <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">UUID</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">or</span> <span class="n">UUID</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">UUID</span> <span class="o">==</span> <span class="s1">&#39;null&#39;</span><span class="p">:</span>
                 <span class="n">UUID</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid1</span><span class="p">())</span>
+            <span class="c1"># 将图片处理成HTML</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;https?://.+\.(?:png|jpg|jpeg|bmp|gif|JPG|PNG|JPEG|BMP|GIF)&#39;</span>
+            <span class="n">url_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;^https?://.+&#39;</span>
+            <span class="n">imgs</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">imgs</span><span class="p">:</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="s1">&#39;&lt;img src=</span><span class="si">{}</span><span class="s1"> class=&quot;img&quot;/&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">img</span><span class="p">))</span>
+            <span class="n">urls</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">url_pattern</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">urls</span><span class="p">:</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="s1">&#39;&lt;a href=</span><span class="si">{}</span><span class="s1"> target=&quot;_blank&quot;&gt;</span><span class="si">{}</span><span class="s1">&lt;/a&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">url</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())),</span> <span class="s1">&#39;uuid&#39;</span><span class="p">:</span> <span class="n">UUID</span><span class="p">})</span></div>
 
     <span class="k">def</span> <span class="nf">_onCompleted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
@@ -241,45 +292,89 @@
             <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activeListen</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">doResponse</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Conversation.say"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.say">[文档]</a>    <span class="k">def</span> <span class="nf">say</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">onCompleted</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; 说一句话 &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Conversation.pardon"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.pardon">[文档]</a>    <span class="k">def</span> <span class="nf">pardon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasPardon</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s2">&quot;抱歉，刚刚没听清，能再说一遍吗？&quot;</span><span class="p">,</span> <span class="n">onCompleted</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">doResponse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activeListen</span><span class="p">()))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hasPardon</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s2">&quot;没听清呢&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hasPardon</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Conversation.say"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.say">[文档]</a>    <span class="k">def</span> <span class="nf">say</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">onCompleted</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        说一句话</span>
+<span class="sd">        :param msg: 内容</span>
+<span class="sd">        :param cache: 是否缓存这句话的音频</span>
+<span class="sd">        :param plugin: 来自哪个插件的消息（将带上插件的说明）</span>
+<span class="sd">        :param onCompleted: 完成的回调</span>
+<span class="sd">        :param wait: 是否要等待说完（为True将阻塞主线程直至说完这句话）</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">plugin</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">appendHistory</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;[</span><span class="si">{}</span><span class="s2">] </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">plugin</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">appendHistory</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;^https?://.+&#39;</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;内容包含URL，所以不读出来&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
         <span class="n">voice</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">cache_path</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="k">if</span> <span class="n">utils</span><span class="o">.</span><span class="n">getCache</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;命中缓存，播放缓存语音&quot;</span><span class="p">)</span>
             <span class="n">voice</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">getCache</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="n">cache_path</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">getCache</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">voice</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tts</span><span class="o">.</span><span class="n">get_speech</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">cache</span><span class="p">:</span>
-                <span class="n">utils</span><span class="o">.</span><span class="n">saveCache</span><span class="p">(</span><span class="n">voice</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">voice</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tts</span><span class="o">.</span><span class="n">get_speech</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="n">cache_path</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">saveCache</span><span class="p">(</span><span class="n">voice</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;保存缓存失败：</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">onSay</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">cache</span><span class="p">)</span>
+            <span class="n">audio</span> <span class="o">=</span> <span class="s1">&#39;http://</span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1">/audio/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/server/host&#39;</span><span class="p">),</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/server/port&#39;</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">cache_path</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;onSay: </span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">audio</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">plugin</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">onSay</span><span class="p">(</span><span class="s2">&quot;[</span><span class="si">{}</span><span class="s2">] </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">plugin</span><span class="p">,</span> <span class="n">msg</span><span class="p">),</span> <span class="n">audio</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">onSay</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">audio</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">onSay</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">onCompleted</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">onCompleted</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_onCompleted</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="n">onCompleted</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_onCompleted</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>        
         <span class="bp">self</span><span class="o">.</span><span class="n">player</span> <span class="o">=</span> <span class="n">Player</span><span class="o">.</span><span class="n">SoxPlayer</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">voice</span><span class="p">,</span> <span class="ow">not</span> <span class="n">cache</span><span class="p">,</span> <span class="n">onCompleted</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">voice</span><span class="p">,</span> <span class="ow">not</span> <span class="n">cache</span><span class="p">,</span> <span class="n">onCompleted</span><span class="p">,</span> <span class="n">wait</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cache</span><span class="p">:</span>
+            <span class="n">utils</span><span class="o">.</span><span class="n">check_and_delete</span><span class="p">(</span><span class="n">cache_path</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span> <span class="c1"># 60秒后将自动清理不缓存的音频</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">lruCache</span><span class="p">()</span>  <span class="c1"># 清理缓存</span></div>
 
-<div class="viewcode-block" id="Conversation.activeListen"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.activeListen">[文档]</a>    <span class="k">def</span> <span class="nf">activeListen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Conversation.activeListen"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.activeListen">[文档]</a>    <span class="k">def</span> <span class="nf">activeListen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">silent</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; 主动问一个问题(适用于多轮对话) &quot;&quot;&quot;</span>
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">Player</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getData</span><span class="p">(</span><span class="s1">&#39;beep_hi.wav&#39;</span><span class="p">))</span>        
-        <span class="n">listener</span> <span class="o">=</span> <span class="n">snowboydecoder</span><span class="o">.</span><span class="n">ActiveListener</span><span class="p">([</span><span class="n">constants</span><span class="o">.</span><span class="n">getHotwordModel</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hotword&#39;</span><span class="p">,</span> <span class="s1">&#39;wukong.pmdl&#39;</span><span class="p">))])</span>
-        <span class="n">voice</span> <span class="o">=</span> <span class="n">listener</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span>
-            <span class="n">silent_count_threshold</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;silent_threshold&#39;</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
-            <span class="n">recording_timeout</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;recording_timeout&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span>
-        <span class="p">)</span>
-        <span class="n">Player</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getData</span><span class="p">(</span><span class="s1">&#39;beep_lo.wav&#39;</span><span class="p">))</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">asr</span><span class="o">.</span><span class="n">transcribe</span><span class="p">(</span><span class="n">voice</span><span class="p">)</span>
-        <span class="n">utils</span><span class="o">.</span><span class="n">check_and_delete</span><span class="p">(</span><span class="n">voice</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">query</span></div>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;activeListen&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">silent</span><span class="p">:</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">Player</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getData</span><span class="p">(</span><span class="s1">&#39;beep_hi.wav&#39;</span><span class="p">))</span>
+            <span class="n">listener</span> <span class="o">=</span> <span class="n">snowboydecoder</span><span class="o">.</span><span class="n">ActiveListener</span><span class="p">([</span><span class="n">constants</span><span class="o">.</span><span class="n">getHotwordModel</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hotword&#39;</span><span class="p">,</span> <span class="s1">&#39;wukong.pmdl&#39;</span><span class="p">))])</span>
+            <span class="n">voice</span> <span class="o">=</span> <span class="n">listener</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span>
+                <span class="n">silent_count_threshold</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;silent_threshold&#39;</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+                <span class="n">recording_timeout</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;recording_timeout&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">silent</span><span class="p">:</span>
+                <span class="n">Player</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">getData</span><span class="p">(</span><span class="s1">&#39;beep_lo.wav&#39;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">voice</span><span class="p">:</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">asr</span><span class="o">.</span><span class="n">transcribe</span><span class="p">(</span><span class="n">voice</span><span class="p">)</span>
+                <span class="n">utils</span><span class="o">.</span><span class="n">check_and_delete</span><span class="p">(</span><span class="n">voice</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">query</span>
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>            
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span>        </div>
 
-<div class="viewcode-block" id="Conversation.play"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.play">[文档]</a>    <span class="k">def</span> <span class="nf">play</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">onCompleted</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Conversation.play"><a class="viewcode-back" href="../../robot.html#robot.Conversation.Conversation.play">[文档]</a>    <span class="k">def</span> <span class="nf">play</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">onCompleted</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; 播放一个音频 &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">interrupt</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">player</span> <span class="o">=</span> <span class="n">Player</span><span class="o">.</span><span class="n">SoxPlayer</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">delete</span><span class="p">,</span> <span class="n">onCompleted</span><span class="o">=</span><span class="n">onCompleted</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">delete</span><span class="p">,</span> <span class="n">onCompleted</span><span class="o">=</span><span class="n">onCompleted</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="n">volume</span><span class="p">)</span></div></div>
     
 </pre></div>
 

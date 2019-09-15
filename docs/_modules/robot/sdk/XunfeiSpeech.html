@@ -1,0 +1,355 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>robot.sdk.XunfeiSpeech &mdash; wukong-robot 1.2.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> wukong-robot
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">wukong-robot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">模块代码</a> &raquo;</li>
+        
+      <li>robot.sdk.XunfeiSpeech</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>robot.sdk.XunfeiSpeech 源代码</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">websocket</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">hmac</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="k">import</span> <span class="n">urlencode</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">ssl</span>
+<span class="kn">from</span> <span class="nn">wsgiref.handlers</span> <span class="k">import</span> <span class="n">format_date_time</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="k">import</span> <span class="n">mktime</span>
+<span class="kn">import</span> <span class="nn">_thread</span> <span class="k">as</span> <span class="nn">thread</span>
+
+<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">STATUS_FIRST_FRAME</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># 第一帧的标识</span>
+<span class="n">STATUS_CONTINUE_FRAME</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># 中间帧标识</span>
+<span class="n">STATUS_LAST_FRAME</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># 最后一帧的标识</span>
+
+<span class="n">wsParam</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">gResult</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+<div class="viewcode-block" id="Ws_Param"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.XunfeiSpeech.Ws_Param">[文档]</a><span class="k">class</span> <span class="nc">Ws_Param</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="c1"># 初始化</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">APPID</span><span class="p">,</span> <span class="n">APIKey</span><span class="p">,</span> <span class="n">APISecret</span><span class="p">,</span> <span class="n">AudioFile</span><span class="p">):</span>
+        <span class="c1"># 控制台鉴权信息</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">APPID</span> <span class="o">=</span> <span class="n">APPID</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">APIKey</span> <span class="o">=</span> <span class="n">APIKey</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">APISecret</span> <span class="o">=</span> <span class="n">APISecret</span>
+
+        <span class="c1"># 固定参数，可不用修改</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Host</span> <span class="o">=</span> <span class="s2">&quot;iat-api.xfyun.cn/v2/iat&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">HttpProto</span> <span class="o">=</span> <span class="s2">&quot;HTTP/1.1&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">HttpMethod</span> <span class="o">=</span> <span class="s2">&quot;GET&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">RequestUri</span> <span class="o">=</span> <span class="s2">&quot;/v2/iat&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Algorithm</span> <span class="o">=</span> <span class="s2">&quot;hmac-sha256&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;wss://&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">Host</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">RequestUri</span>
+
+        <span class="c1"># 设置测试音频文件</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AudioFile</span> <span class="o">=</span> <span class="n">AudioFile</span>
+        <span class="c1"># 公共参数(common)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CommonArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;app_id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">APPID</span><span class="p">}</span>
+        <span class="c1"># 业务参数(business)，更多个性化参数可在官网查看</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">BusinessArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;domain&quot;</span><span class="p">:</span> <span class="s2">&quot;iat&quot;</span><span class="p">,</span> <span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;zh_cn&quot;</span><span class="p">,</span> <span class="s2">&quot;accent&quot;</span><span class="p">:</span> <span class="s2">&quot;mandarin&quot;</span><span class="p">}</span>
+
+    <span class="c1"># 生成url</span>
+<div class="viewcode-block" id="Ws_Param.create_url"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.XunfeiSpeech.Ws_Param.create_url">[文档]</a>    <span class="k">def</span> <span class="nf">create_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;wss://ws-api.xfyun.cn/v2/iat&#39;</span>
+        <span class="c1"># 生成RFC1123格式的时间戳</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">format_date_time</span><span class="p">(</span><span class="n">mktime</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">timetuple</span><span class="p">()))</span>
+
+        <span class="c1"># 拼接字符串</span>
+        <span class="n">signature_origin</span> <span class="o">=</span> <span class="s2">&quot;host: &quot;</span> <span class="o">+</span> <span class="s2">&quot;ws-api.xfyun.cn&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">signature_origin</span> <span class="o">+=</span> <span class="s2">&quot;date: &quot;</span> <span class="o">+</span> <span class="n">date</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">signature_origin</span> <span class="o">+=</span> <span class="s2">&quot;GET &quot;</span> <span class="o">+</span> <span class="s2">&quot;/v2/iat &quot;</span> <span class="o">+</span> <span class="s2">&quot;HTTP/1.1&quot;</span>
+        <span class="c1"># 进行hmac-sha256进行加密</span>
+        <span class="n">signature_sha</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">APISecret</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">signature_origin</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
+                                 <span class="n">digestmod</span><span class="o">=</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
+        <span class="n">signature_sha</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">signature_sha</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+
+        <span class="n">authorization_origin</span> <span class="o">=</span> <span class="s2">&quot;api_key=</span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s2">, algorithm=</span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s2">, headers=</span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s2">, signature=</span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">APIKey</span><span class="p">,</span> <span class="s2">&quot;hmac-sha256&quot;</span><span class="p">,</span> <span class="s2">&quot;host date request-line&quot;</span><span class="p">,</span> <span class="n">signature_sha</span><span class="p">)</span>
+        <span class="n">authorization</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">authorization_origin</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="c1"># 将请求的鉴权参数组合为字典</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;authorization&quot;</span><span class="p">:</span> <span class="n">authorization</span><span class="p">,</span>
+            <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
+            <span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;ws-api.xfyun.cn&quot;</span>
+        <span class="p">}</span>
+        <span class="c1"># 拼接鉴权参数，生成url</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="o">+</span> <span class="s1">&#39;?&#39;</span> <span class="o">+</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="c1"># 此处打印出建立连接时候的url,参考本demo的时候可取消上方打印的注释，比对相同参数时生成的url与自己代码生成的url是否一致</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;websocket url :&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">url</span></div></div>
+
+
+<span class="c1"># 收到websocket消息的处理</span>
+<div class="viewcode-block" id="on_message"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.XunfeiSpeech.on_message">[文档]</a><span class="k">def</span> <span class="nf">on_message</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">gResult</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="p">)[</span><span class="s2">&quot;code&quot;</span><span class="p">]</span>
+        <span class="n">sid</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="p">)[</span><span class="s2">&quot;sid&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">code</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">errMsg</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="p">)[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;xunfei-asr 识别出错了：sid:</span><span class="si">%s</span><span class="s2"> call error:</span><span class="si">%s</span><span class="s2"> code is:</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">sid</span><span class="p">,</span> <span class="n">errMsg</span><span class="p">,</span> <span class="n">code</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="p">)[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;result&quot;</span><span class="p">][</span><span class="s2">&quot;ws&quot;</span><span class="p">]</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">i</span><span class="p">[</span><span class="s2">&quot;cw&quot;</span><span class="p">]:</span>
+                    <span class="n">result</span> <span class="o">+=</span> <span class="n">w</span><span class="p">[</span><span class="s2">&quot;w&quot;</span><span class="p">]</span>
+            <span class="n">gResult</span> <span class="o">=</span> <span class="n">gResult</span> <span class="o">+</span> <span class="n">result</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;sid:</span><span class="si">%s</span><span class="s2"> call success!,data is:</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">sid</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)))</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;xunfei-asr 识别出错了：&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<span class="c1"># 收到websocket错误的处理</span>
+<div class="viewcode-block" id="on_error"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.XunfeiSpeech.on_error">[文档]</a><span class="k">def</span> <span class="nf">on_error</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">error</span><span class="p">):</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;### error:&quot;</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span></div>
+
+
+<span class="c1"># 收到websocket关闭的处理</span>
+<div class="viewcode-block" id="on_close"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.XunfeiSpeech.on_close">[文档]</a><span class="k">def</span> <span class="nf">on_close</span><span class="p">(</span><span class="n">ws</span><span class="p">):</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;### closed ###&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1"># 收到websocket连接建立的处理</span>
+<div class="viewcode-block" id="on_open"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.XunfeiSpeech.on_open">[文档]</a><span class="k">def</span> <span class="nf">on_open</span><span class="p">(</span><span class="n">ws</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">wsParam</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">frameSize</span> <span class="o">=</span> <span class="mi">1220</span>  <span class="c1"># 每一帧的音频大小</span>
+        <span class="n">intervel</span> <span class="o">=</span> <span class="mf">0.04</span>  <span class="c1"># 发送音频间隔(单位:s)</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">STATUS_FIRST_FRAME</span>  <span class="c1"># 音频的状态信息，标识音频是第一帧，还是中间帧、最后一帧</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">wsParam</span><span class="o">.</span><span class="n">AudioFile</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">buf</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">frameSize</span><span class="p">)</span>
+                <span class="c1"># 文件结束</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">buf</span><span class="p">:</span>
+                    <span class="n">status</span> <span class="o">=</span> <span class="n">STATUS_LAST_FRAME</span>
+                <span class="c1"># 第一帧处理</span>
+                <span class="c1"># 发送第一帧音频，带business 参数</span>
+                <span class="c1"># appid 必须带上，只需第一帧发送</span>
+                <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">STATUS_FIRST_FRAME</span><span class="p">:</span>
+
+                    <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="n">wsParam</span><span class="o">.</span><span class="n">CommonArgs</span><span class="p">,</span>
+                         <span class="s2">&quot;business&quot;</span><span class="p">:</span> <span class="n">wsParam</span><span class="o">.</span><span class="n">BusinessArgs</span><span class="p">,</span>
+                         <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;audio/L16;rate=16000&quot;</span><span class="p">,</span>
+                                  <span class="s2">&quot;audio&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
+                                  <span class="s2">&quot;encoding&quot;</span><span class="p">:</span> <span class="s2">&quot;raw&quot;</span><span class="p">}}</span>
+                    <span class="n">d</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+                    <span class="n">ws</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+                    <span class="n">status</span> <span class="o">=</span> <span class="n">STATUS_CONTINUE_FRAME</span>
+                <span class="c1"># 中间帧处理</span>
+                <span class="k">elif</span> <span class="n">status</span> <span class="o">==</span> <span class="n">STATUS_CONTINUE_FRAME</span><span class="p">:</span>
+                    <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;audio/L16;rate=16000&quot;</span><span class="p">,</span>
+                                  <span class="s2">&quot;audio&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
+                                  <span class="s2">&quot;encoding&quot;</span><span class="p">:</span> <span class="s2">&quot;raw&quot;</span><span class="p">}}</span>
+                    <span class="n">ws</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+                <span class="c1"># 最后一帧处理</span>
+                <span class="k">elif</span> <span class="n">status</span> <span class="o">==</span> <span class="n">STATUS_LAST_FRAME</span><span class="p">:</span>
+                    <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;audio/L16;rate=16000&quot;</span><span class="p">,</span>
+                                  <span class="s2">&quot;audio&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
+                                  <span class="s2">&quot;encoding&quot;</span><span class="p">:</span> <span class="s2">&quot;raw&quot;</span><span class="p">}}</span>
+                    <span class="n">ws</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="k">break</span>
+                <span class="c1"># 模拟音频采样间隔</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">intervel</span><span class="p">)</span>
+        <span class="n">ws</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">thread</span><span class="o">.</span><span class="n">start_new_thread</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="transcribe"><a class="viewcode-back" href="../../../robot.sdk.html#robot.sdk.XunfeiSpeech.transcribe">[文档]</a><span class="k">def</span> <span class="nf">transcribe</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">appid</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span> <span class="n">api_secret</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    科大讯飞ASR</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">wsParam</span><span class="p">,</span> <span class="n">gResult</span>
+    <span class="n">gResult</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">wsParam</span> <span class="o">=</span> <span class="n">Ws_Param</span><span class="p">(</span><span class="n">appid</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span> <span class="n">APISecret</span><span class="o">=</span><span class="n">api_secret</span><span class="p">,</span> <span class="n">AudioFile</span><span class="o">=</span><span class="n">fpath</span><span class="p">)</span>
+    <span class="n">websocket</span><span class="o">.</span><span class="n">enableTrace</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">wsUrl</span> <span class="o">=</span> <span class="n">wsParam</span><span class="o">.</span><span class="n">create_url</span><span class="p">()</span>
+    <span class="n">ws</span> <span class="o">=</span> <span class="n">websocket</span><span class="o">.</span><span class="n">WebSocketApp</span><span class="p">(</span><span class="n">wsUrl</span><span class="p">,</span> <span class="n">on_message</span><span class="o">=</span><span class="n">on_message</span><span class="p">,</span> <span class="n">on_error</span><span class="o">=</span><span class="n">on_error</span><span class="p">,</span> <span class="n">on_close</span><span class="o">=</span><span class="n">on_close</span><span class="p">)</span>
+    <span class="n">ws</span><span class="o">.</span><span class="n">on_open</span> <span class="o">=</span> <span class="n">on_open</span>
+    <span class="n">ws</span><span class="o">.</span><span class="n">run_forever</span><span class="p">(</span><span class="n">sslopt</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;cert_reqs&quot;</span><span class="p">:</span> <span class="n">ssl</span><span class="o">.</span><span class="n">CERT_NONE</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">gResult</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, wzpan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

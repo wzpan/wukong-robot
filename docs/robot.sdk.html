@@ -87,6 +87,7 @@
 <li><a class="reference internal" href="#module-robot.sdk.AliSpeech">robot.sdk.AliSpeech module</a></li>
 <li><a class="reference internal" href="#module-robot.sdk.RASRsdk">robot.sdk.RASRsdk module</a></li>
 <li><a class="reference internal" href="#module-robot.sdk.TencentSpeech">robot.sdk.TencentSpeech module</a></li>
+<li><a class="reference internal" href="#module-robot.sdk.XunfeiSpeech">robot.sdk.XunfeiSpeech module</a></li>
 <li><a class="reference internal" href="#module-robot.sdk.unit">robot.sdk.unit module</a></li>
 <li><a class="reference internal" href="#module-robot.sdk">Module contents</a></li>
 </ul>
@@ -179,7 +180,12 @@
 
 <dl class="method">
 <dt id="robot.sdk.AbstractPlugin.AbstractPlugin.activeListen">
-<code class="descname">activeListen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/AbstractPlugin.html#AbstractPlugin.activeListen"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.AbstractPlugin.AbstractPlugin.activeListen" title="永久链接至目标">¶</a></dt>
+<code class="descname">activeListen</code><span class="sig-paren">(</span><em>silent=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/AbstractPlugin.html#AbstractPlugin.activeListen"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.AbstractPlugin.AbstractPlugin.activeListen" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="robot.sdk.AbstractPlugin.AbstractPlugin.clearImmersive">
+<code class="descname">clearImmersive</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/AbstractPlugin.html#AbstractPlugin.clearImmersive"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.AbstractPlugin.AbstractPlugin.clearImmersive" title="永久链接至目标">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -213,8 +219,17 @@ False: 不适合由该插件处理</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="robot.sdk.AbstractPlugin.AbstractPlugin.pause">
+<code class="descname">pause</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/AbstractPlugin.html#AbstractPlugin.pause"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.AbstractPlugin.AbstractPlugin.pause" title="永久链接至目标">¶</a></dt>
+<dd><p>暂停当前正在处理的任务，
+当处于该沉浸模式下且被唤醒时，
+将自动触发这个方法，
+可以用于强制暂停一个耗时的操作</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="robot.sdk.AbstractPlugin.AbstractPlugin.play">
-<code class="descname">play</code><span class="sig-paren">(</span><em>src</em>, <em>delete=False</em>, <em>onCompleted=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/AbstractPlugin.html#AbstractPlugin.play"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.AbstractPlugin.AbstractPlugin.play" title="永久链接至目标">¶</a></dt>
+<code class="descname">play</code><span class="sig-paren">(</span><em>src</em>, <em>delete=False</em>, <em>onCompleted=None</em>, <em>volume=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/AbstractPlugin.html#AbstractPlugin.play"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.AbstractPlugin.AbstractPlugin.play" title="永久链接至目标">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -228,7 +243,7 @@ False: 不适合由该插件处理</p>
 
 <dl class="method">
 <dt id="robot.sdk.AbstractPlugin.AbstractPlugin.say">
-<code class="descname">say</code><span class="sig-paren">(</span><em>text</em>, <em>cache=False</em>, <em>onCompleted=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/AbstractPlugin.html#AbstractPlugin.say"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.AbstractPlugin.AbstractPlugin.say" title="永久链接至目标">¶</a></dt>
+<code class="descname">say</code><span class="sig-paren">(</span><em>text</em>, <em>cache=False</em>, <em>onCompleted=None</em>, <em>wait=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/AbstractPlugin.html#AbstractPlugin.say"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.AbstractPlugin.AbstractPlugin.say" title="永久链接至目标">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -412,6 +427,46 @@ False: 不适合由该插件处理</p>
 <code class="descname">voicetype</code><a class="headerlink" href="#robot.sdk.TencentSpeech.tencentSpeech.voicetype" title="永久链接至目标">¶</a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+</div>
+<div class="section" id="module-robot.sdk.XunfeiSpeech">
+<span id="robot-sdk-xunfeispeech-module"></span><h2>robot.sdk.XunfeiSpeech module<a class="headerlink" href="#module-robot.sdk.XunfeiSpeech" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="robot.sdk.XunfeiSpeech.Ws_Param">
+<em class="property">class </em><code class="descclassname">robot.sdk.XunfeiSpeech.</code><code class="descname">Ws_Param</code><span class="sig-paren">(</span><em>APPID</em>, <em>APIKey</em>, <em>APISecret</em>, <em>AudioFile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/XunfeiSpeech.html#Ws_Param"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.XunfeiSpeech.Ws_Param" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="robot.sdk.XunfeiSpeech.Ws_Param.create_url">
+<code class="descname">create_url</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/XunfeiSpeech.html#Ws_Param.create_url"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.XunfeiSpeech.Ws_Param.create_url" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="robot.sdk.XunfeiSpeech.on_close">
+<code class="descclassname">robot.sdk.XunfeiSpeech.</code><code class="descname">on_close</code><span class="sig-paren">(</span><em>ws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/XunfeiSpeech.html#on_close"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.XunfeiSpeech.on_close" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="robot.sdk.XunfeiSpeech.on_error">
+<code class="descclassname">robot.sdk.XunfeiSpeech.</code><code class="descname">on_error</code><span class="sig-paren">(</span><em>ws</em>, <em>error</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/XunfeiSpeech.html#on_error"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.XunfeiSpeech.on_error" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="robot.sdk.XunfeiSpeech.on_message">
+<code class="descclassname">robot.sdk.XunfeiSpeech.</code><code class="descname">on_message</code><span class="sig-paren">(</span><em>ws</em>, <em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/XunfeiSpeech.html#on_message"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.XunfeiSpeech.on_message" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="robot.sdk.XunfeiSpeech.on_open">
+<code class="descclassname">robot.sdk.XunfeiSpeech.</code><code class="descname">on_open</code><span class="sig-paren">(</span><em>ws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/XunfeiSpeech.html#on_open"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.XunfeiSpeech.on_open" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="robot.sdk.XunfeiSpeech.transcribe">
+<code class="descclassname">robot.sdk.XunfeiSpeech.</code><code class="descname">transcribe</code><span class="sig-paren">(</span><em>fpath</em>, <em>appid</em>, <em>api_key</em>, <em>api_secret</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/robot/sdk/XunfeiSpeech.html#transcribe"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#robot.sdk.XunfeiSpeech.transcribe" title="永久链接至目标">¶</a></dt>
+<dd><p>科大讯飞ASR</p>
 </dd></dl>
 
 </div>

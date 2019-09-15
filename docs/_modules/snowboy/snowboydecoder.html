@@ -151,9 +151,9 @@
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">wave</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">ctypes</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">ctypes</span> <span class="k">import</span> <span class="n">CFUNCTYPE</span><span class="p">,</span> <span class="n">c_char_p</span><span class="p">,</span> <span class="n">c_int</span><span class="p">,</span> <span class="n">cdll</span>
 <span class="kn">from</span> <span class="nn">contextlib</span> <span class="k">import</span> <span class="n">contextmanager</span>
-<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">constants</span><span class="p">,</span> <span class="n">Conversation</span>
+<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">constants</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;snowboy&quot;</span><span class="p">)</span>
@@ -225,6 +225,7 @@
     <span class="sd">&quot;&quot;&quot; Active Listening with VAD &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">decoder_model</span><span class="p">,</span>
                  <span class="n">resource</span><span class="o">=</span><span class="n">RESOURCE_FILE</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;activeListen __init__()&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">recordedData</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">model_str</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">decoder_model</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">detector</span> <span class="o">=</span> <span class="n">snowboydetect</span><span class="o">.</span><span class="n">SnowboyDetect</span><span class="p">(</span>
@@ -243,6 +244,8 @@
 <span class="sd">        :param recording_timeout: limits the maximum length of a recording.</span>
 <span class="sd">        :return: recorded file path</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;activeListen listen()&quot;</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">def</span> <span class="nf">audio_callback</span><span class="p">(</span><span class="n">in_data</span><span class="p">,</span> <span class="n">frame_count</span><span class="p">,</span> <span class="n">time_info</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
@@ -252,15 +255,23 @@
 
         <span class="k">with</span> <span class="n">no_alsa_error</span><span class="p">():</span>            
             <span class="bp">self</span><span class="o">.</span><span class="n">audio</span> <span class="o">=</span> <span class="n">pyaudio</span><span class="o">.</span><span class="n">PyAudio</span><span class="p">()</span>
+        
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;opening audio stream&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">stream_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">audio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span>
-            <span class="nb">input</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="nb">format</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">audio</span><span class="o">.</span><span class="n">get_format_from_width</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">BitsPerSample</span><span class="p">()</span> <span class="o">/</span> <span class="mi">8</span><span class="p">),</span>
-            <span class="n">channels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">NumChannels</span><span class="p">(),</span>
-            <span class="n">rate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">SampleRate</span><span class="p">(),</span>
-            <span class="n">frames_per_buffer</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span>
-            <span class="n">stream_callback</span><span class="o">=</span><span class="n">audio_callback</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stream_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">audio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span>
+                <span class="nb">input</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="nb">format</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">audio</span><span class="o">.</span><span class="n">get_format_from_width</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">BitsPerSample</span><span class="p">()</span> <span class="o">/</span> <span class="mi">8</span><span class="p">),</span>
+                <span class="n">channels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">NumChannels</span><span class="p">(),</span>
+                <span class="n">rate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">SampleRate</span><span class="p">(),</span>
+                <span class="n">frames_per_buffer</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span>
+                <span class="n">stream_callback</span><span class="o">=</span><span class="n">audio_callback</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">return</span> 
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;audio stream opened&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">interrupt_check</span><span class="p">():</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;detect voice return&quot;</span><span class="p">)</span>
@@ -268,6 +279,9 @@
 
         <span class="n">silentCount</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">recordingCount</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;begin activeListen loop&quot;</span><span class="p">)</span>
+        
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
 
             <span class="k">if</span> <span class="n">interrupt_check</span><span class="p">():</span>
@@ -318,6 +332,11 @@
         <span class="n">wf</span><span class="o">.</span><span class="n">writeframes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="n">wf</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;finished saving: &quot;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stream_in</span><span class="o">.</span><span class="n">stop_stream</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stream_in</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">audio</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
+        
         <span class="k">return</span> <span class="n">filename</span></div></div>
     
     

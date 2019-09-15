@@ -147,18 +147,20 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">import</span> <span class="nn">wave</span>
-<span class="kn">import</span> <span class="nn">struct</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">constants</span><span class="p">,</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">logging</span>
 <span class="kn">from</span> <span class="nn">pydub</span> <span class="k">import</span> <span class="n">AudioSegment</span>
 <span class="kn">from</span> <span class="nn">pytz</span> <span class="k">import</span> <span class="n">timezone</span>
+<span class="kn">import</span> <span class="nn">_thread</span> <span class="k">as</span> <span class="nn">thread</span>
+
 <span class="kn">import</span> <span class="nn">smtplib</span>
 <span class="kn">from</span> <span class="nn">email.mime.text</span> <span class="k">import</span> <span class="n">MIMEText</span>
 <span class="kn">from</span> <span class="nn">email.mime.multipart</span> <span class="k">import</span> <span class="n">MIMEMultipart</span>
-<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">logging</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -254,27 +256,34 @@
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filePath</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="check_and_delete"><a class="viewcode-back" href="../../robot.html#robot.utils.check_and_delete">[文档]</a><span class="k">def</span> <span class="nf">check_and_delete</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
+<div class="viewcode-block" id="check_and_delete"><a class="viewcode-back" href="../../robot.html#robot.utils.check_and_delete">[文档]</a><span class="k">def</span> <span class="nf">check_and_delete</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">    检查并删除文件/文件夹</span>
 
 <span class="sd">    :param fp: 文件路径</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">wait</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">wait</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+    
+    <span class="n">thread</span><span class="o">.</span><span class="n">start_new_thread</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="p">())</span></div>
 
-<div class="viewcode-block" id="write_temp_file"><a class="viewcode-back" href="../../robot.html#robot.utils.write_temp_file">[文档]</a><span class="k">def</span> <span class="nf">write_temp_file</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">suffix</span><span class="p">):</span>
+
+<div class="viewcode-block" id="write_temp_file"><a class="viewcode-back" href="../../robot.html#robot.utils.write_temp_file">[文档]</a><span class="k">def</span> <span class="nf">write_temp_file</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">suffix</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w+b&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; </span>
-<span class="sd">    二进制形式写入临时文件</span>
+<span class="sd">    写入临时文件</span>
 
-<span class="sd">    :param data: 二进制数据</span>
+<span class="sd">    :param data: 数据</span>
 <span class="sd">    :param suffix: 后缀名</span>
+<span class="sd">    :param mode: 写入模式，默认为 w+b</span>
 <span class="sd">    :returns: 文件保存后的路径</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="n">tmpfile</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span>
     <span class="k">return</span> <span class="n">tmpfile</span></div>
@@ -314,7 +323,7 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mp3_path</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;文件错误 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mp3_path</span><span class="p">))</span>
         <span class="k">return</span> <span class="kc">None</span>
-    <span class="n">voice</span> <span class="o">=</span> <span class="n">AudioSegment</span><span class="o">.</span><span class="n">from_mp3</span><span class="p">(</span><span class="n">mp3_path</span><span class="p">)</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;wav&quot;</span><span class="p">)</span>
+    <span class="n">AudioSegment</span><span class="o">.</span><span class="n">from_mp3</span><span class="p">(</span><span class="n">mp3_path</span><span class="p">)</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;wav&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">target</span>        </div>
 
 <div class="viewcode-block" id="clean"><a class="viewcode-back" href="../../robot.html#robot.utils.clean">[文档]</a><span class="k">def</span> <span class="nf">clean</span><span class="p">():</span>
@@ -372,7 +381,20 @@
     <span class="sd">&quot;&quot;&quot; 获取缓存的语音 &quot;&quot;&quot;</span>
     <span class="n">foo</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">voice</span><span class="p">)</span>
     <span class="n">md5</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
-    <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">voice</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">TEMP_PATH</span><span class="p">,</span> <span class="n">md5</span><span class="o">+</span><span class="n">ext</span><span class="p">))</span></div>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">TEMP_PATH</span><span class="p">,</span> <span class="n">md5</span><span class="o">+</span><span class="n">ext</span><span class="p">)</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">voice</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">target</span></div>
+    
+
+<div class="viewcode-block" id="lruCache"><a class="viewcode-back" href="../../robot.html#robot.utils.lruCache">[文档]</a><span class="k">def</span> <span class="nf">lruCache</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; 清理最近未使用的缓存 &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/lru_cache/enable&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>            
+            <span class="n">days</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/lru_cache/days&#39;</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;find . -name &quot;*.mp3&quot; -atime +</span><span class="si">%d</span><span class="s1"> -exec rm </span><span class="si">{}</span><span class="s1"> \;&#39;</span> <span class="o">%</span> <span class="n">days</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">TEMP_PATH</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">thread</span><span class="o">.</span><span class="n">start_new_thread</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="p">())</span></div>
+
 </pre></div>
 
            </div>

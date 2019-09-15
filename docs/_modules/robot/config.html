@@ -161,6 +161,7 @@
     <span class="n">init</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="init"><a class="viewcode-back" href="../../robot.html#robot.config.init">[文档]</a><span class="k">def</span> <span class="nf">init</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">has_init</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_PATH</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;错误：</span><span class="si">{}</span><span class="s2"> 应该是个目录，而不应该是个文件&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_PATH</span><span class="p">))</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">CONFIG_PATH</span><span class="p">):</span>
@@ -224,6 +225,8 @@
     <span class="n">curConfig</span> <span class="o">=</span> <span class="n">_config</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
         <span class="n">items</span> <span class="o">=</span> <span class="n">items</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="n">items</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">curConfig</span><span class="p">:</span>
             <span class="n">curConfig</span> <span class="o">=</span> <span class="n">curConfig</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
@@ -239,7 +242,7 @@
 <span class="sd">    :param item: 配置项名</span>
 <span class="sd">    :returns: True: 包含; False: 不包含</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">_config</span></div>
+    <span class="k">return</span> <span class="n">has_path</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="get"><a class="viewcode-back" href="../../robot.html#robot.config.get">[文档]</a><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -250,6 +253,7 @@
 <span class="sd">    :param default: 默认值（可选）</span>
 <span class="sd">    :returns: 这个配置的值。如果没有该配置，则提供一个默认值</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">has_init</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">has_init</span><span class="p">:</span>
         <span class="n">init</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">item</span><span class="p">:</span>

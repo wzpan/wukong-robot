@@ -145,7 +145,7 @@
 <span></span><span class="c1"># -*- coding: utf-8-*-</span>
 
 <span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">config</span>
-<span class="kn">from</span> <span class="nn">watchdog.events</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">watchdog.events</span> <span class="k">import</span> <span class="n">FileSystemEventHandler</span>
 
 <div class="viewcode-block" id="ConfigMonitor"><a class="viewcode-back" href="../../robot.html#robot.ConfigMonitor.ConfigMonitor">[文档]</a><span class="k">class</span> <span class="nc">ConfigMonitor</span><span class="p">(</span><span class="n">FileSystemEventHandler</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conversation</span><span class="p">):</span>

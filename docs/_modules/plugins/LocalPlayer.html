@@ -143,26 +143,90 @@
             
   <h1>plugins.LocalPlayer 源代码</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8-*-</span>
-<span class="c1"># 本地音乐播放器插件</span>
-
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">constants</span><span class="p">,</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">robot</span> <span class="k">import</span> <span class="n">config</span><span class="p">,</span> <span class="n">logging</span>
+<span class="kn">from</span> <span class="nn">robot.Player</span> <span class="k">import</span> <span class="n">MusicPlayer</span>
 <span class="kn">from</span> <span class="nn">robot.sdk.AbstractPlugin</span> <span class="k">import</span> <span class="n">AbstractPlugin</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Plugin"><a class="viewcode-back" href="../../plugins.html#plugins.LocalPlayer.Plugin">[文档]</a><span class="k">class</span> <span class="nc">Plugin</span><span class="p">(</span><span class="n">AbstractPlugin</span><span class="p">):</span>
 
-    <span class="n">IS_IMMERSIVE</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">IS_IMMERSIVE</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># 这是个沉浸式技能</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">con</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Plugin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">con</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">song_list</span> <span class="o">=</span> <span class="kc">None</span>        
+
+<div class="viewcode-block" id="Plugin.get_song_list"><a class="viewcode-back" href="../../plugins.html#plugins.LocalPlayer.Plugin.get_song_list">[文档]</a>    <span class="k">def</span> <span class="nf">get_song_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">or</span> \
+           <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="n">song_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.mp3&#39;</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">path</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">song</span><span class="p">)</span> <span class="k">for</span> <span class="n">song</span> <span class="ow">in</span> <span class="n">song_list</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Plugin.init_music_player"><a class="viewcode-back" href="../../plugins.html#plugins.LocalPlayer.Plugin.init_music_player">[文档]</a>    <span class="k">def</span> <span class="nf">init_music_player</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">song_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_song_list</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/LocalPlayer/path&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">song_list</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> 插件配置有误&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SLUG</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;本地音乐列表：</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">song_list</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">MusicPlayer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">song_list</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Plugin.handle"><a class="viewcode-back" href="../../plugins.html#plugins.LocalPlayer.Plugin.handle">[文档]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">parsed</span><span class="p">):</span>
-        <span class="n">temp</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">TEMP_PATH</span>
-        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">temp</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">f</span> <span class="o">!=</span> <span class="s1">&#39;DIR&#39;</span><span class="p">:</span>
-                <span class="n">utils</span><span class="o">.</span><span class="n">check_and_delete</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;缓存目录已清空&#39;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">player</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_music_player</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">song_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clearImmersive</span><span class="p">()</span>  <span class="c1"># 去掉沉浸式</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;本地音乐目录并没有音乐文件，播放失败&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlu</span><span class="o">.</span><span class="n">hasIntent</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="s1">&#39;MUSICRANK&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlu</span><span class="o">.</span><span class="n">hasIntent</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="s1">&#39;CHANGE_TO_NEXT&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlu</span><span class="o">.</span><span class="n">hasIntent</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="s1">&#39;CHANGE_TO_LAST&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">prev</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlu</span><span class="o">.</span><span class="n">hasIntent</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="s1">&#39;CHANGE_VOL&#39;</span><span class="p">):</span>
+            <span class="n">slots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlu</span><span class="o">.</span><span class="n">getSlots</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="s1">&#39;CHANGE_VOL&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="n">slots</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">slot</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;user_d&#39;</span><span class="p">:</span>
+                    <span class="n">word</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlu</span><span class="o">.</span><span class="n">getSlotWords</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="s1">&#39;CHANGE_VOL&#39;</span><span class="p">,</span> <span class="s1">&#39;user_d&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">word</span> <span class="o">==</span> <span class="s1">&#39;--HIGHER--&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">turnUp</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">turnDown</span><span class="p">()</span>
+                    <span class="k">return</span>
+                <span class="k">elif</span> <span class="n">slot</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;user_vd&#39;</span><span class="p">:</span>
+                    <span class="n">word</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlu</span><span class="o">.</span><span class="n">getSlotWords</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="s1">&#39;CHANGE_VOL&#39;</span><span class="p">,</span> <span class="s1">&#39;user_vd&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">word</span> <span class="o">==</span> <span class="s1">&#39;--LOUDER--&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">turnUp</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">turnDown</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlu</span><span class="o">.</span><span class="n">hasIntent</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="s1">&#39;PAUSE&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">pause</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlu</span><span class="o">.</span><span class="n">hasIntent</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="s1">&#39;CONTINUE&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">resume</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlu</span><span class="o">.</span><span class="n">hasIntent</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="s1">&#39;CLOSE_MUSIC&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clearImmersive</span><span class="p">()</span>  <span class="c1"># 去掉沉浸式</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;没听懂你的意思呢，要停止播放，请说停止播放&#39;</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">resume</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Plugin.pause"><a class="viewcode-back" href="../../plugins.html#plugins.LocalPlayer.Plugin.pause">[文档]</a>    <span class="k">def</span> <span class="nf">pause</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Plugin.restore"><a class="viewcode-back" href="../../plugins.html#plugins.LocalPlayer.Plugin.restore">[文档]</a>    <span class="k">def</span> <span class="nf">restore</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">is_pausing</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">resume</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Plugin.isValidImmersive"><a class="viewcode-back" href="../../plugins.html#plugins.LocalPlayer.Plugin.isValidImmersive">[文档]</a>    <span class="k">def</span> <span class="nf">isValidImmersive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">parsed</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nlu</span><span class="o">.</span><span class="n">hasIntent</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">intent</span><span class="p">)</span> <span class="k">for</span> <span class="n">intent</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;CHANGE_TO_LAST&#39;</span><span class="p">,</span> <span class="s1">&#39;CHANGE_TO_NEXT&#39;</span><span class="p">,</span> <span class="s1">&#39;CHANGE_VOL&#39;</span><span class="p">,</span> <span class="s1">&#39;CLOSE_MUSIC&#39;</span><span class="p">,</span> <span class="s1">&#39;PAUSE&#39;</span><span class="p">,</span> <span class="s1">&#39;CONTINUE&#39;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="Plugin.isValid"><a class="viewcode-back" href="../../plugins.html#plugins.LocalPlayer.Plugin.isValid">[文档]</a>    <span class="k">def</span> <span class="nf">isValid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">parsed</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;本地音乐&#39;</span> <span class="ow">in</span> <span class="n">text</span></div></div>
+        <span class="k">return</span> <span class="s2">&quot;本地音乐&quot;</span> <span class="ow">in</span> <span class="n">text</span></div></div>
+
 </pre></div>
 
            </div>
