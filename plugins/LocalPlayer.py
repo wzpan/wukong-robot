@@ -71,7 +71,8 @@ class Plugin(AbstractPlugin):
             self.player.resume()
 
     def pause(self):
-        self.player.stop()
+        if self.player:
+            self.player.stop()
 
     def restore(self):
         if self.player and not self.player.is_pausing():
