@@ -28,8 +28,8 @@ class AbstractPlugin(metaclass=ABCMeta):
     def play(self, src, delete=False, onCompleted=None, volume=1):
         self.con.play(src, delete, onCompleted, volume)
 
-    def say(self, text, cache=False, onCompleted=None):
-        self.con.say(text, cache=cache, plugin=self.SLUG, onCompleted=onCompleted)
+    def say(self, text, cache=False, onCompleted=None, wait=False):
+        self.con.say(text, cache=cache, plugin=self.SLUG, onCompleted=onCompleted, wait=wait)
 
     def activeListen(self, silent=False):
         return self.con.activeListen(silent)

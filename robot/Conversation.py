@@ -6,7 +6,6 @@ import pstats
 import io
 import re
 import os
-from multiprocessing import Process
 from robot.Brain import Brain
 from snowboy import snowboydecoder
 from robot import logging, ASR, TTS, NLU, AI, Player, config, constants, utils, statistic
@@ -27,7 +26,6 @@ class Conversation(object):
         self.profiling = profiling
         self.onSay = None
         self.hasPardon = False
-        self.conversationPool = set([])
 
     def getHistory(self):
         return self.history
@@ -102,7 +100,7 @@ class Conversation(object):
             logger.info('性能调试已打开')
             pr = cProfile.Profile()
             pr.enable()
-            self.startConverse(fp, callback)
+            self.doConverse(fp, callback)
             pr.disable()
             s = io.StringIO()
             sortby = 'cumulative'
@@ -110,17 +108,7 @@ class Conversation(object):
             ps.print_stats()
             print(s.getvalue())
         else:
-            self.startConverse(fp, callback)
-
-    def startConverse(self, fp, callback=None, onSay=None):
-        # stop all the other conversation thread
-        for process in self.conversationPool:
-            process.kill()
-        self.conversationPool.clear()
-        # create new conversation process
-        p = Process(target=self.doConverse, args=(fp, callback, onSay))
-        self.conversationPool.add(p)
-        p.start()
+            self.doConverse(fp, callback)
 
     def doConverse(self, fp, callback=None, onSay=None):
         try:
@@ -168,8 +156,15 @@ class Conversation(object):
             self.say("没听清呢")
             self.hasPardon = False
 
-    def say(self, msg, cache=False, plugin='', onCompleted=None):
-        """ 说一句话 """
+    def say(self, msg, cache=False, plugin='', onCompleted=None, wait=False):
+        """ 
+        说一句话
+        :param msg: 内容
+        :param cache: 是否缓存这句话的音频
+        :param plugin: 来自哪个插件的消息（将带上插件的说明）
+        :param onCompleted: 完成的回调
+        :param wait: 是否要等待说完（为True将阻塞主线程直至说完这句话）
+        """
         if plugin != '':
             self.appendHistory(1, "[{}] {}".format(plugin, msg))
         else:
@@ -202,7 +197,7 @@ class Conversation(object):
         if onCompleted is None:
             onCompleted = lambda: self._onCompleted(msg)        
         self.player = Player.SoxPlayer()
-        self.player.play(voice, not cache, onCompleted)
+        self.player.play(voice, not cache, onCompleted, wait)
         if not cache:
             utils.check_and_delete(cache_path, 60) # 60秒后将自动清理不缓存的音频
         utils.lruCache()  # 清理缓存

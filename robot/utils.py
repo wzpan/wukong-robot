@@ -130,15 +130,16 @@ def check_and_delete(fp, wait=0):
     thread.start_new_thread(run, ())
 
 
-def write_temp_file(data, suffix):
+def write_temp_file(data, suffix, mode='w+b'):
     """ 
-    二进制形式写入临时文件
+    写入临时文件
 
-    :param data: 二进制数据
+    :param data: 数据
     :param suffix: 后缀名
+    :param mode: 写入模式，默认为 w+b
     :returns: 文件保存后的路径
     """
-    with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as f:
+    with tempfile.NamedTemporaryFile(mode=mode, suffix=suffix, delete=False) as f:
         f.write(data)
         tmpfile = f.name
     return tmpfile
@@ -249,3 +250,4 @@ def lruCache():
             subprocess.run('find . -name "*.mp3" -atime +%d -exec rm {} \;' % days, cwd=constants.TEMP_PATH, shell=True)
 
     thread.start_new_thread(run, ())
+
