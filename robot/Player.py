@@ -200,7 +200,7 @@ class MusicPlayer(SoxPlayer):
             else:
                 subprocess.run(['amixer', 'set', 'Master', '20%+'])
         else:
-            self.plugin.say('当前系统不支持调节音量')
+            self.plugin.say('当前系统不支持调节音量', wait=True)
         self.resume()
 
     def turnDown(self):
@@ -225,5 +225,5 @@ class MusicPlayer(SoxPlayer):
             else:
                 subprocess.run(['amixer', 'set', 'Master', '20%-'])
         else:
-            self.plugin.say('当前系统不支持调节音量')
+            self.plugin.say('当前系统不支持调节音量', wait=True)
         self.resume()
