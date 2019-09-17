@@ -79,7 +79,6 @@ class SoxPlayer(AbstractPlayer):
             for onCompleted in self.onCompleteds:
                 if onCompleted:                
                     onCompleted()
-            self.onCompleteds = []
     
     def play(self, src, delete=False, onCompleted=None, wait=False):
         if (os.path.exists(src)):
