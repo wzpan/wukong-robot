@@ -1,5 +1,5 @@
 # Docker file for wukong-robot
-FROM wzpan/wukong-robot:v1.0.3
+FROM wzpan/wukong-robot:v1.8.0
 MAINTAINER wzpan
 WORKDIR /root/wukong-robot
 RUN git pull
