@@ -3,7 +3,7 @@ name: Docker Image CI
 on:
   push:
     branches:
-    - release/*  
+    - master
 
 jobs:
 
@@ -12,6 +12,21 @@ jobs:
     runs-on: ubuntu-latest
  
     steps:
-    - name: Build the Docker image
-      uses: actions/wzpan@master
-      run: docker build docker --tag wzpan/wukong-robot:latest
+    - uses: actions/checkout@master
+    - name: Publish to Docker Hub Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: wzpan/wukong-robot
+        username: ${{ secrets.DOCKER_GITHUB_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        dockerfile: docker/Dockerfile
+    - name: Publish to Github Package Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: docker.pkg.github.com/wzpan/wukong-robot/wukong
+        username: ${{ secrets.DOCKER_GITHUB_USERNAME }}
+        password: ${{ secrets.DOCKER_GITHUB_PASSWORD }}
+        registry: docker.pkg.github.com
+        dockerfile: docker/Dockerfile
+
+

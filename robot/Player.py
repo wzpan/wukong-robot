@@ -81,7 +81,7 @@ class SoxPlayer(AbstractPlayer):
                     onCompleted()
     
     def play(self, src, delete=False, onCompleted=None, wait=False):
-        if (os.path.exists(src)):
+        if os.path.exists(src) or src.startswith('http'):
             self.src = src
             self.delete = delete
             self.onCompleteds.append(onCompleted)
