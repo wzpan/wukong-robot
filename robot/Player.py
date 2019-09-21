@@ -179,7 +179,7 @@ class MusicPlayer(SoxPlayer):
     def turnUp(self):
         system = platform.system()
         if system == 'Darwin':
-            res = subprocess.run(['osascript', '-e', 'output volume of (get volume settings)'], shell=False, capture_output=True, text=True)
+            res = subprocess.run(['osascript', '-e', 'output volume of (get volume settings)'], shell=False, capture_output=True, universal_newlines=True)
             volume = int(res.stdout.strip())
             volume += 20
             if volume >= 100:
@@ -187,7 +187,7 @@ class MusicPlayer(SoxPlayer):
                 self.plugin.say('音量已经最大啦', wait=True)
             subprocess.run(['osascript', '-e', 'set volume output volume {}'.format(volume)])
         elif system == 'Linux':
-            res = subprocess.run(["amixer sget Master | grep 'Mono:' | awk -F'[][]' '{ print $2 }'"], shell=True, capture_output=True, text=True)
+            res = subprocess.run(["amixer sget Master | grep 'Mono:' | awk -F'[][]' '{ print $2 }'"], shell=True, capture_output=True, universal_newlines=True)
             print(res.stdout)
             if res.stdout != '' and res.stdout.strip().endswith('%'):
                 volume = int(res.stdout.strip().replace('%', ''))
@@ -205,7 +205,7 @@ class MusicPlayer(SoxPlayer):
     def turnDown(self):
         system = platform.system()
         if system == 'Darwin':
-            res = subprocess.run(['osascript', '-e', 'output volume of (get volume settings)'], shell=False, capture_output=True, text=True)
+            res = subprocess.run(['osascript', '-e', 'output volume of (get volume settings)'], shell=False, capture_output=True, universal_newlines=True)
             volume = int(res.stdout.strip())
             volume -= 20
             if volume <= 20:
@@ -213,7 +213,7 @@ class MusicPlayer(SoxPlayer):
                 self.plugin.say('音量已经很小啦', wait=True)
             subprocess.run(['osascript', '-e', 'set volume output volume {}'.format(volume)])
         elif system == 'Linux':
-            res = subprocess.run(["amixer sget Master | grep 'Mono:' | awk -F'[][]' '{ print $2 }'"], shell=True, capture_output=True, text=True)
+            res = subprocess.run(["amixer sget Master | grep 'Mono:' | awk -F'[][]' '{ print $2 }'"], shell=True, capture_output=True, universal_newlines=True)
             if res.stdout != '' and res.stdout.endswith('%'):
                 volume = int(res.stdout.replace('%', '').strip())
                 volume -= 20

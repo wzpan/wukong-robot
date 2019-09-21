@@ -86,7 +86,7 @@ wukong-robot 被唤醒后，用户的语音指令先经过 ASR 引擎进行 ASR 
 
 ### Python 版本 ###
 
-wukong-robot 只支持 Python 3.x，不支持 Python 2.x 。
+wukong-robot 只支持 Python 3.5+，不支持 Python 2.x 。
 
 ### 设备要求 ###
 

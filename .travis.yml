@@ -3,11 +3,11 @@ env:
 language: python
 sudo: false
 python:
-    - "3.6"
+    - "3.5"
 cache:
   directories:
     - "$HOME/.pip-cache/"
-    - "/home/travis/virtualenv/python3.6"
+    - "/home/travis/virtualenv/python3.5"
 install: 
     #- "pip3 install -r client/requirements.txt --cache-dir $HOME/.pip-cache"
     #- "pip3 install coverage --cache-dir $HOME/.pip-cache"
