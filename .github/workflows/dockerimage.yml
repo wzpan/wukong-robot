@@ -1,0 +1,17 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches:
+    - release/*  
+
+jobs:
+
+  build:
+ 
+    runs-on: ubuntu-latest
+ 
+    steps:
+    - name: Build the Docker image
+      uses: actions/wzpan@master
+      run: docker build docker --tag wzpan/wukong-robot:latest
