@@ -28,9 +28,9 @@ def no_alsa_error():
         yield
         pass
 
-def play(fname, onCompleted=None):
+def play(fname, onCompleted=None, wait=False):
     player = getPlayerByFileName(fname)
-    player.play(fname, onCompleted)
+    player.play(fname, onCompleted=onCompleted, wait=wait)
 
 def getPlayerByFileName(fname):
     foo, ext = os.path.splitext(fname)
@@ -77,14 +77,15 @@ class SoxPlayer(AbstractPlayer):
         logger.debug('play completed')
         if self.proc.returncode == 0:
             for onCompleted in self.onCompleteds:
-                if onCompleted:                
+                if onCompleted is not None:
                     onCompleted()
     
     def play(self, src, delete=False, onCompleted=None, wait=False):
         if os.path.exists(src) or src.startswith('http'):
             self.src = src
             self.delete = delete
-            self.onCompleteds.append(onCompleted)
+            if onCompleted is not None:
+                self.onCompleteds.append(onCompleted)
             if not wait:
                 thread.start_new_thread(self.doPlay, ())
             else:
@@ -93,7 +94,7 @@ class SoxPlayer(AbstractPlayer):
             logger.critical('path not exists: {}'.format(src))
 
     def appendOnCompleted(self, onCompleted):
-        if onCompleted:
+        if onCompleted is not None:
             self.onCompleteds.append(onCompleted)
 
     def play_block(self):
