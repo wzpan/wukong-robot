@@ -230,5 +230,5 @@ class Conversation(object):
         if self.player:
             self.interrupt()
         self.player = Player.SoxPlayer()
-        self.player.play(src, delete, onCompleted=onCompleted, volume=volume)
+        self.player.play(src, delete=delete, onCompleted=onCompleted)
     

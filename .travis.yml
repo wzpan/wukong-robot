@@ -9,13 +9,7 @@ cache:
     - "$HOME/.pip-cache/"
     - "/home/travis/virtualenv/python3.5"
 install: 
-    #- "pip3 install -r client/requirements.txt --cache-dir $HOME/.pip-cache"
-    #- "pip3 install coverage --cache-dir $HOME/.pip-cache"
-    #- "pip3 install nose --cache-dir $HOME/.pip-cache"
     - "pip3 install pyflakes --cache-dir $HOME/.pip-cache"
-#before_script:
-#    - "flake8 --exclude=wxbot.py,snowboydetect.py dingdang.py client --show-source"
-#script:
-#    - "nosetests -s --exe -v --with-coverage --cover-erase"
 script:
     - "pyflakes ."
+    - "shellcheck docker/build_pi"
