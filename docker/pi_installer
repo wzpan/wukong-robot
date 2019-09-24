@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+###########################################################
+###########################################################
+##                                                       ##
+## THIS SCRIPT SHOULD ONLY BE RUN ON A RASPBERRY PI 3 B+ ##
+##                                                       ##
+###########################################################
+###########################################################
+set -o errexit  # Exit script when a command exits with non-zero status
+set -o errtrace # Exit on error inside any functions or sub-shells
+set -o nounset  # Exit script on use of an undefined variable
+set -o pipefail # Return exit status of the last command in the pipe that failed
+
+readonly REQUIREMENTS=(
+  ca-certificates
+  curl
+)
+
+# ------------------------------------------------------------------------------
+# Installs all required software packages and tools
+# ------------------------------------------------------------------------------
+install_requirements() {
+  echo "Updating APT packages list..."
+  apt-get update
+
+  echo "Ensure all requirements are installed..."
+  apt-get install -y "${REQUIREMENTS[@]}"
+}
+
+# ------------------------------------------------------------------------------
+# Installs the Docker engine
+# ------------------------------------------------------------------------------
+install_docker() {
+  echo "Installing Docker..."
+  curl -sSL https://get.docker.com | sh
+  groupadd docker
+  gpasswd -a pi docker
+  newgrp docker
+}
+
+# ------------------------------------------------------------------------------
+# Pull the Docker image
+# ------------------------------------------------------------------------------
+pull_image() {
+  echo "Pulling Docker image..."
+  docker pull wzpan/wukong-robot-pi:latest
+}
+
+# ==============================================================================
+# RUN LOGIC
+# ------------------------------------------------------------------------------
+main() {
+  # Are we root?
+  if [[ $EUID -ne 0 ]]; then
+    echo "这个脚本需要 root 权限，"
+    echo "可以在执行 sudo su 后再执行本脚本"
+    exit 1
+  fi
+
+  # Install ALL THE THINGS!
+  install_requirements
+  install_docker
+  pull_image
+  exit 0
+}
+main
