@@ -12,4 +12,3 @@ install:
     - "pip3 install pyflakes --cache-dir $HOME/.pip-cache"
 script:
     - "pyflakes ."
-    - "shellcheck docker/build_pi"

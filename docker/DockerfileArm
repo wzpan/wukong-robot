@@ -1,4 +1,4 @@
-FROM wzpan/wukong-robot-pi:1.8.0
+FROM wzpan/wukong-robot-arm:1.8.0
 MAINTAINER wzpan
 WORKDIR /root/wukong-robot
 RUN git pull -f
