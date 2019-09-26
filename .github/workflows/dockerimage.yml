@@ -20,14 +20,6 @@ jobs:
         username: ${{ secrets.DOCKER_GITHUB_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         dockerfile: docker/Dockerfile
-    - name: Publish to Github Package Registry
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: docker.pkg.github.com/wzpan/wukong-robot/wukong
-        username: ${{ secrets.DOCKER_GITHUB_USERNAME }}
-        password: ${{ secrets.DOCKER_GITHUB_PASSWORD }}
-        registry: docker.pkg.github.com
-        dockerfile: docker/Dockerfile
     - name: Publish to Docker Hub Registry for Arm images
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
@@ -35,5 +27,13 @@ jobs:
         username: ${{ secrets.DOCKER_GITHUB_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         dockerfile: docker/DockerfileArm
+    - name: Publish to Github Package Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: docker.pkg.github.com/wzpan/wukong-robot/wukong
+        username: ${{ secrets.DOCKER_GITHUB_USERNAME }}
+        password: ${{ secrets.DOCKER_GITHUB_PASSWORD }}
+        registry: docker.pkg.github.com
+        dockerfile: docker/Dockerfile    
 
 
