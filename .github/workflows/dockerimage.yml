@@ -20,13 +20,6 @@ jobs:
         username: ${{ secrets.DOCKER_GITHUB_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         dockerfile: docker/Dockerfile
-    - name: Publish to Docker Hub Registry for Arm images
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: wzpan/wukong-robot-arm
-        username: ${{ secrets.DOCKER_GITHUB_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-        dockerfile: docker/DockerfileArm
     - name: Publish to Github Package Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
