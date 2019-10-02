@@ -6,6 +6,7 @@ import wave
 import shutil
 import re
 import time
+import yaml
 import hashlib
 import subprocess
 from . import constants, config
@@ -251,3 +252,17 @@ def lruCache():
 
     thread.start_new_thread(run, ())
 
+def validyaml(filename):
+    """
+    校验 YAML 格式是否正确
+
+    :param filename: yaml文件路径
+    :returns: exception error 或 None
+    """
+    try:
+        f = open(filename)
+        str = f.read()
+        y = yaml.safe_load(str)
+        return None
+    except Exception as e:
+        return e
