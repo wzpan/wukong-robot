@@ -1,20 +1,21 @@
+import os
+import yaml
 import json
-from robot import config, utils, logging, Updater, constants
+import time
 import base64
+import random
+import hashlib
+import asyncio
 import requests
+import markdown
+import threading
+import subprocess
 import tornado.web
 import tornado.ioloop
-import tornado.httpserver
 import tornado.options
-import hashlib
-import threading
-import asyncio
-import subprocess
-import os
-import time
-import yaml
-import markdown
-import random
+import tornado.httpserver
+from tools import make_json, solr_tools
+from robot import config, utils, logging, Updater, constants
 
 logger = logging.getLogger(__name__)
 
@@ -175,7 +176,6 @@ class ConfigHandler(BaseHandler):
             self.render('config.html', sensitivity=config.get('sensitivity'))
 
     def post(self):
-        global conversation        
         if self.validate(self.get_argument('validate', default=None)):
             configStr = self.get_argument('config')
             try:
@@ -208,7 +208,46 @@ class DonateHandler(BaseHandler):
         ])
         self.render('donate.html', content=content)        
 
+
+class QAHandler(BaseHandler):
     
+    def get(self):
+        if not self.isValidated():
+            self.redirect("/login")
+        else:
+            content = ''
+            with open(constants.getQAPath(), 'r') as f:
+                content = f.read()
+            self.render('qa.html', content=content)
+
+    def post(self):
+        if self.validate(self.get_argument('validate', default=None)):
+            qaStr = self.get_argument('qa')
+            qaJson = os.path.join(constants.TEMP_PATH, 'qa_json')
+            try:
+                make_json.convert(qaStr, qaJson)
+                solr_tools.clear_documents(config.get('/anyq/host', '0.0.0.0'),
+                                           'collection1',
+                                           config.get('/anyq/solr_port', '8900')
+                )
+                solr_tools.upload_documents(config.get('/anyq/host', '0.0.0.0'),
+                                           'collection1',
+                                            config.get('/anyq/solr_port', '8900'),
+                                            qaJson
+                )
+                with open(constants.getQAPath(), 'w') as f:
+                    f.write(qaStr)
+                res = {'code': 0, 'message': 'ok'}
+                self.write(json.dumps(res))
+            except Exception as e:
+                logger.error(e)
+                res = {'code': 1, 'message': 'CSV 解析失败，请检查内容'}
+                self.write(json.dumps(res))
+        else:
+            res = {'code': 1, 'message': 'illegal visit'}
+            self.write(json.dumps(res))
+        self.finish()
+
 
 class APIHandler(BaseHandler):
     
@@ -295,6 +334,7 @@ application = tornado.web.Application([
     (r"/log", LogHandler),
     (r"/logout", LogoutHandler),
     (r"/api", APIHandler),
+    (r"/qa", QAHandler),
     (r"/upgrade", UpdateHandler),
     (r"/donate", DonateHandler),
     (r"/photo/(.+\.(?:png|jpg|jpeg|bmp|gif|JPG|PNG|JPEG|BMP|GIF))", tornado.web.StaticFileHandler, {'path': config.get('/camera/dest_path', 'server/static')}),

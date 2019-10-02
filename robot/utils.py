@@ -6,6 +6,7 @@ import wave
 import shutil
 import re
 import time
+import json
 import yaml
 import hashlib
 import subprocess
@@ -257,12 +258,35 @@ def validyaml(filename):
     校验 YAML 格式是否正确
 
     :param filename: yaml文件路径
-    :returns: exception error 或 None
+    :returns: True: 正确; False: 不正确
     """
     try:
         f = open(filename)
         str = f.read()
-        y = yaml.safe_load(str)
-        return None
-    except Exception as e:
-        return e
+        yaml.safe_load(str)
+        return True
+    except Exception:
+        return False
+
+def validjson(s):
+    """
+    校验某个 JSON 字符串是否正确
+    
+    :param s: JOSN字符串
+    :returns: True: 正确; False: 不正确
+    """
+    try:
+        json.loads(s)
+        return True
+    except Exception:
+        return False
+
+def stripPunctuation(s):
+    """
+    移除字符串末尾的标点
+    """
+    punctuations = [',', '，', '.', '。', '?']
+    if any(s.endswith(p) for p in punctuations):
+        s = s[:-1]
+    return s
+

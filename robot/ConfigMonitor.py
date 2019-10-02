@@ -19,8 +19,7 @@ class ConfigMonitor(FileSystemEventHandler):
         filename = event.src_path
         extension = os.path.splitext(filename)[-1].lower()
         if extension in ('.yaml', '.yml'):
-            err = utils.validyaml(filename)
-            if err is None:
+            if utils.validyaml(filename):
                 logger.info("检测到文件 {} 发生变更".format(filename))
                 config.reload()
-                self._conversation.reload()
+                self._conversation.reInit()

@@ -1,8 +1,8 @@
 # -*- coding: utf-8-*-
 import requests
 import json
-from robot import logging
-from robot import config
+import random
+from robot import logging, config, utils
 from uuid import getnode as get_mac
 from abc import ABCMeta, abstractmethod
 
@@ -72,7 +72,7 @@ class TulingRobot(AbstractRobot):
             logger.info('{} 回答：{}'.format(self.SLUG, result))
             return result
         except Exception:
-            logger.critical("Tuling robot failed to responsed for %r",
+            logger.critical("Tuling robot failed to response for %r",
                                   msg, exc_info=True)            
             return "抱歉, 我的大脑短路了，请稍后再试试."
 
@@ -85,7 +85,7 @@ class Emotibot(AbstractRobot):
         """
         Emotibot机器人
         """
-        super(self.__class__, self).__init__()        
+        super(self.__class__, self).__init__()
         self.appid, self.location, self.more = appid, location, more
 
     @classmethod
@@ -132,13 +132,87 @@ class Emotibot(AbstractRobot):
                 result = '\n'.join(responds)
             else:
                 result = "抱歉, 我的大脑短路了，请稍后再试试."
-            logger.info('{} 回答：{}'.format(self.SLUG, result))            
+            logger.info('{} 回答：{}'.format(self.SLUG, result))
             return result
         except Exception:
-            logger.critical("Emotibot failed to responsed for %r",
+            logger.critical("Emotibot failed to response for %r",
                                   msg, exc_info=True)
             return "抱歉, 我的大脑短路了，请稍后再试试."
 
+
+class AnyQRobot(AbstractRobot):
+
+    SLUG = "anyq"
+
+    def __init__(self, host, port, solr_port, threshold, secondary):
+        """
+        AnyQ机器人
+        """
+        super(self.__class__, self).__init__()
+        self.host = host
+        self.threshold = threshold
+        self.port = port
+        self.secondary = secondary
+
+    @classmethod
+    def get_config(cls):
+        # Try to get anyq config from config
+        return config.get('anyq', {})
+
+    def chat(self, texts):
+        """
+        使用AnyQ机器人聊天
+
+        Arguments:
+        texts -- user input, typically speech, to be parsed by a module
+        """
+        msg = ''.join(texts)
+        msg = utils.stripPunctuation(msg)
+        try:
+            url = 'http://{}:{}/anyq?question={}'.format(self.host, self.port, msg)
+            r = requests.get(url)
+            respond = json.loads(r.text)
+            logger.info('anyq response: {}'.format(respond))
+            if len(respond) > 0:
+                # 有命中，进一步判断 confidence 是否达到要求
+                confidence = respond[0]['confidence']
+                if confidence >= self.threshold:
+                    # 命中该问题，返回回答
+                    answer = respond[0]['answer']
+                    if utils.validjson(answer):
+                        answer = random.choice(json.loads(answer))
+                    logger.info('{} 回答：{}'.format(self.SLUG, answer))
+                    return answer
+            # 没有命中，走兜底
+            if self.secondary != 'null' and self.secondary is not None:
+                try:
+                    ai = get_robot_by_slug(self.secondary)
+                    return ai.chat(texts)
+                except Exception:
+                    logger.critical("Secondary robot {} failed to response for {}".format(self.secondary, msg))
+                    return get_unknown_response()
+            else:
+                return get_unknown_response()
+        except Exception:
+            logger.critical("AnyQ robot failed to response for %r",
+                                  msg, exc_info=True)
+            return "抱歉, 我的大脑短路了，请稍后再试试."
+
+
+def get_unknown_response():
+    """
+    不知道怎么回答的情况下的答复
+
+    :returns: 表示不知道的答复
+    """
+    results = [
+        "抱歉，我不会这个呢",
+        "我不会这个呢",
+        "我还不会这个呢",
+        "我还没学会这个呢",
+        "对不起，你说的这个，我还不会"
+    ]
+    return random.choice(results)
 
 
 

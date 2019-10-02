@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
 <link rel="stylesheet" href="{{static_url('starter-template.css')}}" crossorigin="anonymous">
-
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
   <a class="navbar-brand" href="/">wukong-robot</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -15,10 +14,10 @@
       <li class="nav-item">
         <a class="nav-link" href="/config">配置</a>
       </li>
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link" href="/log">日志</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item active">
         <a class="nav-link" href="/qa">QA集</a>
       </li>
       <li class="nav-item">
@@ -29,28 +28,50 @@
       </li>
     </ul>
     <div class="form-inline my-2 my-lg-0">
-      <a class="btn btn-outline-success my-2 my-sm-0" href="https://wukong.hahack.com" target="_blank">文档</a>
+    <a class="btn btn-outline-success my-2 my-sm-0" href="https://wukong.hahack.com" target="_blank">文档</a>
     </div>
   </div>
 </nav>
 
-<div class="container log">
+<div class="container api">
   <div class="alert alert-info" role="alert">
-    <i class="fas fa-bell"></i> 日志不会自动刷新，要查看最新日志，请点击【刷新日志】按钮。
+    <i class="fas fa-bell"></i> 本页面用于维护 wukong-robot 的 <a href="http://github.com/baidu/AnyQ" target="_blank">AnyQ</a> QA 数据集。在配置中将 <code>robot</code> 设为 <code>anyq</code> 后，将会优先选择本 QA 集。<br/>
+    <i class="fas fa-question"></i> 要了解如何安装配置 AnyQ 以及编辑和贡献 QA 数据，可以查看<a href="https://wukong.hahack.com/#/anyq" target="_blank">这篇教程</a>。
   </div>
-  <label for="config-form">日志内容</label>
-  <form class="form log-form" action="#">
+  <label for="qa-form">数据集（请使用制表符 <code>TAB</code> 隔开问题和答案）</label>
+  <form class="form qa-form" action="#">
     <div class="input-group" id="container">
       <div class="input-group-prepend">
-        <span class="input-group-text">wukong.log</span>
+        <span class="input-group-text">qa.csv</span>
       </div>
-        <textarea rows="25" class="form-control" id="log-input" placer='1' aria-label="wukong.log" readonly></textarea>
+        <textarea rows="20" class="form-control" id="qa-input" placer='1' aria-label="With textarea">{% raw content %}</textarea>
     </div>
     <hr>
     <center>
-    <button type="button" class="btn btn-primary mb-2" id="REFRESH"><i class="fas fa-sync"></i> 刷新日志</button>
+      <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#uploadModal"><i class="fas fa-upload"></i> 提交</button>
     </center>
   </form>
+  
+</div>
+
+<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="restartModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="restartModalLabel">你确定吗？</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        确定要覆盖现有的QA数据集吗？
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">只是手抖</button>
+        <button type="button" class="btn btn-primary" id="UPLOAD" data-dismiss="modal">确定</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 
@@ -78,5 +99,6 @@
 
 <script src="{{static_url('main.js')}}" crossorigin="anonymous"></script>
 <script src="{{static_url('log.js')}}" crossorigin="anonymous"></script>
+<script src="{{static_url('qa.js')}}" crossorigin="anonymous"></script>
 <script src="./static/recorder.min.js"></script>
 {% end %}

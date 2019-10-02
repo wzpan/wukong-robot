@@ -113,9 +113,22 @@ nlu_engine: unit
 
 # 聊天机器人
 # 可选值：
+# anyq      - AnyQ
 # tuling    - 图灵机器人
 # emotibot  - 小影机器人
 robot: emotibot
+
+# AnyQ 机器人
+anyq:
+    host: 0.0.0.0
+    port: 8999
+    solr_port: 8900  # solr 的端口号
+    # 置信度（confidence）需达到的阈值，
+    # 达不到就认为不命中
+    threshold: 0.6
+    # 如果没有命中，使用其他兜底的机器人
+    # 如果不想使用兜底，可以设为 null
+    secondary: tuling
 
 # 图灵机器人	
 # http://www.tuling123.com

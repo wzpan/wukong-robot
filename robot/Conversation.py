@@ -16,7 +16,8 @@ logger = logging.getLogger(__name__)
 class Conversation(object):
 
     def __init__(self, profiling=False):
-        self.reload()
+        self.brain = None
+        self.reInit()
         # 历史会话消息
         self.history = []
         # 沉浸模式，处于这个模式下，被打断后将自动恢复这个技能
@@ -37,7 +38,7 @@ class Conversation(object):
         if self.immersiveMode:
             self.brain.pause()
 
-    def reload(self):
+    def reInit(self):
         """ 重新初始化 """
         try:
             self.asr = ASR.get_engine_by_slug(config.get('asr_engine', 'tencent-asr'))

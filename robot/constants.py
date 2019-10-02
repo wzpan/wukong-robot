@@ -32,6 +32,18 @@ def getConfigPath():
     """
     return os.path.join(CONFIG_PATH, CUSTOM_CONFIG_NAME)
 
+def getQAPath():
+    """
+    获取QA数据集文件的路径
+
+    returns: QA数据集文件的存储路径
+    """
+    qa_source = os.path.join(DATA_PATH, 'qa.csv')
+    qa_dst = os.path.join(CONFIG_PATH, 'qa.csv')
+    if not os.path.exists(qa_dst):
+        shutil.copyfile(qa_source, qa_dst)
+    return qa_dst
+
 def getConfigData(*fname):
     """
     获取配置目录下的指定文件的路径
