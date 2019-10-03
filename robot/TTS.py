@@ -113,7 +113,6 @@ class HanTTS(AbstractTTS):
         with tempfile.NamedTemporaryFile() as f:
             tmpfile = f.name
         result.export(tmpfile, format="wav")
-        print(tmpfile)
         logger.info('{} 语音合成成功，合成路径：{}'.format(self.SLUG, tmpfile))
         return tmpfile
 
