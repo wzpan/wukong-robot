@@ -1,4 +1,4 @@
-FROM wzpan/wukong-robot-arm:1.8.0
+ARG BUILD_FROM=hassioaddons/ubuntu-base:1.8.0
 MAINTAINER wzpan
 WORKDIR /root/wukong-robot
 RUN git pull -f
