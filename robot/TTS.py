@@ -1,13 +1,19 @@
 # -*- coding: utf-8-*-
-from aip import AipSpeech
-from .sdk import TencentSpeech, AliSpeech
-from . import utils, config
-from robot import logging
-import base64
+import os
 import time
-import requests
+import base64
 import hashlib
+import tempfile
+import requests
+import pypinyin
+from aip import AipSpeech
+from . import utils, config, constants
+from robot import logging
+from pathlib import Path
+from pypinyin import lazy_pinyin
+from pydub import AudioSegment
 from abc import ABCMeta, abstractmethod
+from .sdk import TencentSpeech, AliSpeech, atc
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +37,86 @@ class AbstractTTS(object):
     @abstractmethod
     def get_speech(self, phrase):
         pass
+
+
+class HanTTS(AbstractTTS):
+    """
+    HanTTS：https://github.com/junzew/HanTTS
+    要使用本模块, 需要先从 SourceForge 下载语音库 syllables.zip ：
+    https://sourceforge.net/projects/hantts/files/?source=navbar
+    并解压到 ~/.wukong 目录下
+    """
+
+    SLUG = "han-tts"
+    CHUNK = 1024
+    punctuation = ['，', '。','？','！','“','”','；','：','（',"）",":",";",",",".","?","!","\"","\'","(",")"]
+
+    def __init__(self, voice='syllables', **args):
+        super(self.__class__, self).__init__()
+        self.voice = voice
+
+    @classmethod
+    def get_config(cls):
+        # Try to get han-tts config from config
+        return config.get('han-tts', {})
+
+    def get_speech(self, phrase):
+        """
+        Synthesize .wav from text
+        """
+        src = os.path.join(constants.CONFIG_PATH, self.voice)
+        text = phrase
+
+        def preprocess(syllables):
+            temp = []
+            for syllable in syllables:
+                for p in self.punctuation:
+                    syllable = syllable.replace(p, "")
+                if syllable.isdigit():
+                    syllable = atc.num2chinese(syllable)
+                    new_sounds = lazy_pinyin(syllable, style=pypinyin.TONE3)
+                    for e in new_sounds:
+                        temp.append(e)
+                else:
+                    temp.append(syllable)
+            return temp
+        
+        if not os.path.exists(src):
+            logger.error('{} 合成失败: 请先下载 syllables.zip (https://sourceforge.net/projects/hantts/files/?source=navbar) 并解压到 ~/.wukong 目录下'.format(self.SLUG))
+            return None
+        logger.debug("{} 合成中...".format(self.SLUG))
+        delay = 0
+        increment = 355 # milliseconds
+        pause = 500 # pause for punctuation
+        syllables = lazy_pinyin(text, style=pypinyin.TONE3)
+        syllables = preprocess(syllables)
+        
+        # initialize to be complete silence, each character takes up ~500ms
+        result = AudioSegment.silent(duration=500*len(text))
+        for syllable in syllables:
+            path = os.path.join(src, syllable+".wav")
+            sound_file = Path(path)
+            # insert 500 ms silence for punctuation marks
+            if syllable in self.punctuation:
+                short_silence = AudioSegment.silent(duration=pause)
+                result = result.overlay(short_silence, position=delay)
+                delay += increment
+                continue
+            # skip sound file that doesn't exist
+            if not sound_file.is_file():
+                continue
+            segment = AudioSegment.from_wav(path)
+            result = result.overlay(segment, position=delay)
+            delay += increment
+
+        tmpfile = ''
+        with tempfile.NamedTemporaryFile() as f:
+            tmpfile = f.name
+        result.export(tmpfile, format="wav")
+        print(tmpfile)
+        logger.info('{} 语音合成成功，合成路径：{}'.format(self.SLUG, tmpfile))
+        return tmpfile
+
 
 class BaiduTTS(AbstractTTS):
     """
