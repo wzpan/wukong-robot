@@ -96,7 +96,7 @@ def upload_documents(host, enginename, port=8983, documents="", num_thread=1):
             req.headers = HEADER
             response = urllib.request.urlopen(req, binary_data.encode('utf-8'))
             mutex.acquire()
-            logger.debug(response.read())
+            logger.info(response.read())
             mutex.release()
         except Exception as err:
             mutex.acquire()

@@ -14,12 +14,14 @@ import tornado.web
 import tornado.ioloop
 import tornado.options
 import tornado.httpserver
+import _thread as thread
 from tools import make_json, solr_tools
 from robot import config, utils, logging, Updater, constants
 
 logger = logging.getLogger(__name__)
 
 conversation, wukong = None, None
+commiting = False
 
 suggestions = [
     '现在几点',
@@ -231,9 +233,10 @@ class QAHandler(BaseHandler):
                                            config.get('/anyq/solr_port', '8900')
                 )
                 solr_tools.upload_documents(config.get('/anyq/host', '0.0.0.0'),
-                                           'collection1',
+                                            'collection1',
                                             config.get('/anyq/solr_port', '8900'),
-                                            qaJson
+                                            qaJson,
+                                            10
                 )
                 with open(constants.getQAPath(), 'w') as f:
                     f.write(qaStr)
@@ -241,7 +244,7 @@ class QAHandler(BaseHandler):
                 self.write(json.dumps(res))
             except Exception as e:
                 logger.error(e)
-                res = {'code': 1, 'message': 'CSV 解析失败，请检查内容'}
+                res = {'code': 1, 'message': '提交失败，请检查内容'}
                 self.write(json.dumps(res))
         else:
             res = {'code': 1, 'message': 'illegal visit'}

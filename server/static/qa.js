@@ -6,9 +6,9 @@ function upload() {
         success: function(res) {
             var data = JSON.parse(res);
             if (data.code == 0) {
-                toastr.success('设置成功');
+                toastr.success('提交成功');
             } else {
-                toastr.error(data.message, '设置失败');
+                toastr.error(data.message, '提交失败');
             }
         },
         error: function() {
