@@ -47,6 +47,7 @@ lru_cache:
 
 # 语音合成服务配置
 # 可选值：
+# han-tts       - HanTTS
 # baidu-tts     - 百度语音合成（推荐）
 # xunfei-tts    - 讯飞语音合成
 # ali-tts       - 阿里语音合成（推荐）
@@ -106,6 +107,14 @@ tencent_yuyin:
     voiceType: 0            # 0: 女声1；1：男生1；2：男生2
     language: 1             # 1: 中文；2：英文
 
+# HanTTS 服务
+han-tts:
+    # 所使用的语音库目录
+    # 需放在 ~/.wukong/ 目录下
+    # 也支持自行录制，详见：
+    # https://github.com/junzew/HanTTS
+    voice: 'syllables' 
+
 # NLU 引擎
 # 可选值：
 # unit      - 百度 UNIT
@@ -113,7 +122,7 @@ nlu_engine: unit
 
 # 聊天机器人
 # 可选值：
-# anyq      - AnyQ
+# anyq      - AnyQ（推荐）
 # tuling    - 图灵机器人
 # emotibot  - 小影机器人
 robot: emotibot
