@@ -14,7 +14,6 @@ import tornado.web
 import tornado.ioloop
 import tornado.options
 import tornado.httpserver
-import _thread as thread
 from tools import make_json, solr_tools
 from robot import config, utils, logging, Updater, constants
 
