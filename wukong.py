@@ -222,7 +222,7 @@ class Wukong(object):
             "age_group": "20_29",
             "gender": "M",
             "microphone": 'respeaker',
-            "token": "1002a4d839fb22b145b2c86729c3d9d7dfb948ba",
+            "token": "",
             "voice_samples": [
                 {"wave": get_wave(w1)},
                 {"wave": get_wave(w2)},
