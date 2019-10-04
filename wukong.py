@@ -13,6 +13,7 @@ import signal
 import hashlib
 import fire
 import urllib3
+import time
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 logger = logging.getLogger(__name__)
@@ -130,11 +131,14 @@ class Wukong(object):
         print("""=====================================================================================
     python3 wukong.py [命令]
     可选命令：
-      md5                  - 用于计算字符串的 md5 值，常用于密码设置
-      update               - 手动更新 wukong-robot
-      upload [thredNum]    - 手动上传 QA 集语料，重建 solr 索引。
-                             threadNum 表示上传时开启的线程数（可选。默认值为 10）
-      profiling            - 运行过程中打印耗时数据
+      md5                      - 用于计算字符串的 md5 值，常用于密码设置
+      update                   - 手动更新 wukong-robot
+      upload [thredNum]        - 手动上传 QA 集语料，重建 solr 索引。
+                                 threadNum 表示上传时开启的线程数（可选。默认值为 10）
+      profiling                - 运行过程中打印耗时数据
+      train [w1] [w2] [w3] [m] - 传入三个wav文件，生成snowboy的.pmdl模型
+                                 w1, w2, w3 表示三个1~3秒的唤醒词录音
+                                 m 表示snowboy的.pmdl模型
     如需更多帮助，请访问：https://wukong.hahack.com/#/run
 =====================================================================================""")
 
@@ -142,7 +146,7 @@ class Wukong(object):
         """
         计算字符串的 md5 值
         """
-        return hashlib.md5(password.encode('utf-8')).hexdigest()
+        return hashlib.md5(str(password).encode('utf-8')).hexdigest()
 
     def update(self):
         """
@@ -165,16 +169,21 @@ class Wukong(object):
         try:
             qaJson = os.path.join(constants.TEMP_PATH, 'qa_json')
             make_json.run(constants.getQAPath(), qaJson)
+            start = time.time()
+            logger.info('开始清理anyq文档...')
             solr_tools.clear_documents(config.get('/anyq/host', '0.0.0.0'),
                                        'collection1',
                                        config.get('/anyq/solr_port', '8900')
             )
+            logger.info('清理完文档,耗时{}秒'.format(time.time()-start))
+            start = time.time()
             solr_tools.upload_documents(config.get('/anyq/host', '0.0.0.0'),
                                         'collection1',
                                         config.get('/anyq/solr_port', '8900'),
                                         qaJson,
                                         threadNum
             )
+            logger.info('更新完文档,耗时{}秒'.format(time.time()-start))
         except Exception as e:
             logger.error("上传失败：{}".format(e))
 
@@ -203,6 +212,35 @@ class Wukong(object):
         logger.info('使用测试环境')
         self._dev = True
         self.run()
+
+    def train(self, w1, w2, w3, m):
+        '''
+        传入三个wav文件，生成snowboy的.pmdl模型
+        '''
+        def get_wave(fname):
+            with open(fname, 'rb') as infile:
+                return base64.b64encode(infile.read())
+        url = "https://snowboy.kitt.ai/api/v1/train/"
+        data = {
+            "name": "wukong-robot",
+            "language": "zh",
+            "age_group": "20_29",
+            "gender": "M",
+            "microphone": 'respeaker',
+            "token": "1002a4d839fb22b145b2c86729c3d9d7dfb948ba",
+            "voice_samples": [
+                {"wave": get_wave(w1)},
+                {"wave": get_wave(w2)},
+                {"wave": get_wave(w3)}
+            ]
+        }
+        response = requests.post(url, json=data)
+        if response.ok:
+            with open(m, "wb") as outfile:
+                outfile.write(response.content)
+            return 'Snowboy模型已保存至{}'.format(m)
+        else:
+            return "Snowboy模型生成失败，原因:{}".format(response.text)
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
