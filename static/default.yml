@@ -73,18 +73,16 @@ baidu_yuyin:
     per: 1  # 发音人选择 0：女生；1：男生；3：度逍遥；4：度丫丫
     lan: 'zh'
 
+
 # 讯飞语音服务
 # appid 及 api_key 需前往
 # https://xfyun.cn/
-# 注册创建是WebAPI应用，并赋予语音听写及在线语音合成两项能力
-# 然后将外网ip地址添加进ip白名单（外网ip查询：https://ip.51240.com/），
-# 或者使用白名单ip中转服务器
+# 注册创建是WebAPI应用，并赋予流式语音听写及在线语音合成两项能力
 xunfei_yuyin:
     appid: '5d45a9e9'
-    asr_api_key: 'f6a501fc4e355737ab26672e28d115f9'  # 语音听写
-    asr_api_secret: '5e004bc07f46d18805a90479f75a55cf'
-    tts_api_key: '680c0eba7c1752503fa0a6ac971ce2cd'  # 在线语音合成
-    voice: 'xiaoyan'  # 全部可选：http://suo.im/51dhCS    
+    api_key: 'f6a501fc4e355737ab26672e28d115f9'  # 语音听写
+    api_secret: '5e004bc07f46d18805a90479f75a55cf'
+    voice: 'xiaoyan'  # 全部可选：https://console.xfyun.cn/services/tts
 
 # 阿里云语音
 # appKey及token需前往

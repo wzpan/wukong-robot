@@ -118,11 +118,11 @@ class XunfeiASR(AbstractASR):
 
     SLUG = "xunfei-asr"
 
-    def __init__(self, appid, asr_api_key, asr_api_secret, tts_api_key, voice='xiaoyan'):
+    def __init__(self, appid, api_key, api_secret, **args):
         super(self.__class__, self).__init__()
         self.appid = appid
-        self.api_key = asr_api_key
-        self.api_secret = asr_api_secret
+        self.api_key = api_key
+        self.api_secret = api_secret
 
     @classmethod
     def get_config(cls):

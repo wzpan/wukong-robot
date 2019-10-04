@@ -3,6 +3,8 @@ import hashlib
 import base64
 import hmac
 import json
+import wave
+import tempfile
 from urllib.parse import urlencode
 import time
 import ssl
@@ -18,10 +20,11 @@ STATUS_FIRST_FRAME = 0  # 第一帧的标识
 STATUS_CONTINUE_FRAME = 1  # 中间帧标识
 STATUS_LAST_FRAME = 2  # 最后一帧的标识
 
-wsParam = None
+asrWsParam = None
 gResult = ''
+gPCMPath = ''
 
-class Ws_Param(object):
+class ASR_Ws_Param(object):
     # 初始化
     def __init__(self, APPID, APIKey, APISecret, AudioFile):
         # 控制台鉴权信息
@@ -76,8 +79,55 @@ class Ws_Param(object):
         return url
 
 
-# 收到websocket消息的处理
-def on_message(ws, message):
+class TTS_Ws_Param(object):
+    # 初始化
+    def __init__(self, APPID, APIKey, APISecret, Text, voice_name="xiaoyan"):
+        self.APPID = APPID
+        self.APIKey = APIKey
+        self.APISecret = APISecret
+        self.Text = Text
+
+        # 公共参数(common)
+        self.CommonArgs = {"app_id": self.APPID}
+        # 业务参数(business)，更多个性化参数可在官网查看
+        self.BusinessArgs = {"aue": "raw", "auf": "audio/L16;rate=16000", "vcn": voice_name, "tte": "utf8"}
+        self.Data = {"status": 2, "text": str(base64.b64encode(self.Text.encode('utf-8')), "UTF8")}
+
+    # 生成url
+    def create_url(self):
+        url = 'wss://tts-api.xfyun.cn/v2/tts'
+        # 生成RFC1123格式的时间戳
+        now = datetime.now()
+        date = format_date_time(mktime(now.timetuple()))
+
+        # 拼接字符串
+        signature_origin = "host: " + "ws-api.xfyun.cn" + "\n"
+        signature_origin += "date: " + date + "\n"
+        signature_origin += "GET " + "/v2/tts " + "HTTP/1.1"
+        # 进行hmac-sha256进行加密
+        signature_sha = hmac.new(self.APISecret.encode('utf-8'), signature_origin.encode('utf-8'),
+                                 digestmod=hashlib.sha256).digest()
+        signature_sha = base64.b64encode(signature_sha).decode(encoding='utf-8')
+
+        authorization_origin = "api_key=\"%s\", algorithm=\"%s\", headers=\"%s\", signature=\"%s\"" % (
+            self.APIKey, "hmac-sha256", "host date request-line", signature_sha)
+        authorization = base64.b64encode(authorization_origin.encode('utf-8')).decode(encoding='utf-8')
+        # 将请求的鉴权参数组合为字典
+        v = {
+            "authorization": authorization,
+            "date": date,
+            "host": "ws-api.xfyun.cn"
+        }
+        # 拼接鉴权参数，生成url
+        url = url + '?' + urlencode(v)
+        # print("date: ",date)
+        # print("v: ",v)
+        # 此处打印出建立连接时候的url,参考本demo的时候可取消上方打印的注释，比对相同参数时生成的url与自己代码生成的url是否一致
+        # print('websocket url :', url)
+        return url
+
+# ASR 收到websocket消息的处理
+def asr_on_message(ws, message):
     global gResult
     try:
         code = json.loads(message)["code"]
@@ -97,24 +147,24 @@ def on_message(ws, message):
         logger.critical("xunfei-asr 识别出错了：", e)
 
 
-# 收到websocket错误的处理
-def on_error(ws, error):
+# ASR 收到websocket错误的处理
+def asr_on_error(ws, error):
     logger.error("### error:", error)
 
 
-# 收到websocket关闭的处理
-def on_close(ws):
+# ASR 收到websocket关闭的处理
+def asr_on_close(ws):
     logger.debug("### closed ###")
 
 
-# 收到websocket连接建立的处理
-def on_open(ws):
-    global wsParam
+# ASR 收到websocket连接建立的处理
+def asr_on_open(ws):
+    global asrWsParam
     def run(*args):
         frameSize = 1220  # 每一帧的音频大小
         intervel = 0.04  # 发送音频间隔(单位:s)
         status = STATUS_FIRST_FRAME  # 音频的状态信息，标识音频是第一帧，还是中间帧、最后一帧
-        with open(wsParam.AudioFile, "rb") as fp:
+        with open(asrWsParam.AudioFile, "rb") as fp:
             while True:
                 buf = fp.read(frameSize)
                 # 文件结束
@@ -125,8 +175,8 @@ def on_open(ws):
                 # appid 必须带上，只需第一帧发送
                 if status == STATUS_FIRST_FRAME:
 
-                    d = {"common": wsParam.CommonArgs,
-                         "business": wsParam.BusinessArgs,
+                    d = {"common": asrWsParam.CommonArgs,
+                         "business": asrWsParam.BusinessArgs,
                          "data": {"status": 0, "format": "audio/L16;rate=16000",
                                   "audio": str(base64.b64encode(buf), 'utf-8'),
                                   "encoding": "raw"}}
@@ -154,16 +204,97 @@ def on_open(ws):
     thread.start_new_thread(run, ())
 
 
+# 收到websocket消息的处理
+def tts_on_message(ws, message):
+    try:
+        code = json.loads(message)["code"]
+        sid = json.loads(message)["sid"]
+        audio = json.loads(message)["data"]["audio"]
+        audio = base64.b64decode(audio)
+        if code != 0:
+            errMsg = json.loads(message)["message"]
+            logger.error("sid:%s call error:%s code is:%s" % (sid, errMsg, code))
+        else:            
+            with open(gTTSPath, 'ab') as f:
+                f.write(audio)
+    except Exception as e:
+        logger.error("receive msg,but parse exception:", e)
+
+
+# 收到websocket错误的处理
+def tts_on_error(ws, error):
+    logger.error("### error:", error)
+
+
+# 收到websocket关闭的处理
+def tts_on_close(ws):
+    global gTTSResult
+    logger.debug("### closed ###")
+    pcmdata = None
+    try:
+        with open(gTTSPath, 'rb') as pcmfile:
+            pcmdata = pcmfile.read()
+        tmpfile = ''
+        with tempfile.NamedTemporaryFile() as f:
+            tmpfile = f.name
+        with wave.open(tmpfile, 'wb') as wavfile:
+            wavfile.setparams((1, 2, 16000, 0, 'NONE', 'NONE'))
+            wavfile.writeframes(pcmdata)
+        gTTSResult = tmpfile
+    except Exception as e:
+        logger.error("XunfeiSpeech error: {}".format(e))
+    
+
+
+# 收到websocket连接建立的处理
+def tts_on_open(ws):
+    global ttsWsParam
+    def run(*args):
+        intervel = 2  # 等待结果间隔(单位:s)
+
+        d = {"common": ttsWsParam.CommonArgs,
+             "business": ttsWsParam.BusinessArgs,
+             "data": ttsWsParam.Data,
+             }
+        d = json.dumps(d)
+        ws.send(d)
+        # sleep等待服务端返回结果
+        time.sleep(intervel)
+        ws.close()
+
+    thread.start_new_thread(run, ())
+
+
 def transcribe(fpath, appid, api_key, api_secret):
     """
     科大讯飞ASR
     """
-    global wsParam, gResult
+    global asrWsParam, gResult
     gResult = ''
-    wsParam = Ws_Param(appid, api_key, APISecret=api_secret, AudioFile=fpath)
+    asrWsParam = ASR_Ws_Param(appid, api_key, APISecret=api_secret, AudioFile=fpath)
     websocket.enableTrace(False)
-    wsUrl = wsParam.create_url()
-    ws = websocket.WebSocketApp(wsUrl, on_message=on_message, on_error=on_error, on_close=on_close)
-    ws.on_open = on_open
+    wsUrl = asrWsParam.create_url()
+    ws = websocket.WebSocketApp(wsUrl, on_message=asr_on_message, on_error=asr_on_error, on_close=asr_on_close)
+    ws.on_open = asr_on_open
     ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
     return gResult
+
+
+def synthesize(msg, appid, api_key, api_secret, voice_name="xiaoyan"):
+    """
+    科大讯飞TTS
+    """
+    global ttsWsParam, gTTSPath, gTTSResult
+    with tempfile.NamedTemporaryFile() as f:
+        gTTSPath = f.name
+    ttsWsParam = TTS_Ws_Param(APPID=appid, APIKey=api_key,
+                              APISecret=api_secret,
+                              Text=msg,
+                              voice_name = voice_name
+    )
+    websocket.enableTrace(False)
+    wsUrl = ttsWsParam.create_url()
+    ws = websocket.WebSocketApp(wsUrl, on_message=tts_on_message, on_error=tts_on_error, on_close=tts_on_close)
+    ws.on_open = tts_on_open
+    ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
+    return gTTSResult

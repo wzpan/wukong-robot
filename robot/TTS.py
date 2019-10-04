@@ -13,7 +13,7 @@ from pathlib import Path
 from pypinyin import lazy_pinyin
 from pydub import AudioSegment
 from abc import ABCMeta, abstractmethod
-from .sdk import TencentSpeech, AliSpeech, atc
+from .sdk import TencentSpeech, AliSpeech, XunfeiSpeech, atc
 
 logger = logging.getLogger(__name__)
 
@@ -198,56 +198,21 @@ class TencentTTS(AbstractTTS):
 class XunfeiTTS(AbstractTTS):
     """
     科大讯飞的语音识别API.
-    外网ip查询：https://ip.51240.com/
-    voice_name: https://www.xfyun.cn/services/online_tts
     """
 
     SLUG = "xunfei-tts"
 
-    def __init__(self, appid, asr_api_key, asr_api_secret, tts_api_key, voice='xiaoyan'):
+    def __init__(self, appid, api_key, api_secret, voice='xiaoyan'):
         super(self.__class__, self).__init__()
-        self.appid, self.api_key, self.voice_name = appid, tts_api_key, voice
+        self.appid, self.api_key, self.api_secret, self.voice_name = appid, api_key, api_secret, voice
 
     @classmethod
     def get_config(cls):
         # Try to get xunfei_yuyin config from config
         return config.get('xunfei_yuyin', {})     
 
-    def getHeader(self, aue):
-        curTime = str(int(time.time()))
-        # curTime = '1526542623'
-        param = "{\"aue\":\""+aue+"\",\"auf\":\"audio/L16;rate=16000\",\"voice_name\":\"" + self.voice_name + "\",\"engine_type\":\"intp65\"}"
-        logger.debug("param:{}".format(param))
-        paramBase64 = str(base64.b64encode(param.encode('utf-8')), 'utf-8')
-        logger.debug("x_param:{}".format(paramBase64))
-
-        m2 = hashlib.md5()
-        m2.update((self.api_key + curTime + paramBase64).encode('utf-8'))
-        checkSum = m2.hexdigest()
-        header = {
-            'X-CurTime': curTime,
-            'X-Param': paramBase64,
-            'X-Appid': self.appid,
-            'X-CheckSum': checkSum,
-            'X-Real-Ip':'127.0.0.1',
-            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-        }
-        return header
-
-    def getBody(self, text):
-        data = {'text':text}
-        return data
-
     def get_speech(self, phrase):
-        URL = "http://api.xfyun.cn/v1/service/v1/tts"
-        r = requests.post(URL, headers=self.getHeader('lame'), data=self.getBody(phrase))
-        contentType = r.headers['Content-Type']
-        if contentType == "audio/mpeg":
-            tmpfile = utils.write_temp_file(r.content, '.mp3')
-            logger.info('{} 语音合成成功，合成路径：{}'.format(self.SLUG, tmpfile))
-            return tmpfile
-        else :
-            logger.critical('{} 合成失败！{}'.format(self.SLUG, r.text), exc_info=True)
+        return XunfeiSpeech.synthesize(phrase, self.appid, self.api_key, self.api_secret, self.voice_name)
 
 
 class AliTTS(AbstractTTS):

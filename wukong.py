@@ -216,13 +216,10 @@ class Wukong(object):
         def get_wave(fname):
             with open(fname, 'rb') as infile:
                 return base64.b64encode(infile.read())
-        url = "https://snowboy.kitt.ai/api/v1/train/"
+        url = 'https://snowboy.kitt.ai/api/v1/train/'
         data = {
             "name": "wukong-robot",
             "language": "zh",
-            "age_group": "20_29",
-            "gender": "M",
-            "microphone": 'respeaker',
             "token": config.get('snowboy_token', ''),
             "voice_samples": [
                 {"wave": get_wave(w1)},
@@ -230,7 +227,7 @@ class Wukong(object):
                 {"wave": get_wave(w3)}
             ]
         }
-        response = requests.post(url, json=data)
+        response = requests.post(url, data=data)
         if response.ok:
             with open(m, "wb") as outfile:
                 outfile.write(response.content)
