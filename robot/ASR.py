@@ -1,7 +1,7 @@
 # -*- coding: utf-8-*-
 import json
 from aip import AipSpeech
-from .sdk import TencentSpeech, AliSpeech, XunfeiSpeech
+from .sdk import TencentSpeech, AliSpeech, XunfeiSpeech, BaiduSpeech
 from . import utils, config
 from robot import logging
 from abc import ABCMeta, abstractmethod
@@ -55,7 +55,10 @@ class BaiduASR(AbstractASR):
 
     def __init__(self, appid, api_key, secret_key, dev_pid=1936, **args):
         super(self.__class__, self).__init__()
-        self.client = AipSpeech(appid, api_key, secret_key)
+        if dev_pid != 80001:
+            self.client = AipSpeech(appid, api_key, secret_key)
+        else:
+            self.client = BaiduSpeech.baiduSpeech(api_key, secret_key, dev_pid)
         self.dev_pid = dev_pid
 
     @classmethod

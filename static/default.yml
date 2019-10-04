@@ -68,6 +68,7 @@ baidu_yuyin:
     appid: '9670645'
     api_key: 'qg4haN8b2bGvFtCbBGqhrmZy'   # 建议使用自己的百度语音APP的API Key
     secret_key: '585d4eccb50d306c401d7df138bb02e7'
+    dev_pid: 1936   # 1936: 普通话远场，1536：普通话(支持简单的英文识别)， 80001：ASR极速版
     per: 1  # 发音人选择 0：女生；1：男生；3：度逍遥；4：度丫丫
     lan: 'zh'
 
