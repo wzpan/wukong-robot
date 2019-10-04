@@ -137,7 +137,7 @@ class Wukong(object):
       upload [thredNum]        - 手动上传 QA 集语料，重建 solr 索引。
                                  threadNum 表示上传时开启的线程数（可选。默认值为 10）
       profiling                - 运行过程中打印耗时数据
-      train [w1] [w2] [w3] [m] - 传入三个wav文件，生成snowboy的.pmdl模型
+      train <w1> <w2> <w3> <m> - 传入三个wav文件，生成snowboy的.pmdl模型
                                  w1, w2, w3 表示三个1~3秒的唤醒词录音
                                  m 表示snowboy的.pmdl模型
     如需更多帮助，请访问：https://wukong.hahack.com/#/run
@@ -223,7 +223,7 @@ class Wukong(object):
             "age_group": "20_29",
             "gender": "M",
             "microphone": 'respeaker',
-            "token": "",
+            "token": config.get('snowboy_token', ''),
             "voice_samples": [
                 {"wave": get_wave(w1)},
                 {"wave": get_wave(w2)},

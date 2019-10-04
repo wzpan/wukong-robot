@@ -27,6 +27,7 @@ hotword: 'wukong.pmdl'  # 唤醒词模型，如要自定义请放到 $HOME/.wuko
 sensitivity: 0.4  # 灵敏度
 silent_threshold: 15 # 判断为静音的阈值。环境比较吵杂的地方可以适当调大
 recording_timeout: 5 # 录制的语音最大长度（秒）
+snowboy_token: your_token # 你的token，用于 train 命令训练语音
 
 # 当机器人反问用户时，是否自动进入下一轮聆听
 active_mode: true
