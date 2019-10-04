@@ -6,7 +6,7 @@ import time
 from pathlib import Path
 from robot import logging
 logger = logging.getLogger(__name__)
-TOKEN_PATH = os.path.join(Path.home(), ".wukong/.baiduSpeech_token")
+TOKEN_PATH = os.path.expanduser("~/.wukong/.baiduSpeech_token")
 
 #百度语音识别 REST_API极速版
 class baiduSpeech(object):
