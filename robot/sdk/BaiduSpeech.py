@@ -3,7 +3,6 @@ import os
 import json
 import requests
 import time
-from pathlib import Path
 from robot import logging
 logger = logging.getLogger(__name__)
 TOKEN_PATH = os.path.expanduser("~/.wukong/.baiduSpeech_token")
