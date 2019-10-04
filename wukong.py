@@ -169,21 +169,16 @@ class Wukong(object):
         try:
             qaJson = os.path.join(constants.TEMP_PATH, 'qa_json')
             make_json.run(constants.getQAPath(), qaJson)
-            start = time.time()
-            logger.info('开始清理anyq文档...')
             solr_tools.clear_documents(config.get('/anyq/host', '0.0.0.0'),
                                        'collection1',
                                        config.get('/anyq/solr_port', '8900')
             )
-            logger.info('清理完文档,耗时{}秒'.format(time.time()-start))
-            start = time.time()
             solr_tools.upload_documents(config.get('/anyq/host', '0.0.0.0'),
                                         'collection1',
                                         config.get('/anyq/solr_port', '8900'),
                                         qaJson,
                                         threadNum
             )
-            logger.info('更新完文档,耗时{}秒'.format(time.time()-start))
         except Exception as e:
             logger.error("上传失败：{}".format(e))
 
