@@ -13,7 +13,8 @@ import signal
 import hashlib
 import fire
 import urllib3
-import time
+import base64
+import requests
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 logger = logging.getLogger(__name__)

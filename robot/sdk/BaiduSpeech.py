@@ -44,7 +44,7 @@ class baiduSpeech(object):
         def is_json(f):
             try:
                 json_object = json.load(f)
-            except ValueError as e:
+            except ValueError:
                 return False
             return json_object
         try:
@@ -63,7 +63,7 @@ class baiduSpeech(object):
         asr_url = 'http://vop.baidu.com/pro_api'
         length = len(pcm)
         if length == 0:
-            logger.error('这个语音文件 {} 是空的'.format(fp))
+            logger.error('这个语音文件 {} 是空的'.format(pcm))
         headers = {
             'Content-Type': 'audio/'+file_type+';rate='+str(sample_rate),
             'Content-Length': str(length)
