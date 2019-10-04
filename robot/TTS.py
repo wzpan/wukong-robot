@@ -1,10 +1,7 @@
 # -*- coding: utf-8-*-
 import os
-import time
 import base64
-import hashlib
 import tempfile
-import requests
 import pypinyin
 from aip import AipSpeech
 from . import utils, config, constants
