@@ -215,7 +215,7 @@ class Wukong(object):
         '''
         def get_wave(fname):
             with open(fname, 'rb') as infile:
-                return base64.b64encode(infile.read())
+                return base64.b64encode(infile.read()).decode('utf-8')
         url = 'https://snowboy.kitt.ai/api/v1/train/'
         data = {
             "name": "wukong-robot",
@@ -227,7 +227,7 @@ class Wukong(object):
                 {"wave": get_wave(w3)}
             ]
         }
-        response = requests.post(url, data=data)
+        response = requests.post(url, json=data)
         if response.ok:
             with open(m, "wb") as outfile:
                 outfile.write(response.content)
