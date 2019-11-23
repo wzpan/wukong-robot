@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  wukong-robot 是一个简单、灵活、优雅的中文语音对话机器人/智能音箱项目，目的是让中国的 Maker 和 Haker 们也能快速打造个性化的智能音箱。
+  wukong-robot 是一个简单、灵活、优雅的中文语音对话机器人/智能音箱项目，目的是让中国的 Maker 和 Haker 们也能快速打造个性化的智能音箱。wukong-robot 还可能是第一个开源的脑机唤醒智能音箱。
 </p>
 
 <p align="center">
@@ -45,18 +45,17 @@
 ## 特性
 
 <p align="center">
-  <img src="http://hahack-1253537070.file.myqcloud.com/images/wukong-docs/wukong-robot-mindmap.png" alt="wukong-robot">
+  <img src="https://hahack-1253537070.file.myqcloud.com/images/wukong-docs/wukong-robot-mindmap.png?version=20191123" alt="wukong-robot">
 </p>
 
 * 模块化。功能插件、语音识别、语音合成、对话机器人都做到了高度模块化，第三方插件单独维护，方便继承和开发自己的插件。
 * 中文支持。集成百度、科大讯飞、阿里、腾讯等多家中文语音识别和语音合成技术，且可以继续扩展。
 * 对话机器人支持。支持基于 AnyQ 的本地对话机器人，并支持接入图灵机器人、Emotibot 等在线对话机器人。
-* 全局监听，离线唤醒。支持无接触地离线语音指令唤醒。
+* 全局监听，离线唤醒。支持 Muse 脑机唤醒，及无接触的离线语音指令唤醒。
 * 灵活可配置。支持定制机器人名字，支持选择语音识别和合成的插件。
 * 智能家居。支持和 mqtt、HomeAssistant 等智能家居协议联动，支持语音控制智能家电。
 * 后台配套支持。提供配套后台，可实现远程操控、修改配置和日志查看等功能。
 * 开放API。可利用后端开放的API，实现更丰富的功能。
-* 微信接入。配合 [wukong-itchat](http://github.com/wzpan/wukong-itchat) ，可实现通过微信远程操控自己家中的设备。
 * 安装简单，支持更多平台。相比 dingdang-robot ，舍弃了 PocketSphinx 的离线唤醒方案，安装变得更加简单，代码量更少，更易于维护并且能在 Mac 以及更多 Linux 系统中运行。
 
 wukong-robot 的工作模式：
@@ -75,9 +74,9 @@ wukong-robot 被唤醒后，用户的语音指令先经过 ASR 引擎进行 ASR 
   <img src="http://hahack-1253537070.file.myqcloud.com/images/wukong-docs/user-demo.jpg" alt="demo">
 </p>
 
-* Demo视频1
-  - coming soon
-* Demo视频2：[ycy-robot 月芽特别定制版](https://www.bilibili.com/video/av50685517/)
+* Demo视频：
+  - [ycy-robot 月芽特别定制版](https://www.bilibili.com/video/av50685517/)
+  - [使用脑机唤醒 wukong-robot](https://www.bilibili.com/video/av76739580/)
 * 后台管理端 Demo
   - 体验地址：https://bot.hahack.com/  （体验用户名：wukong；体验密码：wukong@2019）
 

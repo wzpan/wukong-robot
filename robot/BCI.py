@@ -1,6 +1,5 @@
+import importlib
 import multiprocessing
-from pythonosc import dispatcher as dsp
-from pythonosc import osc_server
 from robot import config, logging
 from datetime import datetime, timedelta
 
@@ -19,19 +18,26 @@ class MuseBCI(object):
 
     def blink_handler(self, unused_addr, args, blink):
         if blink:
-            logger.debug("blink detected")
+            logger.info("blink detected")
             self.last_blink = datetime.now()
-            if (self.last_blink - self.last_jaw) < timedelta(seconds=1):
+            if (self.last_blink - self.last_jaw) <= timedelta(seconds=1):
                 self._wakeup_event.set()
 
     def jaw_clench_handler(self, unused_addr, args, jaw):
         if jaw:
-            logger.debug("Jaw_Clench detected")
+            logger.info("Jaw_Clench detected")
             self.last_jaw = datetime.now()
-            if (self.last_jaw - self.last_blink) < timedelta(seconds=1):
+            if (self.last_jaw - self.last_blink) <= timedelta(seconds=1):
                 self._wakeup_event.set()
 
     def _start_osc(self):
+        if not importlib.util.find_spec('pythonosc'):
+            logger.critical('错误：请先安装 python-osc ！')
+            return
+
+        from pythonosc import dispatcher as dsp
+        from pythonosc import osc_server
+
         dispatcher = dsp.Dispatcher()
         dispatcher.map("/muse/elements/blink", self.blink_handler, "EEG")
         dispatcher.map("/muse/elements/jaw_clench", self.jaw_clench_handler, "EEG")

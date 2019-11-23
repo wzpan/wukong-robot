@@ -29,8 +29,7 @@ class Wukong(object):
     def init(self):
         global conversation
         self.detector = None
-        self._interrupted = False
-        self._wakeup = multiprocessing.Event()
+        self._interrupted = False        
         print('''
 ********************************************************
 *          wukong-robot - 中文语音对话机器人           *
@@ -50,9 +49,11 @@ class Wukong(object):
         self._observer.schedule(event_handler, constants.CONFIG_PATH, False)
         self._observer.schedule(event_handler, constants.DATA_PATH, False)
         self._observer.start()
-        self.bci = BCI.MuseBCI(self._wakeup)
-        self.bci.start()
-        thread.start_new_thread(self._loop_event, ())
+        if config.get('/muse/enable', False):
+            self._wakeup = multiprocessing.Event()
+            self.bci = BCI.MuseBCI(self._wakeup)
+            self.bci.start()
+            thread.start_new_thread(self._loop_event, ())
 
     def _loop_event(self):
         while True:

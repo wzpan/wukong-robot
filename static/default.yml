@@ -24,7 +24,7 @@ server:
 # 并开启 OSC stream
 # 同时眨眼和咬牙齿可以实现唤醒
 muse:
-    enable: true
+    enable: false
     ip: '0.0.0.0'  # 请修改为本机的 ip 地址
     port: 5001     # 请修改为 OSC 的端口号
 
