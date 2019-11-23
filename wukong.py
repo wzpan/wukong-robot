@@ -1,6 +1,6 @@
 # -*- coding: utf-8-*-
 from snowboy import snowboydecoder
-from robot import config, utils, constants, logging, statistic, Player
+from robot import config, utils, constants, logging, statistic, Player, BCI
 from robot.Updater import Updater
 from robot.ConfigMonitor import ConfigMonitor
 from robot.Conversation import Conversation
@@ -9,12 +9,14 @@ from tools import make_json, solr_tools
 from watchdog.observers import Observer
 import sys
 import os
+import fire
+import base64
 import signal
 import hashlib
-import fire
 import urllib3
-import base64
 import requests
+import multiprocessing
+import _thread as thread
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 logger = logging.getLogger(__name__)
@@ -27,7 +29,8 @@ class Wukong(object):
     def init(self):
         global conversation
         self.detector = None
-        self._interrupted = False        
+        self._interrupted = False
+        self._wakeup = multiprocessing.Event()
         print('''
 ********************************************************
 *          wukong-robot - 中文语音对话机器人           *
@@ -47,6 +50,17 @@ class Wukong(object):
         self._observer.schedule(event_handler, constants.CONFIG_PATH, False)
         self._observer.schedule(event_handler, constants.DATA_PATH, False)
         self._observer.start()
+        self.bci = BCI.MuseBCI(self._wakeup)
+        self.bci.start()
+        thread.start_new_thread(self._loop_event, ())
+
+    def _loop_event(self):
+        while True:
+            self._wakeup.wait()
+            self._conversation.interrupt()
+            query = self._conversation.activeListen()
+            self._conversation.doResponse(query)
+            self._wakeup.clear()
 
     def _signal_handler(self, signal, frame):
         self._interrupted = True

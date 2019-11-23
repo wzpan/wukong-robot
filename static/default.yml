@@ -19,6 +19,15 @@ server:
     # 强烈建议修改!!!
     validate: 'f4bde2a342c7c75aa276f78b26cfbd8a'
 
+# Muse 脑机
+# 推荐搭配 Muse Monitor 使用
+# 并开启 OSC stream
+# 同时眨眼和咬牙齿可以实现唤醒
+muse:
+    enable: true
+    ip: '0.0.0.0'  # 请修改为本机的 ip 地址
+    port: 5001     # 请修改为 OSC 的端口号
+
 # snowboy 离线唤醒
 # https://snowboy.kitt.ai/dashboard
 # 建议到 https://snowboy.kitt.ai/hotword/32768
