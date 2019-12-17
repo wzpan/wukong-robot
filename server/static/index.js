@@ -109,6 +109,10 @@ $(function() {
         e.preventDefault();
         var uuid = 'chat' + guid();
         var query = $("input#query")[0].value;
+        if (query.trim() == '') {
+            toastr.error('请输入有效的命令');
+            return;
+        }
         appendHistory(0, query, uuid);
         $('input#query').val('');
         args = {"type": "text", "query": query, 'validate': getCookie('validation'), "uuid": uuid}

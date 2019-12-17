@@ -74,8 +74,11 @@ class ChatHandler(BaseHandler):
             if self.get_argument('type') == 'text':
                 query = self.get_argument('query')
                 uuid = self.get_argument('uuid')
-                conversation.doResponse(query, uuid, onSay=lambda msg, audio: self.onResp(msg, audio))
-                
+                if query == '':
+                    res = {'code': 1, 'message': 'query text is empty'}
+                    self.write(json.dumps(res))
+                else:
+                    conversation.doResponse(query, uuid, onSay=lambda msg, audio: self.onResp(msg, audio))
             elif self.get_argument('type') == 'voice':
                 voice_data = self.get_argument('voice')
                 tmpfile = utils.write_temp_file(base64.b64decode(voice_data), '.wav')
