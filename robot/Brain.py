@@ -1,4 +1,6 @@
 # -*- coding: utf-8-*-
+import re
+from robot import config
 from robot import logging
 from . import plugin_loader
 
@@ -17,15 +19,36 @@ class Brain(object):
         self.plugins = plugin_loader.get_plugins(self.conversation)
         self.handling = False
 
+    def match(self, patterns, text):
+        for pattern in patterns:
+            if re.match(pattern, text):
+                return True
+        return False
+
+    def isValid(self, plugin, text, parsed):
+        patterns = config.get('/{}/patterns'.format(plugin.SLUG), [])
+        if len(patterns) > 0:
+            return plugin.isValid(text, parsed) or self.match(patterns, text)
+        else:
+            return plugin.isValid(text, parsed)
+
+    def isValidImmersive(self, plugin, text, parsed):
+        patterns = config.get('/{}/patterns'.format(plugin.SLUG), [])
+        if len(patterns) > 0:
+            return plugin.isValidImmersive(text, parsed) or self.match(patterns, text)
+        else:
+            return plugin.isValidImmersive(text, parsed)
+    
+
     def isImmersive(self, plugin, text, parsed):
         return self.conversation.getImmersiveMode() == plugin.SLUG and \
-            plugin.isValidImmersive(text, parsed)
+            self.isValidImmersive(plugin, text, parsed)
 
     def printPlugins(self):
         plugin_list = []
         for plugin in self.plugins:
             plugin_list.append(plugin.SLUG)
-        logger.info('已激活插件：{}'.format(plugin_list))
+        logger.info('已激活插件：{}'.format(plugin_list))    
 
     def query(self, text):
         """
@@ -43,7 +66,7 @@ class Brain(object):
         parsed = self.conversation.doParse(text, **args)
 
         for plugin in self.plugins:
-            if not plugin.isValid(text, parsed) and not self.isImmersive(plugin, text, parsed):
+            if not self.isValid(plugin, text, parsed) and not self.isImmersive(plugin, text, parsed):
                 continue
 
             logger.info("'{}' 命中技能 {}".format(text, plugin.SLUG))

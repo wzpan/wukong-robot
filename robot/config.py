@@ -61,7 +61,7 @@ def doInit(config_file=constants.getDefaultConfigPath()):
         raise
 
 
-def get_path(items, default=None):
+def get_path(items, default=None, warm=False):
     global _config
     curConfig = _config
     if isinstance(items, str) and items[0] == '/':
@@ -70,8 +70,12 @@ def get_path(items, default=None):
         if key in curConfig:
             curConfig = curConfig[key]
         else:
-            logger.warning("/%s not specified in profile, defaulting to "
-                            "'%s'", '/'.join(items), default)
+            if warm:
+                logger.warming("/%s not specified in profile, defaulting to "
+                             "'%s'", '/'.join(items), default)
+            else:
+                logger.debug("/%s not specified in profile, defaulting to "
+                             "'%s'", '/'.join(items), default)
             return default
     return curConfig
 
@@ -101,12 +105,13 @@ def has(item):
     return has_path(item)
 
 
-def get(item='', default=None):
+def get(item='', default=None, warm=False):
     """
     获取某个配置的值
 
     :param item: 配置项名。如果是多级配置，则以 "/a/b" 的形式提供
     :param default: 默认值（可选）
+    :param warm: 不存在该配置时，是否告警
     :returns: 这个配置的值。如果没有该配置，则提供一个默认值
     """
     global has_init
@@ -115,12 +120,16 @@ def get(item='', default=None):
     if not item:
         return _config
     if item[0] == '/':
-        return get_path(item, default)
+        return get_path(item, default, warm)
     try:
         return _config[item]
     except KeyError:
-        logger.warning("%s not specified in profile, defaulting to '%s'",
-                        item, default)
+        if warm:
+            logger.warming("%s not specified in profile, defaulting to '%s'",
+                         item, default)
+        else:
+            logger.debug("%s not specified in profile, defaulting to '%s'",
+                         item, default)
         return default
     
 def getConfig():

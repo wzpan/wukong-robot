@@ -235,7 +235,7 @@ class Wukong(object):
         data = {
             "name": "wukong-robot",
             "language": "zh",
-            "token": config.get('snowboy_token', ''),
+            "token": config.get('snowboy_token', '', True),
             "voice_samples": [
                 {"wave": get_wave(w1)},
                 {"wave": get_wave(w2)},
