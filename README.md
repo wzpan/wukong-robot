@@ -200,7 +200,7 @@ wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式�
 ## 联系
 
 * wukong-robot 的主要开发者是 [潘伟洲](http://hahack.com) 。
-* QQ 群：580447290（人数将满，为控制人数，需付费20元入群，**群收入达到一万时将无偿捐赠给壹基金**）
+* QQ 群：580447290（人数将满，为控制人数，需付费20元入群。**群收入的前一万元已无偿捐赠给[壹基金等公益项目](https://hahack-1253537070.cos.ap-chengdu.myqcloud.com/images/donate.png)**）
 
 ## 感谢
 
