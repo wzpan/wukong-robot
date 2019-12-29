@@ -28,6 +28,13 @@ muse:
     ip: '0.0.0.0'  # 请修改为本机的 ip 地址
     port: 5001     # 请修改为 OSC 的端口号
 
+# 是否展示灯光效果
+# 支持 Respeaker 2 Mics 和 Google AIY Voice Kit 两种
+# 必须具备相应的硬件和驱动
+LED:
+    enable: false
+    type: aiy  # aiy: Google AIY Voice Kit; respeaker：respeaker 2Mics
+
 # snowboy 离线唤醒
 # https://snowboy.kitt.ai/dashboard
 # 建议到 https://snowboy.kitt.ai/hotword/32768

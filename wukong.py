@@ -1,6 +1,7 @@
 # -*- coding: utf-8-*-
 from snowboy import snowboydecoder
 from robot import config, utils, constants, logging, statistic, Player, BCI
+from robot.sdk import LED
 from robot.Updater import Updater
 from robot.ConfigMonitor import ConfigMonitor
 from robot.Conversation import Conversation
@@ -29,6 +30,7 @@ class Wukong(object):
     def init(self):
         global conversation
         self.detector = None
+        self._thinking = False
         self._interrupted = False        
         print('''
 ********************************************************
@@ -49,6 +51,8 @@ class Wukong(object):
         self._observer.schedule(event_handler, constants.CONFIG_PATH, False)
         self._observer.schedule(event_handler, constants.DATA_PATH, False)
         self._observer.start()
+        if config.get('/LED/enable', False) and config.get('/LED/type') == 'aiy':
+            thread.start_new_thread(self._init_aiy_button_event, ())
         if config.get('/muse/enable', False):
             self._wakeup = multiprocessing.Event()
             self.bci = BCI.MuseBCI(self._wakeup)
@@ -79,6 +83,8 @@ class Wukong(object):
             logger.warning('正在录音中，跳过')
             return
         self._conversation.interrupt()
+        if config.get('/LED/enable', False):
+            LED.wakeup()
         Player.play(constants.getData('beep_hi.wav'), onCompleted=start_record, wait=True)
 
     def _do_not_bother_on_callback(self):
@@ -95,6 +101,15 @@ class Wukong(object):
 
     def _interrupt_callback(self):
         return self._interrupted
+
+    def _init_aiy_button_event(self):
+        from aiy.board import Board
+        with Board() as board:
+            while True:
+                board.button.wait_for_press()
+                self._conversation.interrupt()
+                query = self._conversation.activeListen()
+                self._conversation.doResponse(query)
 
     def run(self):
         self.init()

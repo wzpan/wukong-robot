@@ -7,6 +7,7 @@ import io
 import re
 import os
 from robot.Brain import Brain
+from robot.sdk import LED
 from snowboy import snowboydecoder
 from robot import logging, ASR, TTS, NLU, AI, Player, config, constants, utils, statistic
 
@@ -60,6 +61,9 @@ class Conversation(object):
         self.interrupt()
         self.appendHistory(0, query, UUID)
 
+        if config.get('/LED/enable', False):
+            LED.think()
+            
         if onSay:
             self.onSay = onSay
 
@@ -82,6 +86,9 @@ class Conversation(object):
                 else:
                     logger.debug('checkRestore')
                     self.checkRestore()
+
+        if config.get('/LED/enable', False):
+            LED.off()
 
     def doParse(self, query, **args):
         return self.nlu.parse(query, **args)
@@ -205,10 +212,12 @@ class Conversation(object):
 
     def activeListen(self, silent=False):
         """ 主动问一个问题(适用于多轮对话) """
+        if config.get('/LED/enable', False):
+            LED.wakeup()
         logger.debug('activeListen')
         try:
             if not silent:
-                time.sleep(1)
+                #time.sleep(1)
                 Player.play(constants.getData('beep_hi.wav'))
             listener = snowboydecoder.ActiveListener([constants.getHotwordModel(config.get('hotword', 'wukong.pmdl'))])
             voice = listener.listen(
