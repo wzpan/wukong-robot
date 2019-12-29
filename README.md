@@ -77,6 +77,7 @@ wukong-robot 被唤醒后，用户的语音指令先经过 ASR 引擎进行 ASR 
 * Demo视频：
   - [ycy-robot 月芽特别定制版](https://www.bilibili.com/video/av50685517/)
   - [使用脑机唤醒 wukong-robot](https://www.bilibili.com/video/av76739580/)
+  - [Google AIY Voice Kit + wukong-robot](https://www.bilibili.com/video/av81173082/)
 * 后台管理端 Demo
   - 体验地址：https://bot.hahack.com/  （体验用户名：wukong；体验密码：wukong@2019）
 
