@@ -152,8 +152,11 @@ class MusicPlayer(SoxPlayer):
         self.play()
 
     def pause(self):
-        logger.debug('MusicPlayer pause')
-        self.pausing = True
+        if self.proc:
+            logger.debug('MusicPlayer pause')
+            self.pausing = True
+            self.last_paused = utils.write_temp_file(str(self.proc.pid), 'pid', 'w')
+            subprocess.run(['pkill', '-STOP', '-F', self.last_paused])
 
     def stop(self):
         if self.proc:
@@ -161,7 +164,7 @@ class MusicPlayer(SoxPlayer):
             # STOP current play process
             self.last_paused = utils.write_temp_file(str(self.proc.pid), 'pid', 'w')
             self.onCompleteds = []
-            subprocess.run(['pkill', '-STOP', '-F', self.last_paused])
+            subprocess.run(['pkill', '-KILL', '-F', self.last_paused])
 
     def resume(self):
         logger.debug('MusicPlayer resume')
