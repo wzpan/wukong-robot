@@ -44,6 +44,7 @@ class BaseHandler(tornado.web.RequestHandler):
         return validation == config.get('/server/validate', '') or validation == str(self.get_cookie('validation'))
 
 
+
 class MainHandler(BaseHandler):
 
     def get(self):
@@ -57,15 +58,45 @@ class MainHandler(BaseHandler):
             notices = None
             if 'notices' in info:
                 notices=info['notices']
-            self.render('index.html', history=conversation.getHistory(), update_info=info, suggestion=suggestion, notices=notices)
+            self.render('index.html', update_info=info, suggestion=suggestion, notices=notices)
         else:
-            self.render('index.html', history=[])
+            self.render('index.html')
+
+class MessageUpdatesHandler(BaseHandler):
+    """Long-polling request for new messages.
+
+    Waits until new messages are available before returning anything.
+    """
+
+    async def post(self):
+        if not self.validate(self.get_argument('validate', default=None)):
+            res = {'code': 1, 'message': 'illegal visit'}
+            self.write(json.dumps(res))
+        else:
+            cursor = self.get_argument("cursor", None)
+            messages = conversation.getHistory().get_messages_since(cursor)
+            while not messages:
+                # Save the Future returned here so we can cancel it in
+                # on_connection_close.
+                self.wait_future = conversation.getHistory().cond.wait()
+                try:
+                    await self.wait_future
+                except asyncio.CancelledError:
+                    return
+                messages = conversation.getHistory().get_messages_since(cursor)
+            if self.request.connection.stream.closed():
+                return
+            res = {'code': 0, 'message': 'ok', 'history': json.dumps(messages)}
+            self.write(json.dumps(res))
+
+    def on_connection_close(self):
+        self.wait_future.cancel()
 
 class ChatHandler(BaseHandler):
 
-    def onResp(self, msg, audio):
+    def onResp(self, msg, audio, plugin):
         logger.debug('response msg: {}'.format(msg))
-        res = {'code': 0, 'message': 'ok', 'resp': msg, 'audio': audio}
+        res = {'code': 0, 'message': 'ok', 'resp': msg, 'audio': audio, 'plugin': plugin}
         self.write(json.dumps(res))
 
     def post(self):
@@ -78,7 +109,7 @@ class ChatHandler(BaseHandler):
                     res = {'code': 1, 'message': 'query text is empty'}
                     self.write(json.dumps(res))
                 else:
-                    conversation.doResponse(query, uuid, onSay=lambda msg, audio: self.onResp(msg, audio))
+                    conversation.doResponse(query, uuid, onSay=lambda msg, audio, plugin: self.onResp(msg, audio, plugin))
             elif self.get_argument('type') == 'voice':
                 voice_data = self.get_argument('voice')
                 tmpfile = utils.write_temp_file(base64.b64decode(voice_data), '.wav')
@@ -89,7 +120,7 @@ class ChatHandler(BaseHandler):
                           ' ' + nfile + ' rate 16k'
                 subprocess.call([soxCall], shell=True, close_fds=True)
                 utils.check_and_delete(tmpfile)
-                conversation.doConverse(nfile, onSay=lambda msg, audio: self.onResp(msg, audio))
+                conversation.doConverse(nfile, onSay=lambda msg, audio, plugin: self.onResp(msg, audio, plugin))
             else:
                 res = {'code': 1, 'message': 'illegal type'}
                 self.write(json.dumps(res))
@@ -107,7 +138,7 @@ class GetHistoryHandler(BaseHandler):
             res = {'code': 1, 'message': 'illegal visit'}
             self.write(json.dumps(res))
         else:
-            res = {'code': 0, 'message': 'ok', 'history': json.dumps(conversation.getHistory())}
+            res = {'code': 0, 'message': 'ok', 'history': json.dumps(conversation.getHistory().cache)}
             self.write(json.dumps(res))
         self.finish()
 
@@ -324,7 +355,7 @@ settings = {
     "template_path": os.path.join(constants.APP_PATH, "server/templates"),
     "static_path": os.path.join(constants.APP_PATH, "server/static"),
     "login_url": "/login",
-    "debug": False
+    "debug": True
 }
 
 application = tornado.web.Application([
@@ -332,6 +363,7 @@ application = tornado.web.Application([
     (r"/login", LoginHandler),
     (r"/gethistory", GetHistoryHandler),
     (r"/chat", ChatHandler),
+    (r"/chat/updates", MessageUpdatesHandler),
     (r"/config", ConfigHandler),
     (r"/getconfig", GetConfigHandler),
     (r"/operate", OperateHandler),

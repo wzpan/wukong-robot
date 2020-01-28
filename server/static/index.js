@@ -1,4 +1,4 @@
-function appendHistory(type, query, uuid) {
+function appendHistory(type, query, uuid, plugin) {
     if (!uuid) return;
     if (type == 0) {
         // 用户消息
@@ -11,49 +11,32 @@ function appendHistory(type, query, uuid) {
               </div>
 `);
     } else {
-        $('.history').append(`
+        if (plugin) {
+            $('.history').append(`
+              <div class="left">
+                 <div class="bubble bubble-white">
+                   <div class="bubble-avatar"><image src="./static/robot.png" width=32px attr="robot" /></div>
+                   <p style="text-align: left" id="${uuid}">${query}</p>
+                   <span class="badge badge-info plugin">${plugin}</span>
+                 </div>
+              </div>
+`);
+        } else {        
+            $('.history').append(`
               <div class="left">
                  <div class="bubble bubble-white">
                    <div class="bubble-avatar"><image src="./static/robot.png" width=32px attr="robot" /></div>
                    <p style="text-align: left" id="${uuid}">${query}</p>
                  </div>
               </div>
-`);
-    }
-    $("#"+uuid).fadeIn(2000);
-    var scrollHeight = $('.history').prop("scrollHeight");
-    $('.history').scrollTop(scrollHeight, 200);
-}
-
-function getHistory () {
-    args = {'validate': getCookie('validation')}
-    $.ajax({
-        url: '/gethistory',
-        type: "GET",
-        data: $.param(args),
-        success: function(res) {            
-            res = JSON.parse(res);
-            if (res.code == 0) {
-                historyList = JSON.parse(res.history);
-                for (let i=0; i<historyList.length; ++i) {
-                    h = historyList[i];
-                    // 是否已绘制
-                    if (!$('.history').find('#'+h['uuid']).length>0) {
-                        appendHistory(h['type'], h['text'], h['uuid']);
-                    }
-                }
-            } else {
-                console.error('get history failed!');
-            }            
-        },
-        error: function() {            
-            console.error('get history failed!');
+`);        
         }
+    }
+    $("#"+uuid).hide();
+    $("#"+uuid).fadeIn(500, ()=>{
+        var scrollHeight = $('.history').prop("scrollHeight");
+        $('.history').scrollTop(scrollHeight, 200);
     });
-}
-
-function autoRefresh( t ) {
-    setInterval("getHistory();", t);
 }
 
 function showProgress() {
@@ -61,7 +44,7 @@ function showProgress() {
 }
 
 function upgrade() {
-    args = {'validate': getCookie('validation')}
+    var args = {'validate': getCookie('validation')}
     $.ajax({
         url: '/upgrade',
         type: "POST",
@@ -102,11 +85,14 @@ function guid() {
     return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 }
 
-$(function() {
-    autoRefresh(5000);  // 每5秒轮询一次历史消息
+$(document).ready(function() {
+    if (!window.console) window.console = {};
+    if (!window.console.log) window.console.log = function() {};
 
     $('.CHAT').on('click', function(e) {
         e.preventDefault();
+        var disabled = $('#query');
+        disabled.disable();
         var uuid = 'chat' + guid();
         var query = $("input#query")[0].value;
         if (query.trim() == '') {
@@ -115,7 +101,7 @@ $(function() {
         }
         appendHistory(0, query, uuid);
         $('input#query').val('');
-        args = {"type": "text", "query": query, 'validate': getCookie('validation'), "uuid": uuid}
+        var args = {"type": "text", "query": query, 'validate': getCookie('validation'), "uuid": uuid}
         $.ajax({
             url: '/chat',
             type: "POST",
@@ -127,20 +113,87 @@ $(function() {
                 } else {
                     toastr.error(data.message, '指令发送失败');
                 }
+                disabled.enable();
             },
             error: function() {
                 toastr.error('服务器异常', '指令发送失败');
+                disabled.enable();
             }
         });
     });
 
+
     $('.UPDATE').on('click', function(e) {
-        $('.UPDATE-SPIN')[0].hidden = false;
-        $(this)[0].disabled = true;
-        upgrade();
+    $('.UPDATE-SPIN')[0].hidden = false;
+       $(this)[0].disabled = true;
+       upgrade();
     });
 
-    var scrollHeight = $('.history').prop("scrollHeight");
-    $('.history').scrollTop(scrollHeight, 200);
+    updater.poll();
 });
 
+
+jQuery.fn.disable = function() {
+    this.enable(false);
+    return this;
+};
+
+jQuery.fn.enable = function(opt_enable) {
+    if (arguments.length && !opt_enable) {
+        this.attr("disabled", "disabled");
+    } else {
+        this.removeAttr("disabled");
+    }
+    return this;
+};
+
+var updater = {
+    errorSleepTime: 500,
+    cursor: null,
+
+    poll: function() {
+        var args = {'validate': getCookie('validation')}        
+        if (updater.cursor) args.cursor = updater.cursor;
+        $.ajax({
+            url: '/chat/updates',
+            type: "POST",
+            data: $.param(args),
+            success: updater.onSuccess,
+            error: updater.onError
+        });        
+    },
+
+    onSuccess: function(response) {
+        try {
+            var res = JSON.parse(response);            
+            updater.newMessages(res);
+        } catch (e) {
+            updater.onError();
+            return;
+        }
+        updater.errorSleepTime = 500;
+        window.setTimeout(updater.poll, 0);
+    },
+
+    onError: function(response) {
+        updater.errorSleepTime *= 2;
+        console.error("get history failed! sleeping for", updater.errorSleepTime, "ms");
+        window.setTimeout(updater.poll, updater.errorSleepTime);
+    },
+
+    newMessages: function(response) {
+        if (response.code != 0 || !response.history) return;
+        var messages = JSON.parse(response.history);
+        updater.cursor = messages[messages.length - 1].uuid;
+        console.log(messages.length, "new messages, cursor:", updater.cursor);
+        for (var i = 0; i < messages.length; i++) {
+            updater.showMessage(messages[i]);
+        }
+    },
+
+    showMessage: function(message) {
+        var existing = $("#" + message.uuid);
+        if (existing.length > 0) return;
+        appendHistory(message['type'], message['text'], message['uuid'], message['plugin']);
+    }
+};

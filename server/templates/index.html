@@ -91,30 +91,7 @@
 </div>
 
 <div class="container" id="container">
-  <div class="history">
-    {% if not history or len(history) == 0 %}
-    <center>
-      <p> 无聊天记录，请先和 wukong-robot 聊会天吧~ </p>
-    </center>
-    {% else %}
-      {% for h in history %}
-          {% if h['type'] == 0 %}
-              <div class="right">
-                 <div class="bubble bubble-green">
-                   <div class="bubble-avatar"><i class="fas fa-user"></i></div>
-                   <p style="text-align: left" id="{{ h['uuid'] }}">{{ h['text'] }}</p>
-                 </div>
-              </div>
-          {% else %}
-              <div class="left">
-                <div class="bubble bubble-white">
-                  <div class="bubble-avatar"><image src="./static/robot.png" width=32px attr="robot" /></div>
-                  <p style="text-align: left" id="{{ h['uuid'] }}">{% raw h['text'] %}</p>
-                </div>
-              </div>
-          {% end %}
-      {% end %}
-    {% end %}
+  <div class="history">    
   </div><!-- <div class="history"> -->
 
   <div class="query-form">

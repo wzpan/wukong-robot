@@ -7,7 +7,7 @@ import io
 import re
 import os
 from robot.Brain import Brain
-from robot.sdk import LED
+from robot.sdk import LED, MessageBuffer
 from snowboy import snowboydecoder
 from robot import logging, ASR, TTS, NLU, AI, Player, config, constants, utils, statistic
 
@@ -20,7 +20,7 @@ class Conversation(object):
         self.brain = None
         self.reInit()
         # 历史会话消息
-        self.history = []
+        self.history = MessageBuffer.MessageBuffer()
         # 沉浸模式，处于这个模式下，被打断后将自动恢复这个技能
         self.matchPlugin = None
         self.immersiveMode = None
@@ -128,8 +128,9 @@ class Conversation(object):
             logger.critical(e)
             utils.clean()
 
-    def appendHistory(self, t, text, UUID=''):
+    def appendHistory(self, t, text, UUID='', plugin=''):
         """ 将会话历史加进历史记录 """
+
         if t in (0, 1) and text is not None and text != '':
             if text.endswith(',') or text.endswith('，'):
                 text = text[:-1]
@@ -140,11 +141,11 @@ class Conversation(object):
             url_pattern = r'^https?://.+'
             imgs = re.findall(pattern, text)
             for img in imgs:
-                text = text.replace(img, '<img src={} class="img"/>'.format(img))
+                text = text.replace(img, '<a data-fancybox="images" href="{}"><img src={} class="img fancybox"></img></a>'.format(img, img))
             urls = re.findall(url_pattern, text)
             for url in urls:
                 text = text.replace(url, '<a href={} target="_blank">{}</a>'.format(url, url))
-            self.history.append({'type': t, 'text': text, 'time': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), 'uuid': UUID})
+            self.history.add_message({'type': t, 'text': text, 'time': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), 'uuid': UUID, 'plugin': plugin})
 
     def _onCompleted(self, msg):
         if config.get('active_mode', False) and \
@@ -173,13 +174,12 @@ class Conversation(object):
         :param onCompleted: 完成的回调
         :param wait: 是否要等待说完（为True将阻塞主线程直至说完这句话）
         """
-        if plugin != '':
-            self.appendHistory(1, "[{}] {}".format(plugin, msg))
-        else:
-            self.appendHistory(1, msg)
+        self.appendHistory(1, msg, plugin=plugin)
         pattern = r'^https?://.+'
         if re.match(pattern, msg):
             logger.info("内容包含URL，所以不读出来")
+            self.onSay(msg, '', plugin=plugin)
+            self.onSay = None
             return
         voice = ''
         cache_path = ''
@@ -197,10 +197,7 @@ class Conversation(object):
             logger.info(cache)
             audio = 'http://{}:{}/audio/{}'.format(config.get('/server/host'), config.get('/server/port'), os.path.basename(cache_path))
             logger.info('onSay: {}, {}'.format(msg, audio))
-            if plugin != '':
-                self.onSay("[{}] {}".format(plugin, msg), audio)
-            else:
-                self.onSay(msg, audio)
+            self.onSay(msg, audio, plugin=plugin)
             self.onSay = None
         if onCompleted is None:
             onCompleted = lambda: self._onCompleted(msg)        
