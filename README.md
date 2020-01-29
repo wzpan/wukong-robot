@@ -79,7 +79,7 @@ wukong-robot 被唤醒后，用户的语音指令先经过 ASR 引擎进行 ASR 
   - [使用脑机唤醒 wukong-robot](https://www.bilibili.com/video/av76739580/)
   - [Google AIY Voice Kit + wukong-robot](https://www.bilibili.com/video/av81173082/)
 * 后台管理端 Demo
-  - 体验地址：https://bot.hahack.com/  （体验用户名：wukong；体验密码：wukong@2019）
+  - 体验地址：https://bot.hahack.com:5000  （体验用户名：wukong；体验密码：wukong@2019）
 
 ## 环境要求 ##
 
