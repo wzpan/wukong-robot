@@ -19,7 +19,7 @@ class Plugin(AbstractPlugin):
         if not os.path.exists(path) or \
            not os.path.isdir(path):
             return []
-        song_list = list(filter(lambda d: d.endswith('.mp3'), os.listdir(path)))
+        song_list = list(filter(lambda d: d.endswith('.mp3') or d.endswith('wav'), os.listdir(path)))
         return [os.path.join(path, song) for song in song_list]
 
     def init_music_player(self):
