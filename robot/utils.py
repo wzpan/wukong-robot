@@ -60,7 +60,7 @@ def sendEmail(SUBJECT, BODY, ATTACH_LIST, TO, FROM, SENDER,
     msg['Subject'] = SUBJECT
 
     try:
-        session = smtplib.SMTP()
+        session = smtplib.SMTP(SMTP_SERVER)
         session.connect(SMTP_SERVER, SMTP_PORT)
         session.starttls()
         session.login(FROM, PASSWORD)
