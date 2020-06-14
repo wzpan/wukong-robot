@@ -1,7 +1,7 @@
-from abc import ABCMeta, abstractmethod
-from robot import constants
-from robot import logging
 import sys
+from robot import logging
+from robot import constants
+from abc import ABCMeta, abstractmethod
 
 logger = logging.getLogger(__name__)
 

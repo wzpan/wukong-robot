@@ -1,15 +1,6 @@
 # -*- coding: utf-8-*-
-from snowboy import snowboydecoder
-from robot import config, utils, constants, logging, statistic, Player, BCI
-from robot.sdk import LED
-from robot.Updater import Updater
-from robot.ConfigMonitor import ConfigMonitor
-from robot.Conversation import Conversation
-from server import server
-from tools import make_json, solr_tools
-from watchdog.observers import Observer
-import sys
 import os
+import sys
 import fire
 import base64
 import signal
@@ -18,6 +9,16 @@ import urllib3
 import requests
 import multiprocessing
 import _thread as thread
+from robot.sdk import LED
+from server import server
+from robot.Updater import Updater
+from snowboy import snowboydecoder
+from tools import make_json, solr_tools
+from watchdog.observers import Observer
+from robot.Conversation import Conversation
+from robot.ConfigMonitor import ConfigMonitor
+from robot import config, utils, constants, logging, statistic, Player, BCI
+
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 logger = logging.getLogger(__name__)
@@ -264,6 +265,7 @@ class Wukong(object):
             return 'Snowboy模型已保存至{}'.format(m)
         else:
             return "Snowboy模型生成失败，原因:{}".format(response.text)
+
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:

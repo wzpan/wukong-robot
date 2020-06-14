@@ -1,11 +1,12 @@
 # encoding:utf-8
-import requests
-import datetime
+import os
 import uuid
 import json
-import os
-from dateutil import parser as dparser
+import requests
+import datetime
+from uuid import getnode as get_mac
 from robot import constants, logging
+from dateutil import parser as dparser
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +50,7 @@ def getUnit(query, service_id, api_key, secret_key):
     url = 'https://aip.baidubce.com/rpc/2.0/unit/service/chat?access_token=' + access_token
     request={
         "query":query,
-        "user_id":"888888",
+        "user_id": str(get_mac())[:32],
     }
     body={
         "log_id": str(uuid.uuid1()),

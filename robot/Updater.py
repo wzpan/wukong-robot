@@ -21,7 +21,7 @@ class Updater(object):
 
     def _pull(self, cwd, tag):
         if os.path.exists(cwd):
-            return call(['git checkout master && git pull && git checkout {}'.format(tag, tag, tag)], cwd=cwd, shell=True) == 0
+            return call(['git checkout master && git pull && git checkout {}'.format(tag)], cwd=cwd, shell=True) == 0
         else:
             logger.error("目录 {} 不存在".format(cwd))
             return False

@@ -1,7 +1,7 @@
 # -*- coding: utf-8-*-
 import pkgutil
-from . import constants
 from . import config
+from . import constants
 from robot import logging
 from robot.sdk.AbstractPlugin import AbstractPlugin
 

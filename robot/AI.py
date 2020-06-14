@@ -1,10 +1,10 @@
 # -*- coding: utf-8-*-
-import requests
 import json
 import random
-from robot import logging, config, utils
+import requests
 from uuid import getnode as get_mac
 from abc import ABCMeta, abstractmethod
+from robot import logging, config, utils
 
 logger = logging.getLogger(__name__)
 

@@ -136,6 +136,17 @@ han-tts:
 # unit      - 百度 UNIT
 nlu_engine: unit
 
+# 百度 UNIT
+unit:
+    # 在 https://ai.baidu.com/unit 里注册创建一个机器人
+    # 得到一个机器人 ID ，
+    # 然后访问下面页面获取 API Key 和 Secret Key：
+    # https://console.bce.baidu.com/ai/#/ai/unit/app/list
+    service_id: 'S13442'  # 机器人ID
+    api_key: 'w5v7gUV3iPGsGntcM84PtOOM'
+    secret_key: 'KffXwW6E1alcGplcabcNs63Li6GvvnfL'
+    
+
 # 聊天机器人
 # 可选值：
 # anyq      - AnyQ（推荐）

@@ -59,9 +59,9 @@ class Brain(object):
         """
 
         args = {
-            "service_id": "S13442",
-            "api_key": 'w5v7gUV3iPGsGntcM84PtOOM',
-            "secret_key": 'KffXwW6E1alcGplcabcNs63Li6GvvnfL'
+            "service_id": config.get('/unit/service_id', 'S13442'),
+            "api_key": config.get('/unit/api_key', 'w5v7gUV3iPGsGntcM84PtOOM'),
+            "secret_key": config.get('/unit/secret_key', 'KffXwW6E1alcGplcabcNs63Li6GvvnfL')
         }
         parsed = self.conversation.doParse(text, **args)
 
