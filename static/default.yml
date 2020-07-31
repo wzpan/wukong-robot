@@ -117,8 +117,8 @@ ali_yuyin:
 # 注册获取
 tencent_yuyin:
     appid: '1253537070'
-    secretid: 'AKID7C7JK9QomcWJUjcsKbK8iLQjhju8fC3z'
-    secret_key: '2vhKRVSn4mXQ9PiT7eOtBqQhR5Z6IvPn'
+    secretid: 'xxxxxxxxxxxxx'
+    secret_key: 'xxxxxxxxxxxxx'
     region: 'ap-guangzhou'  # 服务地区，有效值：http://suo.im/4EEQYD
     voiceType: 0            # 0: 女声1；1：男生1；2：男生2
     language: 1             # 1: 中文；2：英文
