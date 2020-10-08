@@ -176,6 +176,8 @@ wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式�
 | ------ | --------- |
 | <img src="http://hahack.com/images/misc/alipay.png" height="248px" width="164px" title="支付宝" style="display:inherit;"/> | <img src="http://hahack.com/images/misc/wechatpay.jpeg" height="248px" width="164px" title="微信支付" style="display:inherit;"/> |
 
+如果以上的图裂了，可以下载图片（[支付宝](http://hahack.com/images/misc/alipay.png) | [微信](http://hahack.com/images/misc/wechatpay.jpeg)）到本地进行扫描。
+
 * 对于企业用户，建议[成为这个项目的 backer](https://opencollective.com/wukong-robot/contribute/tier/8131-sponsor)，您将可以把一个带链接的 logo 放在 wukong-robot 后台管理端的首页、捐赠页面以及 Github 项目首页中。
 
 <p>
@@ -201,11 +203,13 @@ wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式�
 ## 联系
 
 * wukong-robot 的主要开发者是 [潘伟洲](http://hahack.com) 。
-* QQ 群：580447290（人数将满，为控制人数，需付费20元入群。微信或支付宝支付后，申请入群时贴上转账单号即可。**群收入的前一万元已无偿捐赠给[壹基金等公益项目](https://hahack-1253537070.cos.ap-chengdu.myqcloud.com/images/donate.png)**）
+* QQ 群：580447290（人数将满，为控制人数，需付费20元入群。微信或支付宝支付后，申请入群时贴上转账单号即可。**群收入的前一万元已无偿捐赠给[壹基金等公益项目](https://hahack-1253537070.cos.ap-chengdu.myqcloud.com/images/donate.png)**）。
 
 | 支付宝 | 微信支付 |
 | ------ | --------- |
 | <img src="http://hahack.com/images/misc/alipay.png" height="248px" width="164px" title="支付宝" style="display:inherit;"/> | <img src="http://hahack.com/images/misc/wechatpay.jpeg" height="248px" width="164px" title="微信支付" style="display:inherit;"/> |
+
+如果以上的图裂了，可以下载图片（[支付宝](http://hahack.com/images/misc/alipay.png) | [微信](http://hahack.com/images/misc/wechatpay.jpeg)）到本地进行扫描。
 
 ## 感谢
 
