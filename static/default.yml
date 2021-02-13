@@ -36,8 +36,7 @@ LED:
     type: aiy  # aiy: Google AIY Voice Kit; respeaker：respeaker 2Mics
 
 # snowboy 离线唤醒
-# https://snowboy.kitt.ai/dashboard
-# 建议到 https://snowboy.kitt.ai/hotword/32768
+# 建议使用 snowboy-seasalt (https://github.com/rhasspy/snowboy-seasalt)
 # 使用相同环境录入你的语音，以提升唤醒成功率和准确率
 hotword: 'wukong.pmdl'  # 唤醒词模型，如要自定义请放到 $HOME/.wukong 目录中
 sensitivity: 0.4  # 灵敏度
