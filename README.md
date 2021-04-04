@@ -100,7 +100,7 @@ wukong-robot 支持运行在以下的设备和系统中：
 
 ## 安装 ##
 
-见 [wukong-robot 安装教程](https://www.hahack.com/wukong-contrib/#/install) 。
+见 [wukong-robot 安装教程](https://wukong.hahack.com/#/install) 。
 
 ## 升级
 
@@ -158,12 +158,12 @@ do_not_bother:
 
 ## 技能插件 ##
 
-* [官方插件列表](https://www.hahack.com/wukong-contrib/#/official)
-* [用户贡献插件](https://www.hahack.com/wukong-contrib/#/contrib)
+* [官方插件列表](https://wukong.hahack.com/#/official)
+* [用户贡献插件](https://wukong.hahack.com/#/contrib)
 
 ## API 接口 ##
 
-wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式调用，见 [后台API](https://www.hahack.com/wukong-contrib/#/api)。
+wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式调用，见 [后台API](https://wukong.hahack.com/#/api)。
 
 ## 捐赠
 
@@ -233,7 +233,6 @@ wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式�
 * 基础篇：https://ke.qq.com/course/387931?tuin=1b8113f4
 * 完整篇：https://ke.qq.com/course/384790?tuin=1b8113f4
 
-> 优惠信息：加QQ群（580447290）联系小木鱼可以领取课程优惠券。
 
 ## 免责声明
 
