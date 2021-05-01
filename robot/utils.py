@@ -23,6 +23,7 @@ from email.mime.multipart import MIMEMultipart
 logger = logging.getLogger(__name__)
 
 do_not_bother = False
+is_recordable = True
 
 def sendEmail(SUBJECT, BODY, ATTACH_LIST, TO, FROM, SENDER,
               PASSWORD, SMTP_SERVER, SMTP_PORT):
@@ -192,8 +193,19 @@ def clean():
         if os.path.isfile(os.path.join(temp, f)) and re.match(r'output[\d]*\.wav', os.path.basename(f)):
             os.remove(os.path.join(temp, f))
 
+def setRecordable(value):
+    """ 设置是否可以开始录制语音 """
+    global is_recordable
+    is_recordable = value
+
+def isRecordable():
+    """ 是否可以开始录制语音 """
+    global is_recordable
+    return is_recordable
+
 def is_proper_time():
     """ 是否合适时间 """
+    global do_not_bother
     if do_not_bother == True:
         return False
     if not config.has('do_not_bother'):

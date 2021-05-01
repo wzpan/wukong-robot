@@ -120,8 +120,7 @@ class ActiveListener(object):
                 format=self.audio.get_format_from_width(
                     self.detector.BitsPerSample() / 8),
                 channels=self.detector.NumChannels(),
-                #rate=self.detector.SampleRate(),
-                rate=44100,  # 强制指定采样率为 44100
+                rate=self.detector.SampleRate(),
                 frames_per_buffer=2048,
                 stream_callback=audio_callback)
         except Exception as e:
@@ -284,8 +283,11 @@ class HotwordDetector(object):
         self._running = True
 
         def audio_callback(in_data, frame_count, time_info, status):
-            self.ring_buffer.extend(in_data)
-            play_data = chr(0) * len(in_data)
+            if utils.isRecordable():
+                self.ring_buffer.extend(in_data)
+                play_data = chr(0) * len(in_data)
+            else:
+                play_data = chr(0)
             return play_data, pyaudio.paContinue
 
         with no_alsa_error():

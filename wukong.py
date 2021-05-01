@@ -75,8 +75,9 @@ class Wukong(object):
 
     def _detected_callback(self):
         def start_record():
-            logger.info('开始录音')            
-            self._conversation.isRecording = True;
+            logger.info('开始录音')
+            self._conversation.isRecording = True
+            utils.setRecordable(True)
         if not utils.is_proper_time():
             logger.warning('勿扰模式开启中')
             return
@@ -86,6 +87,7 @@ class Wukong(object):
         self._conversation.interrupt()
         if config.get('/LED/enable', False):
             LED.wakeup()
+        utils.setRecordable(False)
         Player.play(constants.getData('beep_hi.wav'), onCompleted=start_record, wait=True)
 
     def _do_not_bother_on_callback(self):
