@@ -78,6 +78,9 @@ class TulingRobot(AbstractRobot):
 
 
 class Emotibot(AbstractRobot):
+    """
+    Emotibot 机器人对话服务，已废弃
+    """
 
     SLUG = "emotibot"
 

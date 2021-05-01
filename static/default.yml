@@ -84,7 +84,9 @@ baidu_yuyin:
     appid: '9670645'  # 建议使用自己的百度语音账户 APPID
     api_key: 'qg4haN8b2bGvFtCbBGqhrmZy'
     secret_key: '585d4eccb50d306c401d7df138bb02e7'
-    dev_pid: 1936   # 1936: 普通话远场，1536：普通话(支持简单的英文识别)，80001：ASR极速版（请使用自己的百度语音账户再使用）
+    dev_pid: 1536   # 1536：普通话(支持简单的英文识别)，
+                    # 1936: 普通话远场（需付费，请使用自己的百度语音账户再使用）
+                    # 80001：ASR极速版（需付费，请使用自己的百度语音账户再使用）
     per: 1  # 发音人选择 0：女生；1：男生；3：度逍遥；4：度丫丫
     lan: 'zh'
 
@@ -150,8 +152,7 @@ unit:
 # 可选值：
 # anyq      - AnyQ（推荐）
 # tuling    - 图灵机器人
-# emotibot  - 小影机器人
-robot: emotibot
+robot: tuling
 
 # AnyQ 机器人
 anyq:
@@ -169,11 +170,6 @@ anyq:
 # http://www.tuling123.com
 tuling:
     tuling_key: '98f95153fb5c4684a5602b909949ba61'  # 建议使用自己的图灵机器人API Key
-
-# 小影机器人
-# http://botfactory.emotibot.com/
-emotibot:
-    appid: '32ee80dddb36f1dc5356517503b3f55e'
 
 # 邮箱
 # 如果使用网易邮箱，还需设置允许第三方客户端收发邮件
