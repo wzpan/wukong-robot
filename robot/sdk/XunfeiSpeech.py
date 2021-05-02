@@ -31,17 +31,8 @@ class ASR_Ws_Param(object):
         self.APPID = APPID
         self.APIKey = APIKey
         self.APISecret = APISecret
-
-        # 固定参数，可不用修改
-        self.Host = "iat-api.xfyun.cn/v2/iat"
-        self.HttpProto = "HTTP/1.1"
-        self.HttpMethod = "GET"
-        self.RequestUri = "/v2/iat"
-        self.Algorithm = "hmac-sha256"
-        self.url = "wss://" + self.Host + self.RequestUri
-
-        # 设置测试音频文件
         self.AudioFile = AudioFile
+
         # 公共参数(common)
         self.CommonArgs = {"app_id": self.APPID}
         # 业务参数(business)，更多个性化参数可在官网查看
