@@ -222,7 +222,7 @@ wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式�
 
 - 我能否更换成其他唤醒词，而不是叫“孙悟空”？
 
-  - 能。到 [snowboy官网](http://snowboy.kitt.ai/) 训练一个自己的唤醒词，然后将生成的 pmdl 文件放到 ~/.wukong 中，然后修改配置文件中的 `hotword` 配置即可。
+  - 能。详见 [修改唤醒词](https://wukong.hahack.com/#/tips?id=_2-%e4%bf%ae%e6%94%b9%e5%94%a4%e9%86%92%e8%af%8d) 。
   
 ## 教学视频
 
