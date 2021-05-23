@@ -38,7 +38,7 @@ LED:
 # snowboy 离线唤醒
 # 建议使用 snowboy-seasalt (https://github.com/rhasspy/snowboy-seasalt)
 # 使用相同环境录入你的语音，以提升唤醒成功率和准确率
-hotword: 'wukong.pmdl'  # 唤醒词模型，如要自定义请放到 $HOME/.wukong 目录中
+hotword: 'snowboy.umdl'  # 唤醒词模型，如要自定义请放到 $HOME/.wukong 目录中
 sensitivity: 0.4  # 灵敏度
 silent_threshold: 15 # 判断为静音的阈值。环境比较吵杂的地方可以适当调大
 recording_timeout: 5 # 录制的语音最大长度（秒）
