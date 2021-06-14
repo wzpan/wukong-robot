@@ -76,7 +76,11 @@ def getIntent(parsed):
     """
     if parsed is not None and 'result' in parsed and \
        'response_list' in parsed['result']:
-        return parsed['result']['response_list'][0]['schema']['intent']
+        try:
+            return parsed['result']['response_list'][0]['schema']['intent']
+        except Exception as e:
+            logger.warning(e)
+            return ''
     else:
         return ''
 
@@ -93,7 +97,9 @@ def hasIntent(parsed, intent):
        'response_list' in parsed['result']:
         response_list = parsed['result']['response_list']
         for response in response_list:
-            if response['schema']['intent'] == intent:
+            if 'schema' in response and \
+                'intent' in response['schema'] and \
+                    response['schema']['intent'] == intent:
                 return True
         return False
     else:
@@ -113,10 +119,18 @@ def getSlots(parsed, intent=''):
        'response_list' in parsed['result']:
         response_list = parsed['result']['response_list']
         if intent == '':
-            return parsed['result']['response_list'][0]['schema']['slots']
+            try:
+                return parsed['result']['response_list'][0]['schema']['slots']
+            except Exception as e:
+                logger.warning(e)
+                return []
         for response in response_list:
-            if response['schema']['intent'] == intent:
+            if 'schema' in response and \
+                'intent' in response['schema'] and \
+                    'slots' in response['schema'] and \
+                    response['schema']['intent'] == intent:
                 return response['schema']['slots']
+        return []
     else:
         return []
 
@@ -148,10 +162,20 @@ def getSay(parsed, intent=''):
        'response_list' in parsed['result']:
         response_list = parsed['result']['response_list']
         if intent == '':
-            return response_list[0]['action_list'][0]['say']
+            try:
+                return response_list[0]['action_list'][0]['say']
+            except Exception as e:
+                logger.warning(e)
+                return ''
         for response in response_list:
-            if response['schema']['intent'] == intent:
-                return response['action_list'][0]['say']
+            if 'schema' in response and \
+                'intent' in response['schema'] and \
+                response['schema']['intent'] == intent:
+                    try:
+                        return response['action_list'][0]['say']
+                    except Exception as e:
+                        logger.warning(e)
+                        return ''
         return ''
     else:
         return ''
