@@ -9,6 +9,7 @@ INTENT = "BUILT_POEM"
 
 logger = logging.getLogger(__name__)
 
+
 class Plugin(AbstractPlugin):
 
     SLUG = "poem"
@@ -19,9 +20,7 @@ class Plugin(AbstractPlugin):
             self.say(responds, cache=True)
         except Exception as e:
             logger.error(e)
-            self.say('抱歉，写诗插件出问题了，请稍后再试', cache=True)
+            self.say("抱歉，写诗插件出问题了，请稍后再试", cache=True)
 
     def isValid(self, text, parsed):
-        return self.nlu.hasIntent(parsed, INTENT) and '写' in text and '诗' in text
-        
-        
+        return self.nlu.hasIntent(parsed, INTENT) and "写" in text and "诗" in text

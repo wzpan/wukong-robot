@@ -1,6 +1,7 @@
 from . import apa102
 import time
 import threading
+
 try:
     import queue as Queue
 except ImportError:
@@ -115,7 +116,9 @@ class Pixels:
 
     def write(self, colors):
         for i in range(self.PIXELS_N):
-            self.dev.set_pixel(i, int(colors[3*i]), int(colors[3*i + 1]), int(colors[3*i + 2]))
+            self.dev.set_pixel(
+                i, int(colors[3 * i]), int(colors[3 * i + 1]), int(colors[3 * i + 2])
+            )
 
         self.dev.show()
 
@@ -123,7 +126,7 @@ class Pixels:
 pixels = Pixels()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     while True:
 
         try:
@@ -137,7 +140,6 @@ if __name__ == '__main__':
             time.sleep(3)
         except KeyboardInterrupt:
             break
-
 
     pixels.off()
     time.sleep(1)

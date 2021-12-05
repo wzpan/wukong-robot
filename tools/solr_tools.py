@@ -1,13 +1,13 @@
-#coding=utf-8
+# coding=utf-8
 
 # Copyright (c) 2018 Baidu, Inc. All Rights Reserved.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,22 +42,26 @@ def _get_error_message(respond_str):
     print(respond_str)
 
 
-def add_engine(host, enginename, port=8983, shard=1, replica=1, maxshardpernode=5, conf='myconf'):
+def add_engine(
+    host, enginename, port=8983, shard=1, replica=1, maxshardpernode=5, conf="myconf"
+):
     """
     Add engine
     """
     url = "http://{}:{}/solr/admin/collections".format(host, port)
     params = {}
-    params['action'] = 'CREATE'
-    params['name'] = enginename
-    params['numShards'] = shard
-    params['replicationFactor'] = replica
-    params['maxShardsPerNode'] = maxshardpernode
-    params['collection.configName'] = conf
-    params['wt'] = 'json'
+    params["action"] = "CREATE"
+    params["name"] = enginename
+    params["numShards"] = shard
+    params["replicationFactor"] = replica
+    params["maxShardsPerNode"] = maxshardpernode
+    params["collection.configName"] = conf
+    params["wt"] = "json"
     try:
         req = urllib.request.Request(url)
-        response = urllib.request.urlopen(req, urllib.parse.urlencode(params).encode("utf-8"))
+        response = urllib.request.urlopen(
+            req, urllib.parse.urlencode(params).encode("utf-8")
+        )
         print(response.read())
     except Exception as err:
         _get_error_message(err)
@@ -69,12 +73,14 @@ def delete_engine(host, enginename, port=8983):
     """
     url = "http://{}:{}/solr/admin/collections".format(host, port)
     params = {}
-    params['action'] = 'DELETE'
-    params['name'] = enginename
-    params['wt'] = 'json'
+    params["action"] = "DELETE"
+    params["name"] = enginename
+    params["wt"] = "json"
     try:
         req = urllib.request.Request(url)
-        response = urllib.request.urlopen(req, urllib.parse.urlencode(params).encode("utf-8"))
+        response = urllib.request.urlopen(
+            req, urllib.parse.urlencode(params).encode("utf-8")
+        )
         print(response.read())
     except Exception as err:
         _get_error_message(err)
@@ -85,6 +91,7 @@ def upload_documents(host, enginename, port=8983, documents="", num_thread=1):
     Fill documents
     documents can be a file path(Each row is a json format document)
     """
+
     def thread_upload(binary_data, mutex):
         """
         We didn't use the producer-consumer model because of the need to implement batch loads 
@@ -94,7 +101,7 @@ def upload_documents(host, enginename, port=8983, documents="", num_thread=1):
         try:
             req = urllib.request.Request(url)
             req.headers = HEADER
-            response = urllib.request.urlopen(req, binary_data.encode('utf-8'))
+            response = urllib.request.urlopen(req, binary_data.encode("utf-8"))
             mutex.acquire()
             logger.info(response.read())
             mutex.release()
@@ -114,7 +121,7 @@ def upload_documents(host, enginename, port=8983, documents="", num_thread=1):
         for sub_batch in batch_docs:
             if len(sub_batch) <= 0:
                 continue
-            data = "[{}]".format(','.join(sub_batch))
+            data = "[{}]".format(",".join(sub_batch))
             task = threading.Thread(target=thread_upload, args=(data, mutex))
             task.setDaemon(True)
             thread_task.append(task)
@@ -155,6 +162,7 @@ def upload_documents(host, enginename, port=8983, documents="", num_thread=1):
                 batch_bytes = byte_doc
             # Upload the last remaining
             upload_batch(batch_docs)
+
     # Based on the methods provided above, batch uploads based on incoming file types
     if os.path.isfile(documents):
         upload_file(documents)
@@ -171,12 +179,14 @@ def clear_documents(host, enginename, port=8983):
     """
     url = "http://{}:{}/solr/{}/update".format(host, port, enginename)
     params = {}
-    params['stream.body'] = "<delete><query>*:*</query></delete>"
-    params['wt'] = 'json'
-    params['commit'] = 'true'
+    params["stream.body"] = "<delete><query>*:*</query></delete>"
+    params["wt"] = "json"
+    params["commit"] = "true"
     try:
         req = urllib.request.Request(url)
-        response = urllib.request.urlopen(req, urllib.parse.urlencode(params).encode("utf-8"))
+        response = urllib.request.urlopen(
+            req, urllib.parse.urlencode(params).encode("utf-8")
+        )
         logger.debug(response.read())
     except Exception as err:
         logger.error(err)
@@ -186,7 +196,8 @@ def help(**kwargs):
     """
     usage
     """
-    print("""=====================================================================================
+    print(
+        """=====================================================================================
     solr_tools provides two ways to use: Python method and command line
     Commands available:
       -op             - specific operations are listed and explained below
@@ -204,7 +215,8 @@ def help(**kwargs):
       -schema_conf    - available when op's set_schema, schema config file path
       -documents      - available when op's up_doc, documents path
       -num_thread     - available when op's up_doc, to define multithread num
-    =====================================================================================""")
+    ====================================================================================="""
+    )
 
 
 def call_function(func, params):
@@ -219,10 +231,12 @@ def command_line_tools():
     command tools
     """
     params = {}
-    ops = {'add_eng': add_engine,
-           'del_eng': delete_engine,
-           'up_doc': upload_documents,
-           'clear_doc': clear_documents}
+    ops = {
+        "add_eng": add_engine,
+        "del_eng": delete_engine,
+        "up_doc": upload_documents,
+        "clear_doc": clear_documents,
+    }
     argidx = 1
     func = help
     while argidx < len(sys.argv):
@@ -236,37 +250,37 @@ def command_line_tools():
                 exit(1)
             func = ops[op]
             argidx += 2
-        elif sys.argv[argidx] == '-host':
+        elif sys.argv[argidx] == "-host":
             params["host"] = sys.argv[argidx + 1]
             argidx += 2
-        elif sys.argv[argidx] == '-port':
+        elif sys.argv[argidx] == "-port":
             params["port"] = int(sys.argv[argidx + 1])
             argidx += 2
-        elif sys.argv[argidx] == '-eng_name':
+        elif sys.argv[argidx] == "-eng_name":
             params["enginename"] = sys.argv[argidx + 1]
             argidx += 2
-        elif sys.argv[argidx] == '-shard':
+        elif sys.argv[argidx] == "-shard":
             params["shard"] = int(sys.argv[argidx + 1])
             argidx += 2
-        elif sys.argv[argidx] == '-replica':
+        elif sys.argv[argidx] == "-replica":
             params["replica"] = int(sys.argv[argidx + 1])
             argidx += 2
-        elif sys.argv[argidx] == '-nodemaxshard':
+        elif sys.argv[argidx] == "-nodemaxshard":
             params["maxshardpernode"] = int(sys.argv[argidx + 1])
             argidx += 2
-        elif sys.argv[argidx] == '-conf_name':
+        elif sys.argv[argidx] == "-conf_name":
             params["conf"] = sys.argv[argidx + 1]
             argidx += 2
-        elif sys.argv[argidx] == '-schema_conf':
+        elif sys.argv[argidx] == "-schema_conf":
             params["schema_config"] = sys.argv[argidx + 1]
             argidx += 2
-        elif sys.argv[argidx] == '-documents':
+        elif sys.argv[argidx] == "-documents":
             params["documents"] = sys.argv[argidx + 1]
             argidx += 2
-        elif sys.argv[argidx] == '-num_thread':
+        elif sys.argv[argidx] == "-num_thread":
             params["num_thread"] = int(sys.argv[argidx + 1])
             argidx += 2
-        elif sys.argv[argidx] == '-help':
+        elif sys.argv[argidx] == "-help":
             help()
             exit(1)
         else:
@@ -276,7 +290,8 @@ def command_line_tools():
     call_function(func, params)
 
 
-if __name__ == '__main__':
-    clear_documents('localhost', 'collection1', 8902)
-    upload_documents('localhost', 'collection1', 8902, 'sample_docs.json', num_thread=10)
-
+if __name__ == "__main__":
+    clear_documents("localhost", "collection1", 8902)
+    upload_documents(
+        "localhost", "collection1", 8902, "sample_docs.json", num_thread=10
+    )

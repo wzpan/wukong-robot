@@ -5,8 +5,8 @@ from datetime import datetime, timedelta
 
 logger = logging.getLogger(__name__)
 
-class MuseBCI(object):
 
+class MuseBCI(object):
     def __init__(self, event):
         self._wakeup_event = event
         self.last_blink = datetime.now() - timedelta(days=1.5)
@@ -31,8 +31,8 @@ class MuseBCI(object):
                 self._wakeup_event.set()
 
     def _start_osc(self):
-        if not importlib.util.find_spec('pythonosc'):
-            logger.critical('错误：请先安装 python-osc ！')
+        if not importlib.util.find_spec("pythonosc"):
+            logger.critical("错误：请先安装 python-osc ！")
             return
 
         from pythonosc import dispatcher as dsp
@@ -44,10 +44,13 @@ class MuseBCI(object):
 
         try:
             server = osc_server.ThreadingOSCUDPServer(
-                (config.get('/muse/ip', '127.0.0.1'), int(config.get('/muse/port', '5001'))), dispatcher)
+                (
+                    config.get("/muse/ip", "127.0.0.1"),
+                    int(config.get("/muse/port", "5001")),
+                ),
+                dispatcher,
+            )
             logger.info("Muse serving on {}".format(server.server_address))
             server.serve_forever()
         except Exception as e:
             logger.error(e)
-
-    

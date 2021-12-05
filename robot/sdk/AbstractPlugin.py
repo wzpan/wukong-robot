@@ -9,11 +9,12 @@ try:
     sys.path.append(constants.CONTRIB_PATH)
 except Exception as e:
     logger.debug("未检测到插件目录,Error:{}".format(e))
-    
+
+
 class AbstractPlugin(metaclass=ABCMeta):
     """ 技能插件基类 """
 
-    SLUG = 'AbstractPlugin'
+    SLUG = "AbstractPlugin"
     IS_IMMERSIVE = False
 
     def __init__(self, con):
@@ -29,7 +30,9 @@ class AbstractPlugin(metaclass=ABCMeta):
         self.con.play(src, delete, onCompleted, volume)
 
     def say(self, text, cache=False, onCompleted=None, wait=False):
-        self.con.say(text, cache=cache, plugin=self.SLUG, onCompleted=onCompleted, wait=wait)
+        self.con.say(
+            text, cache=cache, plugin=self.SLUG, onCompleted=onCompleted, wait=wait
+        )
 
     def activeListen(self, silent=False):
         return self.con.activeListen(silent)
@@ -89,4 +92,3 @@ class AbstractPlugin(metaclass=ABCMeta):
         可以自动恢复当前插件的处理逻辑
         """
         return
-    

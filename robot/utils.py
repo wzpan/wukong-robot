@@ -25,8 +25,10 @@ logger = logging.getLogger(__name__)
 do_not_bother = False
 is_recordable = True
 
-def sendEmail(SUBJECT, BODY, ATTACH_LIST, TO, FROM, SENDER,
-              PASSWORD, SMTP_SERVER, SMTP_PORT):
+
+def sendEmail(
+    SUBJECT, BODY, ATTACH_LIST, TO, FROM, SENDER, PASSWORD, SMTP_SERVER, SMTP_PORT
+):
     """
     发送邮件
 
@@ -41,24 +43,24 @@ def sendEmail(SUBJECT, BODY, ATTACH_LIST, TO, FROM, SENDER,
     :param SMTP_PORT: smtp 端口号
     :returns: True: 发送成功; False: 发送失败
     """
-    txt = MIMEText(BODY.encode('utf-8'), 'html', 'utf-8')
+    txt = MIMEText(BODY.encode("utf-8"), "html", "utf-8")
     msg = MIMEMultipart()
-    msg.attach(txt)    
+    msg.attach(txt)
 
     for attach in ATTACH_LIST:
         try:
-            att = MIMEText(open(attach, 'rb').read(), 'base64', 'utf-8')
+            att = MIMEText(open(attach, "rb").read(), "base64", "utf-8")
             filename = os.path.basename(attach)
-            att["Content-Type"] = 'application/octet-stream'
+            att["Content-Type"] = "application/octet-stream"
             att["Content-Disposition"] = 'attachment; filename="%s"' % filename
             msg.attach(att)
         except Exception:
-            logger.error(u'附件 %s 发送失败！' % attach)
+            logger.error(u"附件 %s 发送失败！" % attach)
             continue
 
-    msg['From'] = SENDER
-    msg['To'] = TO
-    msg['Subject'] = SUBJECT
+    msg["From"] = SENDER
+    msg["To"] = TO
+    msg["Subject"] = SUBJECT
 
     try:
         session = smtplib.SMTP(SMTP_SERVER)
@@ -83,21 +85,22 @@ def emailUser(SUBJECT="", BODY="", ATTACH_LIST=[]):
     """
     # add footer
     if BODY:
-        BODY = u"%s，<br><br>这是您要的内容：<br>%s<br>" % (config['first_name'], BODY)
+        BODY = u"%s，<br><br>这是您要的内容：<br>%s<br>" % (config["first_name"], BODY)
 
-    recipient = config.get('/email/address', '')
-    robot_name = config.get('robot_name_cn', 'wukong-robot')
+    recipient = config.get("/email/address", "")
+    robot_name = config.get("robot_name_cn", "wukong-robot")
     recipient = robot_name + " <%s>" % recipient
-    user = config.get('/email/address', '')
-    password = config.get('/email/password', '')
-    server = config.get('/email/smtp_server', '')
-    port = config.get('/email/smtp_port', '')
+    user = config.get("/email/address", "")
+    password = config.get("/email/password", "")
+    server = config.get("/email/smtp_server", "")
+    port = config.get("/email/smtp_port", "")
 
     if not recipient or not user or not password or not server or not port:
         return False
     try:
-        sendEmail(SUBJECT, BODY, ATTACH_LIST, user, user,
-                  recipient, password, server, port)
+        sendEmail(
+            SUBJECT, BODY, ATTACH_LIST, user, user, recipient, password, server, port
+        )
         return True
     except Exception as e:
         logger.error(e)
@@ -112,8 +115,9 @@ def get_file_content(filePath):
     :returns: 文件内容
     :raises IOError: 读取失败则抛出 IOError
     """
-    with open(filePath, 'rb') as fp:
+    with open(filePath, "rb") as fp:
         return fp.read()
+
 
 def check_and_delete(fp, wait=0):
     """ 
@@ -121,6 +125,7 @@ def check_and_delete(fp, wait=0):
 
     :param fp: 文件路径
     """
+
     def run():
         if wait > 0:
             time.sleep(wait)
@@ -129,11 +134,11 @@ def check_and_delete(fp, wait=0):
                 os.remove(fp)
             else:
                 shutil.rmtree(fp)
-    
+
     thread.start_new_thread(run, ())
 
 
-def write_temp_file(data, suffix, mode='w+b'):
+def write_temp_file(data, suffix, mode="w+b"):
     """ 
     写入临时文件
 
@@ -147,6 +152,7 @@ def write_temp_file(data, suffix, mode='w+b'):
         tmpfile = f.name
     return tmpfile
 
+
 def get_pcm_from_wav(wav_path):
     """ 
     从 wav 文件中读取 pcm
@@ -154,8 +160,9 @@ def get_pcm_from_wav(wav_path):
     :param wav_path: wav 文件路径
     :returns: pcm 数据
     """
-    wav = wave.open(wav_path, 'rb')
+    wav = wave.open(wav_path, "rb")
     return wav.readframes(wav.getnframes())
+
 
 def convert_wav_to_mp3(wav_path):
     """ 
@@ -167,9 +174,10 @@ def convert_wav_to_mp3(wav_path):
     if not os.path.exists(wav_path):
         logger.critical("文件错误 {}".format(wav_path))
         return None
-    mp3_path = wav_path.replace('.wav', '.mp3')
+    mp3_path = wav_path.replace(".wav", ".mp3")
     AudioSegment.from_wav(wav_path).export(mp3_path, format="mp3")
     return mp3_path
+
 
 def convert_mp3_to_wav(mp3_path):
     """ 
@@ -183,87 +191,103 @@ def convert_mp3_to_wav(mp3_path):
         logger.critical("文件错误 {}".format(mp3_path))
         return None
     AudioSegment.from_mp3(mp3_path).export(target, format="wav")
-    return target        
+    return target
+
 
 def clean():
     """ 清理垃圾数据 """
     temp = constants.TEMP_PATH
     temp_files = os.listdir(temp)
     for f in temp_files:
-        if os.path.isfile(os.path.join(temp, f)) and re.match(r'output[\d]*\.wav', os.path.basename(f)):
+        if os.path.isfile(os.path.join(temp, f)) and re.match(
+            r"output[\d]*\.wav", os.path.basename(f)
+        ):
             os.remove(os.path.join(temp, f))
+
 
 def setRecordable(value):
     """ 设置是否可以开始录制语音 """
     global is_recordable
     is_recordable = value
 
+
 def isRecordable():
     """ 是否可以开始录制语音 """
     global is_recordable
     return is_recordable
+
 
 def is_proper_time():
     """ 是否合适时间 """
     global do_not_bother
     if do_not_bother == True:
         return False
-    if not config.has('do_not_bother'):
+    if not config.has("do_not_bother"):
         return True
-    bother_profile = config.get('do_not_bother')
-    if not bother_profile['enable']:
+    bother_profile = config.get("do_not_bother")
+    if not bother_profile["enable"]:
         return True
-    if 'since' not in bother_profile or 'till' not in bother_profile:
+    if "since" not in bother_profile or "till" not in bother_profile:
         return True
-    since = bother_profile['since']
-    till = bother_profile['till']
+    since = bother_profile["since"]
+    till = bother_profile["till"]
     current = time.localtime(time.time()).tm_hour
     if till > since:
         return current not in range(since, till)
     else:
-        return not (current in range(since, 25) or
-                    current in range(-1, till))
+        return not (current in range(since, 25) or current in range(-1, till))
+
 
 def get_do_not_bother_on_hotword():
     """ 打开勿扰模式唤醒词 """
-    return config.get('/do_not_bother/on_hotword', '悟空别吵.pmdl')
+    return config.get("/do_not_bother/on_hotword", "悟空别吵.pmdl")
+
 
 def get_do_not_bother_off_hotword():
     """ 关闭勿扰模式唤醒词 """
-    return config.get('/do_not_bother/off_hotword', '悟空醒醒.pmdl')
+    return config.get("/do_not_bother/off_hotword", "悟空醒醒.pmdl")
+
 
 def getTimezone():
     """ 获取时区 """
-    return timezone(config.get('timezone', 'HKT'))
+    return timezone(config.get("timezone", "HKT"))
+
 
 def getCache(msg):
     """ 获取缓存的语音 """
-    md5 = hashlib.md5(msg.encode('utf-8')).hexdigest()
-    mp3_cache = os.path.join(constants.TEMP_PATH, md5 + '.mp3')
-    wav_cache = os.path.join(constants.TEMP_PATH, md5 + '.wav')
+    md5 = hashlib.md5(msg.encode("utf-8")).hexdigest()
+    mp3_cache = os.path.join(constants.TEMP_PATH, md5 + ".mp3")
+    wav_cache = os.path.join(constants.TEMP_PATH, md5 + ".wav")
     if os.path.exists(mp3_cache):
         return mp3_cache
     elif os.path.exists(wav_cache):
         return wav_cache
     return None
 
+
 def saveCache(voice, msg):
     """ 获取缓存的语音 """
     foo, ext = os.path.splitext(voice)
-    md5 = hashlib.md5(msg.encode('utf-8')).hexdigest()
-    target = os.path.join(constants.TEMP_PATH, md5+ext)
+    md5 = hashlib.md5(msg.encode("utf-8")).hexdigest()
+    target = os.path.join(constants.TEMP_PATH, md5 + ext)
     shutil.copyfile(voice, target)
     return target
-    
+
 
 def lruCache():
     """ 清理最近未使用的缓存 """
+
     def run(*args):
-        if config.get('/lru_cache/enable', True):            
-            days = config.get('/lru_cache/days', 7)
-            subprocess.run('find . -name "*.mp3" -atime +%d -exec rm {} \;' % days, cwd=constants.TEMP_PATH, shell=True)
+        if config.get("/lru_cache/enable", True):
+            days = config.get("/lru_cache/days", 7)
+            subprocess.run(
+                'find . -name "*.mp3" -atime +%d -exec rm {} \;' % days,
+                cwd=constants.TEMP_PATH,
+                shell=True,
+            )
 
     thread.start_new_thread(run, ())
+
 
 def validyaml(filename):
     """
@@ -280,6 +304,7 @@ def validyaml(filename):
     except Exception:
         return False
 
+
 def validjson(s):
     """
     校验某个 JSON 字符串是否正确
@@ -293,12 +318,12 @@ def validjson(s):
     except Exception:
         return False
 
+
 def stripPunctuation(s):
     """
     移除字符串末尾的标点
     """
-    punctuations = [',', '，', '.', '。', '?']
+    punctuations = [",", "，", ".", "。", "?"]
     if any(s.endswith(p) for p in punctuations):
         s = s[:-1]
     return s
-

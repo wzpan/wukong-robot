@@ -8,6 +8,7 @@ from abc import ABCMeta, abstractmethod
 
 logger = logging.getLogger(__name__)
 
+
 class AbstractASR(object):
     """
     Generic parent class for all ASR engines
@@ -64,20 +65,18 @@ class BaiduASR(AbstractASR):
     @classmethod
     def get_config(cls):
         # Try to get baidu_yuyin config from config
-        return config.get('baidu_yuyin', {})
+        return config.get("baidu_yuyin", {})
 
     def transcribe(self, fp):
         # 识别本地文件
         pcm = utils.get_pcm_from_wav(fp)
-        res = self.client.asr(pcm, 'pcm', 16000, {
-            'dev_pid': self.dev_pid,
-        })
-        if res['err_no'] == 0:
-            logger.info('{} 语音识别到了：{}'.format(self.SLUG, res['result']))
-            return ''.join(res['result'])
+        res = self.client.asr(pcm, "pcm", 16000, {"dev_pid": self.dev_pid,})
+        if res["err_no"] == 0:
+            logger.info("{} 语音识别到了：{}".format(self.SLUG, res["result"]))
+            return "".join(res["result"])
         else:
-            logger.info('{} 语音识别出错了: {}'.format(self.SLUG, res['err_msg']))
-            return ''
+            logger.info("{} 语音识别出错了: {}".format(self.SLUG, res["err_msg"]))
+            return ""
 
 
 class TencentASR(AbstractASR):
@@ -87,7 +86,7 @@ class TencentASR(AbstractASR):
 
     SLUG = "tencent-asr"
 
-    def __init__(self, appid, secretid, secret_key, region='ap-guangzhou', **args):
+    def __init__(self, appid, secretid, secret_key, region="ap-guangzhou", **args):
         super(self.__class__, self).__init__()
         self.engine = TencentSpeech.tencentSpeech(secret_key, secretid)
         self.region = region
@@ -95,19 +94,19 @@ class TencentASR(AbstractASR):
     @classmethod
     def get_config(cls):
         # Try to get tencent_yuyin config from config
-        return config.get('tencent_yuyin', {})
+        return config.get("tencent_yuyin", {})
 
     def transcribe(self, fp):
         mp3_path = utils.convert_wav_to_mp3(fp)
-        r = self.engine.ASR(mp3_path, 'mp3', '1', self.region)
+        r = self.engine.ASR(mp3_path, "mp3", "1", self.region)
         utils.check_and_delete(mp3_path)
         res = json.loads(r)
-        if 'Response' in res and 'Result' in res['Response']:
-            logger.info('{} 语音识别到了：{}'.format(self.SLUG, res['Response']['Result']))
-            return res['Response']['Result']
+        if "Response" in res and "Result" in res["Response"]:
+            logger.info("{} 语音识别到了：{}".format(self.SLUG, res["Response"]["Result"]))
+            return res["Response"]["Result"]
         else:
-            logger.critical('{} 语音识别出错了'.format(self.SLUG), exc_info=True)
-            return ''
+            logger.critical("{} 语音识别出错了".format(self.SLUG), exc_info=True)
+            return ""
 
 
 class XunfeiASR(AbstractASR):
@@ -127,7 +126,7 @@ class XunfeiASR(AbstractASR):
     @classmethod
     def get_config(cls):
         # Try to get xunfei_yuyin config from config
-        return config.get('xunfei_yuyin', {})
+        return config.get("xunfei_yuyin", {})
 
     def transcribe(self, fp):
         return XunfeiSpeech.transcribe(fp, self.appid, self.api_key, self.api_secret)
@@ -147,16 +146,16 @@ class AliASR(AbstractASR):
     @classmethod
     def get_config(cls):
         # Try to get ali_yuyin config from config
-        return config.get('ali_yuyin', {})
+        return config.get("ali_yuyin", {})
 
     def transcribe(self, fp):
         result = AliSpeech.asr(self.appKey, self.token, fp)
         if result is not None:
-            logger.info('{} 语音识别到了：{}'.format(self.SLUG, result))
+            logger.info("{} 语音识别到了：{}".format(self.SLUG, result))
             return result
         else:
-            logger.critical('{} 语音识别出错了'.format(self.SLUG), exc_info=True)
-            return ''
+            logger.critical("{} 语音识别出错了".format(self.SLUG), exc_info=True)
+            return ""
 
 
 def get_engine_by_slug(slug=None):
@@ -171,8 +170,12 @@ def get_engine_by_slug(slug=None):
     if not slug or type(slug) is not str:
         raise TypeError("无效的 ASR slug '%s'", slug)
 
-    selected_engines = list(filter(lambda engine: hasattr(engine, "SLUG") and
-                              engine.SLUG == slug, get_engines()))
+    selected_engines = list(
+        filter(
+            lambda engine: hasattr(engine, "SLUG") and engine.SLUG == slug,
+            get_engines(),
+        )
+    )
 
     if len(selected_engines) == 0:
         raise ValueError("错误：找不到名为 {} 的 ASR 引擎".format(slug))
@@ -191,6 +194,9 @@ def get_engines():
             subclasses.add(subclass)
             subclasses.update(get_subclasses(subclass))
         return subclasses
-    return [engine for engine in
-            list(get_subclasses(AbstractASR))
-            if hasattr(engine, 'SLUG') and engine.SLUG]
+
+    return [
+        engine
+        for engine in list(get_subclasses(AbstractASR))
+        if hasattr(engine, "SLUG") and engine.SLUG
+    ]

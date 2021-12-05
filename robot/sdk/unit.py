@@ -10,8 +10,9 @@ from dateutil import parser as dparser
 
 logger = logging.getLogger(__name__)
 
+
 def get_token(api_key, secret_key):
-    cache = open(os.path.join(constants.TEMP_PATH, 'baidustt.ini'), 'a+')
+    cache = open(os.path.join(constants.TEMP_PATH, "baidustt.ini"), "a+")
     try:
         pms = cache.readlines()
         if len(pms) > 0:
@@ -24,17 +25,20 @@ def get_token(api_key, secret_key):
                 return tk
     finally:
         cache.close()
-    URL = 'http://openapi.baidu.com/oauth/2.0/token'
-    params = {'grant_type': 'client_credentials',
-              'client_id': api_key,
-              'client_secret': secret_key}
+    URL = "http://openapi.baidu.com/oauth/2.0/token"
+    params = {
+        "grant_type": "client_credentials",
+        "client_id": api_key,
+        "client_secret": secret_key,
+    }
     r = requests.get(URL, params=params)
     try:
         r.raise_for_status()
-        token = r.json()['access_token']
+        token = r.json()["access_token"]
         return token
     except requests.exceptions.HTTPError:
-        return ''
+        return ""
+
 
 def getUnit(query, service_id, api_key, secret_key):
     """ 
@@ -47,20 +51,23 @@ def getUnit(query, service_id, api_key, secret_key):
     :returns: UNIT 解析结果。如果解析失败，返回 None
     """
     access_token = get_token(api_key, secret_key)
-    url = 'https://aip.baidubce.com/rpc/2.0/unit/service/chat?access_token=' + access_token
-    request={
-        "query":query,
+    url = (
+        "https://aip.baidubce.com/rpc/2.0/unit/service/chat?access_token="
+        + access_token
+    )
+    request = {
+        "query": query,
         "user_id": str(get_mac())[:32],
     }
-    body={
+    body = {
         "log_id": str(uuid.uuid1()),
-        "version":"2.0",
+        "version": "2.0",
         "service_id": service_id,
         "session_id": str(uuid.uuid1()),
-        "request":request
+        "request": request,
     }
     try:
-        headers = {'Content-Type': 'application/json'}
+        headers = {"Content-Type": "application/json"}
         request = requests.post(url, json=body, headers=headers)
         return json.loads(request.text)
     except Exception:
@@ -74,15 +81,18 @@ def getIntent(parsed):
     :param parsed: UNIT 解析结果
     :returns: 意图数组
     """
-    if parsed is not None and 'result' in parsed and \
-       'response_list' in parsed['result']:
+    if (
+        parsed is not None
+        and "result" in parsed
+        and "response_list" in parsed["result"]
+    ):
         try:
-            return parsed['result']['response_list'][0]['schema']['intent']
+            return parsed["result"]["response_list"][0]["schema"]["intent"]
         except Exception as e:
             logger.warning(e)
-            return ''
+            return ""
     else:
-        return ''
+        return ""
 
 
 def hasIntent(parsed, intent):
@@ -93,20 +103,25 @@ def hasIntent(parsed, intent):
     :param intent: 意图的名称
     :returns: True: 包含; False: 不包含
     """
-    if parsed is not None and 'result' in parsed and \
-       'response_list' in parsed['result']:
-        response_list = parsed['result']['response_list']
+    if (
+        parsed is not None
+        and "result" in parsed
+        and "response_list" in parsed["result"]
+    ):
+        response_list = parsed["result"]["response_list"]
         for response in response_list:
-            if 'schema' in response and \
-                'intent' in response['schema'] and \
-                    response['schema']['intent'] == intent:
+            if (
+                "schema" in response
+                and "intent" in response["schema"]
+                and response["schema"]["intent"] == intent
+            ):
                 return True
         return False
     else:
         return False
 
 
-def getSlots(parsed, intent=''):
+def getSlots(parsed, intent=""):
     """ 
     提取某个意图的所有词槽
     
@@ -115,24 +130,30 @@ def getSlots(parsed, intent=''):
     :returns: 词槽列表。你可以通过 name 属性筛选词槽，
 再通过 normalized_word 属性取出相应的值
     """
-    if parsed is not None and 'result' in parsed and \
-       'response_list' in parsed['result']:
-        response_list = parsed['result']['response_list']
-        if intent == '':
+    if (
+        parsed is not None
+        and "result" in parsed
+        and "response_list" in parsed["result"]
+    ):
+        response_list = parsed["result"]["response_list"]
+        if intent == "":
             try:
-                return parsed['result']['response_list'][0]['schema']['slots']
+                return parsed["result"]["response_list"][0]["schema"]["slots"]
             except Exception as e:
                 logger.warning(e)
                 return []
         for response in response_list:
-            if 'schema' in response and \
-                'intent' in response['schema'] and \
-                    'slots' in response['schema'] and \
-                    response['schema']['intent'] == intent:
-                return response['schema']['slots']
+            if (
+                "schema" in response
+                and "intent" in response["schema"]
+                and "slots" in response["schema"]
+                and response["schema"]["intent"] == intent
+            ):
+                return response["schema"]["slots"]
         return []
     else:
         return []
+
 
 def getSlotWords(parsed, intent, name):
     """ 
@@ -146,11 +167,12 @@ def getSlotWords(parsed, intent, name):
     slots = getSlots(parsed, intent)
     words = []
     for slot in slots:
-        if slot['name'] == name:
-            words.append(slot['normalized_word'])
+        if slot["name"] == name:
+            words.append(slot["normalized_word"])
     return words
 
-def getSay(parsed, intent=''):
+
+def getSay(parsed, intent=""):
     """
     提取 UNIT 的回复文本
 
@@ -158,29 +180,39 @@ def getSay(parsed, intent=''):
     :param intent: 意图的名称
     :returns: UNIT 的回复文本
     """
-    if parsed is not None and 'result' in parsed and \
-       'response_list' in parsed['result']:
-        response_list = parsed['result']['response_list']
-        if intent == '':
+    if (
+        parsed is not None
+        and "result" in parsed
+        and "response_list" in parsed["result"]
+    ):
+        response_list = parsed["result"]["response_list"]
+        if intent == "":
             try:
-                return response_list[0]['action_list'][0]['say']
+                return response_list[0]["action_list"][0]["say"]
             except Exception as e:
                 logger.warning(e)
-                return ''
+                return ""
         for response in response_list:
-            if 'schema' in response and \
-                'intent' in response['schema'] and \
-                response['schema']['intent'] == intent:
-                    try:
-                        return response['action_list'][0]['say']
-                    except Exception as e:
-                        logger.warning(e)
-                        return ''
-        return ''
+            if (
+                "schema" in response
+                and "intent" in response["schema"]
+                and response["schema"]["intent"] == intent
+            ):
+                try:
+                    return response["action_list"][0]["say"]
+                except Exception as e:
+                    logger.warning(e)
+                    return ""
+        return ""
     else:
-        return ''
+        return ""
 
 
-if __name__ == '__main__':
-    parsed = getUnit('今天的天气', "S13442", 'w5v7gUV3iPGsGntcM84PtOOM', 'KffXwW6E1alcGplcabcNs63Li6GvvnfL')
+if __name__ == "__main__":
+    parsed = getUnit(
+        "今天的天气",
+        "S13442",
+        "w5v7gUV3iPGsGntcM84PtOOM",
+        "KffXwW6E1alcGplcabcNs63Li6GvvnfL",
+    )
     print(parsed)

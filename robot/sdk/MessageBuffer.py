@@ -2,8 +2,8 @@
 # 用于维护历史消息
 import tornado.locks
 
-class MessageBuffer(object):
 
+class MessageBuffer(object):
     def __init__(self):
         # cond is notified whenever the message cache is updated
         self.cond = tornado.locks.Condition()

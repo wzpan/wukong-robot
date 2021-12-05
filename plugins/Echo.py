@@ -7,13 +7,11 @@ from robot.sdk.AbstractPlugin import AbstractPlugin
 
 logger = logging.getLogger(__name__)
 
-class Plugin(AbstractPlugin):
 
+class Plugin(AbstractPlugin):
     def handle(self, text, parsed):
-        text = text.lower().replace('echo', '').replace(u'传话', '')
+        text = text.lower().replace("echo", "").replace(u"传话", "")
         self.say(text, cache=False)
 
     def isValid(self, text, parsed):
         return any(word in text.lower() for word in ["echo", u"传话"])
-        
-        

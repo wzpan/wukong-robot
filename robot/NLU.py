@@ -5,6 +5,7 @@ from abc import ABCMeta, abstractmethod
 
 logger = logging.getLogger(__name__)
 
+
 class AbstractNLU(object):
     """
     Generic parent class for all NLU engines
@@ -119,15 +120,16 @@ class UnitNLU(AbstractNLU):
             - secret_key: UNIT secret_key
         :returns: UNIT 解析结果。如果解析失败，返回 None
         """
-        if 'service_id' not in args or \
-           'api_key' not in args or \
-           'secret_key' not in args:
-            logger.critical('{} NLU 失败：参数错误！'.format(self.SLUG))
+        if (
+            "service_id" not in args
+            or "api_key" not in args
+            or "secret_key" not in args
+        ):
+            logger.critical("{} NLU 失败：参数错误！".format(self.SLUG))
             return None
-        return unit.getUnit(query,
-                            args['service_id'],
-                            args['api_key'],
-                            args['secret_key'])
+        return unit.getUnit(
+            query, args["service_id"], args["api_key"], args["secret_key"]
+        )
 
     def getIntent(self, parsed):
         """ 
@@ -193,14 +195,18 @@ def get_engine_by_slug(slug=None):
     if not slug or type(slug) is not str:
         raise TypeError("无效的 NLU slug '%s'", slug)
 
-    selected_engines = list(filter(lambda engine: hasattr(engine, "SLUG") and
-                              engine.SLUG == slug, get_engines()))
+    selected_engines = list(
+        filter(
+            lambda engine: hasattr(engine, "SLUG") and engine.SLUG == slug,
+            get_engines(),
+        )
+    )
 
     if len(selected_engines) == 0:
         raise ValueError("错误：找不到名为 {} 的 NLU 引擎".format(slug))
     else:
         if len(selected_engines) > 1:
-            logger.warning("注意: 有多个 NLU 名称与指定的引擎名 {} 匹配").format(slug)        
+            logger.warning("注意: 有多个 NLU 名称与指定的引擎名 {} 匹配").format(slug)
         engine = selected_engines[0]
         logger.info("使用 {} NLU 引擎".format(engine.SLUG))
         return engine.get_instance()
@@ -213,6 +219,9 @@ def get_engines():
             subclasses.add(subclass)
             subclasses.update(get_subclasses(subclass))
         return subclasses
-    return [engine for engine in
-            list(get_subclasses(AbstractNLU))
-            if hasattr(engine, 'SLUG') and engine.SLUG]
+
+    return [
+        engine
+        for engine in list(get_subclasses(AbstractNLU))
+        if hasattr(engine, "SLUG") and engine.SLUG
+    ]
