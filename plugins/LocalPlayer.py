@@ -1,4 +1,4 @@
-# -*- coding: utf-8-*-
+# -*- coding: utf-8 -*-
 import os
 from robot import config, logging
 from robot.Player import MusicPlayer

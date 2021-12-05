@@ -1,4 +1,4 @@
-# -*- coding: utf-8-*-
+# -*- coding: utf-8 -*-
 from robot import logging
 from robot.sdk.AbstractPlugin import AbstractPlugin
 

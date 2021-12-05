@@ -1,4 +1,4 @@
-# -*- coding: utf-8-*-
+# -*- coding: utf-8 -*-
 from .sdk import unit
 from robot import logging
 from abc import ABCMeta, abstractmethod

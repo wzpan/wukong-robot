@@ -1,4 +1,4 @@
-# -*- coding: utf-8-*-
+# -*- coding: utf-8 -*-
 # 用于维护历史消息
 import tornado.locks
 

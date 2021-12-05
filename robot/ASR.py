@@ -1,4 +1,4 @@
-# -*- coding: utf-8-*-
+# -*- coding: utf-8 -*-
 import json
 from aip import AipSpeech
 from .sdk import TencentSpeech, AliSpeech, XunfeiSpeech, BaiduSpeech
