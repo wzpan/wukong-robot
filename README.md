@@ -206,7 +206,7 @@ wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式�
 
 使用 QQ 扫码加入：
 
-![](https://wzpan-1253537070.cos.ap-guangzhou.myqcloud.com/misc/wukong-guild.jpeg)
+![](https://wzpan-1253537070.cos.ap-guangzhou.myqcloud.com/misc/wukong-guild-1.16.jpeg)
 
 * QQ 群：580447290（人数将满，为控制人数，需付费20元入群。微信或支付宝支付后，申请入群时贴上转账单号即可。**群收入的前一万元已无偿捐赠给[壹基金等公益项目](https://hahack-1253537070.cos.ap-chengdu.myqcloud.com/images/donate.png)**）。
 
