@@ -146,28 +146,32 @@ class AzureTTS(AbstractTTS):
     """
     使用微软语音合成技术
     """
+
     SLUG = "azure-tts"
 
-    def __init__(self,secret_key,region,lang='zh-CN',voice='zh-CN-XiaoxiaoNeural',**args) -> None:
+    def __init__(
+        self, secret_key, region, lang="zh-CN", voice="zh-CN-XiaoxiaoNeural", **args
+    ) -> None:
         super(self.__class__, self).__init__()
         self.post_url = "https://INSERT_REGION_HERE.tts.speech.microsoft.com/cognitiveservices/v1".replace(
-            "INSERT_REGION_HERE", region)
+            "INSERT_REGION_HERE", region
+        )
 
         self.post_header = {
-            'Ocp-Apim-Subscription-Key': secret_key,
-            'Content-Type': 'application/ssml+xml',
-            'X-Microsoft-OutputFormat': 'audio-16khz-128kbitrate-mono-mp3',
-            'User-Agent': 'curl'
+            "Ocp-Apim-Subscription-Key": secret_key,
+            "Content-Type": "application/ssml+xml",
+            "X-Microsoft-OutputFormat": "audio-16khz-128kbitrate-mono-mp3",
+            "User-Agent": "curl",
         }
         self.sess = requests.session()
-        body = ElementTree.Element('speak', version='1.0')
-        body.set('xml:lang', 'en-us')
-        vc = ElementTree.SubElement(body, 'voice')
-        vc.set('xml:lang', lang)
-        vc.set('name', voice)
+        body = ElementTree.Element("speak", version="1.0")
+        body.set("xml:lang", "en-us")
+        vc = ElementTree.SubElement(body, "voice")
+        vc.set("xml:lang", lang)
+        vc.set("name", voice)
         self.body = body
         self.vc = vc
-    
+
     @classmethod
     def get_config(cls):
         # Try to get baidu_yuyin config from config
@@ -175,16 +179,18 @@ class AzureTTS(AbstractTTS):
 
     def get_speech(self, phrase):
         self.vc.text = phrase
-        result = self.sess.post(self.post_url,headers=self.post_header,data=ElementTree.tostring(self.body))
+        result = self.sess.post(
+            self.post_url,
+            headers=self.post_header,
+            data=ElementTree.tostring(self.body),
+        )
         # 识别正确返回语音二进制,http状态码为200
-        if result.status_code==200:
+        if result.status_code == 200:
             tmpfile = utils.write_temp_file(result.content, ".mp3")
             logger.info("{} 语音合成成功，合成路径：{}".format(self.SLUG, tmpfile))
             return tmpfile
         else:
             logger.critical("{} 合成失败！".format(self.SLUG), exc_info=True)
-
-
 
 
 class BaiduTTS(AbstractTTS):
@@ -194,7 +200,7 @@ class BaiduTTS(AbstractTTS):
     之后创建一个新应用, 然后在应用管理的"查看key"中获得 API Key 和 Secret Key
     填入 config.yml 中.
     ...
-        baidu_yuyin: 
+        baidu_yuyin:
             appid: '9670645'
             api_key: 'qg4haN8b2bGvFtCbBGqhrmZy'
             secret_key: '585d4eccb50d306c401d7df138bb02e7'
