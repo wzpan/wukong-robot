@@ -33,6 +33,7 @@ class AbstractASR(object):
     def transcribe(self, fp):
         pass
 
+
 class AzureASR(AbstractASR):
     """
     微软的语音识别API
@@ -40,42 +41,43 @@ class AzureASR(AbstractASR):
 
     SLUG = "azure-asr"
 
-    def __init__(self, secret_key, region, lang='zh-CN', **args):
+    def __init__(self, secret_key, region, lang="zh-CN", **args):
         super(self.__class__, self).__init__()
-        self.post_url = \
-            "https://<REGION_IDENTIFIER>.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1".replace(
-            "<REGION_IDENTIFIER>", region)
+        self.post_url = "https://<REGION_IDENTIFIER>.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1".replace(
+            "<REGION_IDENTIFIER>", region
+        )
 
         self.post_header = {
-            'Ocp-Apim-Subscription-Key': secret_key,
-            'Content-Type': 'audio/wav; codecs=audio/pcm; samplerate=16000',
-            'Accept': 'application/json'
+            "Ocp-Apim-Subscription-Key": secret_key,
+            "Content-Type": "audio/wav; codecs=audio/pcm; samplerate=16000",
+            "Accept": "application/json",
         }
 
-        self.post_param = {'language': lang, 'profanity': 'raw'}
+        self.post_param = {"language": lang, "profanity": "raw"}
         self.sess = requests.session()
-        
+
     @classmethod
     def get_config(cls):
         # Try to get azure_yuyin config from config
         return config.get("azure_yuyin", {})
-    
+
     def transcribe(self, fp):
         # 识别本地文件
         pcm = utils.get_pcm_from_wav(fp)
-        ret = self.sess.post(url=self.post_url,
-                                 data=pcm,
-                                 headers=self.post_header,
-                                 params=self.post_param)
+        ret = self.sess.post(
+            url=self.post_url,
+            data=pcm,
+            headers=self.post_header,
+            params=self.post_param,
+        )
 
         if ret.status_code == 200:
-            res=ret.json()
+            res = ret.json()
             logger.info("{} 语音识别到了：{}".format(self.SLUG, res["DisplayText"]))
             return "".join(res["DisplayText"])
         else:
             logger.info("{} 语音识别出错了: {}".format(self.SLUG, ret.text))
             return ""
-    
 
 
 class BaiduASR(AbstractASR):
@@ -92,7 +94,7 @@ class BaiduASR(AbstractASR):
     之后创建一个新应用, 然后在应用管理的"查看key"中获得 API Key 和 Secret Key
     填入 config.xml 中.
     ...
-        baidu_yuyin: 
+        baidu_yuyin:
             appid: '9670645'
             api_key: 'qg4haN8b2bGvFtCbBGqhrmZy'
             secret_key: '585d4eccb50d306c401d7df138bb02e7'
@@ -117,7 +119,14 @@ class BaiduASR(AbstractASR):
     def transcribe(self, fp):
         # 识别本地文件
         pcm = utils.get_pcm_from_wav(fp)
-        res = self.client.asr(pcm, "pcm", 16000, {"dev_pid": self.dev_pid,})
+        res = self.client.asr(
+            pcm,
+            "pcm",
+            16000,
+            {
+                "dev_pid": self.dev_pid,
+            },
+        )
         if res["err_no"] == 0:
             logger.info("{} 语音识别到了：{}".format(self.SLUG, res["result"]))
             return "".join(res["result"])
