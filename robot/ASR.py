@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
 from aip import AipSpeech
-
-from robot.TTS import AbstractTTS
 from .sdk import TencentSpeech, AliSpeech, XunfeiSpeech, BaiduSpeech
 from . import utils, config
 from robot import logging
