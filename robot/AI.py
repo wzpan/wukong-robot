@@ -55,24 +55,17 @@ class TulingRobot(AbstractRobot):
             url = "http://openapi.turingapi.com/openapi/api/v2"
             userid = str(get_mac())[:32]
             body = {
-                "perception": {
-                    "inputText": {
-                        "text": msg
-                    }
-                },
-                "userInfo": {
-                    "apiKey": self.tuling_key,
-                    "userId": userid
-                }
+                "perception": {"inputText": {"text": msg}},
+                "userInfo": {"apiKey": self.tuling_key, "userId": userid},
             }
             r = requests.post(url, json=body)
             respond = json.loads(r.text)
             result = ""
-            if 'results' in respond:
-                for res in respond['results']:
-                    result += '\n'.join(res['values'].values())
+            if "results" in respond:
+                for res in respond["results"]:
+                    result += "\n".join(res["values"].values())
             else:
-                result = '图灵机器人服务异常，请联系作者'
+                result = "图灵机器人服务异常，请联系作者"
             logger.info("{} 回答：{}".format(self.SLUG, result))
             return result
         except Exception:
