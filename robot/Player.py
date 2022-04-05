@@ -111,6 +111,7 @@ class SoxPlayer(AbstractPlayer):
         if self.proc:
             self.onCompleteds = []
             self.proc.terminate()
+            self.proc.kill()
             if self.delete:
                 utils.check_and_delete(self.src)
 

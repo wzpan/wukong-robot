@@ -107,15 +107,11 @@ class Wukong(object):
 
     def _do_not_bother_on_callback(self):
         if config.get("/do_not_bother/hotword_switch", False):
-            utils.do_not_bother = True
-            Player.play(constants.getData("off.wav"))
-            logger.info("勿扰模式打开")
+            self.enable_do_no_bother()
 
     def _do_not_bother_off_callback(self):
         if config.get("/do_not_bother/hotword_switch", False):
-            utils.do_not_bother = False
-            Player.play(constants.getData("on.wav"))
-            logger.info("勿扰模式关闭")
+            self.disable_do_not_bother()
 
     def _interrupt_callback(self):
         return self._interrupted
@@ -193,9 +189,6 @@ class Wukong(object):
       upload [thredNum]        - 手动上传 QA 集语料，重建 solr 索引。
                                  threadNum 表示上传时开启的线程数（可选。默认值为 10）
       profiling                - 运行过程中打印耗时数据
-      train <w1> <w2> <w3> <m> - 传入三个wav文件，生成snowboy的.pmdl模型
-                                 w1, w2, w3 表示三个1~3秒的唤醒词录音
-                                 m 表示snowboy的.pmdl模型
     如需更多帮助，请访问：https://wukong.hahack.com/#/run
 ====================================================================================="""
         )
@@ -254,6 +247,22 @@ class Wukong(object):
         python = sys.executable
         os.execl(python, python, *sys.argv)
 
+    def switch_on_do_not_bother(self):
+        """
+        打开勿扰模式
+        """
+        utils.do_not_bother = True
+        Player.play(constants.getData("off.wav"))
+        logger.info("勿扰模式打开")
+
+    def switch_off_do_not_bother(self):
+        """
+        关闭勿扰模式
+        """
+        utils.do_not_bother = False
+        Player.play(constants.getData("on.wav"))
+        logger.info("勿扰模式关闭")
+
     def profiling(self):
         """
         运行过程中打印耗时数据
@@ -266,34 +275,6 @@ class Wukong(object):
         logger.info("使用测试环境")
         self._dev = True
         self.run()
-
-    def train(self, w1, w2, w3, m):
-        """
-        传入三个wav文件，生成snowboy的.pmdl模型
-        """
-
-        def get_wave(fname):
-            with open(fname, "rb") as infile:
-                return base64.b64encode(infile.read()).decode("utf-8")
-
-        url = "https://snowboy.kitt.ai/api/v1/train/"
-        data = {
-            "name": "wukong-robot",
-            "language": "zh",
-            "token": config.get("snowboy_token", "", True),
-            "voice_samples": [
-                {"wave": get_wave(w1)},
-                {"wave": get_wave(w2)},
-                {"wave": get_wave(w3)},
-            ],
-        }
-        response = requests.post(url, json=data)
-        if response.ok:
-            with open(m, "wb") as outfile:
-                outfile.write(response.content)
-            return "Snowboy模型已保存至{}".format(m)
-        else:
-            return "Snowboy模型生成失败，原因:{}".format(response.text)
 
 
 if __name__ == "__main__":

@@ -32,7 +32,7 @@ class Plugin(AbstractPlugin):
         except Exception:
             self.say(u"抱歉，照片目录创建失败", cache=True)
             return
-        dest_file = os.path.join(dest_path, "%s.jpg" % time.time())
+        dest_file = os.path.join(dest_path, "%s.jpg" % time.time()).replace(".", "", 1)
         if camera_type == 0:
             # usb camera
             logger.info("usb camera")

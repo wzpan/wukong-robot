@@ -212,14 +212,25 @@ class OperateHandler(BaseHandler):
     def post(self):
         global wukong
         if self.validate(self.get_argument("validate", default=None)):
-            if self.get_argument("type") == "restart":
+            type = self.get_argument("type")
+            if type in ["restart", "0"]:
                 res = {"code": 0, "message": "ok"}
                 self.write(json.dumps(res))
                 self.finish()
                 time.sleep(3)
                 wukong.restart()
+            elif type == "1":
+                wukong.switch_on_do_not_bother()
+                res = {"code": 0, "message": "勿扰模式已打开"}
+                self.write(json.dumps(res))
+                self.finish()
+            elif type == "2":
+                wukong.switch_off_do_not_bother()
+                res = {"code": 0, "message": "勿扰模式已关闭"}
+                self.write(json.dumps(res))
+                self.finish()
             else:
-                res = {"code": 1, "message": "illegal type"}
+                res = {"code": 1, "message": "illegal type {}".format(type)}
                 self.write(json.dumps(res))
                 self.finish()
         else:
