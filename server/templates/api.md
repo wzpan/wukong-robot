@@ -18,7 +18,7 @@ $ curl localhost:5000/gethistory?validate=f4bde2a342c7c75aa276f78b26cfbd8a
 
 ## 管理
 
-用于重启 wukong-robot 。
+用于管理 wukong-robot ，包括重启/打开勿扰模式/关闭勿扰模式。
 
 - url：/operate
 - method: POST
@@ -27,7 +27,15 @@ $ curl localhost:5000/gethistory?validate=f4bde2a342c7c75aa276f78b26cfbd8a
 | 参数名 |  是否必须 | 说明  |
 | ---   | ------- | ----- |
 | validate | 是 | 参见 [鉴权](#_1) |
-| type  | 是 |  类型。目前只有 `restart` 一种 |
+| type  | 是 |  管理类型类型。详见 [管理类型取值](#管理类型取值) |
+
+### 管理类型取值
+
+| 取值 | 说明 |
+| ---- |  ---- |
+| 0    | 重启 wukong-robot |
+| 1    | 打开勿扰模式 |
+| 2    | 关闭勿扰模式 |
 
 - 示例：
 
