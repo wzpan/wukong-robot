@@ -147,7 +147,7 @@ class APA102:
             self.spi.xfer2([0x00])
 
     def clear_strip(self):
-        """ Turns off the strip and shows the result right away."""
+        """Turns off the strip and shows the result right away."""
 
         for led in range(self.num_led):
             self.set_pixel(led, 0, 0, 0)
@@ -197,7 +197,7 @@ class APA102:
         )
 
     def rotate(self, positions=1):
-        """ Rotate the LEDs by the specified number of positions.
+        """Rotate the LEDs by the specified number of positions.
 
         Treating the internal LED array as a circular buffer, rotate it by
         the specified number of positions. The number could be negative,

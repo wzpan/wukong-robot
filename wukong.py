@@ -3,13 +3,12 @@
 import os
 import sys
 import fire
-import base64
 import signal
 import hashlib
 import urllib3
-import requests
 import multiprocessing
 import _thread as thread
+from watchdog.observers import Observer
 
 from robot.sdk import LED
 from robot.Updater import Updater
@@ -20,8 +19,6 @@ from robot import config, utils, constants, logging, statistic, Player, BCI
 from server import server
 from snowboy import snowboydecoder
 from tools import make_json, solr_tools
-
-from watchdog.observers import Observer
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 

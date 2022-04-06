@@ -40,8 +40,9 @@ class Brain(object):
             return plugin.isValidImmersive(text, parsed)
 
     def isImmersive(self, plugin, text, parsed):
-        return self.conversation.getImmersiveMode() == plugin.SLUG and self.isValidImmersive(
-            plugin, text, parsed
+        return (
+            self.conversation.getImmersiveMode() == plugin.SLUG
+            and self.isValidImmersive(plugin, text, parsed)
         )
 
     def printPlugins(self):
@@ -86,7 +87,7 @@ class Brain(object):
                 self.handling = False
             except Exception:
                 logger.critical("Failed to execute plugin", exc_info=True)
-                reply = u"抱歉，插件{}出故障了，晚点再试试吧".format(plugin.SLUG)
+                reply = "抱歉，插件{}出故障了，晚点再试试吧".format(plugin.SLUG)
                 self.conversation.say(reply, plugin=plugin.SLUG)
             else:
                 logger.debug(
@@ -102,7 +103,7 @@ class Brain(object):
         return False
 
     def restore(self):
-        """ 恢复某个技能的处理 """
+        """恢复某个技能的处理"""
         if not self.conversation.immersiveMode:
             return
         for plugin in self.plugins:
@@ -110,7 +111,7 @@ class Brain(object):
                 plugin.restore()
 
     def pause(self):
-        """ 暂停某个技能的处理 """
+        """暂停某个技能的处理"""
         if not self.conversation.immersiveMode:
             return
         for plugin in self.plugins:

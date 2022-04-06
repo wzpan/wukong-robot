@@ -45,9 +45,9 @@ def tail(filepath, n=10):
 
 
 def getLogger(name):
-    """ 
-    作用同标准模块 logging.getLogger(name) 
-    
+    """
+    作用同标准模块 logging.getLogger(name)
+
     :returns: logger
     """
     formatter = logging.Formatter(
@@ -71,7 +71,7 @@ def getLogger(name):
 
 
 def readLog(lines=200):
-    """ 
+    """
     获取最新的指定行数的 log
 
     :param lines: 最大的行数

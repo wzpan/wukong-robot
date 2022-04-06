@@ -55,7 +55,7 @@ def sendEmail(
             att["Content-Disposition"] = 'attachment; filename="%s"' % filename
             msg.attach(att)
         except Exception:
-            logger.error(u"附件 %s 发送失败！" % attach)
+            logger.error("附件 %s 发送失败！" % attach)
             continue
 
     msg["From"] = SENDER
@@ -85,7 +85,7 @@ def emailUser(SUBJECT="", BODY="", ATTACH_LIST=[]):
     """
     # add footer
     if BODY:
-        BODY = u"%s，<br><br>这是您要的内容：<br>%s<br>" % (config["first_name"], BODY)
+        BODY = "%s，<br><br>这是您要的内容：<br>%s<br>" % (config["first_name"], BODY)
 
     recipient = config.get("/email/address", "")
     robot_name = config.get("robot_name_cn", "wukong-robot")
@@ -120,7 +120,7 @@ def get_file_content(filePath):
 
 
 def check_and_delete(fp, wait=0):
-    """ 
+    """
     检查并删除文件/文件夹
 
     :param fp: 文件路径
@@ -139,7 +139,7 @@ def check_and_delete(fp, wait=0):
 
 
 def write_temp_file(data, suffix, mode="w+b"):
-    """ 
+    """
     写入临时文件
 
     :param data: 数据
@@ -154,9 +154,9 @@ def write_temp_file(data, suffix, mode="w+b"):
 
 
 def get_pcm_from_wav(wav_path):
-    """ 
+    """
     从 wav 文件中读取 pcm
-    
+
     :param wav_path: wav 文件路径
     :returns: pcm 数据
     """
@@ -165,7 +165,7 @@ def get_pcm_from_wav(wav_path):
 
 
 def convert_wav_to_mp3(wav_path):
-    """ 
+    """
     将 wav 文件转成 mp3
 
     :param wav_path: wav 文件路径
@@ -180,7 +180,7 @@ def convert_wav_to_mp3(wav_path):
 
 
 def convert_mp3_to_wav(mp3_path):
-    """ 
+    """
     将 mp3 文件转成 wav
 
     :param mp3_path: mp3 文件路径
@@ -195,7 +195,7 @@ def convert_mp3_to_wav(mp3_path):
 
 
 def clean():
-    """ 清理垃圾数据 """
+    """清理垃圾数据"""
     temp = constants.TEMP_PATH
     temp_files = os.listdir(temp)
     for f in temp_files:
@@ -206,19 +206,19 @@ def clean():
 
 
 def setRecordable(value):
-    """ 设置是否可以开始录制语音 """
+    """设置是否可以开始录制语音"""
     global is_recordable
     is_recordable = value
 
 
 def isRecordable():
-    """ 是否可以开始录制语音 """
+    """是否可以开始录制语音"""
     global is_recordable
     return is_recordable
 
 
 def is_proper_time():
-    """ 是否合适时间 """
+    """是否合适时间"""
     global do_not_bother
     if do_not_bother == True:
         return False
@@ -239,22 +239,22 @@ def is_proper_time():
 
 
 def get_do_not_bother_on_hotword():
-    """ 打开勿扰模式唤醒词 """
+    """打开勿扰模式唤醒词"""
     return config.get("/do_not_bother/on_hotword", "悟空别吵.pmdl")
 
 
 def get_do_not_bother_off_hotword():
-    """ 关闭勿扰模式唤醒词 """
+    """关闭勿扰模式唤醒词"""
     return config.get("/do_not_bother/off_hotword", "悟空醒醒.pmdl")
 
 
 def getTimezone():
-    """ 获取时区 """
+    """获取时区"""
     return timezone(config.get("timezone", "HKT"))
 
 
 def getCache(msg):
-    """ 获取缓存的语音 """
+    """获取缓存的语音"""
     md5 = hashlib.md5(msg.encode("utf-8")).hexdigest()
     mp3_cache = os.path.join(constants.TEMP_PATH, md5 + ".mp3")
     wav_cache = os.path.join(constants.TEMP_PATH, md5 + ".wav")
@@ -266,7 +266,7 @@ def getCache(msg):
 
 
 def saveCache(voice, msg):
-    """ 获取缓存的语音 """
+    """获取缓存的语音"""
     foo, ext = os.path.splitext(voice)
     md5 = hashlib.md5(msg.encode("utf-8")).hexdigest()
     target = os.path.join(constants.TEMP_PATH, md5 + ext)
@@ -275,7 +275,7 @@ def saveCache(voice, msg):
 
 
 def lruCache():
-    """ 清理最近未使用的缓存 """
+    """清理最近未使用的缓存"""
 
     def run(*args):
         if config.get("/lru_cache/enable", True):
@@ -308,7 +308,7 @@ def validyaml(filename):
 def validjson(s):
     """
     校验某个 JSON 字符串是否正确
-    
+
     :param s: JOSN字符串
     :returns: True: 正确; False: 不正确
     """

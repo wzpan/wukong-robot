@@ -85,7 +85,7 @@ def play_audio_file(fname=DETECT_DING):
 
 
 class ActiveListener(object):
-    """ Active Listening with VAD """
+    """Active Listening with VAD"""
 
     def __init__(self, decoder_model, resource=RESOURCE_FILE):
         logger.debug("activeListen __init__()")

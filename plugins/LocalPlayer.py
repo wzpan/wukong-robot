@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
+import platform
+
 from robot import config, logging
 from robot.Player import MusicPlayer
 from robot.sdk.AbstractPlugin import AbstractPlugin
@@ -74,10 +76,16 @@ class Plugin(AbstractPlugin):
 
     def pause(self):
         if self.player:
-            self.player.stop()
+            system = platform.system()
+            # BigSur 以上 Mac 系统的 pkill 无法正常暂停音频，
+            # 因此改成直接停止播放，不再支持沉浸模式
+            if system == "Darwin" and float(platform.mac_ver()[0]) >= 10.16:
+                self.player.stop()
+                return
+            self.player.pause()
 
     def restore(self):
-        if self.player and not self.player.is_pausing():
+        if self.player and self.player.is_pausing():
             self.player.resume()
 
     def isValidImmersive(self, text, parsed):

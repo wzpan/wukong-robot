@@ -147,7 +147,7 @@ class BaiduTTS(AbstractTTS):
     之后创建一个新应用, 然后在应用管理的"查看key"中获得 API Key 和 Secret Key
     填入 config.yml 中.
     ...
-        baidu_yuyin: 
+        baidu_yuyin:
             appid: '9670645'
             api_key: 'qg4haN8b2bGvFtCbBGqhrmZy'
             secret_key: '585d4eccb50d306c401d7df138bb02e7'

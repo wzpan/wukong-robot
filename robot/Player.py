@@ -2,6 +2,7 @@
 import subprocess
 import os
 import platform
+import signal
 from . import utils
 import _thread as thread
 from robot import logging
@@ -82,7 +83,7 @@ class SoxPlayer(AbstractPlayer):
         if self.delete:
             utils.check_and_delete(self.src)
         logger.debug("play completed")
-        if self.proc.returncode == 0:
+        if self.proc and self.proc.returncode == 0:
             for onCompleted in self.onCompleteds:
                 if onCompleted is not None:
                     onCompleted()
@@ -112,6 +113,7 @@ class SoxPlayer(AbstractPlayer):
             self.onCompleteds = []
             self.proc.terminate()
             self.proc.kill()
+            self.proc = None
             if self.delete:
                 utils.check_and_delete(self.src)
 
@@ -134,7 +136,6 @@ class MusicPlayer(SoxPlayer):
         self.plugin = plugin
         self.idx = 0
         self.pausing = False
-        self.last_paused = None
 
     def update_playlist(self, playlist):
         super().stop()
@@ -161,24 +162,26 @@ class MusicPlayer(SoxPlayer):
         self.play()
 
     def pause(self):
-        logger.debug("MusicPlayer pause")
+        logger.debug("MusicPlayer pause {}".format(self.proc.pid))
         self.pausing = True
+        if self.proc:
+            os.kill(self.proc.pid, signal.SIGSTOP)
 
     def stop(self):
         if self.proc:
-            logger.debug("MusicPlayer stop")
-            # STOP current play process
-            self.last_paused = utils.write_temp_file(str(self.proc.pid), "pid", "w")
+            logger.debug("MusicPlayer stop {}".format(self.proc.pid))
             self.onCompleteds = []
-            subprocess.run(["pkill", "-STOP", "-F", self.last_paused])
+            os.kill(self.proc.pid, signal.SIGSTOP)
+            self.proc.terminate()
+            self.proc.kill()
+            self.proc = None
 
     def resume(self):
         logger.debug("MusicPlayer resume")
         self.pausing = False
         self.onCompleteds = [self.next]
-        if self.last_paused is not None:
-            print(self.last_paused)
-            subprocess.run(["pkill", "-CONT", "-F", self.last_paused])
+        if self.proc:
+            os.kill(self.proc.pid, signal.SIGCONT)
 
     def is_playing(self):
         return self.playing

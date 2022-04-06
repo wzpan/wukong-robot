@@ -12,7 +12,7 @@ except Exception as e:
 
 
 class AbstractPlugin(metaclass=ABCMeta):
-    """ 技能插件基类 """
+    """技能插件基类"""
 
     SLUG = "AbstractPlugin"
     IS_IMMERSIVE = False
@@ -80,7 +80,7 @@ class AbstractPlugin(metaclass=ABCMeta):
         暂停当前正在处理的任务，
         当处于该沉浸模式下且被唤醒时，
         将自动触发这个方法，
-        可以用于强制暂停一个耗时的操作        
+        可以用于强制暂停一个耗时的操作
         """
         return
 

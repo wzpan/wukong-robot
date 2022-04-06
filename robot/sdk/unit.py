@@ -41,7 +41,7 @@ def get_token(api_key, secret_key):
 
 
 def getUnit(query, service_id, api_key, secret_key):
-    """ 
+    """
     NLU 解析
 
     :param query: 用户的指令字符串
@@ -75,7 +75,7 @@ def getUnit(query, service_id, api_key, secret_key):
 
 
 def getIntent(parsed):
-    """ 
+    """
     提取意图
 
     :param parsed: UNIT 解析结果
@@ -96,7 +96,7 @@ def getIntent(parsed):
 
 
 def hasIntent(parsed, intent):
-    """ 
+    """
     判断是否包含某个意图
 
     :param parsed: UNIT 解析结果
@@ -122,13 +122,13 @@ def hasIntent(parsed, intent):
 
 
 def getSlots(parsed, intent=""):
-    """ 
-    提取某个意图的所有词槽
-    
-    :param parsed: UNIT 解析结果
-    :param intent: 意图的名称
-    :returns: 词槽列表。你可以通过 name 属性筛选词槽，
-再通过 normalized_word 属性取出相应的值
+    """
+        提取某个意图的所有词槽
+
+        :param parsed: UNIT 解析结果
+        :param intent: 意图的名称
+        :returns: 词槽列表。你可以通过 name 属性筛选词槽，
+    再通过 normalized_word 属性取出相应的值
     """
     if (
         parsed is not None
@@ -156,9 +156,9 @@ def getSlots(parsed, intent=""):
 
 
 def getSlotWords(parsed, intent, name):
-    """ 
+    """
     找出命中某个词槽的内容
-    
+
     :param parsed: UNIT 解析结果
     :param intent: 意图的名称
     :param name: 词槽名

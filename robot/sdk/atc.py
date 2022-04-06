@@ -63,7 +63,7 @@ def num2chinese(num, big=False, simp=True, o=False, twoalt=False):
     `simp`  : use simplified characters instead of traditional characters.
     `o`     : use 〇 for zero.
     `twoalt`: use 两/兩 for two when appropriate.
-    Note that `o` and `twoalt` is ignored when `big` is used, 
+    Note that `o` and `twoalt` is ignored when `big` is used,
     and `twoalt` is ignored when `o` is used for formal representations.
     """
     # check num first

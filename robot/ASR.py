@@ -45,7 +45,7 @@ class BaiduASR(AbstractASR):
     之后创建一个新应用, 然后在应用管理的"查看key"中获得 API Key 和 Secret Key
     填入 config.xml 中.
     ...
-        baidu_yuyin: 
+        baidu_yuyin:
             appid: '9670645'
             api_key: 'qg4haN8b2bGvFtCbBGqhrmZy'
             secret_key: '585d4eccb50d306c401d7df138bb02e7'
@@ -70,7 +70,14 @@ class BaiduASR(AbstractASR):
     def transcribe(self, fp):
         # 识别本地文件
         pcm = utils.get_pcm_from_wav(fp)
-        res = self.client.asr(pcm, "pcm", 16000, {"dev_pid": self.dev_pid,})
+        res = self.client.asr(
+            pcm,
+            "pcm",
+            16000,
+            {
+                "dev_pid": self.dev_pid,
+            },
+        )
         if res["err_no"] == 0:
             logger.info("{} 语音识别到了：{}".format(self.SLUG, res["result"]))
             return "".join(res["result"])

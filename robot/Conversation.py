@@ -51,7 +51,7 @@ class Conversation(object):
             self.brain.pause()
 
     def reInit(self):
-        """ 重新初始化 """
+        """重新初始化"""
         try:
             self.asr = ASR.get_engine_by_slug(config.get("asr_engine", "tencent-asr"))
             self.ai = AI.get_robot_by_slug(config.get("robot", "tuling"))
@@ -111,7 +111,7 @@ class Conversation(object):
         return self.immersiveMode
 
     def converse(self, fp, callback=None):
-        """ 核心对话逻辑 """
+        """核心对话逻辑"""
         Player.play(constants.getData("beep_lo.wav"))
         logger.info("结束录音")
         self.isRecording = False
@@ -140,7 +140,7 @@ class Conversation(object):
             utils.clean()
 
     def appendHistory(self, t, text, UUID="", plugin=""):
-        """ 将会话历史加进历史记录 """
+        """将会话历史加进历史记录"""
 
         if t in (0, 1) and text is not None and text != "":
             if text.endswith(",") or text.endswith("，"):
@@ -177,7 +177,7 @@ class Conversation(object):
 
     def _onCompleted(self, msg):
         if config.get("active_mode", False) and (
-            msg.endswith("?") or msg.endswith(u"？") or u"告诉我" in msg or u"请回答" in msg
+            msg.endswith("?") or msg.endswith("？") or "告诉我" in msg or "请回答" in msg
         ):
             query = self.activeListen()
             self.doResponse(query)
@@ -194,7 +194,7 @@ class Conversation(object):
             self.hasPardon = False
 
     def say(self, msg, cache=False, plugin="", onCompleted=None, wait=False):
-        """ 
+        """
         说一句话
         :param msg: 内容
         :param cache: 是否缓存这句话的音频
@@ -240,7 +240,7 @@ class Conversation(object):
         utils.lruCache()  # 清理缓存
 
     def activeListen(self, silent=False):
-        """ 主动问一个问题(适用于多轮对话) """
+        """主动问一个问题(适用于多轮对话)"""
         if config.get("/LED/enable", False):
             LED.wakeup()
         logger.debug("activeListen")
@@ -266,7 +266,7 @@ class Conversation(object):
             return ""
 
     def play(self, src, delete=False, onCompleted=None, volume=1):
-        """ 播放一个音频 """
+        """播放一个音频"""
         if self.player:
             self.interrupt()
         self.player = Player.SoxPlayer()

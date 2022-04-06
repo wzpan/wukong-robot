@@ -24,13 +24,13 @@ class Plugin(AbstractPlugin):
         camera_type = config.get("/camera/type", 0)
         if config.has("/camera/usb_camera") and config.get("/camera/usb_camera"):
             camera_type = 0
-        if any(word in text for word in [u"安静", u"偷偷", u"悄悄"]):
+        if any(word in text for word in ["安静", "偷偷", "悄悄"]):
             sound = False
         try:
             if not os.path.exists(dest_path):
                 os.makedirs(dest_path)
         except Exception:
-            self.say(u"抱歉，照片目录创建失败", cache=True)
+            self.say("抱歉，照片目录创建失败", cache=True)
             return
         dest_file = os.path.join(dest_path, "%s.jpg" % time.time()).replace(".", "", 1)
         if camera_type == 0:
@@ -59,7 +59,7 @@ class Plugin(AbstractPlugin):
             if count_down > 0 and sound:
                 command.extend(["-w", str(count_down)])
         if sound and count_down > 0:
-            self.say(u"收到，%d秒后启动拍照" % (count_down), cache=True)
+            self.say("收到，%d秒后启动拍照" % (count_down), cache=True)
             if camera_type == 0:
                 time.sleep(count_down)
 
@@ -72,11 +72,11 @@ class Plugin(AbstractPlugin):
                     config.get("/server/port"),
                     os.path.basename(dest_file),
                 )
-                self.say(u"拍照成功：{}".format(photo_url), cache=True)
+                self.say("拍照成功：{}".format(photo_url), cache=True)
         except subprocess.CalledProcessError as e:
             logger.error(e)
             if sound:
-                self.say(u"拍照失败，请检查相机是否连接正确", cache=True)
+                self.say("拍照失败，请检查相机是否连接正确", cache=True)
 
     def isValid(self, text, parsed):
         return any(word in text for word in ["拍照", "拍张照"])

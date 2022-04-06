@@ -94,7 +94,7 @@ def upload_documents(host, enginename, port=8983, documents="", num_thread=1):
 
     def thread_upload(binary_data, mutex):
         """
-        We didn't use the producer-consumer model because of the need to implement batch loads 
+        We didn't use the producer-consumer model because of the need to implement batch loads
         if not, too many documents are read into memory
         """
         url = "http://{}:{}/solr/{}/update".format(host, port, enginename)
@@ -134,7 +134,7 @@ def upload_documents(host, enginename, port=8983, documents="", num_thread=1):
         """
         Upload a document in a file
         """
-        oneM = 2 ** 20
+        oneM = 2**20
         batch_bytes = 0
         batch_docs = [list() for i in range(num_thread)]
         idx_container = 0

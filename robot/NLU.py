@@ -35,7 +35,7 @@ class AbstractNLU(object):
 
     @abstractmethod
     def getIntent(self, parsed):
-        """ 
+        """
         提取意图
 
         :param parsed: 解析结果
@@ -45,7 +45,7 @@ class AbstractNLU(object):
 
     @abstractmethod
     def hasIntent(self, parsed, intent):
-        """ 
+        """
         判断是否包含某个意图
 
         :param parsed: 解析结果
@@ -56,9 +56,9 @@ class AbstractNLU(object):
 
     @abstractmethod
     def getSlots(self, parsed, intent):
-        """ 
+        """
         提取某个意图的所有词槽
-    
+
         :param parsed: 解析结果
         :param intent: 意图的名称
         :returns: 词槽列表。你可以通过 name 属性筛选词槽，
@@ -68,9 +68,9 @@ class AbstractNLU(object):
 
     @abstractmethod
     def getSlotWords(self, parsed, intent, name):
-        """ 
+        """
         找出命中某个词槽的内容
-    
+
         :param parsed: 解析结果
         :param intent: 意图的名称
         :param name: 词槽名
@@ -132,7 +132,7 @@ class UnitNLU(AbstractNLU):
         )
 
     def getIntent(self, parsed):
-        """ 
+        """
         提取意图
 
         :param parsed: 解析结果
@@ -141,7 +141,7 @@ class UnitNLU(AbstractNLU):
         return unit.getIntent(parsed)
 
     def hasIntent(self, parsed, intent):
-        """ 
+        """
         判断是否包含某个意图
 
         :param parsed: UNIT 解析结果
@@ -151,9 +151,9 @@ class UnitNLU(AbstractNLU):
         return unit.hasIntent(parsed, intent)
 
     def getSlots(self, parsed, intent):
-        """ 
+        """
         提取某个意图的所有词槽
-    
+
         :param parsed: UNIT 解析结果
         :param intent: 意图的名称
         :returns: 词槽列表。你可以通过 name 属性筛选词槽，
@@ -162,9 +162,9 @@ class UnitNLU(AbstractNLU):
         return unit.getSlots(parsed, intent)
 
     def getSlotWords(self, parsed, intent, name):
-        """ 
+        """
         找出命中某个词槽的内容
-    
+
         :param parsed: UNIT 解析结果
         :param intent: 意图的名称
         :param name: 词槽名
