@@ -130,18 +130,20 @@ class Conversation(object):
             self.doConverse(fp, callback)
 
     def doConverse(self, fp, callback=None, onSay=None):
+        self.interrupt()
         try:
-            self.interrupt()
             query = self.asr.transcribe(fp)
-            utils.check_and_delete(fp)
+        except Exception as e:
+            logger.critical("ASR识别失败：{}".format(e))
+        utils.check_and_delete(fp)
+        try:
             self.doResponse(query, callback, onSay)
         except Exception as e:
-            logger.critical(e)
-            utils.clean()
+            logger.critical("回复失败：".format(e))
+        utils.clean()
 
     def appendHistory(self, t, text, UUID="", plugin=""):
         """将会话历史加进历史记录"""
-
         if t in (0, 1) and text is not None and text != "":
             if text.endswith(",") or text.endswith("，"):
                 text = text[:-1]
@@ -220,7 +222,7 @@ class Conversation(object):
                 voice = self.tts.get_speech(msg)
                 cache_path = utils.saveCache(voice, msg)
             except Exception as e:
-                logger.error("保存缓存失败：{}".format(e))
+                logger.error("语音合成失败：{}".format(e))
         if self.onSay:
             logger.info(cache)
             audio = "http://{}:{}/audio/{}".format(
@@ -262,7 +264,7 @@ class Conversation(object):
                 return query
             return ""
         except Exception as e:
-            logger.error(e)
+            logger.error("主动聆听失败".format(e))
             return ""
 
     def play(self, src, delete=False, onCompleted=None, volume=1):

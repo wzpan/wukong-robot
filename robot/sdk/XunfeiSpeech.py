@@ -162,11 +162,11 @@ def asr_on_message(ws, message):
 
 # ASR 收到websocket错误的处理
 def asr_on_error(ws, error):
-    logger.error("### error:", error)
+    logger.error("xunfei-asr 识别出错：", error)
 
 
 # ASR 收到websocket关闭的处理
-def asr_on_close(ws):
+def asr_on_close(ws, _foo, _bar):
     logger.debug("### closed ###")
 
 
@@ -252,11 +252,11 @@ def tts_on_message(ws, message):
 
 # 收到websocket错误的处理
 def tts_on_error(ws, error):
-    logger.error("### error:", error)
+    logger.error("xunfei-tts 合成出错：", error)
 
 
 # 收到websocket关闭的处理
-def tts_on_close(ws):
+def tts_on_close(ws, _foo, _bar):
     global gTTSResult
     logger.debug("### closed ###")
     pcmdata = None

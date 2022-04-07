@@ -152,6 +152,7 @@ var updater = {
     cursor: null,
 
     poll: function() {
+        console.log('updater poll');
         var args = {'validate': getCookie('validation')}        
         if (updater.cursor) args.cursor = updater.cursor;
         $.ajax({
