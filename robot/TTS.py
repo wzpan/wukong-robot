@@ -224,7 +224,7 @@ class TencentTTS(AbstractTTS):
             logger.info("{} 语音合成成功，合成路径：{}".format(self.SLUG, tmpfile))
             return tmpfile
         else:
-            logger.critical("{} 合成失败！{}".format(self.SLUG, result), exc_info=True)
+            logger.critical("{} 合成失败：{}".format(self.SLUG, result), exc_info=True)
 
 
 class XunfeiTTS(AbstractTTS):

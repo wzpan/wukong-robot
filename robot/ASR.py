@@ -114,7 +114,7 @@ class TencentASR(AbstractASR):
             logger.info("{} 语音识别到了：{}".format(self.SLUG, res["Response"]["Result"]))
             return res["Response"]["Result"]
         else:
-            logger.critical("{} 语音识别出错了".format(self.SLUG), exc_info=True)
+            logger.critical("{} 语音识别出错了: {}".format(self.SLUG, res), exc_info=True)
             return ""
 
 

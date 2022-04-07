@@ -22,8 +22,10 @@ STATUS_CONTINUE_FRAME = 1  # 中间帧标识
 STATUS_LAST_FRAME = 2  # 最后一帧的标识
 
 asrWsParam = None
+ttsWsParam = None
+
 gResult = ""
-gPCMPath = ""
+gTTSResult = ""
 
 
 class ASR_Ws_Param(object):
