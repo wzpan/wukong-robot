@@ -83,6 +83,8 @@ class BaiduASR(AbstractASR):
             return "".join(res["result"])
         else:
             logger.info("{} 语音识别出错了: {}".format(self.SLUG, res["err_msg"]))
+            if res["err_msg"] == 'request pv too much':
+                logger.info("       出现这个原因很可能是你的百度语音服务调用量超出限制，或未开通付费")
             return ""
 
 
