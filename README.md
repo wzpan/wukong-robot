@@ -124,7 +124,7 @@ python3 wukong.py
 
 第一次启动时将提示你是否要到用户目录下创建一个配置文件，输入 `y` 即可。
 
-然后通过唤醒词 “孙悟空” 唤醒 wukong-robot 进行交互（该唤醒词可自定义）。
+然后通过唤醒词 “snowboy” 唤醒 wukong-robot 进行交互（该唤醒词可自定义）。
 
 要让 wukong-robot 暂时屏蔽离线监听，可以在配置文件中设置 `hotword_switch` 为 true：
 
@@ -225,7 +225,7 @@ wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式�
 
 ## FAQ
 
-- 我能否更换成其他唤醒词，而不是叫“孙悟空”？
+- 我能否更换成其他唤醒词，而不是叫“snowboy”？
 
   - 能。详见 [修改唤醒词](https://wukong.hahack.com/#/tips?id=_2-%e4%bf%ae%e6%94%b9%e5%94%a4%e9%86%92%e8%af%8d) 。
   
