@@ -162,7 +162,7 @@ class MusicPlayer(SoxPlayer):
         self.play()
 
     def pause(self):
-        logger.debug("MusicPlayer pause {}".format(self.proc.pid))
+        logger.debug("MusicPlayer pause")
         self.pausing = True
         if self.proc:
             os.kill(self.proc.pid, signal.SIGSTOP)
@@ -213,7 +213,6 @@ class MusicPlayer(SoxPlayer):
                 capture_output=True,
                 universal_newlines=True,
             )
-            print(res.stdout)
             if res.stdout != "" and res.stdout.strip().endswith("%"):
                 volume = int(res.stdout.strip().replace("%", ""))
                 volume += 20
