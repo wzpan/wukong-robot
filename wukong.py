@@ -48,7 +48,7 @@ class Wukong(object):
 
 """.format(
                 config.get("/server/host", "0.0.0.0"),
-                config.get("/server/port", "5000"),
+                config.get("/server/port", "5001"),
             )
         )
         config.init()

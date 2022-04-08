@@ -8,7 +8,7 @@ location: '深圳'
 server:
     enable: true
     host: '0.0.0.0'  # ip 地址
-    port: '5000'     # 端口号    
+    port: '5001'     # 端口号
     username: 'wukong'  # 用户名
     # cookie 的 secret ，用于对 cookie 的内容进行加密及防止篡改
     # 建议使用 os.urandom(24) 生成一串随机字符串

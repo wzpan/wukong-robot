@@ -7,7 +7,7 @@
 所有接口都需要带上 `validate` 参数，该参数值和配置文件中的 `server/validate` 参数值相同。示例：
 
 ``` sh
-$ curl localhost:5000/gethistory?validate=f4bde2a342c7c75aa276f78b26cfbd8a
+$ curl localhost:5001/gethistory?validate=f4bde2a342c7c75aa276f78b26cfbd8a
 ```
 
 接口返回：
@@ -40,7 +40,7 @@ $ curl localhost:5000/gethistory?validate=f4bde2a342c7c75aa276f78b26cfbd8a
 - 示例：
 
 ``` sh
-$ curl -X POST localhost:5000/operate -d "type=restart&validate=f4bde2a342c7c75aa276f78b26cfbd8a"
+$ curl -X POST localhost:5001/operate -d "type=restart&validate=f4bde2a342c7c75aa276f78b26cfbd8a"
 ```
 
 - 返回：
@@ -66,7 +66,7 @@ $ curl -X POST localhost:5000/operate -d "type=restart&validate=f4bde2a342c7c75a
 - 示例：
 
 ``` sh
-$ curl localhost:5000/getlog?validate=f4bde2a342c7c75aa276f78b26cfbd8a&lines=10
+$ curl localhost:5001/getlog?validate=f4bde2a342c7c75aa276f78b26cfbd8a&lines=10
 ```
 
 - 返回：
@@ -99,7 +99,7 @@ $ curl localhost:5000/getlog?validate=f4bde2a342c7c75aa276f78b26cfbd8a&lines=10
 - 示例：
 
 ``` sh
-$ curl -X POST localhost:5000/chat -d "type=text&query=%E7%8E%B0%E5%9C%A8%E5%87%A0%E7%82%B9&validate=f4bde2a342c7c75aa276f78b26cfbd8a&uuid=chated17be5d-0240-c9ba-2b2e-7eb98588cf34"
+$ curl -X POST localhost:5001/chat -d "type=text&query=%E7%8E%B0%E5%9C%A8%E5%87%A0%E7%82%B9&validate=f4bde2a342c7c75aa276f78b26cfbd8a&uuid=chated17be5d-0240-c9ba-2b2e-7eb98588cf34"
 ```
 
 - 返回：
@@ -124,7 +124,7 @@ $ curl -X POST localhost:5000/chat -d "type=text&query=%E7%8E%B0%E5%9C%A8%E5%87%
 - 示例：
 
 ``` sh
-$ curl localhost:5000/gethistory?validate=f4bde2a342c7c75aa276f78b26cfbd8a
+$ curl localhost:5001/gethistory?validate=f4bde2a342c7c75aa276f78b26cfbd8a
 ```
 
 - 返回：
@@ -153,7 +153,7 @@ $ curl localhost:5000/gethistory?validate=f4bde2a342c7c75aa276f78b26cfbd8a
 - 示例：
 
 ``` sh
-$ curl localhost:5000/getconfig?validate=f4bde2a342c7c75aa276f78b26cfbd8a\&key=server
+$ curl localhost:5001/getconfig?validate=f4bde2a342c7c75aa276f78b26cfbd8a\&key=server
 ```
 
 - 返回：
@@ -181,7 +181,7 @@ $ curl localhost:5000/getconfig?validate=f4bde2a342c7c75aa276f78b26cfbd8a\&key=s
 - 示例：
 
 ``` sh
-$ curl -X localhost:5000/config -d "config=robot_name_cn%3A+'%E5%AD%99%E6%82%9F%E7%A9%BA'%0Afirst_name%3A+'%E4%BC%9F%E6%B4%B2'%0Alast_name%3A+'%E6%BD%98'%0Atimezone%3A+HKT%0Alocation%3A+'%E6%B7%B1%E5%9C%B3'%0A%0A%23+%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%AB%AF%0Aserver%3A%0A++++enable%3A+true%0A++++host%3A+'0.0.0.0'++%23+ip+%E5%9C%B0%E5%9D%80%0A++++port%3A+'5000'+++++%23+%E7%AB%AF%E5%8F%A3%E5%8F%B7++++%0A++++username%3A+'wukong'..."
+$ curl -X localhost:5001/config -d "config=robot_name_cn%3A+'%E5%AD%99%E6%82%9F%E7%A9%BA'%0Afirst_name%3A+'%E4%BC%9F%E6%B4%B2'%0Alast_name%3A+'%E6%BD%98'%0Atimezone%3A+HKT%0Alocation%3A+'%E6%B7%B1%E5%9C%B3'%0A%0A%23+%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%AB%AF%0Aserver%3A%0A++++enable%3A+true%0A++++host%3A+'0.0.0.0'++%23+ip+%E5%9C%B0%E5%9D%80%0A++++port%3A+'5001'+++++%23+%E7%AB%AF%E5%8F%A3%E5%8F%B7++++%0A++++username%3A+'wukong'..."
 ```
 
 - 返回：

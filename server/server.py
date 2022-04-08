@@ -439,7 +439,7 @@ def start_server(con, wk):
     conversation = con
     wukong = wk
     if config.get("/server/enable", False):
-        port = config.get("/server/port", "5000")
+        port = config.get("/server/port", "5001")
         try:
             asyncio.set_event_loop(asyncio.new_event_loop())
             application.listen(int(port))
