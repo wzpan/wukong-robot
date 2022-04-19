@@ -5,6 +5,7 @@ from .sdk import TencentSpeech, AliSpeech, XunfeiSpeech, BaiduSpeech
 from . import utils, config
 from robot import logging
 from abc import ABCMeta, abstractmethod
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +30,52 @@ class AbstractASR(object):
     @abstractmethod
     def transcribe(self, fp):
         pass
+
+
+class AzureASR(AbstractASR):
+    """
+    微软的语音识别API
+    """
+
+    SLUG = "azure-asr"
+
+    def __init__(self, secret_key, region, lang="zh-CN", **args):
+        super(self.__class__, self).__init__()
+        self.post_url = "https://<REGION_IDENTIFIER>.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1".replace(
+            "<REGION_IDENTIFIER>", region
+        )
+
+        self.post_header = {
+            "Ocp-Apim-Subscription-Key": secret_key,
+            "Content-Type": "audio/wav; codecs=audio/pcm; samplerate=16000",
+            "Accept": "application/json",
+        }
+
+        self.post_param = {"language": lang, "profanity": "raw"}
+        self.sess = requests.session()
+
+    @classmethod
+    def get_config(cls):
+        # Try to get azure_yuyin config from config
+        return config.get("azure_yuyin", {})
+
+    def transcribe(self, fp):
+        # 识别本地文件
+        pcm = utils.get_pcm_from_wav(fp)
+        ret = self.sess.post(
+            url=self.post_url,
+            data=pcm,
+            headers=self.post_header,
+            params=self.post_param,
+        )
+
+        if ret.status_code == 200:
+            res = ret.json()
+            logger.info("{} 语音识别到了：{}".format(self.SLUG, res["DisplayText"]))
+            return "".join(res["DisplayText"])
+        else:
+            logger.info("{} 语音识别出错了: {}".format(self.SLUG, ret.text))
+            return ""
 
 
 class BaiduASR(AbstractASR):
