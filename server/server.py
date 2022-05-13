@@ -110,7 +110,10 @@ class ChatHandler(BaseHandler):
             "audio": audio,
             "plugin": plugin,
         }
-        self.write(json.dumps(res))
+        try:
+            self.write(json.dumps(res))
+        except:
+            pass
 
     def post(self):
         global conversation
