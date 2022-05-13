@@ -104,11 +104,11 @@ class Wukong(object):
 
     def _do_not_bother_on_callback(self):
         if config.get("/do_not_bother/hotword_switch", False):
-            self.enable_do_no_bother()
+            self.switch_on_do_not_bother()
 
     def _do_not_bother_off_callback(self):
         if config.get("/do_not_bother/hotword_switch", False):
-            self.disable_do_not_bother()
+            self.switch_off_do_not_bother()
 
     def _interrupt_callback(self):
         return self._interrupted

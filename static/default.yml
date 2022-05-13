@@ -68,6 +68,7 @@ lru_cache:
 # xunfei-tts    - 讯飞语音合成
 # ali-tts       - 阿里语音合成（推荐）
 # tencent-tts   - 腾讯云语音合成（推荐）
+# azure-tts     - 微软语音合成
 tts_engine: baidu-tts
 
 # 语音识别服务配置
@@ -76,6 +77,7 @@ tts_engine: baidu-tts
 # xunfei-asr    - 讯飞语音识别
 # ali-asr       - 阿里语音识别
 # tencent-asr   - 腾讯云语音识别（推荐）
+# azure-asr     - 微软语音识别
 asr_engine: baidu-asr
 
 # 百度语音服务
