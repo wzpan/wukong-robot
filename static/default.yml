@@ -83,10 +83,11 @@ asr_engine: baidu-asr
 # 百度语音服务
 # http://yuyin.baidu.com/
 # 有免费额度限制，请使用自己的百度智能云账户
+
 baidu_yuyin:
-    appid: '9670645'
-    api_key: 'qg4haN8b2bGvFtCbBGqhrmZy'
-    secret_key: '585d4eccb50d306c401d7df138bb02e7'
+    appid: 'YOUR_APPID'
+    api_key: 'YOUR_API_KEY'
+    secret_key: 'YOUR_SECRET_KEY'
     dev_pid: 1536   # 1536：普通话(支持简单的英文识别)，
                     # 1936: 普通话远场（需付费，请使用自己的百度语音账户再使用）
                     # 80001：ASR极速版（需付费，请使用自己的百度语音账户再使用）
@@ -100,9 +101,9 @@ baidu_yuyin:
 # 注册创建是WebAPI应用，并赋予流式语音听写及在线语音合成两项能力
 # 有免费额度限制，请使用自己的讯飞云账户
 xunfei_yuyin:
-    appid: '5d45a9e9'
-    api_secret: '5e004bc07f46d18805a90479f75a55cf'
-    api_key: 'f6a501fc4e355737ab26672e28d115f9'
+    appid: 'YOUR_APPID'
+    api_secret: 'YOUR_API_SECRET'
+    api_key: 'YOUR_API_KEY'
     voice: 'xiaoyan'  # 全部可选：https://console.xfyun.cn/services/tts
 
 # 阿里云语音
@@ -111,8 +112,8 @@ xunfei_yuyin:
 # 注册获取
 # 有免费额度限制，且需要认证为阿里企业账户
 ali_yuyin:
-    appKey: 'x04ujKJ7oRvDgt6h'
-    token: 'xxxxxxxxxxxxxx'
+    appKey: 'YOUR_APPKEY'
+    token: 'YOUR_TOKEN'
     voice: 'xiaogang' #xiaoyun为女生，xiaogang为男生, 全部可选：http://suo.im/4x8RzQ
 
 # 腾讯云语音
@@ -122,9 +123,9 @@ ali_yuyin:
 # 创建子用户，访问API密钥获得 secretid 和 secret_key 注册获取
 # 有免费额度限制，请使用自己的腾讯云账户
 tencent_yuyin:
-    appid: '1253537070'
-    secretid: 'xxxxxxxxxxxxx'
-    secret_key: 'xxxxxxxxxxxxx'
+    appid: 'YOUR_APPID'
+    secretid: 'YOUR_SECRET_ID'
+    secret_key: 'YOUR_SECRET_KEY'
     region: 'ap-guangzhou'  # 服务地区，有效值：http://suo.im/4EEQYD
     voiceType: 0            # 0: 女声1；1：男生1；2：男生2
     language: 1             # 1: 中文；2：英文

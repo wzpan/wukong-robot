@@ -79,7 +79,7 @@ class Plugin(AbstractPlugin):
             system = platform.system()
             # BigSur 以上 Mac 系统的 pkill 无法正常暂停音频，
             # 因此改成直接停止播放，不再支持沉浸模式
-            if system == "Darwin" and float(platform.mac_ver()[0]) >= 10.16:
+            if system == "Darwin" and float(platform.mac_ver()[0][:5]) >= 10.16:
                 self.player.stop()
                 return
             self.player.pause()
