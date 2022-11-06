@@ -14,6 +14,7 @@ import tornado.web
 import tornado.ioloop
 import tornado.options
 import tornado.httpserver
+from urllib.parse import unquote
 from tools import make_json, solr_tools
 from robot import config, utils, logging, Updater, constants
 
@@ -253,8 +254,9 @@ class ConfigHandler(BaseHandler):
         if self.validate(self.get_argument("validate", default=None)):
             configStr = self.get_argument("config")
             try:
-                yaml.load(configStr)
-                config.dump(configStr)
+                cfg = unquote(configStr)
+                yaml.safe_load(cfg)
+                config.dump(cfg)
                 res = {"code": 0, "message": "ok"}
                 self.write(json.dumps(res))
             except:

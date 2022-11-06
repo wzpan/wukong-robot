@@ -6,7 +6,7 @@ function saveConfig(msg) {
     $.ajax({
         url: '/config',
         type: "POST",
-        data: {"config": $('#config-input').val(), 'validate': getCookie('validation')},
+        data: {"config": encodeURIComponent($('#config-input').val()), 'validate': getCookie('validation')},
         success: function(res) {
             var data = JSON.parse(res);
             if (!msg) msg='';
