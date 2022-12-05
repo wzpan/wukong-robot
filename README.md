@@ -223,12 +223,10 @@ wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式�
 * 感谢 aliciacai 贡献的 wukong-robot 图标。
 * 感谢所有为[本项目](https://github.com/wzpan/wukong-robot/graphs/contributors)、 [wukong-contrib](https://github.com/wzpan/wukong-contrib/graphs/contributors) 项目以及[dingdang-robot](https://github.com/dingdang-robot/dingdang-robot/graphs/contributors) 项目做出过贡献的人！
 
-## FAQ
+## Star 历史
 
-- 我能否更换成其他唤醒词，而不是叫“snowboy”？
+[![Star History Chart](https://api.star-history.com/svg?repos=wzpan/wukong-robot&type=Date)](https://star-history.com/#wzpan/wukong-robot&Date)
 
-  - 能。详见 [修改唤醒词](https://wukong.hahack.com/#/tips?id=_2-%e4%bf%ae%e6%94%b9%e5%94%a4%e9%86%92%e8%af%8d) 。
-  
 ## 免责声明
 
 * wukong-robot 只用作个人学习研究，如因使用 wukong-robot 导致任何损失，本人概不负责。
