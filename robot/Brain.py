@@ -40,8 +40,9 @@ class Brain(object):
             return plugin.isValidImmersive(text, parsed)
 
     def isImmersive(self, plugin, text, parsed):
-        return self.conversation.getImmersiveMode() == plugin.SLUG and self.isValidImmersive(
-            plugin, text, parsed
+        return (
+            self.conversation.getImmersiveMode() == plugin.SLUG
+            and self.isValidImmersive(plugin, text, parsed)
         )
 
     def printPlugins(self):

@@ -45,15 +45,14 @@ class Wukong(object):
                 config.get("/server/host", "0.0.0.0"),
                 config.get("/server/port", "5001"),
             )
-        )        
-        
+        )
+
         self.conversation = Conversation(self._profiling)
         self.conversation.say(
             "{} 你好！试试对我喊唤醒词叫醒我吧".format(config.get("first_name", "主人")), True
         )
         self.lifeCycleHandler = LifeCycleHandler(self.conversation)
         self.lifeCycleHandler.onInit()
-
 
     def _signal_handler(self, signal, frame):
         self._interrupted = True
@@ -65,6 +64,7 @@ class Wukong(object):
             logger.info("开始录音")
             self.conversation.isRecording = True
             utils.setRecordable(True)
+
         if not utils.is_proper_time():
             logger.warning("勿扰模式开启中")
             return
@@ -73,8 +73,7 @@ class Wukong(object):
             return
         self.conversation.interrupt()
         utils.setRecordable(False)
-        self.lifeCycleHandler.onWakeup()
-        _start_record()
+        self.lifeCycleHandler.onWakeup(onCompleted=_start_record)
 
     def _interrupt_callback(self):
         return self._interrupted

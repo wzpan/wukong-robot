@@ -4,9 +4,6 @@ import multiprocessing
 import _thread as thread
 
 from watchdog.observers import Observer
-from pinpong.board import *
-from pinpong.extension.unihiker import *
-
 from robot import config, constants, statistic, Player
 from robot.ConfigMonitor import ConfigMonitor
 from robot.sdk import LED
@@ -133,11 +130,11 @@ class LifeCycleHandler(object):
     def _beep_lo(self):
         Player.play(constants.getData("beep_lo.wav"))
 
-    def onWakeup(self):
+    def onWakeup(self, onCompleted=None):
         """
         唤醒并进入录音的状态
         """
-        self._beep_hi()
+        self._beep_hi(onCompleted=onCompleted, wait=onCompleted)
         if config.get("/LED/enable", False):
             LED.wakeup()
         self._unihiker and self._unihiker.record(1, "我正在聆听...")
@@ -147,6 +144,7 @@ class LifeCycleHandler(object):
         """
         录音结束并进入思考的状态
         """
+        self._beep_lo()
         self._unihiker and self._unihiker.think()
         self._unihiker and self._unihiker.record(1, "我正在思考...")
         if config.get("/LED/enable", False):
