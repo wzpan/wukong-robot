@@ -40,9 +40,8 @@ class Brain(object):
             return plugin.isValidImmersive(text, parsed)
 
     def isImmersive(self, plugin, text, parsed):
-        return (
-            self.conversation.getImmersiveMode() == plugin.SLUG
-            and self.isValidImmersive(plugin, text, parsed)
+        return self.conversation.getImmersiveMode() == plugin.SLUG and self.isValidImmersive(
+            plugin, text, parsed
         )
 
     def printPlugins(self):
@@ -51,22 +50,14 @@ class Brain(object):
             plugin_list.append(plugin.SLUG)
         logger.info("已激活插件：{}".format(plugin_list))
 
-    def query(self, text):
+    def query(self, text, parsed):
         """
         query 模块
 
         Arguments:
-        text -- 用户输入
+        text -- 原文本
+        parsed -- ULU解析出来的结果
         """
-
-        args = {
-            "service_id": config.get("/unit/service_id", "S13442"),
-            "api_key": config.get("/unit/api_key", "w5v7gUV3iPGsGntcM84PtOOM"),
-            "secret_key": config.get(
-                "/unit/secret_key", "KffXwW6E1alcGplcabcNs63Li6GvvnfL"
-            ),
-        }
-        parsed = self.conversation.doParse(text, **args)
 
         for plugin in self.plugins:
             if not self.isValid(plugin, text, parsed) and not self.isImmersive(

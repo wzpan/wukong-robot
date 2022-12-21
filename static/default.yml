@@ -28,6 +28,15 @@ muse:
     ip: '0.0.0.0'  # 请修改为本机的 ip 地址
     port: 5001     # 请修改为 OSC 的端口号
 
+# 行空板
+# 需搭配行空板使用
+# 展示专为行空板设计的 GUI
+# 摇一摇可以实现唤醒 
+# https://www.unihiker.com/
+unihiker:
+    enable: false
+    beep: false # 是否需要开启主板的蜂鸣提示音
+
 # 是否展示灯光效果
 # 支持 Respeaker 2 Mics 和 Google AIY Voice Kit 两种
 # 必须具备相应的硬件和驱动
@@ -52,9 +61,6 @@ do_not_bother:
     enable: false # true: 开启; false: 关闭
     since: 23    # 开始时间
     till: 9      # 结束时间，如果比 since 小表示第二天
-    hotword_switch: false  # 是否使用唤醒词开关唤醒模式
-    on_hotword: '悟空别吵.pmdl'  # 通过这个唤醒词可切换勿扰模式。默认是“悟空别吵”
-    off_hotword: '悟空醒醒.pmdl'  # 通过这个唤醒词可切换勿扰模式。默认是“悟空醒醒”
 
 # 是否定期清理temp目录下的缓存音频
 lru_cache:
@@ -143,6 +149,13 @@ han-tts:
 # unit      - 百度 UNIT
 nlu_engine: unit
 
+# 聊天机器人
+# 可选值：
+# unit      - 百度UNIT（推荐）
+# anyq      - AnyQ
+# tuling    - 图灵机器人
+robot: unit
+
 # 百度 UNIT
 unit:
     # 在 https://ai.baidu.com/unit 里注册创建一个机器人
@@ -152,13 +165,6 @@ unit:
     service_id: 'S13442'  # 机器人ID
     api_key: 'w5v7gUV3iPGsGntcM84PtOOM'
     secret_key: 'KffXwW6E1alcGplcabcNs63Li6GvvnfL'
-    
-
-# 聊天机器人
-# 可选值：
-# anyq      - AnyQ（推荐）
-# tuling    - 图灵机器人
-robot: tuling
 
 # AnyQ 机器人
 anyq:

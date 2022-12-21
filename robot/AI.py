@@ -5,6 +5,7 @@ import requests
 from uuid import getnode as get_mac
 from abc import ABCMeta, abstractmethod
 from robot import logging, config, utils
+from robot.sdk import unit
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +24,7 @@ class AbstractRobot(object):
         pass
 
     @abstractmethod
-    def chat(self, texts):
+    def chat(self, texts, parsed):
         pass
 
 
@@ -40,10 +41,9 @@ class TulingRobot(AbstractRobot):
 
     @classmethod
     def get_config(cls):
-        # Try to get ali_yuyin config from config
         return config.get("tuling", {})
 
-    def chat(self, texts):
+    def chat(self, texts, parsed=None):
         """
         使用图灵机器人聊天
 
@@ -51,6 +51,7 @@ class TulingRobot(AbstractRobot):
         texts -- user input, typically speech, to be parsed by a module
         """
         msg = "".join(texts)
+        msg = utils.stripPunctuation(msg)
         try:
             url = "http://openapi.turingapi.com/openapi/api/v2"
             userid = str(get_mac())[:32]
@@ -75,6 +76,58 @@ class TulingRobot(AbstractRobot):
             return "抱歉, 我的大脑短路了，请稍后再试试."
 
 
+class UnitRobot(AbstractRobot):
+
+    SLUG = "unit"
+
+    def __init__(self):
+        """
+        百度UNIT机器人
+        """
+        super(self.__class__, self).__init__()
+
+    @classmethod
+    def get_config(cls):
+        return {}
+
+    def chat(self, texts, parsed):
+        """
+        使用百度UNIT机器人聊天
+
+        Arguments:
+        texts -- user input, typically speech, to be parsed by a module
+        """
+        msg = "".join(texts)
+        msg = utils.stripPunctuation(msg)
+        intents = [
+            "USER_AQI",
+            "USER_CLOTHES",
+            "USER_CLOUDY",
+            "USER_EXERCISE",
+            "USER_FOG",
+            "USER_HIGH_TEMP",
+            "USER_INFLUENZA",
+            "USER_LOW_TEMP",
+            "USER_RAIN",
+            "USER_SNOW",
+            "USER_SUNNY",
+            "USER_TEMP",
+            "USER_TRIP",
+            "USER_ULTRAVIOLET",
+            "USER_WASH_CAR",
+            "USER_WEATHER",
+            "USER_WIND",
+        ]
+        try:
+            for intent in intents:
+                if unit.hasIntent(parsed, intent):
+                    return unit.getSay(parsed, intent)
+            return unit.getSay(parsed, "BUILT_CHAT")
+        except Exception:
+            logger.critical("UNIT robot failed to response for %r", msg, exc_info=True)
+            return "抱歉, 我的大脑短路了，请稍后再试试."
+
+
 class AnyQRobot(AbstractRobot):
 
     SLUG = "anyq"
@@ -94,7 +147,7 @@ class AnyQRobot(AbstractRobot):
         # Try to get anyq config from config
         return config.get("anyq", {})
 
-    def chat(self, texts):
+    def chat(self, texts, parsed):
         """
         使用AnyQ机器人聊天
 
@@ -122,7 +175,7 @@ class AnyQRobot(AbstractRobot):
             if self.secondary != "null" and self.secondary is not None:
                 try:
                     ai = get_robot_by_slug(self.secondary)
-                    return ai.chat(texts)
+                    return ai.chat(texts, parsed)
                 except Exception:
                     logger.critical(
                         "Secondary robot {} failed to response for {}".format(

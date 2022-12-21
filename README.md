@@ -126,18 +126,6 @@ python3 wukong.py
 
 然后通过唤醒词 “snowboy” 唤醒 wukong-robot 进行交互（该唤醒词可自定义）。
 
-要让 wukong-robot 暂时屏蔽离线监听，可以在配置文件中设置 `hotword_switch` 为 true：
-
-``` yaml
-# 勿扰模式，该时间段内自动进入睡眠，避免监听
-do_not_bother:
-    ...
-    hotword_switch: false  # 是否使用唤醒词开关唤醒模式
-    ...
-```
-
-然后使用热词 “悟空别吵”；要让 wukong-robot 恢复离线监听，可以使用热词 “悟空醒醒”。
-
 此外，wukong-robot 默认在运行期间还会启动一个后台管理端，提供了远程对话、查看修改配置、查看 log 等能力。
 
 - 默认地址：http://localhost:5001

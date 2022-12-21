@@ -58,7 +58,7 @@ class MainHandler(BaseHandler):
             self.redirect("/login")
             return
         if conversation:
-            info = Updater.fetch(wukong._dev)
+            info = Updater.fetch()
             suggestion = random.choice(suggestions)
             notices = None
             if "notices" in info:
@@ -223,16 +223,6 @@ class OperateHandler(BaseHandler):
                 self.finish()
                 time.sleep(3)
                 wukong.restart()
-            elif type == "1":
-                wukong.switch_on_do_not_bother()
-                res = {"code": 0, "message": "勿扰模式已打开"}
-                self.write(json.dumps(res))
-                self.finish()
-            elif type == "2":
-                wukong.switch_off_do_not_bother()
-                res = {"code": 0, "message": "勿扰模式已关闭"}
-                self.write(json.dumps(res))
-                self.finish()
             else:
                 res = {"code": 1, "message": "illegal type {}".format(type)}
                 self.write(json.dumps(res))

@@ -63,11 +63,13 @@ class Plugin(AbstractPlugin):
                     else:
                         self.player.turnDown()
 
-        elif self.nlu.hasIntent(parsed, "PAUSE"):
-            self.player.pause()
         elif self.nlu.hasIntent(parsed, "CONTINUE"):
+            logger.info("继续播放")
             self.player.resume()
-        elif self.nlu.hasIntent(parsed, "CLOSE_MUSIC"):
+        elif self.nlu.hasIntent(parsed, "CLOSE_MUSIC") or self.nlu.hasIntent(
+            parsed, "PAUSE"
+        ):
+            logger.info("停止播放")
             self.player.stop()
             self.clearImmersive()  # 去掉沉浸式
         else:

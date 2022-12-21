@@ -134,7 +134,7 @@ def upload_documents(host, enginename, port=8983, documents="", num_thread=1):
         """
         Upload a document in a file
         """
-        oneM = 2**20
+        oneM = 2 ** 20
         batch_bytes = 0
         batch_docs = [list() for i in range(num_thread)]
         idx_container = 0

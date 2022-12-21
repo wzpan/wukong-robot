@@ -6,6 +6,7 @@ import pstats
 import io
 import re
 import os
+from robot.LifeCycleHandler import LifeCycleHandler
 from robot.Brain import Brain
 from robot.sdk import LED, MessageBuffer
 from snowboy import snowboydecoder
@@ -39,6 +40,7 @@ class Conversation(object):
         self.profiling = profiling
         self.onSay = None
         self.hasPardon = False
+        self.lifeCycleHandler = LifeCycleHandler(self)
 
     def getHistory(self):
         return self.history
@@ -72,9 +74,6 @@ class Conversation(object):
         self.interrupt()
         self.appendHistory(0, query, UUID)
 
-        if config.get("/LED/enable", False):
-            LED.think()
-
         if onSay:
             self.onSay = onSay
 
@@ -84,9 +83,17 @@ class Conversation(object):
 
         lastImmersiveMode = self.immersiveMode
 
-        if not self.brain.query(query):
+        args = {
+            "service_id": config.get("/unit/service_id", "S13442"),
+            "api_key": config.get("/unit/api_key", "w5v7gUV3iPGsGntcM84PtOOM"),
+            "secret_key": config.get(
+                "/unit/secret_key", "KffXwW6E1alcGplcabcNs63Li6GvvnfL"
+            ),
+        }
+        parsed = self.doParse(query, **args)
+        if not self.brain.query(query, parsed):
             # 没命中技能，使用机器人回复
-            msg = self.ai.chat(query)
+            msg = self.ai.chat(query, parsed)
             self.say(msg, True, onCompleted=self.checkRestore)
         else:
             if lastImmersiveMode is not None and lastImmersiveMode != self.matchPlugin:
@@ -97,9 +104,6 @@ class Conversation(object):
                 else:
                     logger.debug("checkRestore")
                     self.checkRestore()
-
-        if config.get("/LED/enable", False):
-            LED.off()
 
     def doParse(self, query, **args):
         return self.nlu.parse(query, **args)
@@ -112,8 +116,8 @@ class Conversation(object):
 
     def converse(self, fp, callback=None):
         """核心对话逻辑"""
-        Player.play(constants.getData("beep_lo.wav"))
         logger.info("结束录音")
+        self.lifeCycleHandler.onThink()
         self.isRecording = False
         if self.profiling:
             logger.info("性能调试已打开")
@@ -139,12 +143,12 @@ class Conversation(object):
         try:
             self.doResponse(query, callback, onSay)
         except Exception as e:
-            logger.critical("回复失败：".format(e))
+            logger.critical("回复失败：{}".format(e))
         utils.clean()
 
     def appendHistory(self, t, text, UUID="", plugin=""):
         """将会话历史加进历史记录"""
-        if t in (0, 1) and text is not None and text != "":
+        if t in (0, 1) and text:
             if text.endswith(",") or text.endswith("，"):
                 text = text[:-1]
             if UUID == "" or UUID == None or UUID == "null":
@@ -165,6 +169,7 @@ class Conversation(object):
                 text = text.replace(
                     url, '<a href={} target="_blank">{}</a>'.format(url, url)
                 )
+            self.lifeCycleHandler.onResponse(t, text)
             self.history.add_message(
                 {
                     "type": t,
@@ -243,12 +248,10 @@ class Conversation(object):
 
     def activeListen(self, silent=False):
         """主动问一个问题(适用于多轮对话)"""
-        if config.get("/LED/enable", False):
-            LED.wakeup()
         logger.debug("activeListen")
         try:
             if not silent:
-                Player.play(constants.getData("beep_hi.wav"))
+                self.lifeCycleHandler.onWakeup()
             listener = snowboydecoder.ActiveListener(
                 [constants.getHotwordModel(config.get("hotword", "wukong.pmdl"))]
             )
@@ -257,7 +260,7 @@ class Conversation(object):
                 recording_timeout=config.get("recording_timeout", 5) * 4,
             )
             if not silent:
-                Player.play(constants.getData("beep_lo.wav"))
+                self.lifeCycleHandler.onThink()
             if voice:
                 query = self.asr.transcribe(voice)
                 utils.check_and_delete(voice)

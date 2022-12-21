@@ -117,14 +117,7 @@ class BaiduASR(AbstractASR):
     def transcribe(self, fp):
         # 识别本地文件
         pcm = utils.get_pcm_from_wav(fp)
-        res = self.client.asr(
-            pcm,
-            "pcm",
-            16000,
-            {
-                "dev_pid": self.dev_pid,
-            },
-        )
+        res = self.client.asr(pcm, "pcm", 16000, {"dev_pid": self.dev_pid})
         if res["err_no"] == 0:
             logger.info("{} 语音识别到了：{}".format(self.SLUG, res["result"]))
             return "".join(res["result"])
