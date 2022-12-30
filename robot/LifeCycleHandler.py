@@ -88,6 +88,7 @@ class LifeCycleHandler(object):
         天行板摇一摇的监听逻辑
         """
         while True:
+            from pinpong.extension.unihiker import accelerometer
             if accelerometer.get_strength() >= 1.5:
                 logger.info("天行版摇一摇触发唤醒")
                 self._conversation.interrupt()

@@ -67,6 +67,7 @@ class Conversation(object):
 
     def checkRestore(self):
         if self.immersiveMode:
+            self.lifeCycleHandler.onRestore()
             self.brain.restore()
 
     def doResponse(self, query, UUID="", onSay=None):
