@@ -1,9 +1,6 @@
 import time
 
-import pvporcupine
-from pvrecorder import PvRecorder
 from snowboy import snowboydecoder
-
 from robot import config, logging, utils, constants
 
 logger = logging.getLogger(__name__)
@@ -20,6 +17,10 @@ def initDetector(wukong):
     global porcupine, recorder, detector
     if config.get("detector", "porcupine") == "porcupine":
         logger.info("使用 porcupine 进行离线唤醒")
+        
+        import pvporcupine
+        from pvrecorder import PvRecorder
+        
         access_key = config.get("/porcupine/access_key")
         keyword_paths = config.get("/porcupine/keyword_paths")
         keywords = config.get("/porcupine/keywords", ["porcupine"])

@@ -156,6 +156,10 @@ class LifeCycleHandler(object):
         """
         思考完成并播放结果的状态
         """
+        if t == 1:
+            text = text[:60]+'...' if len(text) >= 60 else text
+        else:
+            text = text[:9]+'...' if len(text) >= 9 else text
         self._unihiker and self._unihiker.record(t, text)
         if config.get("/LED/enable", False):
             LED.off()

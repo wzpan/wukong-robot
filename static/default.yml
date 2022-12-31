@@ -21,9 +21,9 @@ server:
 
 # 热词唤醒机制
 # 可选值：
-# porcupine（推荐）
+# porcupine
 # snowboy
-detector: porcupine
+detector: snowboy
 # 灵敏度
 sensitivity: 0.5
 
