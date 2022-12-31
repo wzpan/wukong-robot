@@ -55,10 +55,7 @@ def getUnit(query, service_id, api_key, secret_key):
         "https://aip.baidubce.com/rpc/2.0/unit/service/chat?access_token="
         + access_token
     )
-    request = {
-        "query": query,
-        "user_id": str(get_mac())[:32],
-    }
+    request = {"query": query, "user_id": str(get_mac())[:32]}
     body = {
         "log_id": str(uuid.uuid1()),
         "version": "2.0",
@@ -170,6 +167,36 @@ def getSlotWords(parsed, intent, name):
         if slot["name"] == name:
             words.append(slot["normalized_word"])
     return words
+
+
+def getSayByConfidence(parsed):
+    """
+    提取 UNIT 置信度最高的回复文本
+
+    :param parsed: UNIT 解析结果
+    :returns: UNIT 的回复文本
+    """
+    if (
+        parsed is not None
+        and "result" in parsed
+        and "response_list" in parsed["result"]
+    ):
+        response_list = parsed["result"]["response_list"]
+        answer = {}
+        for response in response_list:
+            if (
+                "schema" in response
+                and "intent_confidence" in response["schema"]
+                and (
+                    not answer
+                    or response["schema"]["intent_confidence"]
+                    > answer["schema"]["intent_confidence"]
+                )
+            ):
+                answer = response
+        return answer["action_list"][0]["say"]
+    else:
+        return ""
 
 
 def getSay(parsed, intent=""):

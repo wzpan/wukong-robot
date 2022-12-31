@@ -13,3 +13,5 @@ websocket==0.2.1
 websocket-client
 pypinyin
 jieba
+pvporcupine
+pvrecorder

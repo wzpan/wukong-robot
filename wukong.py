@@ -6,18 +6,14 @@ import fire
 import signal
 import hashlib
 import urllib3
-import multiprocessing
-import _thread as thread
-from watchdog.observers import Observer
 
-from robot.sdk import LED
 from robot.Updater import Updater
 from robot.Conversation import Conversation
-from robot.ConfigMonitor import ConfigMonitor
-from robot import config, utils, constants, logging, statistic, Player, BCI
+from robot.LifeCycleHandler import LifeCycleHandler
+
+from robot import config, utils, constants, logging, detector
 
 from server import server
-from snowboy import snowboydecoder
 from tools import make_json, solr_tools
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -28,12 +24,11 @@ logger = logging.getLogger(__name__)
 class Wukong(object):
 
     _profiling = False
-    _dev = False
 
     def init(self):
-        global conversation
         self.detector = None
-        self._thinking = False
+        self.porcupine = None
+        self.gui = None
         self._interrupted = False
         print(
             """
@@ -51,130 +46,54 @@ class Wukong(object):
                 config.get("/server/port", "5001"),
             )
         )
-        config.init()
-        self._conversation = Conversation(self._profiling)
-        self._conversation.say(
+
+        self.conversation = Conversation(self._profiling)
+        self.conversation.say(
             "{} 你好！试试对我喊唤醒词叫醒我吧".format(config.get("first_name", "主人")), True
         )
-        self._observer = Observer()
-        event_handler = ConfigMonitor(self._conversation)
-        self._observer.schedule(event_handler, constants.CONFIG_PATH, False)
-        self._observer.schedule(event_handler, constants.DATA_PATH, False)
-        self._observer.start()
-        if config.get("/LED/enable", False) and config.get("/LED/type") == "aiy":
-            thread.start_new_thread(self._init_aiy_button_event, ())
-        if config.get("/muse/enable", False):
-            self._wakeup = multiprocessing.Event()
-            self.bci = BCI.MuseBCI(self._wakeup)
-            self.bci.start()
-            thread.start_new_thread(self._loop_event, ())
-
-    def _loop_event(self):
-        while True:
-            self._wakeup.wait()
-            self._conversation.interrupt()
-            query = self._conversation.activeListen()
-            self._conversation.doResponse(query)
-            self._wakeup.clear()
+        self.lifeCycleHandler = LifeCycleHandler(self.conversation)
+        self.lifeCycleHandler.onInit()
 
     def _signal_handler(self, signal, frame):
         self._interrupted = True
         utils.clean()
-        self._observer.stop()
+        self.lifeCycleHandler.onKilled()
 
-    def _detected_callback(self):
-        def start_record():
+    def _detected_callback(self, is_snowboy=True):
+        def _start_record():
             logger.info("开始录音")
-            self._conversation.isRecording = True
+            self.conversation.isRecording = True
             utils.setRecordable(True)
 
         if not utils.is_proper_time():
             logger.warning("勿扰模式开启中")
             return
-        if self._conversation.isRecording:
+        if self.conversation.isRecording:
             logger.warning("正在录音中，跳过")
             return
-        self._conversation.interrupt()
-        if config.get("/LED/enable", False):
-            LED.wakeup()
-        utils.setRecordable(False)
-        Player.play(
-            constants.getData("beep_hi.wav"), onCompleted=start_record, wait=True
+        if is_snowboy:
+            self.conversation.interrupt()
+            utils.setRecordable(False)
+        self.lifeCycleHandler.onWakeup(
+            onCompleted=_start_record if is_snowboy else None
         )
-
-    def _do_not_bother_on_callback(self):
-        if config.get("/do_not_bother/hotword_switch", False):
-            self.switch_on_do_not_bother()
-
-    def _do_not_bother_off_callback(self):
-        if config.get("/do_not_bother/hotword_switch", False):
-            self.switch_off_do_not_bother()
 
     def _interrupt_callback(self):
         return self._interrupted
 
-    def _init_aiy_button_event(self):
-        from aiy.board import Board
-
-        with Board() as board:
-            while True:
-                board.button.wait_for_press()
-                self._conversation.interrupt()
-                query = self._conversation.activeListen()
-                self._conversation.doResponse(query)
-
     def run(self):
         self.init()
-
         # capture SIGINT signal, e.g., Ctrl+C
         signal.signal(signal.SIGINT, self._signal_handler)
-
-        # site
-        server.run(self._conversation, self)
-
-        statistic.report(0)
-
+        # 后台管理端
+        server.run(self.conversation, self)
         try:
-            self.initDetector()
+            # 初始化离线唤醒
+            detector.initDetector(self)
+
         except AttributeError:
             logger.error("初始化离线唤醒功能失败")
             pass
-
-    def initDetector(self):
-        if self.detector is not None:
-            self.detector.terminate()
-        if config.get("/do_not_bother/hotword_switch", False):
-            models = [
-                constants.getHotwordModel(config.get("hotword", "wukong.pmdl")),
-                constants.getHotwordModel(utils.get_do_not_bother_on_hotword()),
-                constants.getHotwordModel(utils.get_do_not_bother_off_hotword()),
-            ]
-        else:
-            models = constants.getHotwordModel(config.get("hotword", "wukong.pmdl"))
-        self.detector = snowboydecoder.HotwordDetector(
-            models, sensitivity=config.get("sensitivity", 0.5)
-        )
-        # main loop
-        try:
-            if config.get("/do_not_bother/hotword_switch", False):
-                callbacks = [
-                    self._detected_callback,
-                    self._do_not_bother_on_callback,
-                    self._do_not_bother_off_callback,
-                ]
-            else:
-                callbacks = self._detected_callback
-            self.detector.start(
-                detected_callback=callbacks,
-                audio_recorder_callback=self._conversation.converse,
-                interrupt_check=self._interrupt_callback,
-                silent_count_threshold=config.get("silent_threshold", 15),
-                recording_timeout=config.get("recording_timeout", 5) * 4,
-                sleep_time=0.03,
-            )
-            self.detector.terminate()
-        except Exception as e:
-            logger.critical("离线唤醒机制初始化失败：{}".format(e))
 
     def help(self):
         print(
@@ -244,33 +163,12 @@ class Wukong(object):
         python = sys.executable
         os.execl(python, python, *sys.argv)
 
-    def switch_on_do_not_bother(self):
-        """
-        打开勿扰模式
-        """
-        utils.do_not_bother = True
-        Player.play(constants.getData("off.wav"))
-        logger.info("勿扰模式打开")
-
-    def switch_off_do_not_bother(self):
-        """
-        关闭勿扰模式
-        """
-        utils.do_not_bother = False
-        Player.play(constants.getData("on.wav"))
-        logger.info("勿扰模式关闭")
-
     def profiling(self):
         """
         运行过程中打印耗时数据
         """
         logger.info("性能调优")
         self._profiling = True
-        self.run()
-
-    def dev(self):
-        logger.info("使用测试环境")
-        self._dev = True
         self.run()
 
 

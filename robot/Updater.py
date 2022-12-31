@@ -77,11 +77,9 @@ class Updater(object):
         else:
             return current
 
-    def fetch(self, dev=False):
+    def fetch(self):
         global URL, DEV_URL
         url = URL
-        if dev:
-            url = DEV_URL
         now = datetime.now()
         if (now - self.last_check).seconds <= 1800:
             logger.debug("30 分钟内已检查过更新，使用上次的检查结果：{}".format(self.update_info))
@@ -111,11 +109,11 @@ class Updater(object):
             return {}
 
 
-def fetch(dev):
+def fetch():
     global _updater
     if not _updater:
         _updater = Updater()
-    return _updater.fetch(dev)
+    return _updater.fetch()
 
 
 if __name__ == "__main__":
