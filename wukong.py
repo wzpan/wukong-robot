@@ -11,10 +11,9 @@ from robot.Updater import Updater
 from robot.Conversation import Conversation
 from robot.LifeCycleHandler import LifeCycleHandler
 
-from robot import config, utils, constants, logging, Player
+from robot import config, utils, constants, logging, detector
 
 from server import server
-from snowboy import snowboydecoder
 from tools import make_json, solr_tools
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -28,6 +27,7 @@ class Wukong(object):
 
     def init(self):
         self.detector = None
+        self.porcupine = None
         self.gui = None
         self._interrupted = False
         print(
@@ -59,7 +59,7 @@ class Wukong(object):
         utils.clean()
         self.lifeCycleHandler.onKilled()
 
-    def _detected_callback(self):
+    def _detected_callback(self, is_snowboy=True):
         def _start_record():
             logger.info("开始录音")
             self.conversation.isRecording = True
@@ -71,9 +71,12 @@ class Wukong(object):
         if self.conversation.isRecording:
             logger.warning("正在录音中，跳过")
             return
-        self.conversation.interrupt()
-        utils.setRecordable(False)
-        self.lifeCycleHandler.onWakeup(onCompleted=_start_record)
+        if is_snowboy:
+            self.conversation.interrupt()
+            utils.setRecordable(False)
+        self.lifeCycleHandler.onWakeup(
+            onCompleted=_start_record if is_snowboy else None
+        )
 
     def _interrupt_callback(self):
         return self._interrupted
@@ -86,32 +89,11 @@ class Wukong(object):
         server.run(self.conversation, self)
         try:
             # 初始化离线唤醒
-            self.initDetector()
+            detector.initDetector(self)
+
         except AttributeError:
             logger.error("初始化离线唤醒功能失败")
             pass
-
-    def initDetector(self):
-        if self.detector is not None:
-            self.detector.terminate()
-        models = constants.getHotwordModel(config.get("hotword", "wukong.pmdl"))
-        self.detector = snowboydecoder.HotwordDetector(
-            models, sensitivity=config.get("sensitivity", 0.5)
-        )
-        # main loop
-        try:
-            callbacks = self._detected_callback
-            self.detector.start(
-                detected_callback=callbacks,
-                audio_recorder_callback=self.conversation.converse,
-                interrupt_check=self._interrupt_callback,
-                silent_count_threshold=config.get("silent_threshold", 15),
-                recording_timeout=config.get("recording_timeout", 5) * 4,
-                sleep_time=0.03,
-            )
-            self.detector.terminate()
-        except Exception as e:
-            logger.critical("离线唤醒机制初始化失败：{}".format(e))
 
     def help(self):
         print(
