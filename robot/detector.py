@@ -15,7 +15,7 @@ def initDetector(wukong):
     初始化离线唤醒热词监听器，支持 snowboy 和 porcupine 两大引擎
     """
     global porcupine, recorder, detector
-    if config.get("detector", "porcupine") == "porcupine":
+    if config.get("detector", "snowboy") == "porcupine":
         logger.info("使用 porcupine 进行离线唤醒")
         
         import pvporcupine
