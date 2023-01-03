@@ -65,7 +65,7 @@ class LifeCycleHandler(object):
                 self._unihiker = Unihiker()
                 thread.start_new_thread(self._unihiker_shake_event, ())
             except ImportError:
-                logger.error("错误：请确保当前硬件环境为天行板")
+                logger.error("错误：请确保当前硬件环境为行空板")
 
     def _init_LED(self):
         if config.get("/LED/enable", False) and config.get("/LED/type") == "aiy":
@@ -85,13 +85,13 @@ class LifeCycleHandler(object):
 
     def _unihiker_shake_event(self):
         """
-        天行板摇一摇的监听逻辑
+        行空板摇一摇的监听逻辑
         """
         while True:
             from pinpong.extension.unihiker import accelerometer
 
             if accelerometer.get_strength() >= 1.5:
-                logger.info("天行版摇一摇触发唤醒")
+                logger.info("行空板摇一摇触发唤醒")
                 self._conversation.interrupt()
                 query = self._conversation.activeListen()
                 self._conversation.doResponse(query)
