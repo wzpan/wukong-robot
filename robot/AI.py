@@ -119,10 +119,15 @@ class UnitRobot(AbstractRobot):
             "USER_WIND",
         ]
         try:
+            result = ""
             for intent in intents:
                 if unit.hasIntent(parsed, intent):
-                    return unit.getSay(parsed, intent)
-            return unit.getSay(parsed, "BUILT_CHAT")
+                    result = unit.getSay(parsed, intent)
+                    logger.info("{} 回答：{}".format(self.SLUG, result))
+                    return result
+            result = unit.getSay(parsed, 'BUILT_CHAT')
+            logger.info("{} 回答：{}".format(self.SLUG, result))
+            return result
         except Exception:
             logger.critical("UNIT robot failed to response for %r", msg, exc_info=True)
             return "抱歉, 我的大脑短路了，请稍后再试试."
