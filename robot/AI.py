@@ -2,6 +2,7 @@
 import json
 import random
 import requests
+import openai
 from uuid import getnode as get_mac
 from abc import ABCMeta, abstractmethod
 from robot import logging, config, utils
@@ -187,6 +188,64 @@ class AnyQRobot(AbstractRobot):
                 return get_unknown_response()
         except Exception:
             logger.critical("AnyQ robot failed to response for %r", msg, exc_info=True)
+            return "抱歉, 我的大脑短路了，请稍后再试试."
+
+
+class GPTRobot(AbstractRobot):
+
+    SLUG = "gpt"
+
+    def __init__(self, openai_api_key,model, temperature, max_tokens,top_p,frequency_penalty,presence_penalty,stop_ai):
+        """
+        GPT机器人
+        openai.api_key = os.getenv("OPENAI_API_KEY")
+        """
+        super(self.__class__, self).__init__()
+        self.openai_api_key = openai_api_key
+        openai.api_key=self.openai_api_key
+        logger.info(self.openai_api_key)
+        self.model = model
+        self.temperature = temperature
+        self.max_tokens = max_tokens
+        self.top_p = top_p
+        self.frequency_penalty = frequency_penalty
+        self.presence_penalty = presence_penalty
+        self.stop_ai = stop_ai
+
+    @classmethod
+    def get_config(cls):
+        # Try to get anyq config from config
+        return config.get("gpt", {})
+
+    def chat(self, texts, parsed):
+        """
+        使用GPT机器人聊天
+
+        Arguments:
+        texts -- user input, typically speech, to be parsed by a module
+        """
+        msg = "".join(texts)
+        msg = utils.stripPunctuation(msg)
+        print(msg)
+        try:
+            response = openai.Completion.create(
+            model=self.model,
+            prompt=msg,
+            temperature=self.temperature,
+            max_tokens=self.max_tokens,
+            top_p=self.top_p,
+            frequency_penalty=self.frequency_penalty,
+            presence_penalty=self.presence_penalty,
+            stop=self.stop_ai
+            )
+            logger.debug(response)
+            logger.debug(response.choices[0].text)
+            respond=response.choices[0].text
+            logger.info("GPT response: {}".format(respond))
+            return respond
+            
+        except Exception:
+            logger.critical("GPT robot failed to response for %r", msg, exc_info=True)
             return "抱歉, 我的大脑短路了，请稍后再试试."
 
 

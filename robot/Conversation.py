@@ -30,7 +30,14 @@ logger = logging.getLogger(__name__)
 class Conversation(object):
     def __init__(self, profiling=False):
         self.brain = None
+        self.asr = None
+        self.ai = None
+        self.tts = None
+        self.nlu = None
         self.reInit()
+        self.player = None
+        self.brain = Brain(self)
+        self.brain.printPlugins()
         # 历史会话消息
         self.history = MessageBuffer.MessageBuffer()
         # 沉浸模式，处于这个模式下，被打断后将自动恢复这个技能
@@ -211,12 +218,26 @@ class Conversation(object):
         :param wait: 是否要等待说完（为True将阻塞主线程直至说完这句话）
         """
         self.appendHistory(1, msg, plugin=plugin)
-        pattern = r"^https?://.+"
+        pattern = r"http[s]?://.+"
         if re.match(pattern, msg):
-            logger.info("内容包含URL，所以不读出来")
-            self.onSay(msg, "", plugin=plugin)
-            self.onSay = None
+            logger.info("内容包含URL，屏蔽后续内容")
+            msg = re.sub(pattern, '', msg)
+        if not msg:
             return
+        if len(msg) > 100:
+            # 文本太长，TTS 会报错
+            shorter_msg = ''
+            if "\n" in msg:
+                line = 0
+                while True:
+                    shorter_msg += msg.split('\n')[line]
+                    line += 1
+                    if len(shorter_msg) >= 100:
+                        break
+                msg = shorter_msg
+            else:
+                msg = msg[0:100]
+            msg += "后面的内容太长，我就不念啦"
         voice = ""
         cache_path = ""
         if utils.getCache(msg):

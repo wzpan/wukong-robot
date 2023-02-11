@@ -72,7 +72,8 @@ class Plugin(AbstractPlugin):
                     config.get("/server/port"),
                     os.path.basename(dest_file),
                 )
-                self.say("拍照成功：{}".format(photo_url), cache=True)
+                self.say("拍照成功", cache=True)
+                self.say(photo_url)
         except subprocess.CalledProcessError as e:
             logger.error(e)
             if sound:

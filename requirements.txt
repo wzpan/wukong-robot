@@ -15,3 +15,4 @@ pypinyin
 jieba
 pvporcupine
 pvrecorder
+openai

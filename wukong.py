@@ -90,7 +90,6 @@ class Wukong(object):
         try:
             # 初始化离线唤醒
             detector.initDetector(self)
-
         except AttributeError:
             logger.error("初始化离线唤醒功能失败")
             pass
