@@ -170,7 +170,7 @@ nlu_engine: unit
 # 聊天机器人
 # 可选值：
 # unit      - 百度UNIT（推荐）
-# gpt       - GPT
+# openai    - OpenAI GPT3
 # anyq      - AnyQ
 # tuling    - 图灵机器人
 robot: unit
