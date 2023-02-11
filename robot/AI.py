@@ -191,13 +191,13 @@ class AnyQRobot(AbstractRobot):
             return "抱歉, 我的大脑短路了，请稍后再试试."
 
 
-class GPTRobot(AbstractRobot):
+class OPENAIRobot(AbstractRobot):
 
-    SLUG = "gpt"
+    SLUG = "openai"
 
     def __init__(self, openai_api_key,model, temperature, max_tokens,top_p,frequency_penalty,presence_penalty,stop_ai):
         """
-        GPT机器人
+        OpenAI机器人
         openai.api_key = os.getenv("OPENAI_API_KEY")
         """
         super(self.__class__, self).__init__()
@@ -215,18 +215,17 @@ class GPTRobot(AbstractRobot):
     @classmethod
     def get_config(cls):
         # Try to get anyq config from config
-        return config.get("gpt", {})
+        return config.get("openai", {})
 
     def chat(self, texts, parsed):
         """
-        使用GPT机器人聊天
+        使用OpenAI机器人聊天
 
         Arguments:
         texts -- user input, typically speech, to be parsed by a module
         """
         msg = "".join(texts)
         msg = utils.stripPunctuation(msg)
-        print(msg)
         try:
             response = openai.Completion.create(
             model=self.model,
@@ -241,11 +240,11 @@ class GPTRobot(AbstractRobot):
             logger.debug(response)
             logger.debug(response.choices[0].text)
             respond=response.choices[0].text
-            logger.info("GPT response: {}".format(respond))
+            logger.info("openai response: {}".format(respond))
             return respond
             
         except Exception:
-            logger.critical("GPT robot failed to response for %r", msg, exc_info=True)
+            logger.critical("openai robot failed to response for %r", msg, exc_info=True)
             return "抱歉, 我的大脑短路了，请稍后再试试."
 
 
