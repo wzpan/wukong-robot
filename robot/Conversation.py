@@ -241,11 +241,11 @@ class Conversation(object):
                 while True:
                     shorter_msg += lines[idx]
                     idx += 1
-                    if len(shorter_msg) >= 128:
+                    if len(shorter_msg) >= config.get('max_text_length', 128):
                         break
                 msg = shorter_msg
             else:
-                msg = msg[0:128]
+                msg = msg[0:config.get('max_text_length', 128)]
             logger.info(f"截断后的文本：{msg}")
             is_too_long = True
         voice = ""
