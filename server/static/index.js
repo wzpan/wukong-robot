@@ -11,25 +11,26 @@ function appendHistory(type, query, uuid, plugin) {
               </div>
 `);
     } else {
+        queries = query.split('\n');
+        $('.history').append(`
+          <div class="left">
+             <div class="bubble bubble-white">
+               <div class="bubble-avatar"><image src="./static/robot.png" width=32px attr="robot" /></div>
+               <div style="text-align: left" id="${uuid}">
+             </div>
+           </div>
+        `);
+        for (i in queries) {
+            console.log(`#${uuid}`);
+            let line = queries[i].replaceAll(' ', '&nbsp;')
+            $(`#${uuid}`).append(`
+                <p>${line}</p>
+            `);
+        }
         if (plugin) {
-            $('.history').append(`
-              <div class="left">
-                 <div class="bubble bubble-white">
-                   <div class="bubble-avatar"><image src="./static/robot.png" width=32px attr="robot" /></div>
-                   <p style="text-align: left" id="${uuid}">${query}</p>
-                   <span class="badge badge-info plugin">${plugin}</span>
-                 </div>
-              </div>
-`);
-        } else {        
-            $('.history').append(`
-              <div class="left">
-                 <div class="bubble bubble-white">
-                   <div class="bubble-avatar"><image src="./static/robot.png" width=32px attr="robot" /></div>
-                   <p style="text-align: left" id="${uuid}">${query}</p>
-                 </div>
-              </div>
-`);        
+            $(`#${uuid}`).after(`
+               <span class="badge badge-info plugin">${plugin}</span>             
+            `);
         }
     }
     $("#"+uuid).hide();
