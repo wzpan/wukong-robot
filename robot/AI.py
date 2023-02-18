@@ -206,9 +206,10 @@ class OPENAIRobot(AbstractRobot):
         self.openai_api_key = openai_api_key
         try:
             import openai
+            self.openai = openai
         except Exception:
-            logger.critical('OpenAI 初始化失败，请确认 Python 版本 ')
-        openai.api_key=self.openai_api_key
+            logger.critical('OpenAI 初始化失败，请升级 Python 版本至 >= 3.7.1')        
+        self.openai.api_key=self.openai_api_key
         self.model = model
         self.temperature = temperature
         self.max_tokens = max_tokens
@@ -232,7 +233,7 @@ class OPENAIRobot(AbstractRobot):
         msg = "".join(texts)
         msg = utils.stripPunctuation(msg)
         try:
-            response = openai.Completion.create(
+            response = self.openai.Completion.create(
             model=self.model,
             prompt=msg,
             temperature=self.temperature,
