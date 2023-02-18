@@ -18,7 +18,7 @@ class AbstractPlugin(metaclass=ABCMeta):
     IS_IMMERSIVE = False
 
     def __init__(self, con):
-        if self.IS_IMMERSIVE is not None:
+        if self.IS_IMMERSIVE:
             self.isImmersive = self.IS_IMMERSIVE
         else:
             self.isImmersive = False

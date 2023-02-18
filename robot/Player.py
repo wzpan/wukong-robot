@@ -85,15 +85,13 @@ class SoxPlayer(AbstractPlayer):
         logger.debug("play completed")
         if self.proc and self.proc.returncode == 0:
             for onCompleted in self.onCompleteds:
-                if onCompleted is not None:
-                    onCompleted()
+                onCompleted and onCompleted()
 
     def play(self, src, delete=False, onCompleted=None, wait=False):
         if src and (os.path.exists(src) or src.startswith("http")):
             self.src = src
             self.delete = delete
-            if onCompleted is not None:
-                self.onCompleteds.append(onCompleted)
+            onCompleted and self.onCompleteds.append(onCompleted)
             if not wait:
                 thread.start_new_thread(self.doPlay, ())
             else:
@@ -101,9 +99,11 @@ class SoxPlayer(AbstractPlayer):
         else:
             logger.critical("path not exists: {}".format(src))
 
+    def preappendCompleted(self, onCompleted):
+        onCompleted and self.onCompleteds.insert(0, onCompleted)
+
     def appendOnCompleted(self, onCompleted):
-        if onCompleted is not None:
-            self.onCompleteds.append(onCompleted)
+        onCompleted and self.onCompleteds.append(onCompleted)
 
     def play_block(self):
         self.run()

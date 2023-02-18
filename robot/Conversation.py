@@ -53,7 +53,7 @@ class Conversation(object):
         return self.history
 
     def interrupt(self):
-        if self.player is not None and self.player.is_playing():
+        if self.player and self.player.is_playing():
             self.player.stop()
             self.player = None
         if self.immersiveMode:
@@ -74,6 +74,7 @@ class Conversation(object):
 
     def checkRestore(self):
         if self.immersiveMode:
+            logger.info("处于沉浸模式，恢复技能")
             self.lifeCycleHandler.onRestore()
             self.brain.restore()
 
@@ -104,9 +105,9 @@ class Conversation(object):
             msg = self.ai.chat(query, parsed)
             self.say(msg, True, onCompleted=self.checkRestore)
         else:
-            if lastImmersiveMode is not None and lastImmersiveMode != self.matchPlugin:
+            if lastImmersiveMode and lastImmersiveMode != self.matchPlugin:
                 time.sleep(1)
-                if self.player is not None and self.player.is_playing():
+                if self.player and self.player.is_playing():
                     logger.debug("等说完再checkRestore")
                     self.player.appendOnCompleted(lambda: self.checkRestore())
                 else:
@@ -208,7 +209,7 @@ class Conversation(object):
             self.say("没听清呢")
             self.hasPardon = False
 
-    def say(self, msg, cache=False, plugin="", onCompleted=None, wait=False):
+    def say(self, msg, cache=False, plugin="", onCompleted=None, wait=False, append_history=True):
         """
         说一句话
         :param msg: 内容
@@ -217,27 +218,36 @@ class Conversation(object):
         :param onCompleted: 完成的回调
         :param wait: 是否要等待说完（为True将阻塞主线程直至说完这句话）
         """
-        self.appendHistory(1, msg, plugin=plugin)
+        append_history and self.appendHistory(1, msg, plugin=plugin)
+        is_too_long = False
         pattern = r"http[s]?://.+"
         if re.match(pattern, msg):
             logger.info("内容包含URL，屏蔽后续内容")
             msg = re.sub(pattern, '', msg)
         if not msg:
             return
-        if len(msg) > 100:
+        msg = utils.stripPunctuation(msg)
+        msg = msg.strip()
+        logger.info(f"即将朗读语音：{msg}")
+        if config.get("trim_too_long_text", True) and \
+            len(msg) > config.get('max_text_length', 128):
             # 文本太长，TTS 会报错
+            logger.info("文本超长，需进行截断")
+            # 采用截断的方案
+            lines = re.split("。|！|？|\.|\!|\?|\n", msg)
             shorter_msg = ''
             if "\n" in msg:
-                line = 0
+                idx = 0
                 while True:
-                    shorter_msg += msg.split('\n')[line]
-                    line += 1
-                    if len(shorter_msg) >= 100:
+                    shorter_msg += lines[idx]
+                    idx += 1
+                    if len(shorter_msg) >= 128:
                         break
                 msg = shorter_msg
             else:
-                msg = msg[0:100]
-            msg += "后面的内容太长，我就不念啦"
+                msg = msg[0:128]
+            logger.info(f"截断后的文本：{msg}")
+            is_too_long = True
         voice = ""
         cache_path = ""
         if utils.getCache(msg):
@@ -263,9 +273,9 @@ class Conversation(object):
         if onCompleted is None:
             onCompleted = lambda: self._onCompleted(msg)
         self.player = Player.SoxPlayer()
+        if config.get("trim_too_long_text", True) and is_too_long:
+            self.player.preappendCompleted(lambda: self.say("后面的内容太长了，我就不念了", append_history=False))
         self.player.play(voice, not cache, onCompleted, wait)
-        if not cache:
-            utils.check_and_delete(cache_path, 60)  # 60秒后将自动清理不缓存的音频
         utils.lruCache()  # 清理缓存
 
     def activeListen(self, silent=False):

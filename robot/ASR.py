@@ -199,7 +199,7 @@ class AliASR(AbstractASR):
 
     def transcribe(self, fp):
         result = AliSpeech.asr(self.appKey, self.token, fp)
-        if result is not None:
+        if result:
             logger.info("{} 语音识别到了：{}".format(self.SLUG, result))
             return result
         else:

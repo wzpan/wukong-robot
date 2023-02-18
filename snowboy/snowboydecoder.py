@@ -376,11 +376,10 @@ class HotwordDetector(object):
                     )
                     logger.info(message)
                     callback = detected_callback[status - 1]
-                    if callback is not None:
-                        callback()
+                    callback and callback()
 
                     if (
-                        audio_recorder_callback is not None
+                        audio_recorder_callback
                         and status == 1
                         and utils.is_proper_time()
                     ):

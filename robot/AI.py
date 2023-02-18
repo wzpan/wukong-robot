@@ -173,7 +173,7 @@ class AnyQRobot(AbstractRobot):
                     logger.info("{} 回答：{}".format(self.SLUG, answer))
                     return answer
             # 没有命中，走兜底
-            if self.secondary != "null" and self.secondary is not None:
+            if self.secondary != "null" and self.secondary:
                 try:
                     ai = get_robot_by_slug(self.secondary)
                     return ai.chat(texts, parsed)
@@ -195,7 +195,10 @@ class OPENAIRobot(AbstractRobot):
 
     SLUG = "openai"
 
-    def __init__(self, openai_api_key,model, temperature, max_tokens,top_p,frequency_penalty,presence_penalty,stop_ai):
+    def __init__(self, openai_api_key, model, 
+                 temperature, max_tokens, 
+                 top_p, frequency_penalty, 
+                 presence_penalty, stop_ai):
         """
         OpenAI机器人
         openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -203,7 +206,6 @@ class OPENAIRobot(AbstractRobot):
         super(self.__class__, self).__init__()
         self.openai_api_key = openai_api_key
         openai.api_key=self.openai_api_key
-        logger.info(self.openai_api_key)
         self.model = model
         self.temperature = temperature
         self.max_tokens = max_tokens
@@ -237,9 +239,8 @@ class OPENAIRobot(AbstractRobot):
             presence_penalty=self.presence_penalty,
             stop=self.stop_ai
             )
-            logger.debug(response)
-            logger.debug(response.choices[0].text)
-            respond=response.choices[0].text
+            #print(response)
+            respond = response.choices[0].text
             logger.info("openai response: {}".format(respond))
             return respond
             

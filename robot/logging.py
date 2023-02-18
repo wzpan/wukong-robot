@@ -50,10 +50,9 @@ def getLogger(name):
 
     :returns: logger
     """
-    formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(filename)s - %(funcName)s - line %(lineno)s - %(levelname)s - %(message)s"
-    )
-
+    format = "%(asctime)s - %(name)s - %(filename)s - %(funcName)s - line %(lineno)s - %(levelname)s - %(message)s"
+    formatter = logging.Formatter(format)
+    logging.basicConfig(format=format)
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
 
@@ -63,7 +62,7 @@ def getLogger(name):
         maxBytes=1024 * 1024,
         backupCount=5,
     )
-    file_handler.setLevel(level=logging.DEBUG)
+    file_handler.setLevel(level=logging.NOTSET)
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
 

@@ -327,7 +327,7 @@ class AliTTS(AbstractTTS):
 
     def get_speech(self, phrase):
         tmpfile = AliSpeech.tts(self.appKey, self.token, self.voice, phrase)
-        if tmpfile is not None:
+        if tmpfile:
             logger.info("{} 语音合成成功，合成路径：{}".format(self.SLUG, tmpfile))
             return tmpfile
         else:

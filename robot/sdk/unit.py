@@ -79,7 +79,7 @@ def getIntent(parsed):
     :returns: 意图数组
     """
     if (
-        parsed is not None
+        parsed
         and "result" in parsed
         and "response_list" in parsed["result"]
     ):
@@ -101,7 +101,7 @@ def hasIntent(parsed, intent):
     :returns: True: 包含; False: 不包含
     """
     if (
-        parsed is not None
+        parsed
         and "result" in parsed
         and "response_list" in parsed["result"]
     ):
@@ -128,7 +128,7 @@ def getSlots(parsed, intent=""):
     再通过 normalized_word 属性取出相应的值
     """
     if (
-        parsed is not None
+        parsed
         and "result" in parsed
         and "response_list" in parsed["result"]
     ):
@@ -177,7 +177,7 @@ def getSayByConfidence(parsed):
     :returns: UNIT 的回复文本
     """
     if (
-        parsed is not None
+        parsed
         and "result" in parsed
         and "response_list" in parsed["result"]
     ):
@@ -208,7 +208,7 @@ def getSay(parsed, intent=""):
     :returns: UNIT 的回复文本
     """
     if (
-        parsed is not None
+        parsed
         and "result" in parsed
         and "response_list" in parsed["result"]
     ):
