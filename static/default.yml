@@ -96,6 +96,10 @@ lru_cache:
 # azure-tts     - 微软语音合成
 tts_engine: baidu-tts
 
+# 文本超过一定字符数后是否截断
+trim_too_long_text: true
+max_text_length: 128
+
 # 语音识别服务配置
 # 可选值：
 # baidu-asr     - 百度在线语音识别
