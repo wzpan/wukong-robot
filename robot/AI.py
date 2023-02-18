@@ -2,14 +2,13 @@
 import json
 import random
 import requests
-import openai
+
 from uuid import getnode as get_mac
 from abc import ABCMeta, abstractmethod
 from robot import logging, config, utils
 from robot.sdk import unit
 
 logger = logging.getLogger(__name__)
-
 
 class AbstractRobot(object):
 
@@ -205,6 +204,10 @@ class OPENAIRobot(AbstractRobot):
         """
         super(self.__class__, self).__init__()
         self.openai_api_key = openai_api_key
+        try:
+            import openai
+        except Exception:
+            logger.critical('OpenAI 初始化失败，请确认 Python 版本 ')
         openai.api_key=self.openai_api_key
         self.model = model
         self.temperature = temperature

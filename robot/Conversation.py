@@ -228,7 +228,7 @@ class Conversation(object):
             return
         msg = utils.stripPunctuation(msg)
         msg = msg.strip()
-        logger.info(f"即将朗读语音：{msg}")
+        logger.info("即将朗读语音：".format(msg))
         if config.get("trim_too_long_text", True) and \
             len(msg) > config.get('max_text_length', 128):
             # 文本太长，TTS 会报错
@@ -246,7 +246,7 @@ class Conversation(object):
                 msg = shorter_msg
             else:
                 msg = msg[0:config.get('max_text_length', 128)]
-            logger.info(f"截断后的文本：{msg}")
+            logger.info("截断后的文本：".format(msg))
             is_too_long = True
         voice = ""
         cache_path = ""
