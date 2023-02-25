@@ -208,7 +208,7 @@ class OPENAIRobot(AbstractRobot):
             import openai
             self.openai = openai
         except Exception:
-            logger.critical('OpenAI 初始化失败，请升级 Python 版本至 >= 3.7.1')        
+            logger.critical('OpenAI 初始化失败，请升级 Python 版本至 >= 3.7.1')
         self.openai.api_key=self.openai_api_key
         self.model = model
         self.temperature = temperature

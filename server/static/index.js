@@ -21,15 +21,17 @@ function appendHistory(type, query, uuid, plugin) {
            </div>
         `);
         for (i in queries) {
-            console.log(`#${uuid}`);
-            let line = queries[i].replaceAll(' ', '&nbsp;')
+            let line = queries[i];
+            if (line.indexOf('<a') < 0) {
+                line = line.replaceAll(' ', '&nbsp;')
+            }
             $(`#${uuid}`).append(`
                 <p>${line}</p>
             `);
         }
         if (plugin) {
             $(`#${uuid}`).after(`
-               <span class="badge badge-info plugin">${plugin}</span>             
+               <span class="badge badge-info plugin">${plugin}</span>
             `);
         }
     }
