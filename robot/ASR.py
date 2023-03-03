@@ -207,6 +207,43 @@ class AliASR(AbstractASR):
             return ""
 
 
+class WhisperASR(AbstractASR):
+    """
+    OpenAI 的 whisper 语音识别API
+    """
+
+    SLUG = "openai"
+
+    def __init__(self, openai_api_key, **args):
+        super(self.__class__, self).__init__()
+        try:
+            import openai
+            self.openai = openai
+            self.openai.api_key = openai_api_key
+            print(openai_api_key)
+        except Exception:
+            logger.critical('OpenAI 初始化失败，请升级 Python 版本至 > 3.6')
+
+    @classmethod
+    def get_config(cls):
+        return config.get("openai", {})
+
+    def transcribe(self, fp):
+        if self.openai:
+            try:
+                with open(fp, "rb") as f:
+                    result = self.openai.Audio.transcribe("whisper-1", f)
+                    if result:
+                        logger.info("{} 语音识别到了：{}".format(self.SLUG, result.text))
+                        return result.text
+            except Exception:
+                logger.critical("{} 语音识别出错了".format(self.SLUG), exc_info=True)
+                return ""
+        logger.critical("{} 语音识别出错了".format(self.SLUG), exc_info=True)
+        return ""
+
+
+
 def get_engine_by_slug(slug=None):
     """
     Returns:

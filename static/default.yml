@@ -107,6 +107,7 @@ max_text_length: 128
 # ali-asr       - 阿里语音识别
 # tencent-asr   - 腾讯云语音识别（推荐）
 # azure-asr     - 微软语音识别
+# openai        - OpenAI Whisper
 asr_engine: baidu-asr
 
 # 百度语音服务
@@ -174,7 +175,7 @@ nlu_engine: unit
 # 聊天机器人
 # 可选值：
 # unit      - 百度UNIT（推荐）
-# openai    - OpenAI GPT3（要求 Python >= 3.7.1）
+# openai    - OpenAI ChatGPT(要求 Python >= 3.7.1）
 # anyq      - AnyQ
 # tuling    - 图灵机器人
 robot: unit
@@ -206,26 +207,26 @@ anyq:
 tuling:
     tuling_key: '98f95153fb5c4684a5602b909949ba61'  # 建议使用自己的图灵机器人API Key
 
-# OpenAI(GPT3) 机器人
+# OpenAI(ChatGPT) 机器人
 # 使用科学上网工具到 https://platform.openai.com
 # 注册一个账号，获得 openai_api_key 后填到下面的配置中即可
-# 缺点：返回速度较慢，并要求 Python >= 3.7.1
+# 缺点：返回速度较慢，并要求 Python > 3.6
 openai:
     openai_api_key: 'sk-xxxxxxxxxxxxxxxxxxxxxxxxxx'
-    model: 'text-davinci-003'
-    #参数指定将生成文本的模型类型。默认情况下，OpenAI 提供了几个模型供您选择，您可以在此处查看。此外，您甚至可以创建自己的模型，但这超出了本教程的范围。https://beta.openai.com/docs/models/overview
-    #prompt:''
-    #该prompt参数指定您从模型提供的输入提示，然后模型将自动完成对它的响应。这可以是任何你想要的
+    # 参数指定将生成文本的模型类型。默认情况下，OpenAI 提供了几个模型供您选择，您可以在此处查看。此外，您甚至可以创建自己的模型，但这超出了本教程的范围。https://beta.openai.com/docs/models/overview
+    model: 'gpt-3.5-turbo'
+    # 在前面加的一段前缀
+    prefix: '请用200字回答：'
+    # 该temperature参数指定响应的不确定性。这意味着该模型更有可能产生创造性的东西，并且可以被认为是模型承担风险并偏离正常反应。将此参数设置为 1 意味着模型将返回它不确定的结果，相比之下，将此参数设置为 0 意味着模型将返回它几乎可以肯定的结果。
     temperature: 1
-    #该temperature参数指定响应的不确定性。这意味着该模型更有可能产生创造性的东西，并且可以被认为是模型承担风险并偏离正常反应。将此参数设置为 1 意味着模型将返回它不确定的结果，相比之下，将此参数设置为 0 意味着模型将返回它几乎可以肯定的结果。
+    # 该max_tokens参数指定模型允许生成的最大字符数量作为其输出的一部分。您需要为生成的更多字符付费，因此请务必小心使用此参数。
     max_tokens: 2000
-    #该max_tokens参数指定模型允许生成的最大令牌数量作为其输出的一部分。您需要为生成的更多令牌付费，因此请务必小心使用此参数。
+    # 一个可用于代替 temperature 的参数，对应机器学习中 nucleus sampling，如果设置 0.1 意味着只考虑构成前 10% 概率质量的 tokens
     top_p: 1.0
-    #一个可用于代替 temperature 的参数，对应机器学习中 nucleus sampling，如果设置 0.1 意味着只考虑构成前 10% 概率质量的 tokens
+    # -2.0 ~ 2.0 之间的数字，正值会根据新 tokens 在文本中的现有频率对其进行惩罚，从而降低模型逐字重复同一行的可能性
     frequency_penalty: 0.0
-    #-2.0 ~ 2.0 之间的数字，正值会根据新 tokens 在文本中的现有频率对其进行惩罚，从而降低模型逐字重复同一行的可能性
-    presence_penalty: 0.0
-    #-2.0 ~ 2.0 之间的数字，正值会根据到目前为止是否出现在文本中来惩罚新 tokens，从而增加模型谈论新主题的可能性
+    # -2.0 ~ 2.0 之间的数字，正值会根据到目前为止是否出现在文本中来惩罚新 tokens，从而增加模型谈论新主题的可能性
+    presence_penalty: 0.0    
     stop_ai: 'stop'
 
 

@@ -73,7 +73,7 @@ class TulingRobot(AbstractRobot):
             logger.critical(
                 "Tuling robot failed to response for %r", msg, exc_info=True
             )
-            return "抱歉, 我的大脑短路了，请稍后再试试."
+            return "抱歉, 图灵机器人服务回答失败"
 
 
 class UnitRobot(AbstractRobot):
@@ -125,7 +125,7 @@ class UnitRobot(AbstractRobot):
             return unit.getSay(parsed, "BUILT_CHAT")
         except Exception:
             logger.critical("UNIT robot failed to response for %r", msg, exc_info=True)
-            return "抱歉, 我的大脑短路了，请稍后再试试."
+            return "抱歉, 百度UNIT服务回答失败"
 
 
 class AnyQRobot(AbstractRobot):
@@ -187,30 +187,31 @@ class AnyQRobot(AbstractRobot):
                 return get_unknown_response()
         except Exception:
             logger.critical("AnyQ robot failed to response for %r", msg, exc_info=True)
-            return "抱歉, 我的大脑短路了，请稍后再试试."
+            return "抱歉, AnyQ回答失败"
 
 
 class OPENAIRobot(AbstractRobot):
 
     SLUG = "openai"
 
-    def __init__(self, openai_api_key, model, 
+    def __init__(self, openai_api_key, model,
                  temperature, max_tokens, 
                  top_p, frequency_penalty, 
-                 presence_penalty, stop_ai):
+                 presence_penalty, stop_ai, prefix=""):
         """
         OpenAI机器人
         openai.api_key = os.getenv("OPENAI_API_KEY")
         """
         super(self.__class__, self).__init__()
-        self.openai_api_key = openai_api_key
+        self.openai = None
         try:
             import openai
             self.openai = openai
+            self.openai.api_key = openai_api_key
         except Exception:
-            logger.critical('OpenAI 初始化失败，请升级 Python 版本至 >= 3.7.1')
-        self.openai.api_key=self.openai_api_key
+            logger.critical('OpenAI 初始化失败，请升级 Python 版本至 > 3.6')
         self.model = model
+        self.prefix = prefix
         self.temperature = temperature
         self.max_tokens = max_tokens
         self.top_p = top_p
@@ -232,25 +233,41 @@ class OPENAIRobot(AbstractRobot):
         """
         msg = "".join(texts)
         msg = utils.stripPunctuation(msg)
+        msg = self.prefix + msg  # 增加一段前缀
+        logger.info('msg: ' + msg)
         try:
-            response = self.openai.Completion.create(
-            model=self.model,
-            prompt=msg,
-            temperature=self.temperature,
-            max_tokens=self.max_tokens,
-            top_p=self.top_p,
-            frequency_penalty=self.frequency_penalty,
-            presence_penalty=self.presence_penalty,
-            stop=self.stop_ai
-            )
-            #print(response)
-            respond = response.choices[0].text
+            respond = ''
+            if '-turbo' in self.model:
+                response = self.openai.Completion.create(
+                    model=self.model,
+                    messages=[{"role": "user", "content": msg}],
+                    temperature=self.temperature,
+                    max_tokens=self.max_tokens,
+                    top_p=self.top_p,
+                    frequency_penalty=self.frequency_penalty,
+                    presence_penalty=self.presence_penalty,
+                    stop=self.stop_ai,
+                    api_base="https://api.openai.com/v1/chat"
+                )
+                respond = response.choices[0].message.content
+            else:
+                response = self.openai.Completion.create(
+                    model=self.model,
+                    prompt=msg,
+                    temperature=self.temperature,
+                    max_tokens=self.max_tokens,
+                    top_p=self.top_p,
+                    frequency_penalty=self.frequency_penalty,
+                    presence_penalty=self.presence_penalty,
+                    stop=self.stop_ai
+                )
+                respond = response.choices[0].text
             logger.info("openai response: {}".format(respond))
             return respond
             
         except Exception:
             logger.critical("openai robot failed to response for %r", msg, exc_info=True)
-            return "抱歉, 我的大脑短路了，请稍后再试试."
+            return "抱歉，OpenAI 回答失败"
 
 
 def get_unknown_response():

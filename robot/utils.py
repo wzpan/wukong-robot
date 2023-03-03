@@ -107,7 +107,7 @@ def emailUser(SUBJECT="", BODY="", ATTACH_LIST=[]):
         return False
 
 
-def get_file_content(filePath):
+def get_file_content(filePath, flag='rb'):
     """
     读取文件内容并返回
 
@@ -115,7 +115,7 @@ def get_file_content(filePath):
     :returns: 文件内容
     :raises IOError: 读取失败则抛出 IOError
     """
-    with open(filePath, "rb") as fp:
+    with open(filePath, flag) as fp:
         return fp.read()
 
 

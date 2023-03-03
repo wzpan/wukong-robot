@@ -230,7 +230,7 @@ class Conversation(object):
         msg = msg.strip()
         logger.info("即将朗读语音：".format(msg))
         if config.get("trim_too_long_text", True) and \
-            len(msg) > config.get('max_text_length', 128):
+            len(msg) > int(config.get('max_text_length', 128)):
             # 文本太长，TTS 会报错
             logger.info("文本超长，需进行截断")
             # 采用截断的方案
