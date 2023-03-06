@@ -224,11 +224,11 @@ class Conversation(object):
         if re.match(pattern, msg):
             logger.info("内容包含URL，屏蔽后续内容")
             msg = re.sub(pattern, '', msg)
-        if not msg:
-            return
         msg = utils.stripPunctuation(msg)
         msg = msg.strip()
-        logger.info("即将朗读语音：".format(msg))
+        if not msg:
+            return
+        logger.info("即将朗读语音：{}".format(msg))
         if config.get("trim_too_long_text", True) and \
             len(msg) > int(config.get('max_text_length', 128)):
             # 文本太长，TTS 会报错

@@ -3,6 +3,9 @@ import os
 import base64
 import tempfile
 import pypinyin
+import subprocess
+import uuid
+
 from aip import AipSpeech
 from . import utils, config, constants
 from robot import logging
@@ -328,6 +331,36 @@ class AliTTS(AbstractTTS):
     def get_speech(self, phrase):
         tmpfile = AliSpeech.tts(self.appKey, self.token, self.voice, phrase)
         if tmpfile:
+            logger.info("{} 语音合成成功，合成路径：{}".format(self.SLUG, tmpfile))
+            return tmpfile
+        else:
+            logger.critical("{} 合成失败！".format(self.SLUG), exc_info=True)
+
+class MacTTS(AbstractTTS):
+    """
+    macOS 系统自带的TTS
+    voice: 发音人，默认是 Tingting
+        全部发音人列表：命令行执行 say -v '?' 可以打印所有语音
+        中文推荐 Tingting（普通话）或者 Sinji（粤语）
+    """
+
+    SLUG = "mac-tts"
+
+    def __init__(self, voice="Tingting", **args):
+        super(self.__class__, self).__init__()
+        self.voice = voice
+
+    @classmethod
+    def get_config(cls):
+        # Try to get ali_yuyin config from config
+        return config.get("mac_tts", {})
+
+    def get_speech(self, phrase):
+        tmpfile = os.path.join(constants.TEMP_PATH, uuid.uuid4().hex + '.asiff')
+        res = subprocess.run(['say', '-v', self.voice, '-o', tmpfile, str(phrase)],
+                             shell=False,
+                             universal_newlines=True)
+        if res.returncode == 0:
             logger.info("{} 语音合成成功，合成路径：{}".format(self.SLUG, tmpfile))
             return tmpfile
         else:
