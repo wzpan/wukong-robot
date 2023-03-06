@@ -72,7 +72,11 @@ class SoxPlayer(AbstractPlayer):
         self.onCompleteds = []
 
     def doPlay(self):
-        cmd = ["play", str(self.src)]
+        system = platform.system()
+        if system == "Darwin":
+            cmd = ["afplay", str(self.src)]
+        else:
+            cmd = ["play", str(self.src)]
         logger.debug("Executing %s", " ".join(cmd))
         self.proc = subprocess.Popen(
             cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL

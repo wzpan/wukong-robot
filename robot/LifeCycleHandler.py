@@ -136,6 +136,7 @@ class LifeCycleHandler(object):
         """
         唤醒并进入录音的状态
         """
+        logger.info('onWakeup')
         self._beep_hi(onCompleted=onCompleted, wait=onCompleted)
         if config.get("/LED/enable", False):
             LED.wakeup()
@@ -146,6 +147,7 @@ class LifeCycleHandler(object):
         """
         录音结束并进入思考的状态
         """
+        logger.info('onThink')
         self._beep_lo()
         self._unihiker and self._unihiker.think()
         self._unihiker and self._unihiker.record(1, "我正在思考...")
@@ -168,7 +170,8 @@ class LifeCycleHandler(object):
         """
         恢复沉浸式技能的状态
         """
-        pass
+        logger.info('onRestore')
 
     def onKilled(self):
+        logger.info('onKill')
         self._observer.stop()
