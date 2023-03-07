@@ -171,27 +171,6 @@ class GetHistoryHandler(BaseHandler):
         self.finish()
 
 
-class GetConfigHandler(BaseHandler):
-    def get(self):
-        if not self.validate(self.get_argument("validate", default=None)):
-            res = {"code": 1, "message": "illegal visit"}
-            self.write(json.dumps(res))
-        else:
-            key = self.get_argument("key", default="")
-            res = ""
-            if key == "":
-                res = {
-                    "code": 0,
-                    "message": "ok",
-                    "config": config.getText(),
-                    "sensitivity": config.get("sensitivity", 0.5),
-                }
-            else:
-                res = {"code": 0, "message": "ok", "value": config.get(key)}
-            self.write(json.dumps(res))
-        self.finish()
-
-
 class GetLogHandler(BaseHandler):
     def get(self):
         if not self.validate(self.get_argument("validate", default=None)):
@@ -204,7 +183,7 @@ class GetLogHandler(BaseHandler):
         self.finish()
 
 
-class LogHandler(BaseHandler):
+class LogPageHandler(BaseHandler):
     def get(self):
         if not self.isValidated():
             self.redirect("/login")
@@ -233,12 +212,32 @@ class OperateHandler(BaseHandler):
             self.finish()
 
 
-class ConfigHandler(BaseHandler):
+class ConfigPageHandler(BaseHandler):
     def get(self):
         if not self.isValidated():
             self.redirect("/login")
         else:
             self.render("config.html", sensitivity=config.get("sensitivity"))
+            
+class ConfigHandler(BaseHandler):
+    def get(self):
+        if not self.validate(self.get_argument("validate", default=None)):
+            res = {"code": 1, "message": "illegal visit"}
+            self.write(json.dumps(res))
+        else:
+            key = self.get_argument("key", default="")
+            res = ""
+            if key == "":
+                res = {
+                    "code": 0,
+                    "message": "ok",
+                    "config": config.getText(),
+                    "sensitivity": config.get("sensitivity", 0.5),
+                }
+            else:
+                res = {"code": 0, "message": "ok", "value": config.get(key)}
+            self.write(json.dumps(res))
+        self.finish()
 
     def post(self):
         if self.validate(self.get_argument("validate", default=None)):
@@ -400,19 +399,23 @@ application = tornado.web.Application(
     [
         (r"/", MainHandler),
         (r"/login", LoginHandler),
-        (r"/gethistory", GetHistoryHandler),
+        (r"/history", GetHistoryHandler),
         (r"/chat", ChatHandler),
         (r"/chat/updates", MessageUpdatesHandler),
-        (r"/config", ConfigHandler),
-        (r"/getconfig", GetConfigHandler),
-        (r"/operate", OperateHandler),
-        (r"/getlog", GetLogHandler),
-        (r"/log", LogHandler),
+        (r"/config", ConfigHandler),   
+        (r"/configpage", ConfigPageHandler),     
+        (r"/operate", OperateHandler),        
+        (r"/logpage", LogPageHandler),
+        (r"/log", GetLogHandler), 
         (r"/logout", LogoutHandler),
         (r"/api", APIHandler),
         (r"/qa", QAHandler),
         (r"/upgrade", UpdateHandler),
         (r"/donate", DonateHandler),
+        # 废弃老接口
+        (r"/getlog", GetLogHandler), 
+        (r"/gethistory", GetHistoryHandler),
+        (r"/getconfig", ConfigHandler),
         (
             r"/photo/(.+\.(?:png|jpg|jpeg|bmp|gif|JPG|PNG|JPEG|BMP|GIF))",
             tornado.web.StaticFileHandler,

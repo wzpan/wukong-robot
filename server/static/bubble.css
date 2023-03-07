@@ -9,7 +9,7 @@ http://twitter.com/necolas
 Created: 02 March 2010
 Version: 1.2 (03 March 2011)
 
-Dual licensed under MIT and GNU GPLv2 © Nicolas Gallagher 
+Dual licensed under MIT and GNU GPLv2 ï¿½ Nicolas Gallagher 
 ------------------------------------------ */
 
 /* NOTE: Some declarations use longhand notation so that it can be clearly
@@ -131,7 +131,6 @@ Dual licensed under MIT and GNU GPLv2 © Nicolas Gallagher
    ------------------------------------------ */
 
 .left .bubble-white {
-  margin-left:100px;
   float:left;
 }
 
@@ -139,7 +138,6 @@ Dual licensed under MIT and GNU GPLv2 © Nicolas Gallagher
    ------------------------------------------ */
 
 .right .bubble-white {
-  margin-right:100px;
   float:right;
 }
 
@@ -222,7 +220,6 @@ Dual licensed under MIT and GNU GPLv2 © Nicolas Gallagher
    ------------------------------------------ */
 
 .right .bubble-blue {
-  margin-right:100px;
   float:right;
 }
 
@@ -382,7 +379,6 @@ Dual licensed under MIT and GNU GPLv2 © Nicolas Gallagher
    ------------------------------------------ */
 
 .left .bubble-green {
-  margin-left:100px;
   float:left;
 }
 
@@ -390,7 +386,7 @@ Dual licensed under MIT and GNU GPLv2 © Nicolas Gallagher
    ------------------------------------------ */
 
 .right .bubble-green {
-  margin-right:100px;
+  margin-right:20px;
   float:right;
 }
 

@@ -5,7 +5,7 @@ function appendHistory(type, query, uuid, plugin) {
         $('.history').append(`
               <div class="right">
                  <div class="bubble bubble-green">
-                   <div class="bubble-avatar"><i class="fas fa-user"></i></div>
+                   <!-- <div class="bubble-avatar"><i class="fas fa-user"></i></div> -->
                    <p style="text-align: left" id="${uuid}">${query}</p>
                  </div>
               </div>
@@ -15,7 +15,7 @@ function appendHistory(type, query, uuid, plugin) {
         $('.history').append(`
           <div class="left">
              <div class="bubble bubble-white">
-               <div class="bubble-avatar"><image src="./static/robot.png" width=32px attr="robot" /></div>
+               <!-- <div class="bubble-avatar"><image src="./static/robot.png" width=32px attr="robot" /></div> -->
                <div style="text-align: left" id="${uuid}">
              </div>
            </div>

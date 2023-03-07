@@ -7,7 +7,7 @@
 所有接口都需要带上 `validate` 参数，该参数值和配置文件中的 `server/validate` 参数值相同。示例：
 
 ``` sh
-$ curl localhost:5001/gethistory?validate=f4bde2a342c7c75aa276f78b26cfbd8a
+$ curl localhost:5001/history?validate=f4bde2a342c7c75aa276f78b26cfbd8a
 ```
 
 接口返回：
@@ -54,7 +54,7 @@ $ curl -X POST localhost:5001/operate -d "type=restart&validate=f4bde2a342c7c75a
 
 用于查看 wukong-robot 保存的日志。出于性能上的考虑，默认只返回最后 200 行的内容，相当于做了一次 `tail -n 200` 。
 
-- url：/getlog
+- url：/log
 - method: GET
 - 参数：
 
@@ -66,7 +66,7 @@ $ curl -X POST localhost:5001/operate -d "type=restart&validate=f4bde2a342c7c75a
 - 示例：
 
 ``` sh
-$ curl localhost:5001/getlog?validate=f4bde2a342c7c75aa276f78b26cfbd8a&lines=10
+$ curl localhost:5001/log?validate=f4bde2a342c7c75aa276f78b26cfbd8a&lines=10
 ```
 
 - 返回：
@@ -113,7 +113,7 @@ $ curl -X POST localhost:5001/chat -d "type=text&query=%E7%8E%B0%E5%9C%A8%E5%87%
 
 用于查看 wukong-robot 启动到现在的所有会话记录。
 
-- url：/gethistory
+- url：/history
 - method: GET
 - 参数：
 
@@ -124,7 +124,7 @@ $ curl -X POST localhost:5001/chat -d "type=text&query=%E7%8E%B0%E5%9C%A8%E5%87%
 - 示例：
 
 ``` sh
-$ curl localhost:5001/gethistory?validate=f4bde2a342c7c75aa276f78b26cfbd8a
+$ curl localhost:5001/history?validate=f4bde2a342c7c75aa276f78b26cfbd8a
 ```
 
 - 返回：
@@ -141,7 +141,7 @@ $ curl localhost:5001/gethistory?validate=f4bde2a342c7c75aa276f78b26cfbd8a
 
 用于查看 wukong-robot 现有的配置。
 
-- url：/getconfig
+- url：/config
 - method: GET
 - 参数：
 
@@ -153,7 +153,7 @@ $ curl localhost:5001/gethistory?validate=f4bde2a342c7c75aa276f78b26cfbd8a
 - 示例：
 
 ``` sh
-$ curl localhost:5001/getconfig?validate=f4bde2a342c7c75aa276f78b26cfbd8a\&key=server
+$ curl localhost:5001/config?validate=f4bde2a342c7c75aa276f78b26cfbd8a\&key=server
 ```
 
 - 返回：
