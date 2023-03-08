@@ -7,7 +7,7 @@ python:
 cache:
   directories:
     - "$HOME/.pip-cache/"
-    - "/home/travis/virtualenv/python3.5"
+    - "/home/travis/virtualenv/python3.8"
 install: 
     - "pip3 install pyflakes --cache-dir $HOME/.pip-cache"
 script:

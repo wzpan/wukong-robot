@@ -87,13 +87,13 @@ wukong-robot 被唤醒后，用户的语音指令先经过 ASR 引擎进行 ASR 
 
 ### Python 版本 ###
 
-wukong-robot 只支持 Python 3.5+，不支持 Python 2.x 。
+wukong-robot 只支持 Python 3.7+，不支持 Python 2.x 。
 
 ### 设备要求 ###
 
 wukong-robot 支持运行在以下的设备和系统中：
 
-* 64bit Mac OS X
+* Intel Chip Mac (不支持 M1 芯片)
 * 64bit Ubuntu（12.04 and 14.04）
 * 全系列的树莓派（Raspbian 系统）
 * Pine 64 with Debian Jessie 8.5（3.10.102）

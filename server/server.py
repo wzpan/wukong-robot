@@ -131,7 +131,7 @@ class ChatHandler(BaseHandler):
                         uuid,
                         onSay=lambda msg, audio, plugin: self.onResp(
                             msg, audio, plugin
-                        ),
+                        )
                     )
             elif self.get_argument("type") == "voice":
                 voice_data = self.get_argument("voice")
@@ -144,7 +144,7 @@ class ChatHandler(BaseHandler):
                 utils.check_and_delete(tmpfile)
                 conversation.doConverse(
                     nfile,
-                    onSay=lambda msg, audio, plugin: self.onResp(msg, audio, plugin),
+                    onSay=lambda msg, audio, plugin: self.onResp(msg, audio, plugin)
                 )
             else:
                 res = {"code": 1, "message": "illegal type"}

@@ -1,5 +1,10 @@
 FROM wzpan/wukong-robot-arm:1.8.0
 MAINTAINER wzpan
+# Upgrade to python 3.8
+RUN apt-get remove -y python3-pip
+RUN apt-get autoremove -y
+RUN apt-get install -y python3.8
+RUN apt-get install -y python3-pip
 WORKDIR /root/wukong-robot
 RUN git pull -f
 RUN pip3 install -r requirements.txt

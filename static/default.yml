@@ -218,7 +218,6 @@ tuling:
 # OpenAI(ChatGPT) 机器人
 # 使用科学上网工具到 https://platform.openai.com
 # 注册一个账号，获得 openai_api_key 后填到下面的配置中即可
-# 缺点：返回速度较慢，并要求 Python > 3.6
 openai:
     openai_api_key: 'sk-xxxxxxxxxxxxxxxxxxxxxxxxxx'
     # 参数指定将生成文本的模型类型。默认情况下，OpenAI 提供了几个模型供您选择，您可以在此处查看。此外，您甚至可以创建自己的模型，但这超出了本教程的范围。https://beta.openai.com/docs/models/overview

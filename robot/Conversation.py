@@ -79,6 +79,13 @@ class Conversation(object):
             self.brain.restore()
 
     def doResponse(self, query, UUID="", onSay=None):
+        """
+        响应指令
+        
+        :param query: 指令
+        :UUID: 指令的UUID
+        :onSay: 朗读时的回调
+        """
         statistic.report(1)
         self.interrupt()
         self.appendHistory(0, query, UUID)
@@ -217,6 +224,7 @@ class Conversation(object):
         :param plugin: 来自哪个插件的消息（将带上插件的说明）
         :param onCompleted: 完成的回调
         :param wait: 是否要等待说完（为True将阻塞主线程直至说完这句话）
+        :param append_history: 是否要追加到聊天记录
         """
         append_history and self.appendHistory(1, msg, plugin=plugin)
         is_too_long = False
@@ -279,7 +287,10 @@ class Conversation(object):
         utils.lruCache()  # 清理缓存
 
     def activeListen(self, silent=False):
-        """主动问一个问题(适用于多轮对话)"""
+        """
+        主动问一个问题(适用于多轮对话)
+        :param silent: 是否不触发唤醒表现（主要用于极客模式）
+        """
         logger.debug("activeListen")
         try:
             if not silent:
