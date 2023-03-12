@@ -21,9 +21,11 @@ RUN ln -s /usr/python/bin/python3.9 /usr/bin/python3
 RUN ln -s /usr/python/bin/pip3.9 /usr/bin/pip
 RUN rm /usr/local/bin/pip
 RUN ln -s /usr/python/bin/pip3.9 /usr/local/bin/pip
+RUN mv /usr/bin/lsb_release /usr/bin/lsb_release_bak
+RUN apt-get install portaudio19-dev python-pyaudio python3-pyaudio sox pulseaudio libsox-fmt-all ffmpeg
+RUN pip3 install pyaudio
 WORKDIR /root/wukong-robot
 RUN git pull -f
-RUN mv /usr/bin/lsb_release /usr/bin/lsb_release_bak
 RUN pip install -r requirements.txt
 WORKDIR /root/.wukong/contrib
 RUN git pull -f

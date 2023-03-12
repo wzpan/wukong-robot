@@ -23,6 +23,7 @@ RUN ln -s /usr/python/bin/pip3.9 /usr/local/bin/pip
 RUN mv /usr/bin/lsb_release /usr/bin/lsb_release_bak
 WORKDIR /root/wukong-robot
 RUN git pull -f
+RUN pip3 install pyaudio
 RUN pip3 install -r requirements.txt
 WORKDIR /root/.wukong/contrib
 RUN git pull -f
