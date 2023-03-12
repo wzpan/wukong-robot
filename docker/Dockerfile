@@ -2,10 +2,9 @@
 FROM wzpan/wukong-robot:v1.8.0
 MAINTAINER wzpan
 # Upgrade to python 3.9
-RUN add-apt-repository -r ppa:deadsnakes/python-3.6
+RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt update
 RUN apt install software-properties-common
-RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt-get remove -y python3-pip
 RUN apt-get autoremove -y
 RUN apt-get install -y python3.9
