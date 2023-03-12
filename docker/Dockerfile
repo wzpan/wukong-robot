@@ -2,18 +2,28 @@
 FROM wzpan/wukong-robot:v1.8.0
 MAINTAINER wzpan
 # Upgrade to python 3.9
+RUN rm /etc/apt/sources.list.d/*jonathon*
 RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt update
-RUN apt install software-properties-common
-RUN apt-get remove -y python3-pip
+RUN apt install -y software-properties-common
 RUN apt-get autoremove -y
-RUN apt-get install -y python3.9
-RUN apt-get install -y python3-pip
+RUN wget https://www.python.org/ftp/python/3.9.0/Python-3.9.0.tar.xz
+RUN tar -xf Python-3.9.0.tar.xz
+WORKDIR Python-3.9.0
+RUN apt install -y autoconf libtool automake libffi-dev
+RUN ./configure --prefix=/usr/python
+RUN make -j 12
+RUN make altinstall
 RUN rm /usr/bin/python3
-RUN ln -s /usr/bin/python3.9 /usr/bin/python3
-RUN python3.8 -m pip install --upgrade pip
+RUN rm /usr/bin/python
+RUN ln -s /usr/python/bin/python3.9 /usr/bin/python
+RUN ln -s /usr/python/bin/python3.9 /usr/bin/python3
+RUN ln -s /usr/python/bin/pip3.9 /usr/bin/pip
+RUN rm /usr/local/bin/pip
+RUN ln -s /usr/python/bin/pip3.9 /usr/local/bin/pip
 WORKDIR /root/wukong-robot
 RUN git pull -f
+RUN mv /usr/bin/lsb_release /usr/bin/lsb_release_bak
 RUN pip install -r requirements.txt
 WORKDIR /root/.wukong/contrib
 RUN git pull -f
