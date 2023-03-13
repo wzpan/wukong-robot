@@ -197,7 +197,8 @@ class OPENAIRobot(AbstractRobot):
     def __init__(self, openai_api_key, model,
                  temperature, max_tokens, 
                  top_p, frequency_penalty, 
-                 presence_penalty, stop_ai, prefix=""):
+                 presence_penalty, stop_ai, 
+                 prefix="", proxy="", api_base=""):
         """
         OpenAI机器人
         openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -208,6 +209,9 @@ class OPENAIRobot(AbstractRobot):
             import openai
             self.openai = openai
             self.openai.api_key = openai_api_key
+            if proxy:
+                self.openai.proxy = proxy
+
         except Exception:
             logger.critical('OpenAI 初始化失败，请升级 Python 版本至 > 3.6')
         self.model = model
@@ -218,6 +222,7 @@ class OPENAIRobot(AbstractRobot):
         self.frequency_penalty = frequency_penalty
         self.presence_penalty = presence_penalty
         self.stop_ai = stop_ai
+        self.api_base = api_base
 
     @classmethod
     def get_config(cls):
@@ -247,7 +252,7 @@ class OPENAIRobot(AbstractRobot):
                     frequency_penalty=self.frequency_penalty,
                     presence_penalty=self.presence_penalty,
                     stop=self.stop_ai,
-                    api_base="https://api.openai.com/v1/chat"
+                    api_base=self.api_base if self.api_base else "https://api.openai.com/v1/chat"
                 )
                 respond = response.choices[0].message.content
             else:
