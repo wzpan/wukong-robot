@@ -44,7 +44,7 @@ def doInit(config_file=constants.getDefaultConfigPath()):
         except OSError:
             logger.error(
                 f"Could not create config dir: '{constants.CONFIG_PATH}'",
-                stack_info=True
+                stack_info=True,
             )
             raise
 

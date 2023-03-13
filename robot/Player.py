@@ -207,9 +207,7 @@ class MusicPlayer(SoxPlayer):
             if volume >= 100:
                 volume = 100
                 self.plugin.say("音量已经最大啦", wait=True)
-            subprocess.run(
-                ["osascript", "-e", f"set volume output volume {volume}"]
-            )
+            subprocess.run(["osascript", "-e", f"set volume output volume {volume}"])
         elif system == "Linux":
             res = subprocess.run(
                 ["amixer sget Master | grep 'Mono:' | awk -F'[][]' '{ print $2 }'"],
@@ -244,9 +242,7 @@ class MusicPlayer(SoxPlayer):
             if volume <= 20:
                 volume = 20
                 self.plugin.say("音量已经很小啦", wait=True)
-            subprocess.run(
-                ["osascript", "-e", f"set volume output volume {volume}"]
-            )
+            subprocess.run(["osascript", "-e", f"set volume output volume {volume}"])
         elif system == "Linux":
             res = subprocess.run(
                 ["amixer sget Master | grep 'Mono:' | awk -F'[][]' '{ print $2 }'"],

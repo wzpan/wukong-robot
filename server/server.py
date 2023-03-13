@@ -131,7 +131,7 @@ class ChatHandler(BaseHandler):
                         uuid,
                         onSay=lambda msg, audio, plugin: self.onResp(
                             msg, audio, plugin
-                        )
+                        ),
                     )
             elif self.get_argument("type") == "voice":
                 voice_data = self.get_argument("voice")
@@ -144,7 +144,7 @@ class ChatHandler(BaseHandler):
                 utils.check_and_delete(tmpfile)
                 conversation.doConverse(
                     nfile,
-                    onSay=lambda msg, audio, plugin: self.onResp(msg, audio, plugin)
+                    onSay=lambda msg, audio, plugin: self.onResp(msg, audio, plugin),
                 )
             else:
                 res = {"code": 1, "message": "illegal type"}
@@ -218,7 +218,8 @@ class ConfigPageHandler(BaseHandler):
             self.redirect("/login")
         else:
             self.render("config.html", sensitivity=config.get("sensitivity"))
-            
+
+
 class ConfigHandler(BaseHandler):
     def get(self):
         if not self.validate(self.get_argument("validate", default=None)):
@@ -402,18 +403,18 @@ application = tornado.web.Application(
         (r"/history", GetHistoryHandler),
         (r"/chat", ChatHandler),
         (r"/chat/updates", MessageUpdatesHandler),
-        (r"/config", ConfigHandler),   
-        (r"/configpage", ConfigPageHandler),     
-        (r"/operate", OperateHandler),        
+        (r"/config", ConfigHandler),
+        (r"/configpage", ConfigPageHandler),
+        (r"/operate", OperateHandler),
         (r"/logpage", LogPageHandler),
-        (r"/log", GetLogHandler), 
+        (r"/log", GetLogHandler),
         (r"/logout", LogoutHandler),
         (r"/api", APIHandler),
         (r"/qa", QAHandler),
         (r"/upgrade", UpdateHandler),
         (r"/donate", DonateHandler),
         # 废弃老接口
-        (r"/getlog", GetLogHandler), 
+        (r"/getlog", GetLogHandler),
         (r"/gethistory", GetHistoryHandler),
         (r"/getconfig", ConfigHandler),
         (
@@ -428,7 +429,7 @@ application = tornado.web.Application(
         ),
         (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "server/static"}),
     ],
-    **settings
+    **settings,
 )
 
 

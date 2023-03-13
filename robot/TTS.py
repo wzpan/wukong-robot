@@ -107,7 +107,8 @@ class HanTTS(AbstractTTS):
 
         if not os.path.exists(src):
             logger.error(
-                f"{self.SLUG} 合成失败: 请先下载 syllables.zip (https://sourceforge.net/projects/hantts/files/?source=navbar) 并解压到 ~/.wukong 目录下", stack_info=True
+                f"{self.SLUG} 合成失败: 请先下载 syllables.zip (https://sourceforge.net/projects/hantts/files/?source=navbar) 并解压到 ~/.wukong 目录下",
+                stack_info=True,
             )
             return None
         logger.debug(f"{self.SLUG} 合成中...")
@@ -258,7 +259,7 @@ class TencentTTS(AbstractTTS):
         region="ap-guangzhou",
         voiceType=0,
         language=1,
-        **args
+        **args,
     ):
         super(self.__class__, self).__init__()
         self.engine = TencentSpeech.tencentSpeech(secret_key, secretid)
@@ -334,6 +335,7 @@ class AliTTS(AbstractTTS):
         else:
             logger.critical(f"{self.SLUG} 合成失败！", stack_info=True)
 
+
 class MacTTS(AbstractTTS):
     """
     macOS 系统自带的TTS
@@ -354,10 +356,12 @@ class MacTTS(AbstractTTS):
         return config.get("mac_tts", {})
 
     def get_speech(self, phrase):
-        tmpfile = os.path.join(constants.TEMP_PATH, uuid.uuid4().hex + '.asiff')
-        res = subprocess.run(['say', '-v', self.voice, '-o', tmpfile, str(phrase)],
-                             shell=False,
-                             universal_newlines=True)
+        tmpfile = os.path.join(constants.TEMP_PATH, uuid.uuid4().hex + ".asiff")
+        res = subprocess.run(
+            ["say", "-v", self.voice, "-o", tmpfile, str(phrase)],
+            shell=False,
+            universal_newlines=True,
+        )
         if res.returncode == 0:
             logger.info(f"{self.SLUG} 语音合成成功，合成路径：{tmpfile}")
             return tmpfile

@@ -10,6 +10,7 @@ from robot.sdk import unit
 
 logger = logging.getLogger(__name__)
 
+
 class AbstractRobot(object):
 
     __metaclass__ = ABCMeta
@@ -192,11 +193,20 @@ class OPENAIRobot(AbstractRobot):
 
     SLUG = "openai"
 
-    def __init__(self, openai_api_key, model,
-                 temperature, max_tokens, 
-                 top_p, frequency_penalty, 
-                 presence_penalty, stop_ai, 
-                 prefix="", proxy="", api_base=""):
+    def __init__(
+        self,
+        openai_api_key,
+        model,
+        temperature,
+        max_tokens,
+        top_p,
+        frequency_penalty,
+        presence_penalty,
+        stop_ai,
+        prefix="",
+        proxy="",
+        api_base="",
+    ):
         """
         OpenAI机器人
         openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -205,14 +215,15 @@ class OPENAIRobot(AbstractRobot):
         self.openai = None
         try:
             import openai
+
             self.openai = openai
             self.openai.api_key = openai_api_key
             if proxy:
-                logger.info(f"使用代理{proxy}")
+                logger.info(f"{self.SLUG} 使用代理：{proxy}")
                 self.openai.proxy = proxy
 
         except Exception:
-            logger.critical('OpenAI 初始化失败，请升级 Python 版本至 > 3.6')
+            logger.critical("OpenAI 初始化失败，请升级 Python 版本至 > 3.6")
         self.model = model
         self.prefix = prefix
         self.temperature = temperature
@@ -238,10 +249,10 @@ class OPENAIRobot(AbstractRobot):
         msg = "".join(texts)
         msg = utils.stripPunctuation(msg)
         msg = self.prefix + msg  # 增加一段前缀
-        logger.info('msg: ' + msg)
+        logger.info("msg: " + msg)
         try:
-            respond = ''
-            if '-turbo' in self.model:
+            respond = ""
+            if "-turbo" in self.model:
                 response = self.openai.Completion.create(
                     model=self.model,
                     messages=[{"role": "user", "content": msg}],
@@ -251,7 +262,9 @@ class OPENAIRobot(AbstractRobot):
                     frequency_penalty=self.frequency_penalty,
                     presence_penalty=self.presence_penalty,
                     stop=self.stop_ai,
-                    api_base=self.api_base if self.api_base else "https://api.openai.com/v1/chat"
+                    api_base=self.api_base
+                    if self.api_base
+                    else "https://api.openai.com/v1/chat",
                 )
                 respond = response.choices[0].message.content
             else:
@@ -263,14 +276,16 @@ class OPENAIRobot(AbstractRobot):
                     top_p=self.top_p,
                     frequency_penalty=self.frequency_penalty,
                     presence_penalty=self.presence_penalty,
-                    stop=self.stop_ai
+                    stop=self.stop_ai,
                 )
                 respond = response.choices[0].text
             logger.info(f"openai response: {respond}")
             return respond
-            
+
         except Exception:
-            logger.critical("openai robot failed to response for %r", msg, exc_info=True)
+            logger.critical(
+                "openai robot failed to response for %r", msg, exc_info=True
+            )
             return "抱歉，OpenAI 回答失败"
 
 

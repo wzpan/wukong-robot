@@ -17,10 +17,10 @@ def initDetector(wukong):
     global porcupine, recorder, detector
     if config.get("detector", "snowboy") == "porcupine":
         logger.info("使用 porcupine 进行离线唤醒")
-        
+
         import pvporcupine
         from pvrecorder import PvRecorder
-        
+
         access_key = config.get("/porcupine/access_key")
         keyword_paths = config.get("/porcupine/keyword_paths")
         keywords = config.get("/porcupine/keywords", ["porcupine"])
@@ -67,14 +67,19 @@ def initDetector(wukong):
         except pvporcupine.PorcupineActivationLimitError as e:
             logger.error(
                 f"[Porcupine] AccessKey {access_key} has reached it's temporary device limit",
-                stack_info=True
+                stack_info=True,
             )
             raise e
         except pvporcupine.PorcupineActivationRefusedError as e:
-            logger.error("[Porcupine] AccessKey '%s' refused" % access_key, stack_info=True)
+            logger.error(
+                "[Porcupine] AccessKey '%s' refused" % access_key, stack_info=True
+            )
             raise e
         except pvporcupine.PorcupineActivationThrottledError as e:
-            logger.error("[Porcupine] AccessKey '%s' has been throttled" % access_key, stack_info=True)
+            logger.error(
+                "[Porcupine] AccessKey '%s' has been throttled" % access_key,
+                stack_info=True,
+            )
             raise e
         except pvporcupine.PorcupineError as e:
             logger.error("[Porcupine] 初始化 Porcupine 失败", stack_info=True)

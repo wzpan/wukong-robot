@@ -107,7 +107,7 @@ def emailUser(SUBJECT="", BODY="", ATTACH_LIST=[]):
         return False
 
 
-def get_file_content(filePath, flag='rb'):
+def get_file_content(filePath, flag="rb"):
     """
     读取文件内容并返回
 

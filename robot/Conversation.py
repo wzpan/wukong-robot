@@ -81,7 +81,7 @@ class Conversation(object):
     def doResponse(self, query, UUID="", onSay=None):
         """
         响应指令
-        
+
         :param query: 指令
         :UUID: 指令的UUID
         :onSay: 朗读时的回调
@@ -180,9 +180,7 @@ class Conversation(object):
                 )
             urls = re.findall(url_pattern, text)
             for url in urls:
-                text = text.replace(
-                    url, f'<a href={url} target="_blank">{url}</a>'
-                )
+                text = text.replace(url, f'<a href={url} target="_blank">{url}</a>')
             self.lifeCycleHandler.onResponse(t, text)
             self.history.add_message(
                 {
@@ -214,7 +212,15 @@ class Conversation(object):
             self.say("没听清呢")
             self.hasPardon = False
 
-    def say(self, msg, cache=False, plugin="", onCompleted=None, wait=False, append_history=True):
+    def say(
+        self,
+        msg,
+        cache=False,
+        plugin="",
+        onCompleted=None,
+        wait=False,
+        append_history=True,
+    ):
         """
         说一句话
         :param msg: 内容
@@ -229,29 +235,30 @@ class Conversation(object):
         pattern = r"http[s]?://.+"
         if re.match(pattern, msg):
             logger.info("内容包含URL，屏蔽后续内容")
-            msg = re.sub(pattern, '', msg)
+            msg = re.sub(pattern, "", msg)
         msg = utils.stripPunctuation(msg)
         msg = msg.strip()
         if not msg:
             return
         logger.info(f"即将朗读语音：{msg}")
-        if config.get("trim_too_long_text", True) and \
-            len(msg) > int(config.get('max_text_length', 128)):
+        if config.get("trim_too_long_text", True) and len(msg) > int(
+            config.get("max_text_length", 128)
+        ):
             # 文本太长，TTS 会报错
             logger.info("文本超长，需进行截断")
             # 采用截断的方案
             lines = re.split("。|！|？|\.|\!|\?|\n", msg)
-            shorter_msg = ''
+            shorter_msg = ""
             if "\n" in msg:
                 idx = 0
                 while True:
                     shorter_msg += lines[idx]
                     idx += 1
-                    if len(shorter_msg) >= config.get('max_text_length', 128):
+                    if len(shorter_msg) >= config.get("max_text_length", 128):
                         break
                 msg = shorter_msg
             else:
-                msg = msg[0:config.get('max_text_length', 128)]
+                msg = msg[0 : config.get("max_text_length", 128)]
             logger.info(f"截断后的文本：{msg}")
             is_too_long = True
         voice = ""
@@ -280,7 +287,9 @@ class Conversation(object):
             onCompleted = lambda: self._onCompleted(msg)
         self.player = Player.SoxPlayer()
         if config.get("trim_too_long_text", True) and is_too_long:
-            self.player.preappendCompleted(lambda: self.say("后面的内容太长了，我就不念了", append_history=False))
+            self.player.preappendCompleted(
+                lambda: self.say("后面的内容太长了，我就不念了", append_history=False)
+            )
         self.player.play(voice, not cache, onCompleted, wait)
         utils.lruCache()  # 清理缓存
 

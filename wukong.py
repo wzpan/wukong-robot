@@ -43,16 +43,16 @@ class Wukong(object):
             如需退出，可以按 Ctrl-4 组合键
 
 """.format(
-                utils.get_file_content(os.path.join(constants.APP_PATH, 'VERSION'), 'r').strip(),
+                utils.get_file_content(
+                    os.path.join(constants.APP_PATH, "VERSION"), "r"
+                ).strip(),
                 config.get("/server/host", "0.0.0.0"),
                 config.get("/server/port", "5001"),
             )
         )
 
         self.conversation = Conversation(self._profiling)
-        self.conversation.say(
-            f"{config.get('first_name', '主人')} 你好！试试对我喊唤醒词叫醒我吧", True
-        )
+        self.conversation.say(f"{config.get('first_name', '主人')} 你好！试试对我喊唤醒词叫醒我吧", True)
         self.lifeCycleHandler = LifeCycleHandler(self.conversation)
         self.lifeCycleHandler.onInit()
 

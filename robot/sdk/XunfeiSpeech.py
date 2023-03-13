@@ -145,7 +145,9 @@ def asr_on_message(ws, message):
         if code != 0:
             errMsg = json.loads(message)["message"]
             logger.critical(
-                "xunfei-asr 识别出错了：sid:%s call error:%s code is:%s" % (sid, errMsg, code), stack_info=True
+                "xunfei-asr 识别出错了：sid:%s call error:%s code is:%s"
+                % (sid, errMsg, code),
+                stack_info=True,
             )
         else:
             data = json.loads(message)["data"]["result"]["ws"]
