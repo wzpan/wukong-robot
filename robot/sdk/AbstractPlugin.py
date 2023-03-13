@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 try:
     sys.path.append(constants.CONTRIB_PATH)
 except Exception as e:
-    logger.debug("未检测到插件目录,Error:{}".format(e))
+    logger.error(f"未检测到插件目录, Error: {e}", stack_info=True)
 
 
 class AbstractPlugin(metaclass=ABCMeta):

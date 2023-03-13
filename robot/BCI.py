@@ -50,7 +50,7 @@ class MuseBCI(object):
                 ),
                 dispatcher,
             )
-            logger.info("Muse serving on {}".format(server.server_address))
+            logger.info(f"Muse serving on {server.server_address}")
             server.serve_forever()
         except Exception as e:
-            logger.error(e)
+            logger.error(e, stack_info=True)

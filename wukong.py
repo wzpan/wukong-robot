@@ -51,7 +51,7 @@ class Wukong(object):
 
         self.conversation = Conversation(self._profiling)
         self.conversation.say(
-            "{} 你好！试试对我喊唤醒词叫醒我吧".format(config.get("first_name", "主人")), True
+            f"{config.get('first_name', '主人')} 你好！试试对我喊唤醒词叫醒我吧", True
         )
         self.lifeCycleHandler = LifeCycleHandler(self.conversation)
         self.lifeCycleHandler.onInit()
@@ -93,7 +93,7 @@ class Wukong(object):
             # 初始化离线唤醒
             detector.initDetector(self)
         except AttributeError:
-            logger.error("初始化离线唤醒功能失败")
+            logger.error("初始化离线唤醒功能失败", stack_info=True)
             pass
 
     def help(self):
@@ -150,7 +150,7 @@ class Wukong(object):
                 threadNum,
             )
         except Exception as e:
-            logger.error("上传失败：{}".format(e))
+            logger.error(f"上传失败：{e}", stack_info=True)
 
     def restart(self):
         """

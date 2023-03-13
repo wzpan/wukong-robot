@@ -67,7 +67,7 @@ class TulingRobot(AbstractRobot):
                     result += "\n".join(res["values"].values())
             else:
                 result = "图灵机器人服务异常，请联系作者"
-            logger.info("{} 回答：{}".format(self.SLUG, result))
+            logger.info(f"{self.SLUG} 回答：{result}")
             return result
         except Exception:
             logger.critical(
@@ -157,10 +157,10 @@ class AnyQRobot(AbstractRobot):
         msg = "".join(texts)
         msg = utils.stripPunctuation(msg)
         try:
-            url = "http://{}:{}/anyq?question={}".format(self.host, self.port, msg)
+            url = f"http://{self.host}:{self.port}/anyq?question={msg}"
             r = requests.get(url)
             respond = json.loads(r.text)
-            logger.info("anyq response: {}".format(respond))
+            logger.info(f"anyq response: {respond}")
             if len(respond) > 0:
                 # 有命中，进一步判断 confidence 是否达到要求
                 confidence = respond[0]["confidence"]
@@ -169,7 +169,7 @@ class AnyQRobot(AbstractRobot):
                     answer = respond[0]["answer"]
                     if utils.validjson(answer):
                         answer = random.choice(json.loads(answer))
-                    logger.info("{} 回答：{}".format(self.SLUG, answer))
+                    logger.info(f"{self.SLUG} 回答：{answer}")
                     return answer
             # 没有命中，走兜底
             if self.secondary != "null" and self.secondary:
@@ -178,9 +178,7 @@ class AnyQRobot(AbstractRobot):
                     return ai.chat(texts, parsed)
                 except Exception:
                     logger.critical(
-                        "Secondary robot {} failed to response for {}".format(
-                            self.secondary, msg
-                        )
+                        f"Secondary robot {self.secondary} failed to response for {msg}"
                     )
                     return get_unknown_response()
             else:
@@ -210,6 +208,7 @@ class OPENAIRobot(AbstractRobot):
             self.openai = openai
             self.openai.api_key = openai_api_key
             if proxy:
+                logger.info(f"使用代理{proxy}")
                 self.openai.proxy = proxy
 
         except Exception:
@@ -267,7 +266,7 @@ class OPENAIRobot(AbstractRobot):
                     stop=self.stop_ai
                 )
                 respond = response.choices[0].text
-            logger.info("openai response: {}".format(respond))
+            logger.info(f"openai response: {respond}")
             return respond
             
         except Exception:
@@ -307,7 +306,7 @@ def get_robot_by_slug(slug):
                 + "This is most certainly a bug." % slug
             )
         robot = selected_robots[0]
-        logger.info("使用 {} 对话机器人".format(robot.SLUG))
+        logger.info(f"使用 {robot.SLUG} 对话机器人")
         return robot.get_instance()
 
 

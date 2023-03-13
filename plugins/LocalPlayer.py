@@ -29,8 +29,8 @@ class Plugin(AbstractPlugin):
     def init_music_player(self):
         self.song_list = self.get_song_list(config.get("/LocalPlayer/path"))
         if self.song_list == None:
-            logger.error("{} 插件配置有误".format(self.SLUG))
-        logger.info("本地音乐列表：{}".format(self.song_list))
+            logger.error(f"{self.SLUG} 插件配置有误", stack_info=True)
+        logger.info(f"本地音乐列表：{self.song_list}")
         return MusicPlayer(self.song_list, self)
 
     def handle(self, text, parsed):

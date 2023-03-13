@@ -125,7 +125,7 @@ class UnitNLU(AbstractNLU):
             or "api_key" not in args
             or "secret_key" not in args
         ):
-            logger.critical("{} NLU 失败：参数错误！".format(self.SLUG))
+            logger.critical(f"{self.SLUG} NLU 失败：参数错误！", stack_info=True)
             return None
         return unit.getUnit(
             query, args["service_id"], args["api_key"], args["secret_key"]
@@ -203,12 +203,12 @@ def get_engine_by_slug(slug=None):
     )
 
     if len(selected_engines) == 0:
-        raise ValueError("错误：找不到名为 {} 的 NLU 引擎".format(slug))
+        raise ValueError(f"错误：找不到名为 {slug} 的 NLU 引擎")
     else:
         if len(selected_engines) > 1:
-            logger.warning("注意: 有多个 NLU 名称与指定的引擎名 {} 匹配").format(slug)
+            logger.warning(f"注意: 有多个 NLU 名称与指定的引擎名 {slug} 匹配")
         engine = selected_engines[0]
-        logger.info("使用 {} NLU 引擎".format(engine.SLUG))
+        logger.info(f"使用 {engine.SLUG} NLU 引擎")
         return engine.get_instance()
 
 

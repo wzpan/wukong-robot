@@ -19,7 +19,7 @@ class Plugin(AbstractPlugin):
             responds = self.nlu.getSay(parsed, INTENT)
             self.say(responds, cache=True)
         except Exception as e:
-            logger.error(e)
+            logger.error(e, stack_info=True)
             self.say("抱歉，写诗插件出问题了，请稍后再试", cache=True)
 
     def isValid(self, text, parsed):

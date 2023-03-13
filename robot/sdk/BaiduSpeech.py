@@ -45,7 +45,7 @@ class baiduSpeech(object):
                     f.write(data)
                 return result["access_token"]
         except Exception as err:
-            logger.error("请求token_access失败: {}".format(err))
+            logger.error(f"请求token_access失败: {err}", stack_info=True)
 
     def load(self):
         def is_json(f):
@@ -68,13 +68,13 @@ class baiduSpeech(object):
                 else:
                     return access_token["access_token"]
         except (OSError, KeyError, ValueError) as e:
-            print("加载.baiduSpeech_token文件失败，请检查！原因是{}".format(e))
+            print(f"加载.baiduSpeech_token文件失败，请检查！原因是{e}")
 
     def asr(self, pcm, file_type, sample_rate, dev_pid):
         asr_url = "http://vop.baidu.com/pro_api"
         length = len(pcm)
         if length == 0:
-            logger.error("这个语音文件 {} 是空的".format(pcm))
+            logger.error(f"这个语音文件 {pcm} 是空的")
         headers = {
             "Content-Type": "audio/" + file_type + ";rate=" + str(sample_rate),
             "Content-Length": str(length),
@@ -86,4 +86,4 @@ class baiduSpeech(object):
             s = req.content.decode("utf-8")
             return json.loads(s)
         except Exception as err:
-            logger.error("百度ASR极速版请求失败: {}".format(err))
+            logger.error(f"百度ASR极速版请求失败: {err}", stack_info=True)

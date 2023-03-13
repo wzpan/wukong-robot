@@ -101,7 +101,7 @@ class SoxPlayer(AbstractPlayer):
             else:
                 self.doPlay()
         else:
-            logger.critical("path not exists: {}".format(src))
+            logger.critical(f"path not exists: {src}", stack_info=True)
 
     def preappendCompleted(self, onCompleted):
         onCompleted and self.onCompleteds.insert(0, onCompleted)
@@ -173,7 +173,7 @@ class MusicPlayer(SoxPlayer):
 
     def stop(self):
         if self.proc:
-            logger.debug("MusicPlayer stop {}".format(self.proc.pid))
+            logger.debug(f"MusicPlayer stop {self.proc.pid}")
             self.onCompleteds = []
             os.kill(self.proc.pid, signal.SIGSTOP)
             self.proc.terminate()
@@ -208,7 +208,7 @@ class MusicPlayer(SoxPlayer):
                 volume = 100
                 self.plugin.say("音量已经最大啦", wait=True)
             subprocess.run(
-                ["osascript", "-e", "set volume output volume {}".format(volume)]
+                ["osascript", "-e", f"set volume output volume {volume}"]
             )
         elif system == "Linux":
             res = subprocess.run(
@@ -223,7 +223,7 @@ class MusicPlayer(SoxPlayer):
                 if volume >= 100:
                     volume = 100
                     self.plugin.say("音量已经最大啦", wait=True)
-                subprocess.run(["amixer", "set", "Master", "{}%".format(volume)])
+                subprocess.run(["amixer", "set", "Master", f"{volume}%"])
             else:
                 subprocess.run(["amixer", "set", "Master", "20%+"])
         else:
@@ -245,7 +245,7 @@ class MusicPlayer(SoxPlayer):
                 volume = 20
                 self.plugin.say("音量已经很小啦", wait=True)
             subprocess.run(
-                ["osascript", "-e", "set volume output volume {}".format(volume)]
+                ["osascript", "-e", f"set volume output volume {volume}"]
             )
         elif system == "Linux":
             res = subprocess.run(
@@ -260,7 +260,7 @@ class MusicPlayer(SoxPlayer):
                 if volume <= 20:
                     volume = 20
                     self.plugin.say("音量已经最小啦", wait=True)
-                subprocess.run(["amixer", "set", "Master", "{}%".format(volume)])
+                subprocess.run(["amixer", "set", "Master", f"{volume}%"])
             else:
                 subprocess.run(["amixer", "set", "Master", "20%-"])
         else:

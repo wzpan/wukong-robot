@@ -236,7 +236,7 @@ openai:
     presence_penalty: 0.0    
     stop_ai: 'stop'
     # 如果需要代理，反注释下面的配置进行修改
-    # proxy: '127.0.0.1:1080'
+    proxy: '127.0.0.1:1080'
     # 如果需要更换 api_base ，反注释下面的配置进行修改
     # api_base: "https://api.openai.com/v1/chat"
 

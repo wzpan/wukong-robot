@@ -29,7 +29,6 @@ def tail(filepath, n=10):
                 break
 
             f.seek(-r_len, 2)
-            # print('f_len: {}, rem: {}, page_n: {}, r_len: {}'.format(f_len, rem, page_n, r_len))
             lines = f.readlines()[::-1]
             count = len(lines) - 1  # 末行可能不完整，减一行，加大读取量
 

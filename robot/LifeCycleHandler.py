@@ -65,7 +65,7 @@ class LifeCycleHandler(object):
                 self._unihiker = Unihiker()
                 thread.start_new_thread(self._unihiker_shake_event, ())
             except ImportError:
-                logger.error("错误：请确保当前硬件环境为行空板")
+                logger.error("错误：请确保当前硬件环境为行空板", stack_info=True)
 
     def _init_LED(self):
         if config.get("/LED/enable", False) and config.get("/LED/type") == "aiy":
@@ -81,7 +81,7 @@ class LifeCycleHandler(object):
                 bci.start()
                 thread.start_new_thread(self._muse_loop_event, ())
             except ImportError:
-                logger.error("错误：请确保当前硬件搭配了Muse头环并安装了相关驱动")
+                logger.error("错误：请确保当前硬件搭配了Muse头环并安装了相关驱动", stack_info=True)
 
     def _unihiker_shake_event(self):
         """
@@ -104,7 +104,7 @@ class LifeCycleHandler(object):
         try:
             from aiy.board import Board
         except ImportError:
-            logger.error("错误：请确保当前硬件环境为Google AIY VoiceKit并正确安装了驱动")
+            logger.error("错误：请确保当前硬件环境为Google AIY VoiceKit并正确安装了驱动", stack_info=True)
             return
         with Board() as board:
             while True:

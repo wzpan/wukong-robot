@@ -103,7 +103,7 @@ class MessageUpdatesHandler(BaseHandler):
 
 class ChatHandler(BaseHandler):
     def onResp(self, msg, audio, plugin):
-        logger.debug("response msg: {}".format(msg))
+        logger.debug(f"response msg: {msg}")
         res = {
             "code": 0,
             "message": "ok",
@@ -203,7 +203,7 @@ class OperateHandler(BaseHandler):
                 time.sleep(3)
                 wukong.restart()
             else:
-                res = {"code": 1, "message": "illegal type {}".format(type)}
+                res = {"code": 1, "message": f"illegal type {type}"}
                 self.write(json.dumps(res))
                 self.finish()
         else:
@@ -305,7 +305,7 @@ class QAHandler(BaseHandler):
                 res = {"code": 0, "message": "ok"}
                 self.write(json.dumps(res))
             except Exception as e:
-                logger.error(e)
+                logger.error(e, stack_info=True)
                 res = {"code": 1, "message": "提交失败，请检查内容"}
                 self.write(json.dumps(res))
         else:
@@ -443,7 +443,7 @@ def start_server(con, wk):
             application.listen(int(port))
             tornado.ioloop.IOLoop.instance().start()
         except Exception as e:
-            logger.critical("服务器启动失败: {}".format(e))
+            logger.critical(f"服务器启动失败: {e}", stack_info=True)
 
 
 def run(conversation, wukong):

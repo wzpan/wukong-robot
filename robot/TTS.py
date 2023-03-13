@@ -107,12 +107,10 @@ class HanTTS(AbstractTTS):
 
         if not os.path.exists(src):
             logger.error(
-                "{} 合成失败: 请先下载 syllables.zip (https://sourceforge.net/projects/hantts/files/?source=navbar) 并解压到 ~/.wukong 目录下".format(
-                    self.SLUG
-                )
+                f"{self.SLUG} 合成失败: 请先下载 syllables.zip (https://sourceforge.net/projects/hantts/files/?source=navbar) 并解压到 ~/.wukong 目录下", stack_info=True
             )
             return None
-        logger.debug("{} 合成中...".format(self.SLUG))
+        logger.debug(f"{self.SLUG} 合成中...")
         delay = 0
         increment = 355  # milliseconds
         pause = 500  # pause for punctuation
@@ -141,7 +139,7 @@ class HanTTS(AbstractTTS):
         with tempfile.NamedTemporaryFile() as f:
             tmpfile = f.name
         result.export(tmpfile, format="wav")
-        logger.info("{} 语音合成成功，合成路径：{}".format(self.SLUG, tmpfile))
+        logger.info(f"{self.SLUG} 语音合成成功，合成路径：{tmpfile}")
         return tmpfile
 
 
@@ -190,10 +188,10 @@ class AzureTTS(AbstractTTS):
         # 识别正确返回语音二进制,http状态码为200
         if result.status_code == 200:
             tmpfile = utils.write_temp_file(result.content, ".mp3")
-            logger.info("{} 语音合成成功，合成路径：{}".format(self.SLUG, tmpfile))
+            logger.info(f"{self.SLUG} 语音合成成功，合成路径：{tmpfile}")
             return tmpfile
         else:
-            logger.critical("{} 合成失败！".format(self.SLUG), exc_info=True)
+            logger.critical(f"{self.SLUG} 合成失败！", stack_info=True)
 
 
 class BaiduTTS(AbstractTTS):
@@ -230,10 +228,10 @@ class BaiduTTS(AbstractTTS):
         # 识别正确返回语音二进制 错误则返回dict 参照下面错误码
         if not isinstance(result, dict):
             tmpfile = utils.write_temp_file(result, ".mp3")
-            logger.info("{} 语音合成成功，合成路径：{}".format(self.SLUG, tmpfile))
+            logger.info(f"{self.SLUG} 语音合成成功，合成路径：{tmpfile}")
             return tmpfile
         else:
-            logger.critical("{} 合成失败！".format(self.SLUG), exc_info=True)
+            logger.critical(f"{self.SLUG} 合成失败！", stack_info=True)
 
 
 class TencentTTS(AbstractTTS):
@@ -277,10 +275,10 @@ class TencentTTS(AbstractTTS):
             audio = result["Response"]["Audio"]
             data = base64.b64decode(audio)
             tmpfile = utils.write_temp_file(data, ".wav")
-            logger.info("{} 语音合成成功，合成路径：{}".format(self.SLUG, tmpfile))
+            logger.info(f"{self.SLUG} 语音合成成功，合成路径：{tmpfile}")
             return tmpfile
         else:
-            logger.critical("{} 合成失败：{}".format(self.SLUG, result), exc_info=True)
+            logger.critical(f"{self.SLUG} 合成失败：{result}", stack_info=True)
 
 
 class XunfeiTTS(AbstractTTS):
@@ -331,10 +329,10 @@ class AliTTS(AbstractTTS):
     def get_speech(self, phrase):
         tmpfile = AliSpeech.tts(self.appKey, self.token, self.voice, phrase)
         if tmpfile:
-            logger.info("{} 语音合成成功，合成路径：{}".format(self.SLUG, tmpfile))
+            logger.info(f"{self.SLUG} 语音合成成功，合成路径：{tmpfile}")
             return tmpfile
         else:
-            logger.critical("{} 合成失败！".format(self.SLUG), exc_info=True)
+            logger.critical(f"{self.SLUG} 合成失败！", stack_info=True)
 
 class MacTTS(AbstractTTS):
     """
@@ -361,10 +359,10 @@ class MacTTS(AbstractTTS):
                              shell=False,
                              universal_newlines=True)
         if res.returncode == 0:
-            logger.info("{} 语音合成成功，合成路径：{}".format(self.SLUG, tmpfile))
+            logger.info(f"{self.SLUG} 语音合成成功，合成路径：{tmpfile}")
             return tmpfile
         else:
-            logger.critical("{} 合成失败！".format(self.SLUG), exc_info=True)
+            logger.critical(f"{self.SLUG} 合成失败！", stack_info=True)
 
 
 def get_engine_by_slug(slug=None):
@@ -387,12 +385,12 @@ def get_engine_by_slug(slug=None):
     )
 
     if len(selected_engines) == 0:
-        raise ValueError("错误：找不到名为 {} 的 TTS 引擎".format(slug))
+        raise ValueError(f"错误：找不到名为 {slug} 的 TTS 引擎")
     else:
         if len(selected_engines) > 1:
-            logger.warning("注意: 有多个 TTS 名称与指定的引擎名 {} 匹配").format(slug)
+            logger.warning(f"注意: 有多个 TTS 名称与指定的引擎名 {slug} 匹配")
         engine = selected_engines[0]
-        logger.info("使用 {} TTS 引擎".format(engine.SLUG))
+        logger.info(f"使用 {engine.SLUG} TTS 引擎")
         return engine.get_instance()
 
 

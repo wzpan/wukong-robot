@@ -74,7 +74,7 @@ def processPOSTRequest(appKey, token, voice, text, format, sampleRate):
         conn.close()
         return tmpfile
     else:
-        logger.critical("The POST request failed: " + str(body))
+        logger.critical("The POST request failed: " + str(body), stack_info=True)
         conn.close()
         return None
 
@@ -105,7 +105,7 @@ def process(request, token, audioContent):
             conn.close()
             return result
         else:
-            logger.critical("Recognizer failed!")
+            logger.critical("Recognizer failed!", stack_info=True)
             conn.close()
             return None
     except ValueError:

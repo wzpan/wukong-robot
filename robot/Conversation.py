@@ -70,7 +70,7 @@ class Conversation(object):
             self.brain = Brain(self)
             self.brain.printPlugins()
         except Exception as e:
-            logger.critical("对话初始化失败：{}".format(e))
+            logger.critical(f"对话初始化失败：{e}", stack_info=True)
 
     def checkRestore(self):
         if self.immersiveMode:
@@ -154,12 +154,12 @@ class Conversation(object):
         try:
             query = self.asr.transcribe(fp)
         except Exception as e:
-            logger.critical("ASR识别失败：{}".format(e))
+            logger.critical(f"ASR识别失败：{e}", stack_info=True)
         utils.check_and_delete(fp)
         try:
             self.doResponse(query, callback, onSay)
         except Exception as e:
-            logger.critical("回复失败：{}".format(e))
+            logger.critical(f"回复失败：{e}", stack_info=True)
         utils.clean()
 
     def appendHistory(self, t, text, UUID="", plugin=""):
@@ -176,14 +176,12 @@ class Conversation(object):
             for img in imgs:
                 text = text.replace(
                     img,
-                    '<a data-fancybox="images" href="{}"><img src={} class="img fancybox"></img></a>'.format(
-                        img, img
-                    ),
+                    f'<a data-fancybox="images" href="{img}"><img src={img} class="img fancybox"></img></a>',
                 )
             urls = re.findall(url_pattern, text)
             for url in urls:
                 text = text.replace(
-                    url, '<a href={} target="_blank">{}</a>'.format(url, url)
+                    url, f'<a href={url} target="_blank">{url}</a>'
                 )
             self.lifeCycleHandler.onResponse(t, text)
             self.history.add_message(
@@ -236,7 +234,7 @@ class Conversation(object):
         msg = msg.strip()
         if not msg:
             return
-        logger.info("即将朗读语音：{}".format(msg))
+        logger.info(f"即将朗读语音：{msg}")
         if config.get("trim_too_long_text", True) and \
             len(msg) > int(config.get('max_text_length', 128)):
             # 文本太长，TTS 会报错
@@ -254,7 +252,7 @@ class Conversation(object):
                 msg = shorter_msg
             else:
                 msg = msg[0:config.get('max_text_length', 128)]
-            logger.info("截断后的文本：".format(msg))
+            logger.info(f"截断后的文本：{msg}")
             is_too_long = True
         voice = ""
         cache_path = ""
@@ -267,7 +265,7 @@ class Conversation(object):
                 voice = self.tts.get_speech(msg)
                 cache_path = utils.saveCache(voice, msg)
             except Exception as e:
-                logger.error("语音合成失败：{}".format(e))
+                logger.error(f"语音合成失败：{e}", stack_info=True)
         if self.onSay:
             logger.info(cache)
             audio = "http://{}:{}/audio/{}".format(
@@ -275,7 +273,7 @@ class Conversation(object):
                 config.get("/server/port"),
                 os.path.basename(cache_path),
             )
-            logger.info("onSay: {}, {}".format(msg, audio))
+            logger.info(f"onSay: {msg}, {audio}")
             self.onSay(msg, audio, plugin=plugin)
             self.onSay = None
         if onCompleted is None:
@@ -310,7 +308,7 @@ class Conversation(object):
                 return query
             return ""
         except Exception as e:
-            logger.error("主动聆听失败".format(e))
+            logger.error(f"主动聆听失败：{e}", stack_info=True)
             return ""
 
     def play(self, src, delete=False, onCompleted=None, volume=1):

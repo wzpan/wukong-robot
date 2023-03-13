@@ -64,7 +64,7 @@ def run(faq_file_str, json_file_str):
             json_file = open(json_file_str, "w")
             continue
         if len(arr) != field_cnt:
-            print("line {} error".format(idx + 2))
+            print(f"line {idx+2} error")
             continue
         idx += 1
         data = dict([field_names[i], arr[i]] for i in range(field_cnt))

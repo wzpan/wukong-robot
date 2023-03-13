@@ -142,7 +142,7 @@ class ActiveListener(object):
                 stream_callback=audio_callback,
             )
         except Exception as e:
-            logger.critical(e)
+            logger.critical(e, stack_info=True)
             return
 
         logger.debug("audio stream opened")
