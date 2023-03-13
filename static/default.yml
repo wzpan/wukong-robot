@@ -235,6 +235,10 @@ openai:
     # -2.0 ~ 2.0 之间的数字，正值会根据到目前为止是否出现在文本中来惩罚新 tokens，从而增加模型谈论新主题的可能性
     presence_penalty: 0.0    
     stop_ai: 'stop'
+    # 如果需要代理，反注释下面的配置进行修改
+    # proxy: '127.0.0.1:1080'
+    # 如果需要更换 api_base ，反注释下面的配置进行修改
+    # api_base: "https://api.openai.com/v1/chat"
 
 
 # 邮箱
