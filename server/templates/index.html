@@ -88,6 +88,11 @@
   </div>
 </div>
 {% end %}
+{% if 'hahack.com' in location %}
+  <div class="alert alert-warning" role="alert">
+    注意：你正在使用 demo 站点。出于账号安全考虑，该站点只演示了百度 UNIT 对话能力。要使用离线唤醒、ChatGPT 等对话能力及技能插件，请自行部署配置。
+  </div>
+{% end %}
 </div>
 
 <div class="container" id="container">

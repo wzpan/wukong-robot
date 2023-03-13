@@ -90,8 +90,7 @@ function guid() {
 
 $(document).ready(function() {
     if (!window.console) window.console = {};
-    if (!window.console.log) window.console.log = function() {};
-
+    if (!window.console.log) window.console.log = function() {};    
     $('.CHAT').on('click', function(e) {
         e.preventDefault();
         var disabled = $('#query');
