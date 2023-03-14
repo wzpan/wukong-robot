@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/users/wzpan/projects/1"><img alt="wukong-project" src="https://img.shields.io/badge/project-wukong-informational.svg?style=flat-square"></a>
+  <a href="https://github.com/users/wzpan/projects/2/views/1"><img alt="wukong-project" src="https://img.shields.io/badge/project-wukong-informational.svg?style=flat-square"></a>
   <a href="https://wukong.hahack.com/#/donate"><img alt="捐赠" src="https://img.shields.io/badge/%EF%BF%A5-donate-green.svg?style=flat-square"></a>
   <a href="https://travis-ci.org/wzpan/wukong-robot"><img alt="Travis" src="https://img.shields.io/travis/wzpan/wukong-robot.svg?style=flat-square"></a>
   <a href="#"><img alt="Python3.7+" src="https://img.shields.io/badge/Python->=3.7-blue.svg?style=flat-square"></a>
