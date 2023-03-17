@@ -47,7 +47,7 @@
 ## 特性
 
 <p align="center">
-  <img src="https://wzpan-1253537070.cos.ap-guangzhou.myqcloud.com/wukong/wukong-robot-mindmap.png?version=20191123" alt="wukong-robot">
+  <img src="https://wzpan-1253537070.cos.ap-guangzhou.myqcloud.com/wukong/wukong-robot-3.3.0.png" alt="wukong-robot">
 </p>
 
 * 模块化。功能插件、语音识别、语音合成、对话机器人都做到了高度模块化，第三方插件单独维护，方便继承和开发自己的插件。
@@ -59,6 +59,8 @@
 * 后台配套支持。提供配套后台，可实现远程操控、修改配置和日志查看等功能。
 * 开放API。可利用后端开放的API，实现更丰富的功能。
 * 安装简单，支持更多平台。相比 dingdang-robot ，舍弃了 PocketSphinx 的离线唤醒方案，安装变得更加简单，代码量更少，更易于维护并且能在 Mac 以及更多 Linux 系统中运行。
+
+wukong-robot 的功能还在不断更新迭代中，详见 [更新说明](https://github.com/wzpan/wukong-robot/wiki/update-notes) 。
 
 wukong-robot 的工作模式：
 
