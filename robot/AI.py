@@ -100,30 +100,8 @@ class UnitRobot(AbstractRobot):
         """
         msg = "".join(texts)
         msg = utils.stripPunctuation(msg)
-        intents = [
-            "USER_AQI",
-            "USER_CLOTHES",
-            "USER_CLOUDY",
-            "USER_EXERCISE",
-            "USER_FOG",
-            "USER_HIGH_TEMP",
-            "USER_INFLUENZA",
-            "USER_LOW_TEMP",
-            "USER_RAIN",
-            "USER_SNOW",
-            "USER_SUNNY",
-            "USER_TEMP",
-            "USER_TRIP",
-            "USER_ULTRAVIOLET",
-            "USER_WASH_CAR",
-            "USER_WEATHER",
-            "USER_WIND",
-        ]
         try:
-            for intent in intents:
-                if unit.hasIntent(parsed, intent):
-                    return unit.getSay(parsed, intent)
-            return unit.getSay(parsed, "BUILT_CHAT")
+            return unit.getSay(parsed)
         except Exception:
             logger.critical("UNIT robot failed to response for %r", msg, exc_info=True)
             return "抱歉, 百度UNIT服务回答失败"

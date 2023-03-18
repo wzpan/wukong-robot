@@ -3,11 +3,13 @@ import subprocess
 import os
 import platform
 import signal
-from . import utils
-import _thread as thread
+import queue
+import threading
 from robot import logging
 from ctypes import CFUNCTYPE, c_char_p, c_int, cdll
 from contextlib import contextmanager
+
+from . import utils
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +21,6 @@ def py_error_handler(filename, line, function, err, fmt):
 ERROR_HANDLER_FUNC = CFUNCTYPE(None, c_char_p, c_int, c_char_p, c_int, c_char_p)
 
 c_error_handler = ERROR_HANDLER_FUNC(py_error_handler)
-
 
 @contextmanager
 def no_alsa_error():
@@ -33,9 +34,9 @@ def no_alsa_error():
         pass
 
 
-def play(fname, onCompleted=None, wait=False):
+def play(fname, onCompleted=None):
     player = getPlayerByFileName(fname)
-    player.play(fname, onCompleted=onCompleted, wait=wait)
+    player.play(fname, onCompleted=onCompleted)
 
 
 def getPlayerByFileName(fname):
@@ -70,13 +71,25 @@ class SoxPlayer(AbstractPlayer):
         self.proc = None
         self.delete = False
         self.onCompleteds = []
+        self.play_queue = queue.Queue()  # 播放队列
+        self.consumer_thread = threading.Thread(target=self.playLoop)
+        self.consumer_thread.start()
 
-    def doPlay(self):
+    def playLoop(self):
+        while True:
+            src = self.play_queue.get()
+            if src:
+                logger.info(f"开始播放音频：{src}")
+                self.src = src
+                self.doPlay(src)
+                self.play_queue.task_done()
+
+    def doPlay(self, src):
         system = platform.system()
         if system == "Darwin":
-            cmd = ["afplay", str(self.src)]
+            cmd = ["afplay", str(src)]
         else:
-            cmd = ["play", str(self.src)]
+            cmd = ["play", str(src)]
         logger.debug("Executing %s", " ".join(cmd))
         self.proc = subprocess.Popen(
             cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
@@ -85,21 +98,17 @@ class SoxPlayer(AbstractPlayer):
         self.proc.wait()
         self.playing = False
         if self.delete:
-            utils.check_and_delete(self.src)
+            utils.check_and_delete(src)
         logger.debug("play completed")
         if self.proc and self.proc.returncode == 0:
             for onCompleted in self.onCompleteds:
                 onCompleted and onCompleted()
 
-    def play(self, src, delete=False, onCompleted=None, wait=False):
+    def play(self, src, delete=False, onCompleted=None):
         if src and (os.path.exists(src) or src.startswith("http")):
-            self.src = src
             self.delete = delete
             onCompleted and self.onCompleteds.append(onCompleted)
-            if not wait:
-                thread.start_new_thread(self.doPlay, ())
-            else:
-                self.doPlay()
+            self.play_queue.put(src)
         else:
             logger.critical(f"path not exists: {src}", stack_info=True)
 
@@ -206,7 +215,7 @@ class MusicPlayer(SoxPlayer):
             volume += 20
             if volume >= 100:
                 volume = 100
-                self.plugin.say("音量已经最大啦", wait=True)
+                self.plugin.say("音量已经最大啦")
             subprocess.run(["osascript", "-e", f"set volume output volume {volume}"])
         elif system == "Linux":
             res = subprocess.run(
@@ -220,12 +229,12 @@ class MusicPlayer(SoxPlayer):
                 volume += 20
                 if volume >= 100:
                     volume = 100
-                    self.plugin.say("音量已经最大啦", wait=True)
+                    self.plugin.say("音量已经最大啦")
                 subprocess.run(["amixer", "set", "Master", f"{volume}%"])
             else:
                 subprocess.run(["amixer", "set", "Master", "20%+"])
         else:
-            self.plugin.say("当前系统不支持调节音量", wait=True)
+            self.plugin.say("当前系统不支持调节音量")
         self.resume()
 
     def turnDown(self):
@@ -241,7 +250,7 @@ class MusicPlayer(SoxPlayer):
             volume -= 20
             if volume <= 20:
                 volume = 20
-                self.plugin.say("音量已经很小啦", wait=True)
+                self.plugin.say("音量已经很小啦")
             subprocess.run(["osascript", "-e", f"set volume output volume {volume}"])
         elif system == "Linux":
             res = subprocess.run(
@@ -255,10 +264,10 @@ class MusicPlayer(SoxPlayer):
                 volume -= 20
                 if volume <= 20:
                     volume = 20
-                    self.plugin.say("音量已经最小啦", wait=True)
+                    self.plugin.say("音量已经最小啦")
                 subprocess.run(["amixer", "set", "Master", f"{volume}%"])
             else:
                 subprocess.run(["amixer", "set", "Master", "20%-"])
         else:
-            self.plugin.say("当前系统不支持调节音量", wait=True)
+            self.plugin.say("当前系统不支持调节音量")
         self.resume()

@@ -126,8 +126,8 @@ class LifeCycleHandler(object):
             self._conversation.doResponse(query)
             self._wakeup.clear()
 
-    def _beep_hi(self, onCompleted=None, wait=False):
-        Player.play(constants.getData("beep_hi.wav"), onCompleted, wait)
+    def _beep_hi(self, onCompleted=None):
+        Player.play(constants.getData("beep_hi.wav"), onCompleted)
 
     def _beep_lo(self):
         Player.play(constants.getData("beep_lo.wav"))
@@ -137,7 +137,7 @@ class LifeCycleHandler(object):
         唤醒并进入录音的状态
         """
         logger.info("onWakeup")
-        self._beep_hi(onCompleted=onCompleted, wait=onCompleted)
+        self._beep_hi(onCompleted=onCompleted)
         if config.get("/LED/enable", False):
             LED.wakeup()
         self._unihiker and self._unihiker.record(1, "我正在聆听...")

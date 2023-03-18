@@ -6,21 +6,23 @@ import pstats
 import io
 import re
 import os
+
+from snowboy import snowboydecoder
+
 from robot.LifeCycleHandler import LifeCycleHandler
 from robot.Brain import Brain
-from robot.sdk import LED, MessageBuffer
-from snowboy import snowboydecoder
+from robot.sdk import MessageBuffer
 from robot import (
-    logging,
-    ASR,
-    TTS,
-    NLU,
     AI,
-    Player,
+    ASR,
     config,
     constants,
-    utils,
+    logging,
+    NLU,
+    Player,
     statistic,
+    TTS,
+    utils
 )
 
 
@@ -29,13 +31,8 @@ logger = logging.getLogger(__name__)
 
 class Conversation(object):
     def __init__(self, profiling=False):
-        self.brain = None
-        self.asr = None
-        self.ai = None
-        self.tts = None
-        self.nlu = None
+        self.brain, self.asr, self.ai, self.tts, self.nlu, self.player = None, None, None, None, None, None
         self.reInit()
-        self.player = None
         self.brain = Brain(self)
         self.brain.printPlugins()
         # 历史会话消息
@@ -218,7 +215,6 @@ class Conversation(object):
         cache=False,
         plugin="",
         onCompleted=None,
-        wait=False,
         append_history=True,
     ):
         """
@@ -227,7 +223,6 @@ class Conversation(object):
         :param cache: 是否缓存这句话的音频
         :param plugin: 来自哪个插件的消息（将带上插件的说明）
         :param onCompleted: 完成的回调
-        :param wait: 是否要等待说完（为True将阻塞主线程直至说完这句话）
         :param append_history: 是否要追加到聊天记录
         """
         append_history and self.appendHistory(1, msg, plugin=plugin)
@@ -290,7 +285,7 @@ class Conversation(object):
             self.player.preappendCompleted(
                 lambda: self.say("后面的内容太长了，我就不念了", append_history=False)
             )
-        self.player.play(voice, not cache, onCompleted, wait)
+        self.player.play(voice, not cache, onCompleted)
         utils.lruCache()  # 清理缓存
 
     def activeListen(self, silent=False):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # author: wzpan
-# 写诗
+# 回声
 
 import logging
 from robot.sdk.AbstractPlugin import AbstractPlugin
