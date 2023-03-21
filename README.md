@@ -199,7 +199,7 @@ wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式�
 
 ```
 @misc{wukong-robot,
-  author = {Weizhou Pan},
+  author = {潘伟洲},
   title = {wukong-robot，一个简单、灵活、优雅的中文语音对话机器人/智能音箱项目},
   year = {2019},
   publisher = {GitHub},
