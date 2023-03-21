@@ -39,6 +39,7 @@
 * [API接口](#api-接口)
 * [捐赠](#捐赠)
 * [贡献](#贡献)
+* [引用](#引用)
 * [联系](#联系)
 * [感谢](#感谢)
 * [FAQ](#faq)
@@ -190,6 +191,23 @@ wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式�
 * 提 bug 请到 [issue 页面](https://github.com/wzpan/wukong-robot/issues)；
 * 要贡献代码，欢迎 fork 之后再提 pull request；
 * 插件请提交到 [wukong-contrib](https://github.com/wzpan/wukong-contrib) ；
+
+
+## 引用
+
+如果使用本项目的代码或插件，请引用本项目。
+
+```
+@misc{wukong-robot,
+  author = {Weizhou Pan},
+  title = {wukong-robot，一个简单、灵活、优雅的中文语音对话机器人/智能音箱项目},
+  year = {2019},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/wzpan/wukong-robot}},
+}
+```
+
 
 ## 联系
 
