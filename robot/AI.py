@@ -101,7 +101,9 @@ class UnitRobot(AbstractRobot):
         msg = "".join(texts)
         msg = utils.stripPunctuation(msg)
         try:
-            return unit.getSay(parsed)
+            result = unit.getSay(parsed)
+            logger.info("{} 回答：{}".format(self.SLUG, result))
+            return result
         except Exception:
             logger.critical("UNIT robot failed to response for %r", msg, exc_info=True)
             return "抱歉, 百度UNIT服务回答失败"
