@@ -23,14 +23,14 @@ class Updater(object):
         if os.path.exists(cwd):
             return (
                 call(
-                    ["git checkout master && git pull && git checkout {}".format(tag)],
+                    [f"git checkout master && git pull && git checkout {tag}"],
                     cwd=cwd,
                     shell=True,
                 )
                 == 0
             )
         else:
-            logger.error("目录 {} 不存在".format(cwd))
+            logger.error(f"目录 {cwd} 不存在")
             return False
 
     def _pip(self, cwd):
@@ -42,7 +42,7 @@ class Updater(object):
                 == 0
             )
         else:
-            logger.error("目录 {} 不存在".format(cwd))
+            logger.error(f"目录 {cwd} 不存在")
             return False
 
     def update(self):
@@ -82,7 +82,7 @@ class Updater(object):
         url = URL
         now = datetime.now()
         if (now - self.last_check).seconds <= 1800:
-            logger.debug("30 分钟内已检查过更新，使用上次的检查结果：{}".format(self.update_info))
+            logger.debug(f"30 分钟内已检查过更新，使用上次的检查结果：{self.update_info}")
             return self.update_info
         try:
             self.last_check = now
@@ -96,16 +96,16 @@ class Updater(object):
                 constants.CONTRIB_PATH, contrib_version
             )
             if semver.compare(main_version, current_main_version) > 0:
-                logger.info("主仓库检查到更新：{}".format(info["main"]))
+                logger.info(f"主仓库检查到更新：{info['main']}")
                 self.update_info["main"] = info["main"]
             if semver.compare(contrib_version, current_contrib_version) > 0:
-                logger.info("插件库检查到更新：{}".format(info["contrib"]))
+                logger.info(f"插件库检查到更新：{info['contrib']}")
                 self.update_info["contrib"] = info["contrib"]
             if "notices" in info:
                 self.update_info["notices"] = info["notices"]
             return self.update_info
         except Exception as e:
-            logger.error("检查更新失败：", e)
+            logger.error(f"检查更新失败：{e}", stack_info=True)
             return {}
 
 

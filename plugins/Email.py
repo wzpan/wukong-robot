@@ -169,7 +169,7 @@ class Plugin(AbstractPlugin):
         if not senders:
             self.say("您没有未读邮件，真棒！", cache=True)
         elif len(senders) == 1:
-            self.say("您有来自 {} 的未读邮件。{}".format(senders[0], self.getSubject(msgs[0])))
+            self.say(f"您有来自 {senders[0]} 的未读邮件。{self.getSubject(msgs[0])}")
         else:
             response = "您有 %d 封未读邮件" % len(senders)
             unique_senders = list(set(senders))

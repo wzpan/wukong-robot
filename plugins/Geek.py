@@ -26,7 +26,7 @@ class Plugin(AbstractPlugin):
 
     def onAsk(self, input):
         if input:
-            logger.debug("input: {}".format(input))
+            logger.debug(f"input: {input}")
             self.silent_count = 0
             self.con.doResponse(input)
         else:

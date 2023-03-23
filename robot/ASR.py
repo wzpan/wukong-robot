@@ -71,10 +71,10 @@ class AzureASR(AbstractASR):
 
         if ret.status_code == 200:
             res = ret.json()
-            logger.info("{} 语音识别到了：{}".format(self.SLUG, res["DisplayText"]))
+            logger.info(f"{self.SLUG} 语音识别到了：{res['DisplayText']}")
             return "".join(res["DisplayText"])
         else:
-            logger.info("{} 语音识别出错了: {}".format(self.SLUG, ret.text))
+            logger.info(f"{self.SLUG} 语音识别出错了: {res.text}")
             return ""
 
 
@@ -119,10 +119,10 @@ class BaiduASR(AbstractASR):
         pcm = utils.get_pcm_from_wav(fp)
         res = self.client.asr(pcm, "pcm", 16000, {"dev_pid": self.dev_pid})
         if res["err_no"] == 0:
-            logger.info("{} 语音识别到了：{}".format(self.SLUG, res["result"]))
+            logger.info(f"{self.SLUG} 语音识别到了：{res['result']}")
             return "".join(res["result"])
         else:
-            logger.info("{} 语音识别出错了: {}".format(self.SLUG, res["err_msg"]))
+            logger.info(f"{self.SLUG} 语音识别出错了: {res['err_msg']}")
             if res["err_msg"] == "request pv too much":
                 logger.info("       出现这个原因很可能是你的百度语音服务调用量超出限制，或未开通付费")
             return ""
@@ -151,10 +151,10 @@ class TencentASR(AbstractASR):
         utils.check_and_delete(mp3_path)
         res = json.loads(r)
         if "Response" in res and "Result" in res["Response"]:
-            logger.info("{} 语音识别到了：{}".format(self.SLUG, res["Response"]["Result"]))
+            logger.info(f"{self.SLUG} 语音识别到了：{res['Response']['Result']}")
             return res["Response"]["Result"]
         else:
-            logger.critical("{} 语音识别出错了: {}".format(self.SLUG, res), exc_info=True)
+            logger.critical(f"{self.SLUG} 语音识别出错了: {res}", stack_info=True)
             return ""
 
 
@@ -199,12 +199,49 @@ class AliASR(AbstractASR):
 
     def transcribe(self, fp):
         result = AliSpeech.asr(self.appKey, self.token, fp)
-        if result is not None:
-            logger.info("{} 语音识别到了：{}".format(self.SLUG, result))
+        if result:
+            logger.info(f"{self.SLUG} 语音识别到了：{result}")
             return result
         else:
-            logger.critical("{} 语音识别出错了".format(self.SLUG), exc_info=True)
+            logger.critical(f"{self.SLUG} 语音识别出错了", stack_info=True)
             return ""
+
+
+class WhisperASR(AbstractASR):
+    """
+    OpenAI 的 whisper 语音识别API
+    """
+
+    SLUG = "openai"
+
+    def __init__(self, openai_api_key, **args):
+        super(self.__class__, self).__init__()
+        try:
+            import openai
+
+            self.openai = openai
+            self.openai.api_key = openai_api_key
+            print(openai_api_key)
+        except Exception:
+            logger.critical("OpenAI 初始化失败，请升级 Python 版本至 > 3.6")
+
+    @classmethod
+    def get_config(cls):
+        return config.get("openai", {})
+
+    def transcribe(self, fp):
+        if self.openai:
+            try:
+                with open(fp, "rb") as f:
+                    result = self.openai.Audio.transcribe("whisper-1", f)
+                    if result:
+                        logger.info(f"{self.SLUG} 语音识别到了：{result.text}")
+                        return result.text
+            except Exception:
+                logger.critical(f"{self.SLUG} 语音识别出错了", stack_info=True)
+                return ""
+        logger.critical(f"{self.SLUG} 语音识别出错了", stack_info=True)
+        return ""
 
 
 def get_engine_by_slug(slug=None):
@@ -227,12 +264,12 @@ def get_engine_by_slug(slug=None):
     )
 
     if len(selected_engines) == 0:
-        raise ValueError("错误：找不到名为 {} 的 ASR 引擎".format(slug))
+        raise ValueError(f"错误：找不到名为 {slug} 的 ASR 引擎")
     else:
         if len(selected_engines) > 1:
-            logger.warning("注意: 有多个 ASR 名称与指定的引擎名 {} 匹配").format(slug)
+            logger.warning(f"注意: 有多个 ASR 名称与指定的引擎名 {slug} 匹配")
         engine = selected_engines[0]
-        logger.info("使用 {} ASR 引擎".format(engine.SLUG))
+        logger.info(f"使用 {engine.SLUG} ASR 引擎")
         return engine.get_instance()
 
 

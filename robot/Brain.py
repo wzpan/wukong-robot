@@ -26,14 +26,14 @@ class Brain(object):
         return False
 
     def isValid(self, plugin, text, parsed):
-        patterns = config.get("/{}/patterns".format(plugin.SLUG), [])
+        patterns = config.get(f"/{plugin.SLUG}/patterns", [])
         if len(patterns) > 0:
             return plugin.isValid(text, parsed) or self.match(patterns, text)
         else:
             return plugin.isValid(text, parsed)
 
     def isValidImmersive(self, plugin, text, parsed):
-        patterns = config.get("/{}/patterns".format(plugin.SLUG), [])
+        patterns = config.get(f"/{plugin.SLUG}/patterns", [])
         if len(patterns) > 0:
             return plugin.isValidImmersive(text, parsed) or self.match(patterns, text)
         else:
@@ -49,7 +49,7 @@ class Brain(object):
         plugin_list = []
         for plugin in self.plugins:
             plugin_list.append(plugin.SLUG)
-        logger.info("已激活插件：{}".format(plugin_list))
+        logger.info(f"已激活插件：{plugin_list}")
 
     def query(self, text, parsed):
         """
@@ -66,7 +66,7 @@ class Brain(object):
             ):
                 continue
 
-            logger.info("'{}' 命中技能 {}".format(text, plugin.SLUG))
+            logger.info(f"'{text}' 命中技能 {plugin.SLUG}")
             self.conversation.matchPlugin = plugin.SLUG
 
             if plugin.IS_IMMERSIVE:
@@ -78,8 +78,8 @@ class Brain(object):
                 continueHandle = plugin.handle(text, parsed)
                 self.handling = False
             except Exception:
-                logger.critical("Failed to execute plugin", exc_info=True)
-                reply = "抱歉，插件{}出故障了，晚点再试试吧".format(plugin.SLUG)
+                logger.critical("Failed to execute plugin", stack_info=True)
+                reply = f"抱歉，插件{plugin.SLUG}出故障了，晚点再试试吧"
                 self.conversation.say(reply, plugin=plugin.SLUG)
             else:
                 logger.debug(
@@ -91,7 +91,7 @@ class Brain(object):
                 if not continueHandle:
                     return True
 
-        logger.debug("No plugin was able to handle phrase {} ".format(text))
+        logger.debug(f"No plugin was able to handle phrase {text} ")
         return False
 
     def restore(self):

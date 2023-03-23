@@ -6,21 +6,23 @@ import pstats
 import io
 import re
 import os
+
+from snowboy import snowboydecoder
+
 from robot.LifeCycleHandler import LifeCycleHandler
 from robot.Brain import Brain
-from robot.sdk import LED, MessageBuffer
-from snowboy import snowboydecoder
+from robot.sdk import MessageBuffer
 from robot import (
-    logging,
-    ASR,
-    TTS,
-    NLU,
     AI,
-    Player,
+    ASR,
     config,
     constants,
-    utils,
+    logging,
+    NLU,
+    Player,
     statistic,
+    TTS,
+    utils
 )
 
 
@@ -29,8 +31,10 @@ logger = logging.getLogger(__name__)
 
 class Conversation(object):
     def __init__(self, profiling=False):
-        self.brain = None
+        self.brain, self.asr, self.ai, self.tts, self.nlu, self.player = None, None, None, None, None, None
         self.reInit()
+        self.brain = Brain(self)
+        self.brain.printPlugins()
         # 历史会话消息
         self.history = MessageBuffer.MessageBuffer()
         # 沉浸模式，处于这个模式下，被打断后将自动恢复这个技能
@@ -46,7 +50,7 @@ class Conversation(object):
         return self.history
 
     def interrupt(self):
-        if self.player is not None and self.player.is_playing():
+        if self.player and self.player.is_playing():
             self.player.stop()
             self.player = None
         if self.immersiveMode:
@@ -63,14 +67,22 @@ class Conversation(object):
             self.brain = Brain(self)
             self.brain.printPlugins()
         except Exception as e:
-            logger.critical("对话初始化失败：{}".format(e))
+            logger.critical(f"对话初始化失败：{e}", stack_info=True)
 
     def checkRestore(self):
         if self.immersiveMode:
+            logger.info("处于沉浸模式，恢复技能")
             self.lifeCycleHandler.onRestore()
             self.brain.restore()
 
     def doResponse(self, query, UUID="", onSay=None):
+        """
+        响应指令
+
+        :param query: 指令
+        :UUID: 指令的UUID
+        :onSay: 朗读时的回调
+        """
         statistic.report(1)
         self.interrupt()
         self.appendHistory(0, query, UUID)
@@ -97,9 +109,9 @@ class Conversation(object):
             msg = self.ai.chat(query, parsed)
             self.say(msg, True, onCompleted=self.checkRestore)
         else:
-            if lastImmersiveMode is not None and lastImmersiveMode != self.matchPlugin:
+            if lastImmersiveMode and lastImmersiveMode != self.matchPlugin:
                 time.sleep(1)
-                if self.player is not None and self.player.is_playing():
+                if self.player and self.player.is_playing():
                     logger.debug("等说完再checkRestore")
                     self.player.appendOnCompleted(lambda: self.checkRestore())
                 else:
@@ -139,12 +151,12 @@ class Conversation(object):
         try:
             query = self.asr.transcribe(fp)
         except Exception as e:
-            logger.critical("ASR识别失败：{}".format(e))
+            logger.critical(f"ASR识别失败：{e}", stack_info=True)
         utils.check_and_delete(fp)
         try:
             self.doResponse(query, callback, onSay)
         except Exception as e:
-            logger.critical("回复失败：{}".format(e))
+            logger.critical(f"回复失败：{e}", stack_info=True)
         utils.clean()
 
     def appendHistory(self, t, text, UUID="", plugin=""):
@@ -161,15 +173,11 @@ class Conversation(object):
             for img in imgs:
                 text = text.replace(
                     img,
-                    '<a data-fancybox="images" href="{}"><img src={} class="img fancybox"></img></a>'.format(
-                        img, img
-                    ),
+                    f'<a data-fancybox="images" href="{img}"><img src={img} class="img fancybox"></img></a>',
                 )
             urls = re.findall(url_pattern, text)
             for url in urls:
-                text = text.replace(
-                    url, '<a href={} target="_blank">{}</a>'.format(url, url)
-                )
+                text = text.replace(url, f'<a href={url} target="_blank">{url}</a>')
             self.lifeCycleHandler.onResponse(t, text)
             self.history.add_message(
                 {
@@ -201,22 +209,53 @@ class Conversation(object):
             self.say("没听清呢")
             self.hasPardon = False
 
-    def say(self, msg, cache=False, plugin="", onCompleted=None, wait=False):
+    def say(
+        self,
+        msg,
+        cache=False,
+        plugin="",
+        onCompleted=None,
+        append_history=True,
+    ):
         """
         说一句话
         :param msg: 内容
         :param cache: 是否缓存这句话的音频
         :param plugin: 来自哪个插件的消息（将带上插件的说明）
         :param onCompleted: 完成的回调
-        :param wait: 是否要等待说完（为True将阻塞主线程直至说完这句话）
+        :param append_history: 是否要追加到聊天记录
         """
-        self.appendHistory(1, msg, plugin=plugin)
-        pattern = r"^https?://.+"
+        append_history and self.appendHistory(1, msg, plugin=plugin)
+        is_too_long = False
+        pattern = r"http[s]?://.+"
         if re.match(pattern, msg):
-            logger.info("内容包含URL，所以不读出来")
-            self.onSay(msg, "", plugin=plugin)
-            self.onSay = None
+            logger.info("内容包含URL，屏蔽后续内容")
+            msg = re.sub(pattern, "", msg)
+        msg = utils.stripPunctuation(msg)
+        msg = msg.strip()
+        if not msg:
             return
+        logger.info(f"即将朗读语音：{msg}")
+        if config.get("trim_too_long_text", True) and len(msg) > int(
+            config.get("max_text_length", 128)
+        ):
+            # 文本太长，TTS 会报错
+            logger.info("文本超长，需进行截断")
+            # 采用截断的方案
+            lines = re.split("。|！|？|\.|\!|\?|\n", msg)
+            shorter_msg = ""
+            if "\n" in msg:
+                idx = 0
+                while True:
+                    shorter_msg += lines[idx]
+                    idx += 1
+                    if len(shorter_msg) >= config.get("max_text_length", 128):
+                        break
+                msg = shorter_msg
+            else:
+                msg = msg[0 : config.get("max_text_length", 128)]
+            logger.info(f"截断后的文本：{msg}")
+            is_too_long = True
         voice = ""
         cache_path = ""
         if utils.getCache(msg):
@@ -228,7 +267,7 @@ class Conversation(object):
                 voice = self.tts.get_speech(msg)
                 cache_path = utils.saveCache(voice, msg)
             except Exception as e:
-                logger.error("语音合成失败：{}".format(e))
+                logger.error(f"语音合成失败：{e}", stack_info=True)
         if self.onSay:
             logger.info(cache)
             audio = "http://{}:{}/audio/{}".format(
@@ -236,19 +275,24 @@ class Conversation(object):
                 config.get("/server/port"),
                 os.path.basename(cache_path),
             )
-            logger.info("onSay: {}, {}".format(msg, audio))
+            logger.info(f"onSay: {msg}, {audio}")
             self.onSay(msg, audio, plugin=plugin)
             self.onSay = None
         if onCompleted is None:
             onCompleted = lambda: self._onCompleted(msg)
         self.player = Player.SoxPlayer()
-        self.player.play(voice, not cache, onCompleted, wait)
-        if not cache:
-            utils.check_and_delete(cache_path, 60)  # 60秒后将自动清理不缓存的音频
+        if config.get("trim_too_long_text", True) and is_too_long:
+            self.player.preappendCompleted(
+                lambda: self.say("后面的内容太长了，我就不念了", append_history=False)
+            )
+        self.player.play(voice, not cache, onCompleted)
         utils.lruCache()  # 清理缓存
 
     def activeListen(self, silent=False):
-        """主动问一个问题(适用于多轮对话)"""
+        """
+        主动问一个问题(适用于多轮对话)
+        :param silent: 是否不触发唤醒表现（主要用于极客模式）
+        """
         logger.debug("activeListen")
         try:
             if not silent:
@@ -268,7 +312,7 @@ class Conversation(object):
                 return query
             return ""
         except Exception as e:
-            logger.error("主动聆听失败".format(e))
+            logger.error(f"主动聆听失败：{e}", stack_info=True)
             return ""
 
     def play(self, src, delete=False, onCompleted=None, volume=1):

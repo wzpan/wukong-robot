@@ -16,7 +16,7 @@ def wakeup():
 
             pixels.wakeup()
         else:
-            logger.error("错误：不支持的灯光类型")
+            logger.error("错误：不支持的灯光类型", stack_info=True)
 
 
 def think():
@@ -28,7 +28,7 @@ def think():
 
             pixels.think()
         else:
-            logger.error("错误：不支持的灯光类型")
+            logger.error("错误：不支持的灯光类型", stack_info=True)
 
 
 def off():
@@ -40,4 +40,4 @@ def off():
 
             pixels.off()
         else:
-            logger.off("错误：不支持的灯光类型")
+            logger.error("错误：不支持的灯光类型", stack_info=True)

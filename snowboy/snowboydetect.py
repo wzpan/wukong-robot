@@ -38,8 +38,7 @@ elif _swig_python_version_info >= (2, 6, 0):
         try:
             _mod = imp.load_module("_snowboydetect", fp, pathname, description)
         finally:
-            if fp is not None:
-                fp.close()
+            fp and fp.close()
         return _mod
 
     _snowboydetect = swig_import_helper()

@@ -107,7 +107,7 @@ def upload_documents(host, enginename, port=8983, documents="", num_thread=1):
             mutex.release()
         except Exception as err:
             mutex.acquire()
-            logger.error(err)
+            logger.error(err, stack_info=True)
             mutex.release()
 
     def upload_batch(batch_docs):
@@ -189,7 +189,7 @@ def clear_documents(host, enginename, port=8983):
         )
         logger.debug(response.read())
     except Exception as err:
-        logger.error(err)
+        logger.error(err, stack_info=True)
 
 
 def help(**kwargs):

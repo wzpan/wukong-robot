@@ -2,6 +2,7 @@
 import json
 import random
 import requests
+
 from uuid import getnode as get_mac
 from abc import ABCMeta, abstractmethod
 from robot import logging, config, utils
@@ -67,13 +68,13 @@ class TulingRobot(AbstractRobot):
                     result += "\n".join(res["values"].values())
             else:
                 result = "图灵机器人服务异常，请联系作者"
-            logger.info("{} 回答：{}".format(self.SLUG, result))
+            logger.info(f"{self.SLUG} 回答：{result}")
             return result
         except Exception:
             logger.critical(
                 "Tuling robot failed to response for %r", msg, exc_info=True
             )
-            return "抱歉, 我的大脑短路了，请稍后再试试."
+            return "抱歉, 图灵机器人服务回答失败"
 
 
 class UnitRobot(AbstractRobot):
@@ -99,38 +100,13 @@ class UnitRobot(AbstractRobot):
         """
         msg = "".join(texts)
         msg = utils.stripPunctuation(msg)
-        intents = [
-            "USER_AQI",
-            "USER_CLOTHES",
-            "USER_CLOUDY",
-            "USER_EXERCISE",
-            "USER_FOG",
-            "USER_HIGH_TEMP",
-            "USER_INFLUENZA",
-            "USER_LOW_TEMP",
-            "USER_RAIN",
-            "USER_SNOW",
-            "USER_SUNNY",
-            "USER_TEMP",
-            "USER_TRIP",
-            "USER_ULTRAVIOLET",
-            "USER_WASH_CAR",
-            "USER_WEATHER",
-            "USER_WIND",
-        ]
         try:
-            result = ""
-            for intent in intents:
-                if unit.hasIntent(parsed, intent):
-                    result = unit.getSay(parsed, intent)
-                    logger.info("{} 回答：{}".format(self.SLUG, result))
-                    return result
-            result = unit.getSay(parsed, 'BUILT_CHAT')
+            result = unit.getSay(parsed)
             logger.info("{} 回答：{}".format(self.SLUG, result))
             return result
         except Exception:
             logger.critical("UNIT robot failed to response for %r", msg, exc_info=True)
-            return "抱歉, 我的大脑短路了，请稍后再试试."
+            return "抱歉, 百度UNIT服务回答失败"
 
 
 class AnyQRobot(AbstractRobot):
@@ -162,10 +138,10 @@ class AnyQRobot(AbstractRobot):
         msg = "".join(texts)
         msg = utils.stripPunctuation(msg)
         try:
-            url = "http://{}:{}/anyq?question={}".format(self.host, self.port, msg)
+            url = f"http://{self.host}:{self.port}/anyq?question={msg}"
             r = requests.get(url)
             respond = json.loads(r.text)
-            logger.info("anyq response: {}".format(respond))
+            logger.info(f"anyq response: {respond}")
             if len(respond) > 0:
                 # 有命中，进一步判断 confidence 是否达到要求
                 confidence = respond[0]["confidence"]
@@ -174,25 +150,123 @@ class AnyQRobot(AbstractRobot):
                     answer = respond[0]["answer"]
                     if utils.validjson(answer):
                         answer = random.choice(json.loads(answer))
-                    logger.info("{} 回答：{}".format(self.SLUG, answer))
+                    logger.info(f"{self.SLUG} 回答：{answer}")
                     return answer
             # 没有命中，走兜底
-            if self.secondary != "null" and self.secondary is not None:
+            if self.secondary != "null" and self.secondary:
                 try:
                     ai = get_robot_by_slug(self.secondary)
                     return ai.chat(texts, parsed)
                 except Exception:
                     logger.critical(
-                        "Secondary robot {} failed to response for {}".format(
-                            self.secondary, msg
-                        )
+                        f"Secondary robot {self.secondary} failed to response for {msg}"
                     )
                     return get_unknown_response()
             else:
                 return get_unknown_response()
         except Exception:
             logger.critical("AnyQ robot failed to response for %r", msg, exc_info=True)
-            return "抱歉, 我的大脑短路了，请稍后再试试."
+            return "抱歉, AnyQ回答失败"
+
+
+class OPENAIRobot(AbstractRobot):
+
+    SLUG = "openai"
+
+    def __init__(
+        self,
+        openai_api_key,
+        model,
+        temperature,
+        max_tokens,
+        top_p,
+        frequency_penalty,
+        presence_penalty,
+        stop_ai,
+        prefix="",
+        proxy="",
+        api_base="",
+    ):
+        """
+        OpenAI机器人
+        openai.api_key = os.getenv("OPENAI_API_KEY")
+        """
+        super(self.__class__, self).__init__()
+        self.openai = None
+        try:
+            import openai
+
+            self.openai = openai
+            self.openai.api_key = openai_api_key
+            if proxy:
+                logger.info(f"{self.SLUG} 使用代理：{proxy}")
+                self.openai.proxy = proxy
+
+        except Exception:
+            logger.critical("OpenAI 初始化失败，请升级 Python 版本至 > 3.6")
+        self.model = model
+        self.prefix = prefix
+        self.temperature = temperature
+        self.max_tokens = max_tokens
+        self.top_p = top_p
+        self.frequency_penalty = frequency_penalty
+        self.presence_penalty = presence_penalty
+        self.stop_ai = stop_ai
+        self.api_base = api_base
+
+    @classmethod
+    def get_config(cls):
+        # Try to get anyq config from config
+        return config.get("openai", {})
+
+    def chat(self, texts, parsed):
+        """
+        使用OpenAI机器人聊天
+
+        Arguments:
+        texts -- user input, typically speech, to be parsed by a module
+        """
+        msg = "".join(texts)
+        msg = utils.stripPunctuation(msg)
+        msg = self.prefix + msg  # 增加一段前缀
+        logger.info("msg: " + msg)
+        try:
+            respond = ""
+            if "-turbo" in self.model:
+                response = self.openai.Completion.create(
+                    model=self.model,
+                    messages=[{"role": "user", "content": msg}],
+                    temperature=self.temperature,
+                    max_tokens=self.max_tokens,
+                    top_p=self.top_p,
+                    frequency_penalty=self.frequency_penalty,
+                    presence_penalty=self.presence_penalty,
+                    stop=self.stop_ai,
+                    api_base=self.api_base
+                    if self.api_base
+                    else "https://api.openai.com/v1/chat",
+                )
+                respond = response.choices[0].message.content
+            else:
+                response = self.openai.Completion.create(
+                    model=self.model,
+                    prompt=msg,
+                    temperature=self.temperature,
+                    max_tokens=self.max_tokens,
+                    top_p=self.top_p,
+                    frequency_penalty=self.frequency_penalty,
+                    presence_penalty=self.presence_penalty,
+                    stop=self.stop_ai,
+                )
+                respond = response.choices[0].text
+            logger.info(f"openai response: {respond}")
+            return respond
+
+        except Exception:
+            logger.critical(
+                "openai robot failed to response for %r", msg, exc_info=True
+            )
+            return "抱歉，OpenAI 回答失败"
 
 
 def get_unknown_response():
@@ -227,7 +301,7 @@ def get_robot_by_slug(slug):
                 + "This is most certainly a bug." % slug
             )
         robot = selected_robots[0]
-        logger.info("使用 {} 对话机器人".format(robot.SLUG))
+        logger.info(f"使用 {robot.SLUG} 对话机器人")
         return robot.get_instance()
 
 

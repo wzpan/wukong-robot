@@ -63,8 +63,9 @@ class MainHandler(BaseHandler):
             notices = None
             if "notices" in info:
                 notices = info["notices"]
+            logger.info("url: ", self.request.host)
             self.render(
-                "index.html", update_info=info, suggestion=suggestion, notices=notices
+                "index.html", update_info=info, suggestion=suggestion, notices=notices, location=self.request.host
             )
         else:
             self.render("index.html")
@@ -103,7 +104,7 @@ class MessageUpdatesHandler(BaseHandler):
 
 class ChatHandler(BaseHandler):
     def onResp(self, msg, audio, plugin):
-        logger.debug("response msg: {}".format(msg))
+        logger.debug(f"response msg: {msg}")
         res = {
             "code": 0,
             "message": "ok",
@@ -171,27 +172,6 @@ class GetHistoryHandler(BaseHandler):
         self.finish()
 
 
-class GetConfigHandler(BaseHandler):
-    def get(self):
-        if not self.validate(self.get_argument("validate", default=None)):
-            res = {"code": 1, "message": "illegal visit"}
-            self.write(json.dumps(res))
-        else:
-            key = self.get_argument("key", default="")
-            res = ""
-            if key == "":
-                res = {
-                    "code": 0,
-                    "message": "ok",
-                    "config": config.getText(),
-                    "sensitivity": config.get("sensitivity", 0.5),
-                }
-            else:
-                res = {"code": 0, "message": "ok", "value": config.get(key)}
-            self.write(json.dumps(res))
-        self.finish()
-
-
 class GetLogHandler(BaseHandler):
     def get(self):
         if not self.validate(self.get_argument("validate", default=None)):
@@ -204,7 +184,7 @@ class GetLogHandler(BaseHandler):
         self.finish()
 
 
-class LogHandler(BaseHandler):
+class LogPageHandler(BaseHandler):
     def get(self):
         if not self.isValidated():
             self.redirect("/login")
@@ -224,7 +204,7 @@ class OperateHandler(BaseHandler):
                 time.sleep(3)
                 wukong.restart()
             else:
-                res = {"code": 1, "message": "illegal type {}".format(type)}
+                res = {"code": 1, "message": f"illegal type {type}"}
                 self.write(json.dumps(res))
                 self.finish()
         else:
@@ -233,12 +213,33 @@ class OperateHandler(BaseHandler):
             self.finish()
 
 
-class ConfigHandler(BaseHandler):
+class ConfigPageHandler(BaseHandler):
     def get(self):
         if not self.isValidated():
             self.redirect("/login")
         else:
             self.render("config.html", sensitivity=config.get("sensitivity"))
+
+
+class ConfigHandler(BaseHandler):
+    def get(self):
+        if not self.validate(self.get_argument("validate", default=None)):
+            res = {"code": 1, "message": "illegal visit"}
+            self.write(json.dumps(res))
+        else:
+            key = self.get_argument("key", default="")
+            res = ""
+            if key == "":
+                res = {
+                    "code": 0,
+                    "message": "ok",
+                    "config": config.getText(),
+                    "sensitivity": config.get("sensitivity", 0.5),
+                }
+            else:
+                res = {"code": 0, "message": "ok", "value": config.get(key)}
+            self.write(json.dumps(res))
+        self.finish()
 
     def post(self):
         if self.validate(self.get_argument("validate", default=None)):
@@ -306,7 +307,7 @@ class QAHandler(BaseHandler):
                 res = {"code": 0, "message": "ok"}
                 self.write(json.dumps(res))
             except Exception as e:
-                logger.error(e)
+                logger.error(e, stack_info=True)
                 res = {"code": 1, "message": "提交失败，请检查内容"}
                 self.write(json.dumps(res))
         else:
@@ -400,19 +401,23 @@ application = tornado.web.Application(
     [
         (r"/", MainHandler),
         (r"/login", LoginHandler),
-        (r"/gethistory", GetHistoryHandler),
+        (r"/history", GetHistoryHandler),
         (r"/chat", ChatHandler),
         (r"/chat/updates", MessageUpdatesHandler),
         (r"/config", ConfigHandler),
-        (r"/getconfig", GetConfigHandler),
+        (r"/configpage", ConfigPageHandler),
         (r"/operate", OperateHandler),
-        (r"/getlog", GetLogHandler),
-        (r"/log", LogHandler),
+        (r"/logpage", LogPageHandler),
+        (r"/log", GetLogHandler),
         (r"/logout", LogoutHandler),
         (r"/api", APIHandler),
         (r"/qa", QAHandler),
         (r"/upgrade", UpdateHandler),
         (r"/donate", DonateHandler),
+        # 废弃老接口
+        (r"/getlog", GetLogHandler),
+        (r"/gethistory", GetHistoryHandler),
+        (r"/getconfig", ConfigHandler),
         (
             r"/photo/(.+\.(?:png|jpg|jpeg|bmp|gif|JPG|PNG|JPEG|BMP|GIF))",
             tornado.web.StaticFileHandler,
@@ -425,7 +430,7 @@ application = tornado.web.Application(
         ),
         (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "server/static"}),
     ],
-    **settings
+    **settings,
 )
 
 
@@ -440,7 +445,7 @@ def start_server(con, wk):
             application.listen(int(port))
             tornado.ioloop.IOLoop.instance().start()
         except Exception as e:
-            logger.critical("服务器启动失败: {}".format(e))
+            logger.critical(f"服务器启动失败: {e}", stack_info=True)
 
 
 def run(conversation, wukong):

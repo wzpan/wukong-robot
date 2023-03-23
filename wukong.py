@@ -35,6 +35,7 @@ class Wukong(object):
 ********************************************************
 *          wukong-robot - 中文语音对话机器人           *
 *          (c) 2019 潘伟洲 <m@hahack.com>              *
+*               当前版本号:  {}                      *
 *     https://github.com/wzpan/wukong-robot.git        *
 ********************************************************
 
@@ -42,15 +43,16 @@ class Wukong(object):
             如需退出，可以按 Ctrl-4 组合键
 
 """.format(
+                utils.get_file_content(
+                    os.path.join(constants.APP_PATH, "VERSION"), "r"
+                ).strip(),
                 config.get("/server/host", "0.0.0.0"),
                 config.get("/server/port", "5001"),
             )
         )
 
         self.conversation = Conversation(self._profiling)
-        self.conversation.say(
-            "{} 你好！试试对我喊唤醒词叫醒我吧".format(config.get("first_name", "主人")), True
-        )
+        self.conversation.say(f"{config.get('first_name', '主人')} 你好！试试对我喊唤醒词叫醒我吧", True)
         self.lifeCycleHandler = LifeCycleHandler(self.conversation)
         self.lifeCycleHandler.onInit()
 
@@ -90,9 +92,8 @@ class Wukong(object):
         try:
             # 初始化离线唤醒
             detector.initDetector(self)
-
         except AttributeError:
-            logger.error("初始化离线唤醒功能失败")
+            logger.error("初始化离线唤醒功能失败", stack_info=True)
             pass
 
     def help(self):
@@ -149,7 +150,7 @@ class Wukong(object):
                 threadNum,
             )
         except Exception as e:
-            logger.error("上传失败：{}".format(e))
+            logger.error(f"上传失败：{e}", stack_info=True)
 
     def restart(self):
         """

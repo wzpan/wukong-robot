@@ -78,11 +78,7 @@ def getIntent(parsed):
     :param parsed: UNIT 解析结果
     :returns: 意图数组
     """
-    if (
-        parsed is not None
-        and "result" in parsed
-        and "response_list" in parsed["result"]
-    ):
+    if parsed and "result" in parsed and "response_list" in parsed["result"]:
         try:
             return parsed["result"]["response_list"][0]["schema"]["intent"]
         except Exception as e:
@@ -100,11 +96,7 @@ def hasIntent(parsed, intent):
     :param intent: 意图的名称
     :returns: True: 包含; False: 不包含
     """
-    if (
-        parsed is not None
-        and "result" in parsed
-        and "response_list" in parsed["result"]
-    ):
+    if parsed and "result" in parsed and "response_list" in parsed["result"]:
         response_list = parsed["result"]["response_list"]
         for response in response_list:
             if (
@@ -127,11 +119,7 @@ def getSlots(parsed, intent=""):
         :returns: 词槽列表。你可以通过 name 属性筛选词槽，
     再通过 normalized_word 属性取出相应的值
     """
-    if (
-        parsed is not None
-        and "result" in parsed
-        and "response_list" in parsed["result"]
-    ):
+    if parsed and "result" in parsed and "response_list" in parsed["result"]:
         response_list = parsed["result"]["response_list"]
         if intent == "":
             try:
@@ -176,11 +164,7 @@ def getSayByConfidence(parsed):
     :param parsed: UNIT 解析结果
     :returns: UNIT 的回复文本
     """
-    if (
-        parsed is not None
-        and "result" in parsed
-        and "response_list" in parsed["result"]
-    ):
+    if parsed and "result" in parsed and "response_list" in parsed["result"]:
         response_list = parsed["result"]["response_list"]
         answer = {}
         for response in response_list:
@@ -207,11 +191,7 @@ def getSay(parsed, intent=""):
     :param intent: 意图的名称
     :returns: UNIT 的回复文本
     """
-    if (
-        parsed is not None
-        and "result" in parsed
-        and "response_list" in parsed["result"]
-    ):
+    if parsed and "result" in parsed and "response_list" in parsed["result"]:
         response_list = parsed["result"]["response_list"]
         if intent == "":
             try:

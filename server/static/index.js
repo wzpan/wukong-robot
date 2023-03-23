@@ -5,31 +5,34 @@ function appendHistory(type, query, uuid, plugin) {
         $('.history').append(`
               <div class="right">
                  <div class="bubble bubble-green">
-                   <div class="bubble-avatar"><i class="fas fa-user"></i></div>
+                   <!-- <div class="bubble-avatar"><i class="fas fa-user"></i></div> -->
                    <p style="text-align: left" id="${uuid}">${query}</p>
                  </div>
               </div>
 `);
     } else {
+        queries = query.split('\n');
+        $('.history').append(`
+          <div class="left">
+             <div class="bubble bubble-white">
+               <!-- <div class="bubble-avatar"><image src="./static/robot.png" width=32px attr="robot" /></div> -->
+               <div style="text-align: left" id="${uuid}">
+             </div>
+           </div>
+        `);
+        for (i in queries) {
+            let line = queries[i];
+            if (line.indexOf('<a') < 0) {
+                line = line.replaceAll(' ', '&nbsp;')
+            }
+            $(`#${uuid}`).append(`
+                <p>${line}</p>
+            `);
+        }
         if (plugin) {
-            $('.history').append(`
-              <div class="left">
-                 <div class="bubble bubble-white">
-                   <div class="bubble-avatar"><image src="./static/robot.png" width=32px attr="robot" /></div>
-                   <p style="text-align: left" id="${uuid}">${query}</p>
-                   <span class="badge badge-info plugin">${plugin}</span>
-                 </div>
-              </div>
-`);
-        } else {        
-            $('.history').append(`
-              <div class="left">
-                 <div class="bubble bubble-white">
-                   <div class="bubble-avatar"><image src="./static/robot.png" width=32px attr="robot" /></div>
-                   <p style="text-align: left" id="${uuid}">${query}</p>
-                 </div>
-              </div>
-`);        
+            $(`#${uuid}`).after(`
+               <span class="badge badge-info plugin">${plugin}</span>
+            `);
         }
     }
     $("#"+uuid).hide();
@@ -87,8 +90,7 @@ function guid() {
 
 $(document).ready(function() {
     if (!window.console) window.console = {};
-    if (!window.console.log) window.console.log = function() {};
-
+    if (!window.console.log) window.console.log = function() {};    
     $('.CHAT').on('click', function(e) {
         e.preventDefault();
         var disabled = $('#query');

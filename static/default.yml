@@ -43,8 +43,8 @@ porcupine:
 # 建议使用 snowboy-seasalt (https://github.com/rhasspy/snowboy-seasalt)
 # 使用相同环境录入你的语音，以提升唤醒成功率和准确率
 hotword: 'snowboy.umdl'  # 唤醒词模型，如要自定义请放到 $HOME/.wukong 目录中
-silent_threshold: 15 # 判断为静音的阈值。环境比较吵杂的地方可以适当调大
-recording_timeout: 5 # 录制的语音最大长度（秒）
+silent_threshold: 20 # 判断为静音的阈值。环境比较吵杂的地方可以适当调大
+recording_timeout: 15 # 录制的语音最大长度（秒）
 snowboy_token: your_token # 你的token，用于 train 命令训练语音
 
 # Muse 脑机
@@ -94,7 +94,12 @@ lru_cache:
 # ali-tts       - 阿里语音合成（推荐）
 # tencent-tts   - 腾讯云语音合成（推荐）
 # azure-tts     - 微软语音合成
+# mac-tts       - macOS 系统自带TTS（mac 系统推荐）
 tts_engine: baidu-tts
+
+# 文本超过一定字符数后是否截断
+trim_too_long_text: true
+max_text_length: 128
 
 # 语音识别服务配置
 # 可选值：
@@ -103,12 +108,12 @@ tts_engine: baidu-tts
 # ali-asr       - 阿里语音识别
 # tencent-asr   - 腾讯云语音识别（推荐）
 # azure-asr     - 微软语音识别
+# openai        - OpenAI Whisper
 asr_engine: baidu-asr
 
 # 百度语音服务
 # http://yuyin.baidu.com/
 # 有免费额度限制，请使用自己的百度智能云账户
-
 baidu_yuyin:
     appid: 'YOUR_APPID'
     api_key: 'YOUR_API_KEY'
@@ -163,6 +168,13 @@ han-tts:
     # https://github.com/junzew/HanTTS
     voice: 'syllables' 
 
+# macOS 自带的 TTS 服务
+# 注意：仅 macOS 系统可用！
+mac-tts:
+    # 命令行执行 say -v '?' 可以打印所有语音
+    # 中文推荐 Tingting（普通话）或者 Sinji（粤语）
+    voice: Tingting
+
 # NLU 引擎
 # 可选值：
 # unit      - 百度 UNIT
@@ -171,6 +183,7 @@ nlu_engine: unit
 # 聊天机器人
 # 可选值：
 # unit      - 百度UNIT（推荐）
+# openai    - OpenAI ChatGPT(要求 Python >= 3.7.1）
 # anyq      - AnyQ
 # tuling    - 图灵机器人
 robot: unit
@@ -201,6 +214,32 @@ anyq:
 # http://www.tuling123.com
 tuling:
     tuling_key: '98f95153fb5c4684a5602b909949ba61'  # 建议使用自己的图灵机器人API Key
+
+# OpenAI(ChatGPT) 机器人
+# 使用科学上网工具到 https://platform.openai.com
+# 注册一个账号，获得 openai_api_key 后填到下面的配置中即可
+openai:
+    openai_api_key: 'sk-xxxxxxxxxxxxxxxxxxxxxxxxxx'
+    # 参数指定将生成文本的模型类型。默认情况下，OpenAI 提供了几个模型供您选择，您可以在此处查看。此外，您甚至可以创建自己的模型，但这超出了本教程的范围。https://beta.openai.com/docs/models/overview
+    model: 'gpt-3.5-turbo'
+    # 在前面加的一段前缀
+    prefix: '请用200字回答：'
+    # 该temperature参数指定响应的不确定性。这意味着该模型更有可能产生创造性的东西，并且可以被认为是模型承担风险并偏离正常反应。将此参数设置为 1 意味着模型将返回它不确定的结果，相比之下，将此参数设置为 0 意味着模型将返回它几乎可以肯定的结果。
+    temperature: 1
+    # 该max_tokens参数指定模型允许生成的最大字符数量作为其输出的一部分。您需要为生成的更多字符付费，因此请务必小心使用此参数。
+    max_tokens: 2000
+    # 一个可用于代替 temperature 的参数，对应机器学习中 nucleus sampling，如果设置 0.1 意味着只考虑构成前 10% 概率质量的 tokens
+    top_p: 1.0
+    # -2.0 ~ 2.0 之间的数字，正值会根据新 tokens 在文本中的现有频率对其进行惩罚，从而降低模型逐字重复同一行的可能性
+    frequency_penalty: 0.0
+    # -2.0 ~ 2.0 之间的数字，正值会根据到目前为止是否出现在文本中来惩罚新 tokens，从而增加模型谈论新主题的可能性
+    presence_penalty: 0.0    
+    stop_ai: 'stop'
+    # 如果需要代理，反注释下面的配置进行修改
+    proxy: '127.0.0.1:1080'
+    # 如果需要更换 api_base ，反注释下面的配置进行修改
+    # api_base: "https://api.openai.com/v1/chat"
+
 
 # 邮箱
 # 如果使用网易邮箱，还需设置允许第三方客户端收发邮件

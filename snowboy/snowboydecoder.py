@@ -142,7 +142,7 @@ class ActiveListener(object):
                 stream_callback=audio_callback,
             )
         except Exception as e:
-            logger.critical(e)
+            logger.critical(e, stack_info=True)
             return
 
         logger.debug("audio stream opened")
@@ -376,11 +376,10 @@ class HotwordDetector(object):
                     )
                     logger.info(message)
                     callback = detected_callback[status - 1]
-                    if callback is not None:
-                        callback()
+                    callback and callback()
 
                     if (
-                        audio_recorder_callback is not None
+                        audio_recorder_callback
                         and status == 1
                         and utils.is_proper_time()
                     ):

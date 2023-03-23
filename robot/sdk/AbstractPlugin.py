@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 try:
     sys.path.append(constants.CONTRIB_PATH)
 except Exception as e:
-    logger.debug("未检测到插件目录,Error:{}".format(e))
+    logger.error(f"未检测到插件目录, Error: {e}", stack_info=True)
 
 
 class AbstractPlugin(metaclass=ABCMeta):
@@ -18,7 +18,7 @@ class AbstractPlugin(metaclass=ABCMeta):
     IS_IMMERSIVE = False
 
     def __init__(self, con):
-        if self.IS_IMMERSIVE is not None:
+        if self.IS_IMMERSIVE:
             self.isImmersive = self.IS_IMMERSIVE
         else:
             self.isImmersive = False
@@ -27,11 +27,27 @@ class AbstractPlugin(metaclass=ABCMeta):
         self.nlu = self.con.nlu
 
     def play(self, src, delete=False, onCompleted=None, volume=1):
+        """
+        播放音频
+        
+        :param play: 要播放的音频地址
+        :param delete: 播放完成是否要删除，默认不删除
+        :param onCompleted: 播放完后的回调
+        :param volume: 音量
+        """
         self.con.play(src, delete, onCompleted, volume)
 
     def say(self, text, cache=False, onCompleted=None, wait=False):
+        """
+        使用TTS说一句话
+        
+        :param text: 要说话的内容
+        :param cache: 是否要缓存该音频，默认不缓存
+        :param onCompleted: 播放完后的回调
+        :param wait: 已废弃
+        """
         self.con.say(
-            text, cache=cache, plugin=self.SLUG, onCompleted=onCompleted, wait=wait
+            text, cache=cache, plugin=self.SLUG, onCompleted=onCompleted
         )
 
     def activeListen(self, silent=False):

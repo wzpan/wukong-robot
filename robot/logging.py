@@ -29,7 +29,6 @@ def tail(filepath, n=10):
                 break
 
             f.seek(-r_len, 2)
-            # print('f_len: {}, rem: {}, page_n: {}, r_len: {}'.format(f_len, rem, page_n, r_len))
             lines = f.readlines()[::-1]
             count = len(lines) - 1  # 末行可能不完整，减一行，加大读取量
 
@@ -50,10 +49,9 @@ def getLogger(name):
 
     :returns: logger
     """
-    formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(filename)s - %(funcName)s - line %(lineno)s - %(levelname)s - %(message)s"
-    )
-
+    format = "%(asctime)s - %(name)s - %(filename)s - %(funcName)s - line %(lineno)s - %(levelname)s - %(message)s"
+    formatter = logging.Formatter(format)
+    logging.basicConfig(format=format)
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
 
@@ -63,7 +61,7 @@ def getLogger(name):
         maxBytes=1024 * 1024,
         backupCount=5,
     )
-    file_handler.setLevel(level=logging.DEBUG)
+    file_handler.setLevel(level=logging.NOTSET)
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
 

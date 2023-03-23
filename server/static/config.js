@@ -24,7 +24,7 @@ function saveConfig(msg) {
 
 $(function() {
     $.ajax({
-        url: '/getconfig',
+        url: '/config',
         type: "GET",
         data: {'validate': getCookie('validation')},
         success: function(res) {

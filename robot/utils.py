@@ -55,7 +55,7 @@ def sendEmail(
             att["Content-Disposition"] = 'attachment; filename="%s"' % filename
             msg.attach(att)
         except Exception:
-            logger.error("附件 %s 发送失败！" % attach)
+            logger.error(f"附件 {attach} 发送失败！", stack_info=True)
             continue
 
     msg["From"] = SENDER
@@ -71,7 +71,7 @@ def sendEmail(
         session.close()
         return True
     except Exception as e:
-        logger.error(e)
+        logger.error(e, stack_info=True)
         return False
 
 
@@ -103,11 +103,11 @@ def emailUser(SUBJECT="", BODY="", ATTACH_LIST=[]):
         )
         return True
     except Exception as e:
-        logger.error(e)
+        logger.error(e, stack_info=True)
         return False
 
 
-def get_file_content(filePath):
+def get_file_content(filePath, flag="rb"):
     """
     读取文件内容并返回
 
@@ -115,7 +115,7 @@ def get_file_content(filePath):
     :returns: 文件内容
     :raises IOError: 读取失败则抛出 IOError
     """
-    with open(filePath, "rb") as fp:
+    with open(filePath, flag) as fp:
         return fp.read()
 
 
@@ -172,7 +172,7 @@ def convert_wav_to_mp3(wav_path):
     :returns: mp3 文件路径
     """
     if not os.path.exists(wav_path):
-        logger.critical("文件错误 {}".format(wav_path))
+        logger.critical(f"文件错误 {wav_path}", stack_info=True)
         return None
     mp3_path = wav_path.replace(".wav", ".mp3")
     AudioSegment.from_wav(wav_path).export(mp3_path, format="mp3")
@@ -188,7 +188,7 @@ def convert_mp3_to_wav(mp3_path):
     """
     target = mp3_path.replace(".mp3", ".wav")
     if not os.path.exists(mp3_path):
-        logger.critical("文件错误 {}".format(mp3_path))
+        logger.critical(f"文件错误 {mp3_path}", stack_info=True)
         return None
     AudioSegment.from_mp3(mp3_path).export(target, format="wav")
     return target

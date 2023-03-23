@@ -14,10 +14,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/users/wzpan/projects/1"><img alt="wukong-project" src="https://img.shields.io/badge/project-wukong-informational.svg?style=flat-square"></a>
+  <a href="https://github.com/users/wzpan/projects/2/views/1"><img alt="wukong-project" src="https://img.shields.io/badge/project-wukong-informational.svg?style=flat-square"></a>
   <a href="https://wukong.hahack.com/#/donate"><img alt="捐赠" src="https://img.shields.io/badge/%EF%BF%A5-donate-green.svg?style=flat-square"></a>
   <a href="https://travis-ci.org/wzpan/wukong-robot"><img alt="Travis" src="https://img.shields.io/travis/wzpan/wukong-robot.svg?style=flat-square"></a>
-  <a href="#"><img alt="Python3" src="https://img.shields.io/badge/Python-3-blue.svg?style=flat-square"></a>
+  <a href="#"><img alt="Python3.7+" src="https://img.shields.io/badge/Python->=3.7-blue.svg?style=flat-square"></a>
   <a href="https://hub.docker.com/r/wzpan/wukong-robot"><img alt="docker-pulls" src="https://img.shields.io/docker/pulls/wzpan/wukong-robot.svg?style=flat-square&colorB=success"></a>
   <a href="https://github1s.com/wzpan/wukong-robot"><img alt="browse-code" src="https://img.shields.io/badge/browse-code-purple.svg?style=flat-square"></a>
 </p>
@@ -39,6 +39,7 @@
 * [API接口](#api-接口)
 * [捐赠](#捐赠)
 * [贡献](#贡献)
+* [引用](#引用)
 * [联系](#联系)
 * [感谢](#感谢)
 * [FAQ](#faq)
@@ -47,23 +48,25 @@
 ## 特性
 
 <p align="center">
-  <img src="https://hahack-1253537070.file.myqcloud.com/images/wukong-docs/wukong-robot-mindmap.png?version=20191123" alt="wukong-robot">
+  <img src="https://wzpan-1253537070.cos.ap-guangzhou.myqcloud.com/wukong/wukong-robot-3.3.0.png" alt="wukong-robot">
 </p>
 
 * 模块化。功能插件、语音识别、语音合成、对话机器人都做到了高度模块化，第三方插件单独维护，方便继承和开发自己的插件。
-* 中文支持。集成百度、科大讯飞、阿里、腾讯等多家中文语音识别和语音合成技术，且可以继续扩展。
-* 对话机器人支持。支持基于 [AnyQ](/anyq) 的本地对话机器人，并支持接入图灵机器人、Emotibot 等在线对话机器人。
-* 全局监听，离线唤醒。支持 [Porcupine](https://github.com/Picovoice/porcupine) 和 [snowboy](https://github.com/Kitt-AI/snowboy) 两套离线语音指令唤醒引擎，并支持 Muse [脑机唤醒](/bci) 以及行空板摇一摇唤醒等其他唤醒方式。
+* 中文支持。集成百度、科大讯飞、阿里、腾讯、OpenAI Whisper、Apple 等多家中文语音识别和语音合成技术，且可以继续扩展。
+* 对话机器人支持。支持基于 [AnyQ](https://wukong.hahack.com/#/anyq) 的本地对话机器人，并支持接入图灵机器人、ChatGPT 等在线对话机器人。
+* 全局监听，离线唤醒。支持 [Porcupine](https://github.com/Picovoice/porcupine) 和 [snowboy](https://github.com/Kitt-AI/snowboy) 两套离线语音指令唤醒引擎，并支持 Muse [脑机唤醒](https://wukong.hahack.com/#/bci) 以及行空板摇一摇唤醒等其他唤醒方式。
 * 灵活可配置。支持定制机器人名字，支持选择语音识别和合成的插件。
-* 智能家居。支持和 mqtt、[HomeAssistant](/smarthome) 等智能家居协议联动，支持语音控制智能家电。
+* 智能家居。支持和 [小爱音箱](https://wukong.hahack.com/#/linkage)、[Siri](https://wukong.hahack.com/#/linkage)、mqtt、[HomeAssistant](https://wukong.hahack.com/#/smarthome) 等智能家居协议联动，支持语音控制智能家电。
 * 后台配套支持。提供配套后台，可实现远程操控、修改配置和日志查看等功能。
 * 开放API。可利用后端开放的API，实现更丰富的功能。
 * 安装简单，支持更多平台。相比 dingdang-robot ，舍弃了 PocketSphinx 的离线唤醒方案，安装变得更加简单，代码量更少，更易于维护并且能在 Mac 以及更多 Linux 系统中运行。
 
+wukong-robot 的功能还在不断更新迭代中，详见 [更新说明](https://github.com/wzpan/wukong-robot/wiki/update-notes) 。
+
 wukong-robot 的工作模式：
 
 <p align="center">
-  <img src="http://hahack-1253537070.file.myqcloud.com/images/wukong-docs/wukong-robot-workflow.png" alt="wukong-robot 的工作模式">
+  <img src="https://wzpan-1253537070.cos.ap-guangzhou.myqcloud.com/wukong/wukong-robot-workflow.png" alt="wukong-robot 的工作模式">
 </p>
 
 wukong-robot 被唤醒后，用户的语音指令先经过 ASR 引擎进行 ASR 识别成文本，然后对识别到的文本进行 NLU 解析，再将解析结果进行技能匹配，交给适合处理该指令的技能插件去处理。插件处理完成后，得到的结果再交给 TTS 引擎合成成语音，播放给用户。
@@ -73,13 +76,15 @@ wukong-robot 被唤醒后，用户的语音指令先经过 ASR 引擎进行 ASR 
 ## Demo
 
 <p align="center">
-  <img src="http://hahack-1253537070.file.myqcloud.com/images/wukong-docs/user-demo.jpg" alt="demo">
+  <img src="https://wzpan-1253537070.cos.ap-guangzhou.myqcloud.com/wukong/user-demo.jpg" alt="demo">
 </p>
 
 * Demo视频：
   - [ycy-robot 月芽特别定制版](https://www.bilibili.com/video/av50685517/)
   - [使用脑机唤醒 wukong-robot](https://www.bilibili.com/video/av76739580/)
   - [Google AIY Voice Kit + wukong-robot](https://www.bilibili.com/video/av81173082/)
+  - [Siri 联动 wukong-robot + ChatGPT](https://www.bilibili.com/video/BV1yY4y1y7oW)
+  - [小爱同学联动 wukong-robot](https://www.bilibili.com/video/BV1eg4y1b75Y)
 * 后台管理端 Demo
   - 体验地址：https://bot.hahack.com  （体验用户名：wukong；体验密码：wukong@2019）
 
@@ -87,13 +92,13 @@ wukong-robot 被唤醒后，用户的语音指令先经过 ASR 引擎进行 ASR 
 
 ### Python 版本 ###
 
-wukong-robot 只支持 Python 3.5+，不支持 Python 2.x 。
+wukong-robot 只支持 Python 3.7+，不支持 Python 2.x 。
 
 ### 设备要求 ###
 
 wukong-robot 支持运行在以下的设备和系统中：
 
-* 64bit Mac OS X
+* Intel Chip Mac (不支持 M1 芯片)
 * 64bit Ubuntu（12.04 and 14.04）
 * 全系列的树莓派（Raspbian 系统）
 * Pine 64 with Debian Jessie 8.5（3.10.102）
@@ -141,10 +146,7 @@ python3 wukong.py
 
 参考[配置文件的注释](https://github.com/wzpan/wukong-robot/blob/master/static/default.yml)进行配置即可。注意不建议直接修改 default.yml 里的内容，否则会给后续通过 `git pull` 更新带来麻烦。你应该拷贝一份放到 `$HOME/.wukong/config.yml` 中，或者在运行的时候按照提示让 wukong-robot 为你完成这件事。
 
-几个 tips：
-
-1. 建议在运行 wukong-robot 的机器上重新训练一下唤醒词，不同设备录制出来的唤醒词模型使用效果会大打折扣。
-2. 不论使用哪个厂商的API，都建议注册并填上自己注册的应用信息，而不要用默认的配置。这是因为这些API都有使用频率和并发数限制，过多人同时使用会影响服务质量。
+> tips：不论使用哪个厂商的API，都建议注册并填上自己注册的应用信息，而不要用默认的配置。这是因为这些API都有使用频率和并发数限制，过多人同时使用会影响服务质量。
 
 ## 技能插件 ##
 
@@ -189,6 +191,23 @@ wukong-robot 的后台接口是开放 Web API 的，可以使用 Restful 方式�
 * 提 bug 请到 [issue 页面](https://github.com/wzpan/wukong-robot/issues)；
 * 要贡献代码，欢迎 fork 之后再提 pull request；
 * 插件请提交到 [wukong-contrib](https://github.com/wzpan/wukong-contrib) ；
+
+
+## 引用
+
+如果使用本项目的代码或插件，请引用本项目。
+
+```
+@misc{wukong-robot,
+  author = {潘伟洲},
+  title = {wukong-robot，一个简单、灵活、优雅的中文语音对话机器人/智能音箱项目},
+  year = {2019},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/wzpan/wukong-robot}},
+}
+```
+
 
 ## 联系
 

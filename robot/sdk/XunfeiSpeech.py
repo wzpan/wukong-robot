@@ -145,7 +145,9 @@ def asr_on_message(ws, message):
         if code != 0:
             errMsg = json.loads(message)["message"]
             logger.critical(
-                "xunfei-asr 识别出错了：sid:%s call error:%s code is:%s" % (sid, errMsg, code)
+                "xunfei-asr 识别出错了：sid:%s call error:%s code is:%s"
+                % (sid, errMsg, code),
+                stack_info=True,
             )
         else:
             data = json.loads(message)["data"]["result"]["ws"]
@@ -159,7 +161,7 @@ def asr_on_message(ws, message):
                 % (sid, json.dumps(data, ensure_ascii=False))
             )
     except Exception as e:
-        logger.critical("xunfei-asr 识别出错了：", e)
+        logger.critical(f"xunfei-asr 识别出错了：{e}", stack_info=True)
 
 
 # ASR 收到websocket错误的处理
@@ -273,7 +275,7 @@ def tts_on_close(ws, _foo, _bar):
             wavfile.writeframes(pcmdata)
         gTTSResult = tmpfile
     except Exception as e:
-        logger.error("XunfeiSpeech error: {}".format(e))
+        logger.error(f"XunfeiSpeech error: {e}", stack_info=True)
 
 
 # 收到websocket连接建立的处理

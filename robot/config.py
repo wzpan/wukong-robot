@@ -21,11 +21,11 @@ def reload():
 def init():
     global has_init
     if os.path.isfile(constants.CONFIG_PATH):
-        logger.critical("错误：{} 应该是个目录，而不应该是个文件".format(constants.CONFIG_PATH))
+        logger.critical(f"错误：{constants.CONFIG_PATH} 应该是个目录，而不应该是个文件")
     if not os.path.exists(constants.CONFIG_PATH):
         os.makedirs(constants.CONFIG_PATH)
     if not os.path.exists(constants.getConfigPath()):
-        yes_no = input("配置文件{}不存在，要创建吗？(y/n)".format(constants.getConfigPath()))
+        yes_no = input(f"配置文件{constants.getConfigPath()}不存在，要创建吗？(y/n)")
         if yes_no.lower() == "y":
             constants.newConfig()
             doInit(constants.getConfigPath())
@@ -43,9 +43,8 @@ def doInit(config_file=constants.getDefaultConfigPath()):
             os.makedirs(constants.CONFIG_PATH)
         except OSError:
             logger.error(
-                "Could not create config dir: '%s'",
-                constants.CONFIG_PATH,
-                exc_info=True,
+                f"Could not create config dir: '{constants.CONFIG_PATH}'",
+                stack_info=True,
             )
             raise
 
@@ -64,7 +63,7 @@ def doInit(config_file=constants.getDefaultConfigPath()):
         with open(config_file, "r") as f:
             _config = yaml.safe_load(f)
     except Exception as e:
-        logger.error("配置文件 {} 读取失败: {}".format(config_file, e))
+        logger.error(f"配置文件 {config_file} 读取失败: {e}", stack_info=True)
         raise
 
 

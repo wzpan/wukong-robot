@@ -17,10 +17,10 @@ def initDetector(wukong):
     global porcupine, recorder, detector
     if config.get("detector", "snowboy") == "porcupine":
         logger.info("使用 porcupine 进行离线唤醒")
-        
+
         import pvporcupine
         from pvrecorder import PvRecorder
-        
+
         access_key = config.get("/porcupine/access_key")
         keyword_paths = config.get("/porcupine/keyword_paths")
         keywords = config.get("/porcupine/keywords", ["porcupine"])
@@ -62,22 +62,27 @@ def initDetector(wukong):
                     wukong.conversation.doResponse(query)
                     recorder.start()
         except pvporcupine.PorcupineActivationError as e:
-            logger.error("[Porcupine] AccessKey activation error")
+            logger.error("[Porcupine] AccessKey activation error", stack_info=True)
             raise e
         except pvporcupine.PorcupineActivationLimitError as e:
             logger.error(
-                "[Porcupine] AccessKey '%s' has reached it's temporary device limit"
-                % access_key
+                f"[Porcupine] AccessKey {access_key} has reached it's temporary device limit",
+                stack_info=True,
             )
             raise e
         except pvporcupine.PorcupineActivationRefusedError as e:
-            logger.error("[Porcupine] AccessKey '%s' refused" % access_key)
+            logger.error(
+                "[Porcupine] AccessKey '%s' refused" % access_key, stack_info=True
+            )
             raise e
         except pvporcupine.PorcupineActivationThrottledError as e:
-            logger.error("[Porcupine] AccessKey '%s' has been throttled" % access_key)
+            logger.error(
+                "[Porcupine] AccessKey '%s' has been throttled" % access_key,
+                stack_info=True,
+            )
             raise e
         except pvporcupine.PorcupineError as e:
-            logger.error("[Porcupine] 初始化 Porcupine 失败")
+            logger.error("[Porcupine] 初始化 Porcupine 失败", stack_info=True)
             raise e
         except KeyboardInterrupt:
             logger.info("Stopping ...")
@@ -105,4 +110,4 @@ def initDetector(wukong):
             )
             detector.terminate()
         except Exception as e:
-            logger.critical("离线唤醒机制初始化失败：{}".format(e))
+            logger.critical(f"离线唤醒机制初始化失败：{e}", stack_info=True)
