@@ -6,11 +6,13 @@ import pstats
 import io
 import re
 import os
+import traceback
 
 from snowboy import snowboydecoder
 
 from robot.LifeCycleHandler import LifeCycleHandler
 from robot.Brain import Brain
+from robot.Scheduler import Scheduler
 from robot.sdk import MessageBuffer
 from robot import (
     AI,
@@ -22,7 +24,7 @@ from robot import (
     Player,
     statistic,
     TTS,
-    utils
+    utils,
 )
 
 
@@ -31,7 +33,7 @@ logger = logging.getLogger(__name__)
 
 class Conversation(object):
     def __init__(self, profiling=False):
-        self.brain, self.asr, self.ai, self.tts, self.nlu, self.player = None, None, None, None, None, None
+        self.brain, self.asr, self.ai, self.tts, self.nlu = None, None, None, None, None
         self.reInit()
         self.brain = Brain(self)
         self.brain.printPlugins()
@@ -44,6 +46,8 @@ class Conversation(object):
         self.profiling = profiling
         self.onSay = None
         self.hasPardon = False
+        self.scheduler = Scheduler(self)
+        self.player = Player.SoxPlayer()
         self.lifeCycleHandler = LifeCycleHandler(self)
 
     def getHistory(self):
@@ -52,7 +56,6 @@ class Conversation(object):
     def interrupt(self):
         if self.player and self.player.is_playing():
             self.player.stop()
-            self.player = None
         if self.immersiveMode:
             self.brain.pause()
 
@@ -96,6 +99,27 @@ class Conversation(object):
 
         lastImmersiveMode = self.immersiveMode
 
+        parsed = self.doParse(query)
+        if not self.brain.query(query, parsed):
+            if self.nlu.hasIntent(parsed, "PAUSE") or "闭嘴" in query:
+                # 停止说话
+                self.player.stop()
+            else:
+                # 没命中技能，使用机器人回复
+                msg = self.ai.chat(query, parsed)
+                self.say(msg, True, onCompleted=self.checkRestore)
+        else:
+            # 命中技能
+            if lastImmersiveMode and lastImmersiveMode != self.matchPlugin:
+                if self.player:
+                    if self.player.is_playing():
+                        logger.debug("等说完再checkRestore")
+                        self.player.appendOnCompleted(lambda: self.checkRestore())
+                else:
+                    logger.debug("checkRestore")
+                    self.checkRestore()
+
+    def doParse(self, query):
         args = {
             "service_id": config.get("/unit/service_id", "S13442"),
             "api_key": config.get("/unit/api_key", "w5v7gUV3iPGsGntcM84PtOOM"),
@@ -103,22 +127,6 @@ class Conversation(object):
                 "/unit/secret_key", "KffXwW6E1alcGplcabcNs63Li6GvvnfL"
             ),
         }
-        parsed = self.doParse(query, **args)
-        if not self.brain.query(query, parsed):
-            # 没命中技能，使用机器人回复
-            msg = self.ai.chat(query, parsed)
-            self.say(msg, True, onCompleted=self.checkRestore)
-        else:
-            if lastImmersiveMode and lastImmersiveMode != self.matchPlugin:
-                time.sleep(1)
-                if self.player and self.player.is_playing():
-                    logger.debug("等说完再checkRestore")
-                    self.player.appendOnCompleted(lambda: self.checkRestore())
-                else:
-                    logger.debug("checkRestore")
-                    self.checkRestore()
-
-    def doParse(self, query, **args):
         return self.nlu.parse(query, **args)
 
     def setImmersiveMode(self, slug):
@@ -152,11 +160,13 @@ class Conversation(object):
             query = self.asr.transcribe(fp)
         except Exception as e:
             logger.critical(f"ASR识别失败：{e}", stack_info=True)
+            traceback.print_exc()
         utils.check_and_delete(fp)
         try:
             self.doResponse(query, callback, onSay)
         except Exception as e:
             logger.critical(f"回复失败：{e}", stack_info=True)
+            traceback.print_exc()
         utils.clean()
 
     def appendHistory(self, t, text, UUID="", plugin=""):
@@ -268,6 +278,7 @@ class Conversation(object):
                 cache_path = utils.saveCache(voice, msg)
             except Exception as e:
                 logger.error(f"语音合成失败：{e}", stack_info=True)
+                traceback.print_exc()
         if self.onSay:
             logger.info(cache)
             audio = "http://{}:{}/audio/{}".format(
@@ -280,7 +291,6 @@ class Conversation(object):
             self.onSay = None
         if onCompleted is None:
             onCompleted = lambda: self._onCompleted(msg)
-        self.player = Player.SoxPlayer()
         if config.get("trim_too_long_text", True) and is_too_long:
             self.player.preappendCompleted(
                 lambda: self.say("后面的内容太长了，我就不念了", append_history=False)
@@ -292,8 +302,13 @@ class Conversation(object):
         """
         主动问一个问题(适用于多轮对话)
         :param silent: 是否不触发唤醒表现（主要用于极客模式）
+        :param
         """
-        logger.debug("activeListen")
+        if self.immersiveMode:
+            self.player.stop()
+        elif self.player.is_playing():
+            self.player.join()  # 确保所有音频都播完
+        logger.info("进入主动聆听...")
         try:
             if not silent:
                 self.lifeCycleHandler.onWakeup()
@@ -313,6 +328,7 @@ class Conversation(object):
             return ""
         except Exception as e:
             logger.error(f"主动聆听失败：{e}", stack_info=True)
+            traceback.print_exc()
             return ""
 
     def play(self, src, delete=False, onCompleted=None, volume=1):

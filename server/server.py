@@ -65,7 +65,11 @@ class MainHandler(BaseHandler):
                 notices = info["notices"]
             logger.info("url: ", self.request.host)
             self.render(
-                "index.html", update_info=info, suggestion=suggestion, notices=notices, location=self.request.host
+                "index.html",
+                update_info=info,
+                suggestion=suggestion,
+                notices=notices,
+                location=self.request.host,
             )
         else:
             self.render("index.html")

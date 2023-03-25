@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from robot import logging
+import time
+
+from robot import config, logging
 from robot.sdk.AbstractPlugin import AbstractPlugin
 
 logger = logging.getLogger(__name__)
@@ -8,6 +10,7 @@ logger = logging.getLogger(__name__)
 class Plugin(AbstractPlugin):
 
     IS_IMMERSIVE = True  # 这是个沉浸式技能
+    SLUG = "geek"
 
     def __init__(self, con):
         super(Plugin, self).__init__(con)
@@ -23,6 +26,7 @@ class Plugin(AbstractPlugin):
             )
         else:
             self.say("退出极客模式", cache=True)
+            self.clearImmersive()
 
     def onAsk(self, input):
         if input:
@@ -31,14 +35,13 @@ class Plugin(AbstractPlugin):
             self.con.doResponse(input)
         else:
             self.silent_count += 1
-            if self.silent_count >= 5:
+            if self.silent_count >= config.get("/geek/max_silent_count", 5):
                 self.say("退出极客模式", cache=True)
                 self.clearImmersive()
             else:
                 self.onAsk(self.activeListen(silent=True))
 
     def restore(self):
-        logger.debug("restore")
         self.onAsk(self.activeListen(silent=True))
 
     def isValidImmersive(self, text, parsed):

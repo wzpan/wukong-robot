@@ -157,6 +157,23 @@ def getSlotWords(parsed, intent, name):
     return words
 
 
+def getSlotOriginalWords(parsed, intent, name):
+    """
+    找出命中某个词槽的原始内容
+
+    :param parsed: UNIT 解析结果
+    :param intent: 意图的名称
+    :param name: 词槽名
+    :returns: 命中该词槽的值的列表。
+    """
+    slots = getSlots(parsed, intent)
+    words = []
+    for slot in slots:
+        if slot["name"] == name:
+            words.append(slot["original_word"])
+    return words
+
+
 def getSayByConfidence(parsed):
     """
     提取 UNIT 置信度最高的回复文本
