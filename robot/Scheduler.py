@@ -5,7 +5,7 @@ import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 
-from robot import logging, utils
+from robot import logging, utils, constants
 
 logger = logging.getLogger(__name__)
 
@@ -15,8 +15,9 @@ class Job(object):
     任务类
     """
 
-    def __init__(self, remind_time, content, describe, job_id):
+    def __init__(self, remind_time, original_time, content, describe, job_id):
         self.remind_time = remind_time
+        self.original_time = original_time
         self.content = utils.stripPunctuation(content)
         self.describe = describe
         self.job_id = job_id
@@ -42,11 +43,15 @@ class Scheduler(object):
             int(year), int(mon), int(day), int(hour), int(min), int(sec)
         )
 
-    def _add_interval_job(self, alarm, job, norm_str):
+    def _add_interval_job(self, alarm, job_id, norm_str):
         interval, count = norm_str.split("-")[1:]
         interval_type = interval + "s"
         self._sched.add_job(
-            alarm, "interval", **{interval_type: int(count)}, id=job.job_id
+            alarm,
+            "interval",
+            **{interval_type: int(count)},
+            id=job_id,
+            misfire_grace_time=60,
         )
         return True
 
@@ -84,11 +89,13 @@ class Scheduler(object):
         else:
             return None
 
-    def _add_cron_job(self, alarm, job, norm_str):
+    def _add_cron_job(self, alarm, job_id, norm_str):
         # 解析规则字符串
         cron_trigger = self._parse_cron_rule(norm_str)
-        self._sched.add_job(alarm, trigger=cron_trigger)
-        return True
+        if cron_trigger:
+            self._sched.add_job(alarm, trigger=cron_trigger, misfire_grace_time=60)
+            return True
+        return False
 
     def get_jobs(self):
         """
@@ -96,6 +103,9 @@ class Scheduler(object):
 
         """
         return self._jobs
+
+    def set_jobs(self, jobs):
+        self._jobs = jobs
 
     def add_job(self, remind_time, original_time, content, onAlarm, job_id=None):
         """
@@ -111,30 +121,36 @@ class Scheduler(object):
 
         job = Job(
             remind_time=remind_time,
+            original_time=original_time,
             content=content,
             describe=f"时间：{remind_time}，事项：{content}"
             if "repeat" not in remind_time
             else f"时间：{original_time}, 事项：{content}",
             job_id=job_id,
         )
-        self._jobs.append(job)
+        success = False
         if "repeat" in remind_time:
             if "|" in remind_time:
                 # cron 任务
-                if self._add_cron_job(onAlarm, job, remind_time):
-                    return job
-                return None
+                success = self._add_cron_job(onAlarm, job_id, remind_time)
             else:
                 # interval 任务
-                if self._add_interval_job(onAlarm, job, remind_time):
-                    return job
-                return None
+                success = self._add_interval_job(onAlarm, job_id, remind_time)
         else:
-            if self._sched.add_job(
-                onAlarm, "date", run_date=self._get_datetime(remind_time), id=job.job_id
-            ):
-                return job
-            return None
+            success = self._sched.add_job(
+                onAlarm,
+                "date",
+                run_date=self._get_datetime(remind_time),
+                id=job_id,
+                misfire_grace_time=60,
+            )
+        if success:
+            self._jobs.append(job)
+            return job
+        return None
+
+    def has_job(self, job_id):
+        return self._sched.get_job(job_id)
 
     def del_job_by_id(self, job_id):
         """

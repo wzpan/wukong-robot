@@ -35,8 +35,7 @@ class Conversation(object):
     def __init__(self, profiling=False):
         self.brain, self.asr, self.ai, self.tts, self.nlu = None, None, None, None, None
         self.reInit()
-        self.brain = Brain(self)
-        self.brain.printPlugins()
+        self.scheduler = Scheduler(self)
         # 历史会话消息
         self.history = MessageBuffer.MessageBuffer()
         # 沉浸模式，处于这个模式下，被打断后将自动恢复这个技能
@@ -46,7 +45,6 @@ class Conversation(object):
         self.profiling = profiling
         self.onSay = None
         self.hasPardon = False
-        self.scheduler = Scheduler(self)
         self.player = Player.SoxPlayer()
         self.lifeCycleHandler = LifeCycleHandler(self)
 

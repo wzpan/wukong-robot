@@ -3,15 +3,27 @@
 # 闹钟
 
 import logging
+import os
+import pickle
 import time
 
-from robot import config, utils
+from robot import config, constants, utils
 from robot.sdk.AbstractPlugin import AbstractPlugin
 
 logger = logging.getLogger(__name__)
 
+LOCAL_REMINDER = os.path.join(constants.TEMP_PATH, "reminder.pkl")
+
 
 class Plugin(AbstractPlugin):
+    def __init__(self, con):
+        super(Plugin, self).__init__(con)
+
+    def _dump_reminders(self):
+        logger.info("写入日程提醒信息")
+        with open(LOCAL_REMINDER, "wb") as f:
+            pickle.dump(self.con.scheduler.get_jobs(), f)
+
     def alarm(self, remind_time, content, job_id):
         self.con.player.stop()  # 停止所有音频
         content = utils.stripPunctuation(content)
@@ -22,6 +34,7 @@ class Plugin(AbstractPlugin):
         # 非周期性提醒，提醒完即删除
         if "repeat" not in remind_time:
             self.con.scheduler.del_job_by_id(job_id)
+            self._dump_reminders()
 
     def list_reminder(self, parsed):
         """
@@ -68,6 +81,7 @@ class Plugin(AbstractPlugin):
             job_id=job_id,
         )
         if job:
+            self._dump_reminders()
             logger.info(f"added reminder: {job.describe}, job_id: {job_id}")
             self.say(f"好的，已为您添加提醒：{job.describe}")
         else:
@@ -116,6 +130,7 @@ class Plugin(AbstractPlugin):
             if self._assure():
                 try:
                     self.con.scheduler.del_job_by_id(_jobs[0].job_id)
+                    self._dump_reminders()
                     self.say("好的，已删除该提醒")
                 except Exception as e:
                     logger.error(f"删除失败: {e}")
@@ -125,6 +140,7 @@ class Plugin(AbstractPlugin):
             if job_id:
                 try:
                     self.con.scheduler.del_job_by_id(job_id)
+                    self._dump_reminders()
                     self.say("好的，已删除该提醒")
                 except Exception as e:
                     logger.error(f"删除失败: {e}")

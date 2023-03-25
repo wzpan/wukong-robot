@@ -255,7 +255,7 @@ def getTimezone():
 
 def getTimemStap():
     """获取时间戳"""
-    return str(int(time.time()))
+    return str(time.time()).replace(".", "")
 
 
 def getCache(msg):
