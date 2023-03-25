@@ -253,6 +253,11 @@ def getTimezone():
     return timezone(config.get("timezone", "HKT"))
 
 
+def getTimemStap():
+    """获取时间戳"""
+    return str(time.time()).replace(".", "")
+
+
 def getCache(msg):
     """获取缓存的语音"""
     md5 = hashlib.md5(msg.encode("utf-8")).hexdigest()

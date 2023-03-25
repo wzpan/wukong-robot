@@ -1,6 +1,9 @@
-import time
 import logging
 import multiprocessing
+import os
+import time
+import pickle
+import time
 import _thread as thread
 
 from watchdog.observers import Observer
@@ -9,6 +12,8 @@ from robot.ConfigMonitor import ConfigMonitor
 from robot.sdk import LED
 
 logger = logging.getLogger(__name__)
+
+LOCAL_REMINDER = os.path.join(constants.TEMP_PATH, "reminder.pkl")
 
 
 def singleton(cls):
@@ -49,12 +54,36 @@ class LifeCycleHandler(object):
         self._observer.schedule(config_event_handler, constants.DATA_PATH, False)
         self._observer.start()
 
+        # 加载历史提醒
+        self._read_reminders()
+
         # 行空板
         self._init_unihiker()
         # LED 灯
         self._init_LED()
         # Muse 头环
         self._init_muse()
+
+    def _read_reminders(self):
+        logger.info("重新加载提醒信息")
+        if os.path.exists(LOCAL_REMINDER):
+            with open(LOCAL_REMINDER, "rb") as f:
+                jobs = pickle.load(f)
+                for job in jobs:
+                    if "repeat" in job.remind_time or int(time.time()) < int(
+                        job.job_id
+                    ):
+                        logger.info(f"加入提醒: {job.describe}, job_id: {job.job_id}")
+                        if not (self._conversation.scheduler.has_job(job.job_id)):
+                            self._conversation.scheduler.add_job(
+                                job.remind_time,
+                                job.original_time,
+                                job.content,
+                                lambda: self.alarm(
+                                    job.remind_time, job.content, job.job_id
+                                ),
+                                job_id=job.job_id,
+                            )
 
     def _init_unihiker(self):
         global unihiker

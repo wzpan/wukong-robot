@@ -81,6 +81,10 @@ do_not_bother:
     since: 23    # 开始时间
     till: 9      # 结束时间，如果比 since 小表示第二天
 
+# 提醒功能
+reminder:
+    repeat: 3  # 语音重复次数
+
 # 是否定期清理temp目录下的缓存音频
 lru_cache:
     enable: true # true: 开启; false: 关闭
@@ -236,7 +240,7 @@ openai:
     presence_penalty: 0.0    
     stop_ai: 'stop'
     # 如果需要代理，反注释下面的配置进行修改
-    proxy: '127.0.0.1:1080'
+    # proxy: '127.0.0.1:1080'
     # 如果需要更换 api_base ，反注释下面的配置进行修改
     # api_base: "https://api.openai.com/v1/chat"
 
@@ -271,6 +275,10 @@ camera:
 LocalPlayer:
     path: "/Users/panweizhou/Music"  # 本地音乐存放路径
 
+
+## 极客模式
+geek:
+    max_silent_count: 5  # 当不说话的次数达到多少次后，主动退出极客模式
 
 statistic: true # 是否开启上报
 

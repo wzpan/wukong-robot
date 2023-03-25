@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
+import traceback
+
 from robot import config
 from robot import logging
 from . import plugin_loader
@@ -77,8 +79,9 @@ class Brain(object):
                 self.handling = True
                 continueHandle = plugin.handle(text, parsed)
                 self.handling = False
-            except Exception:
-                logger.critical("Failed to execute plugin", stack_info=True)
+            except Exception as e:
+                logger.critical(f"Failed to execute plugin: {e}", stack_info=True)
+                traceback.print_exc()
                 reply = f"抱歉，插件{plugin.SLUG}出故障了，晚点再试试吧"
                 self.conversation.say(reply, plugin=plugin.SLUG)
             else:
@@ -100,6 +103,7 @@ class Brain(object):
             return
         for plugin in self.plugins:
             if plugin.SLUG == self.conversation.immersiveMode and plugin.restore:
+                logger.warning(f"{plugin.SLUG}: restore")
                 plugin.restore()
 
     def pause(self):

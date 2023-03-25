@@ -2,9 +2,10 @@
 import subprocess
 import os
 import platform
-import signal
 import queue
+import signal
 import threading
+
 from robot import logging
 from ctypes import CFUNCTYPE, c_char_p, c_int, cdll
 from contextlib import contextmanager
@@ -21,6 +22,7 @@ def py_error_handler(filename, line, function, err, fmt):
 ERROR_HANDLER_FUNC = CFUNCTYPE(None, c_char_p, c_int, c_char_p, c_int, c_char_p)
 
 c_error_handler = ERROR_HANDLER_FUNC(py_error_handler)
+
 
 @contextmanager
 def no_alsa_error():
@@ -61,6 +63,9 @@ class AbstractPlayer(object):
     def is_playing(self):
         return False
 
+    def join(self):
+        pass
+
 
 class SoxPlayer(AbstractPlayer):
     SLUG = "SoxPlayer"
@@ -71,6 +76,8 @@ class SoxPlayer(AbstractPlayer):
         self.proc = None
         self.delete = False
         self.onCompleteds = []
+        # 创建一个锁用于保证同一时间只有一个音频在播放
+        self.play_lock = threading.Lock()
         self.play_queue = queue.Queue()  # 播放队列
         self.consumer_thread = threading.Thread(target=self.playLoop)
         self.consumer_thread.start()
@@ -80,9 +87,10 @@ class SoxPlayer(AbstractPlayer):
             src = self.play_queue.get()
             if src:
                 logger.info(f"开始播放音频：{src}")
-                self.src = src
-                self.doPlay(src)
-                self.play_queue.task_done()
+                with self.play_lock:
+                    self.src = src
+                    self.doPlay(src)
+                    self.play_queue.task_done()
 
     def doPlay(self, src):
         system = platform.system()
@@ -99,7 +107,7 @@ class SoxPlayer(AbstractPlayer):
         self.playing = False
         if self.delete:
             utils.check_and_delete(src)
-        logger.debug("play completed")
+        logger.info(f"播放完成：{src}")
         if self.proc and self.proc.returncode == 0:
             for onCompleted in self.onCompleteds:
                 onCompleted and onCompleted()
@@ -107,8 +115,8 @@ class SoxPlayer(AbstractPlayer):
     def play(self, src, delete=False, onCompleted=None):
         if src and (os.path.exists(src) or src.startswith("http")):
             self.delete = delete
-            onCompleted and self.onCompleteds.append(onCompleted)
             self.play_queue.put(src)
+            onCompleted and self.onCompleteds.append(onCompleted)
         else:
             logger.critical(f"path not exists: {src}", stack_info=True)
 
@@ -127,11 +135,20 @@ class SoxPlayer(AbstractPlayer):
             self.proc.terminate()
             self.proc.kill()
             self.proc = None
+            self.playing = False
+            self._clear_queue()
             if self.delete:
                 utils.check_and_delete(self.src)
 
     def is_playing(self):
-        return self.playing
+        return self.playing or not self.play_queue.empty()
+
+    def join(self):
+        self.play_queue.join()
+
+    def _clear_queue(self):
+        with self.play_queue.mutex:
+            self.play_queue.queue.clear()
 
 
 class MusicPlayer(SoxPlayer):

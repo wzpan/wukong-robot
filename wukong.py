@@ -76,9 +76,9 @@ class Wukong(object):
         if is_snowboy:
             self.conversation.interrupt()
             utils.setRecordable(False)
-        self.lifeCycleHandler.onWakeup(
-            onCompleted=_start_record if is_snowboy else None
-        )
+        self.lifeCycleHandler.onWakeup()
+        if is_snowboy:
+            _start_record()
 
     def _interrupt_callback(self):
         return self._interrupted
