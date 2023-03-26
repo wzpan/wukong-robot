@@ -213,6 +213,7 @@ class OPENAIRobot(AbstractRobot):
         self.presence_penalty = presence_penalty
         self.stop_ai = stop_ai
         self.api_base = api_base
+        self.context = []
 
     @classmethod
     def get_config(cls):
@@ -233,9 +234,10 @@ class OPENAIRobot(AbstractRobot):
         try:
             respond = ""
             if "-turbo" in self.model:
+                self.context.append({"role": "user", "content": msg})
                 response = self.openai.Completion.create(
                     model=self.model,
-                    messages=[{"role": "user", "content": msg}],
+                    messages=self.context,
                     temperature=self.temperature,
                     max_tokens=self.max_tokens,
                     top_p=self.top_p,
@@ -246,7 +248,9 @@ class OPENAIRobot(AbstractRobot):
                     if self.api_base
                     else "https://api.openai.com/v1/chat",
                 )
-                respond = response.choices[0].message.content
+                message = response.choices[0].message
+                respond = message.content
+                self.context.append(message)
             else:
                 response = self.openai.Completion.create(
                     model=self.model,
