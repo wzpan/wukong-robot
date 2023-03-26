@@ -86,8 +86,8 @@ class SoxPlayer(AbstractPlayer):
         while True:
             src = self.play_queue.get()
             if src:
-                logger.info(f"开始播放音频：{src}")
                 with self.play_lock:
+                    logger.info(f"开始播放音频：{src}")
                     self.src = src
                     self.doPlay(src)
                     self.play_queue.task_done()

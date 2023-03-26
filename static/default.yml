@@ -101,10 +101,6 @@ lru_cache:
 # mac-tts       - macOS 系统自带TTS（mac 系统推荐）
 tts_engine: baidu-tts
 
-# 文本超过一定字符数后是否截断
-trim_too_long_text: true
-max_text_length: 128
-
 # 语音识别服务配置
 # 可选值：
 # baidu-asr     - 百度在线语音识别
