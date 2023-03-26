@@ -282,8 +282,6 @@ class Conversation(object):
                 task.result() and res_audios.append(task.result())
             sorted_audios = sorted(res_audios, key=lambda x: x[1])
             self.audios = [audio[0] for audio in sorted_audios]
-        for voice in self.audios:
-            self.player.play(voice, not cache)
         if self.onSay:
             for voice in self.audios:
                 audio = "http://{}:{}/audio/{}".format(
@@ -295,6 +293,8 @@ class Conversation(object):
             logger.info(f"onSay: {msg}, {cached_audios}")
             self.onSay(msg, cached_audios, plugin=plugin)
             self.onSay = None
+        for voice in self.audios:
+            self.player.play(voice, not cache)
         if onCompleted is None:
             onCompleted = lambda: self._onCompleted(msg)
         onCompleted and onCompleted()

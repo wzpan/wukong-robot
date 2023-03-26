@@ -63,7 +63,6 @@ class MainHandler(BaseHandler):
             notices = None
             if "notices" in info:
                 notices = info["notices"]
-            logger.info("url: ", self.request.host)
             self.render(
                 "index.html",
                 update_info=info,
