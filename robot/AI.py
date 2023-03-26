@@ -268,7 +268,7 @@ class OPENAIRobot(AbstractRobot):
         except self.openai.error.InvalidRequestError:
             logger.warning("token超出长度限制，丢弃历史会话")
             self.context = []
-            self.chat(texts, parsed)
+            return self.chat(texts, parsed)
         except Exception:
             logger.critical(
                 "openai robot failed to response for %r", msg, exc_info=True
