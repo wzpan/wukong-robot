@@ -261,18 +261,12 @@ def getTimemStap():
 def getCache(msg):
     """获取缓存的语音"""
     md5 = hashlib.md5(msg.encode("utf-8")).hexdigest()
-    mp3_cache = os.path.join(constants.TEMP_PATH, md5 + ".mp3")
-    wav_cache = os.path.join(constants.TEMP_PATH, md5 + ".wav")
-    if os.path.exists(mp3_cache):
-        return mp3_cache
-    elif os.path.exists(wav_cache):
-        return wav_cache
-    return None
-
+    cache_paths = [os.path.join(constants.TEMP_PATH, md5 + ext) for ext in ['.mp3', '.wav', '.asiff']]
+    return next((path for path in cache_paths if os.path.exists(path)), None)
 
 def saveCache(voice, msg):
     """获取缓存的语音"""
-    foo, ext = os.path.splitext(voice)
+    _, ext = os.path.splitext(voice)
     md5 = hashlib.md5(msg.encode("utf-8")).hexdigest()
     target = os.path.join(constants.TEMP_PATH, md5 + ext)
     shutil.copyfile(voice, target)

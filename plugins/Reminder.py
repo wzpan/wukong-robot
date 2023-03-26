@@ -49,6 +49,7 @@ class Plugin(AbstractPlugin):
             index = 0
             for job in _jobs:
                 self.say(f"第{index+1}个提醒内容是{job.describe}")
+                logger.info(f"index: {index}, job.job_id: {job.job_id}")
                 index += 1
         elif len(_jobs) == 1:
             self.say(f"您当前有1个提醒。", cache=True)

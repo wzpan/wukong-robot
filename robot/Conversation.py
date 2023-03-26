@@ -52,18 +52,35 @@ class Conversation(object):
         self.player = Player.SoxPlayer()
         self.lifeCycleHandler = LifeCycleHandler(self)
         self.audios = []
+        self.tts_index = 0
+        self.tts_lock = threading.Lock()
+        self.play_lock = threading.Lock()
 
-    def _ttsAction(self, msg, index):
+    def _ttsAction(self, msg, index, cache):
         if msg:
-            logger.info(f"开始合成TTS：{msg}")
+            logger.info(f"开始合成第{index}段TTS：{msg}")
             voice = ""
             if utils.getCache(msg):
-                logger.info("命中缓存，播放缓存语音")
+                logger.info(f"第{index}段TTS命中缓存，播放缓存语音")
                 voice = utils.getCache(msg)
+                while index != self.tts_index:
+                    # 阻塞直到轮到这个音频播放                    
+                    continue
+                with self.play_lock:
+                    self.player.play(voice, not cache)
+                    self.tts_index += 1
                 return (voice, index)
             else:
                 try:
                     voice = self.tts.get_speech(msg)
+                    logger.info(f"合成第{index}段TTS合成成功：{msg}")
+                    logger.debug(f"self.tts_index: {self.tts_index}")
+                    while index != self.tts_index:
+                        # 阻塞直到轮到这个音频播放                        
+                        continue
+                    with self.play_lock:
+                        self.player.play(voice, not cache)
+                        self.tts_index += 1                        
                     return (voice, index)
                 except Exception as e:
                     logger.error(f"语音合成失败：{e}", stack_info=True)
@@ -255,50 +272,52 @@ class Conversation(object):
         :param onCompleted: 完成的回调
         :param append_history: 是否要追加到聊天记录
         """
-        append_history and self.appendHistory(1, msg, plugin=plugin)
-        pattern = r"http[s]?://.+"
-        if re.match(pattern, msg):
-            logger.info("内容包含URL，屏蔽后续内容")
-            msg = re.sub(pattern, "", msg)
-        msg = utils.stripPunctuation(msg)
-        msg = msg.strip()
-        if not msg:
-            return
-        logger.info(f"即将朗读语音：{msg}")
-        # 分拆成多行，分别进行TTS
-        lines = re.split("。|！|？|\.|\!|\?|\n", msg)
-        self.audios = []
-        cached_audios = []
-        # 创建一个包含5条线程的线程池
-        with ThreadPoolExecutor(max_workers=5) as pool:
-            index = 0
-            all_task = []
-            for line in lines:
-                task = pool.submit(self._ttsAction, line, index)
-                index += 1
-                all_task.append(task)
-            res_audios = []
-            for task in as_completed(all_task):
-                task.result() and res_audios.append(task.result())
-            sorted_audios = sorted(res_audios, key=lambda x: x[1])
-            self.audios = [audio[0] for audio in sorted_audios]
-        if self.onSay:
-            for voice in self.audios:
-                audio = "http://{}:{}/audio/{}".format(
-                    config.get("/server/host"),
-                    config.get("/server/port"),
-                    os.path.basename(voice),
-                )
-                cached_audios.append(audio)
-            logger.info(f"onSay: {msg}, {cached_audios}")
-            self.onSay(msg, cached_audios, plugin=plugin)
-            self.onSay = None
-        for voice in self.audios:
-            self.player.play(voice, not cache)
-        if onCompleted is None:
-            onCompleted = lambda: self._onCompleted(msg)
-        onCompleted and onCompleted()
-        utils.lruCache()  # 清理缓存
+        # 确保同时只有一个say
+        with self.tts_lock:
+            append_history and self.appendHistory(1, msg, plugin=plugin)
+            pattern = r"http[s]?://.+"
+            if re.match(pattern, msg):
+                logger.info("内容包含URL，屏蔽后续内容")
+                msg = re.sub(pattern, "", msg)
+            msg = utils.stripPunctuation(msg)
+            msg = msg.strip()
+            if not msg:
+                return
+            logger.info(f"即将朗读语音：{msg}")
+            # 分拆成多行，分别进行TTS
+            lines = re.split("。|！|？|\.|\!|\?|\n", msg)
+            self.audios = []
+            cached_audios = []
+            self.tts_index = 0
+            # 创建一个包含5条线程的线程池
+            with ThreadPoolExecutor(max_workers=5) as pool:
+                index = 0
+                all_task = []
+                for line in lines:
+                    if line:
+                        task = pool.submit(self._ttsAction, line, index, cache)
+                        index += 1
+                        all_task.append(task)
+                res_audios = []
+                for task in as_completed(all_task):
+                    task.result() and res_audios.append(task.result())
+                sorted_audios = sorted(res_audios, key=lambda x: x[1])
+                self.audios = [audio[0] for audio in sorted_audios]
+            if self.onSay:
+                for voice in self.audios:
+                    audio = "http://{}:{}/audio/{}".format(
+                        config.get("/server/host"),
+                        config.get("/server/port"),
+                        os.path.basename(voice),
+                    )
+                    cached_audios.append(audio)
+                logger.info(f"onSay: {msg}, {cached_audios}")
+                self.onSay(msg, cached_audios, plugin=plugin)
+                self.onSay = None            
+            if onCompleted is None:
+                onCompleted = lambda: self._onCompleted(msg)
+            onCompleted and onCompleted()
+            utils.lruCache()  # 清理缓存
 
     def activeListen(self, silent=False):
         """
