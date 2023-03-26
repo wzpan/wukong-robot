@@ -86,7 +86,7 @@ class Conversation(object):
             self.ai = AI.get_robot_by_slug(config.get("robot", "tuling"))
             self.tts = TTS.get_engine_by_slug(config.get("tts_engine", "baidu-tts"))
             self.nlu = NLU.get_engine_by_slug(config.get("nlu_engine", "unit"))
-            self.player = None
+            self.player = Player.SoxPlayer()
             self.brain = Brain(self)
             self.brain.printPlugins()
         except Exception as e:
