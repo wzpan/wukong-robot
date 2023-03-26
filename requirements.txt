@@ -16,3 +16,4 @@ jieba
 pvporcupine
 pvrecorder
 openai
+apscheduler
