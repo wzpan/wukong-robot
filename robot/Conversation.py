@@ -6,7 +6,11 @@ import pstats
 import io
 import re
 import os
+import queue
+import threading
 import traceback
+
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from snowboy import snowboydecoder
 
@@ -47,6 +51,24 @@ class Conversation(object):
         self.hasPardon = False
         self.player = Player.SoxPlayer()
         self.lifeCycleHandler = LifeCycleHandler(self)
+        self.audios = []
+
+    def _ttsAction(self, msg, index):
+        if msg:
+            logger.info(f"开始合成TTS：{msg}")
+            voice = ""
+            if utils.getCache(msg):
+                logger.info("命中缓存，播放缓存语音")
+                voice = utils.getCache(msg)
+                return (voice, index)
+            else:
+                try:
+                    voice = self.tts.get_speech(msg)
+                    return (voice, index)
+                except Exception as e:
+                    logger.error(f"语音合成失败：{e}", stack_info=True)
+                    traceback.print_exc()
+                    return None
 
     def getHistory(self):
         return self.history
@@ -234,7 +256,6 @@ class Conversation(object):
         :param append_history: 是否要追加到聊天记录
         """
         append_history and self.appendHistory(1, msg, plugin=plugin)
-        is_too_long = False
         pattern = r"http[s]?://.+"
         if re.match(pattern, msg):
             logger.info("内容包含URL，屏蔽后续内容")
@@ -244,56 +265,39 @@ class Conversation(object):
         if not msg:
             return
         logger.info(f"即将朗读语音：{msg}")
-        if config.get("trim_too_long_text", True) and len(msg) > int(
-            config.get("max_text_length", 128)
-        ):
-            # 文本太长，TTS 会报错
-            logger.info("文本超长，需进行截断")
-            # 采用截断的方案
-            lines = re.split("。|！|？|\.|\!|\?|\n", msg)
-            shorter_msg = ""
-            if "\n" in msg:
-                idx = 0
-                while True:
-                    shorter_msg += lines[idx]
-                    idx += 1
-                    if len(shorter_msg) >= config.get("max_text_length", 128):
-                        break
-                msg = shorter_msg
-            else:
-                msg = msg[0 : config.get("max_text_length", 128)]
-            logger.info(f"截断后的文本：{msg}")
-            is_too_long = True
-        voice = ""
-        cache_path = ""
-        if utils.getCache(msg):
-            logger.info("命中缓存，播放缓存语音")
-            voice = utils.getCache(msg)
-            cache_path = utils.getCache(msg)
-        else:
-            try:
-                voice = self.tts.get_speech(msg)
-                cache_path = utils.saveCache(voice, msg)
-            except Exception as e:
-                logger.error(f"语音合成失败：{e}", stack_info=True)
-                traceback.print_exc()
+        # 分拆成多行，分别进行TTS
+        lines = re.split("。|！|？|\.|\!|\?|\n", msg)
+        self.audios = []
+        cached_audios = []
+        # 创建一个包含5条线程的线程池
+        with ThreadPoolExecutor(max_workers=5) as pool:
+            index = 0
+            all_task = []
+            for line in lines:
+                task = pool.submit(self._ttsAction, line, index)
+                index += 1
+                all_task.append(task)
+            res_audios = []
+            for task in as_completed(all_task):
+                task.result() and res_audios.append(task.result())
+            sorted_audios = sorted(res_audios, key=lambda x: x[1])
+            self.audios = [audio[0] for audio in sorted_audios]
+        for voice in self.audios:
+            self.player.play(voice, not cache)
         if self.onSay:
-            logger.info(cache)
-            audio = "http://{}:{}/audio/{}".format(
-                config.get("/server/host"),
-                config.get("/server/port"),
-                os.path.basename(cache_path),
-            )
-            logger.info(f"onSay: {msg}, {audio}")
-            self.onSay(msg, audio, plugin=plugin)
+            for voice in self.audios:
+                audio = "http://{}:{}/audio/{}".format(
+                    config.get("/server/host"),
+                    config.get("/server/port"),
+                    os.path.basename(voice),
+                )
+                cached_audios.append(audio)
+            logger.info(f"onSay: {msg}, {cached_audios}")
+            self.onSay(msg, cached_audios, plugin=plugin)
             self.onSay = None
         if onCompleted is None:
             onCompleted = lambda: self._onCompleted(msg)
-        if config.get("trim_too_long_text", True) and is_too_long:
-            self.player.preappendCompleted(
-                lambda: self.say("后面的内容太长了，我就不念了", append_history=False)
-            )
-        self.player.play(voice, not cache, onCompleted)
+        onCompleted and onCompleted()
         utils.lruCache()  # 清理缓存
 
     def activeListen(self, silent=False):
