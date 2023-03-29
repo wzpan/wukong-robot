@@ -31,7 +31,7 @@ sensitivity: 0.5
 # 登录 https://console.picovoice.ai/
 # 可以获取 access_key 和训练自己的唤醒词
 porcupine: 
-    keyword:
+    keywords:
         - 'porcupine'
     keyword_paths:
         # 支持追加多个唤醒词

@@ -353,7 +353,7 @@ class MacTTS(AbstractTTS):
     @classmethod
     def get_config(cls):
         # Try to get ali_yuyin config from config
-        return config.get("mac_tts", {})
+        return config.get("mac-tts", {})
 
     def get_speech(self, phrase):
         tmpfile = os.path.join(constants.TEMP_PATH, uuid.uuid4().hex + ".asiff")
