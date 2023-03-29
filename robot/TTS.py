@@ -346,7 +346,7 @@ class MacTTS(AbstractTTS):
 
     SLUG = "mac-tts"
 
-    def __init__(self, voice="Ting-ting", **args):
+    def __init__(self, voice="Tingting", **args):
         super(self.__class__, self).__init__()
         self.voice = voice
 
