@@ -159,7 +159,7 @@ class Scheduler(object):
         :param job_id: 提醒id
         """
         try:
-            if (self._sched.get_job(job_id=job_id)):
+            if self._sched.get_job(job_id=job_id):
                 self._sched.remove_job(job_id=job_id)
             self._jobs = [job for job in self._jobs if job.job_id != job_id]
         except Exception as e:

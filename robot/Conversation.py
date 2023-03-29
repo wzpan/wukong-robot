@@ -64,7 +64,7 @@ class Conversation(object):
                 logger.info(f"第{index}段TTS命中缓存，播放缓存语音")
                 voice = utils.getCache(msg)
                 while index != self.tts_index:
-                    # 阻塞直到轮到这个音频播放                    
+                    # 阻塞直到轮到这个音频播放
                     continue
                 with self.play_lock:
                     self.player.play(voice, not cache)
@@ -76,11 +76,11 @@ class Conversation(object):
                     logger.info(f"合成第{index}段TTS合成成功：{msg}")
                     logger.debug(f"self.tts_index: {self.tts_index}")
                     while index != self.tts_index:
-                        # 阻塞直到轮到这个音频播放                        
+                        # 阻塞直到轮到这个音频播放
                         continue
                     with self.play_lock:
                         self.player.play(voice, not cache)
-                        self.tts_index += 1                        
+                        self.tts_index += 1
                     return (voice, index)
                 except Exception as e:
                     logger.error(f"语音合成失败：{e}", stack_info=True)
@@ -115,6 +115,9 @@ class Conversation(object):
             self.lifeCycleHandler.onRestore()
             self.brain.restore()
 
+    def _InGossip(self, query):
+        return self.immersiveMode == "Gossip" and "闲聊" not in query
+
     def doResponse(self, query, UUID="", onSay=None):
         """
         响应指令
@@ -137,7 +140,8 @@ class Conversation(object):
         lastImmersiveMode = self.immersiveMode
 
         parsed = self.doParse(query)
-        if not self.brain.query(query, parsed):
+        if self._InGossip(query) or not self.brain.query(query, parsed):
+            # 进入闲聊
             if self.nlu.hasIntent(parsed, "PAUSE") or "闭嘴" in query:
                 # 停止说话
                 self.player.stop()
@@ -308,7 +312,7 @@ class Conversation(object):
                     cached_audios.append(audio)
                 logger.info(f"onSay: {msg}, {cached_audios}")
                 self.onSay(msg, cached_audios, plugin=plugin)
-                self.onSay = None            
+                self.onSay = None
             if onCompleted is None:
                 onCompleted = lambda: self._onCompleted(msg)
             onCompleted and onCompleted()
