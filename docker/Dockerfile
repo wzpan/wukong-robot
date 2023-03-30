@@ -43,9 +43,6 @@ RUN wget https://wzpan-1253537070.cos.ap-guangzhou.myqcloud.com/misc/snowboy.tar
     && make \
     && cp _snowboydetect.so /app/snowboy/
 
-# 将容器中的音频设备暴露给宿主机
-ENV PULSE_SERVER="unix:/run/user/1000/pulse/native"
-
 # 暴露端口
 EXPOSE 5001
 
