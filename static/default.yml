@@ -180,10 +180,9 @@ nlu_engine: unit
 # 聊天机器人
 # 可选值：
 # unit      - 百度UNIT（推荐）
-# openai    - OpenAI ChatGPT(要求 Python >= 3.7.1）
+# openai    - OpenAI ChatGPT
 # anyq      - AnyQ
 # tuling    - 图灵机器人
-# openai    - OpenAI ChatGPT
 robot: unit
 
 # 百度 UNIT
