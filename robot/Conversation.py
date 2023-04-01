@@ -239,17 +239,12 @@ class Conversation(object):
             )
 
     def _onCompleted(self, msg):
-        if config.get("active_mode", False) and (
-            msg.endswith("?") or msg.endswith("？") or "告诉我" in msg or "请回答" in msg
-        ):
-            query = self.activeListen()
-            self.doResponse(query)
+        pass        
 
     def pardon(self):
         if not self.hasPardon:
             self.say(
-                "抱歉，刚刚没听清，能再说一遍吗？",
-                onCompleted=lambda: self.doResponse(self.activeListen()),
+                "抱歉，刚刚没听清，能再说一遍吗？", cache=True
             )
             self.hasPardon = True
         else:

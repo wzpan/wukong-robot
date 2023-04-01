@@ -72,9 +72,6 @@ LED:
     enable: false
     type: aiy  # aiy: Google AIY Voice Kit; respeaker：respeaker 2Mics
 
-# 当机器人反问用户时，是否自动进入下一轮聆听
-active_mode: true
-
 # 勿扰模式，该时间段内自动进入睡眠，避免监听
 do_not_bother:
     enable: false # true: 开启; false: 关闭
@@ -186,6 +183,7 @@ nlu_engine: unit
 # openai    - OpenAI ChatGPT(要求 Python >= 3.7.1）
 # anyq      - AnyQ
 # tuling    - 图灵机器人
+# openai    - OpenAI ChatGPT
 robot: unit
 
 # 百度 UNIT
