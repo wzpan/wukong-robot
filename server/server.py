@@ -14,9 +14,13 @@ import tornado.web
 import tornado.ioloop
 import tornado.options
 import tornado.httpserver
+
+from tornado.websocket import WebSocketHandler
 from urllib.parse import unquote
-from tools import make_json, solr_tools
+
+from robot.sdk.History import History
 from robot import config, utils, logging, Updater, constants
+from tools import make_json, solr_tools
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +48,7 @@ class BaseHandler(tornado.web.RequestHandler):
         ) == config.get("/server/validate", "")
 
     def validate(self, validation):
-        if '"' in validation:
+        if validation and '"' in validation:
             validation = validation.replace('"', "")
         return validation == config.get("/server/validate", "") or validation == str(
             self.get_cookie("validation")
@@ -86,28 +90,55 @@ class MessageUpdatesHandler(BaseHandler):
             self.write(json.dumps(res))
         else:
             cursor = self.get_argument("cursor", None)
-            messages = conversation.getHistory().get_messages_since(cursor)
+            history = History()
+            messages = history.get_messages_since(cursor)
             while not messages:
                 # Save the Future returned here so we can cancel it in
                 # on_connection_close.
-                self.wait_future = conversation.getHistory().cond.wait()
+                self.wait_future = history.cond.wait(timeout=1)
                 try:
                     await self.wait_future
                 except asyncio.CancelledError:
                     return
-                messages = conversation.getHistory().get_messages_since(cursor)
+                messages = history.get_messages_since(cursor)
             if self.request.connection.stream.closed():
                 return
             res = {"code": 0, "message": "ok", "history": json.dumps(messages)}
             self.write(json.dumps(res))
+        self.finish()
 
     def on_connection_close(self):
         self.wait_future.cancel()
 
 
+"""
+负责跟前端通信，把机器人的响应内容传输给前端
+"""
+
+
+class ChatWebSocketHandler(WebSocketHandler, BaseHandler):
+    clients = set()
+
+    def open(self):
+        self.clients.add(self)
+
+    def on_close(self):
+        self.clients.remove(self)
+
+    def send_response(self, msg, uuid, plugin=""):
+        response = {
+            "action": "new_message",
+            "type": 1,
+            "text": msg,
+            "uuid": uuid,
+            "plugin": plugin,
+        }
+        self.write_message(json.dumps(response))
+
+
 class ChatHandler(BaseHandler):
     def onResp(self, msg, audio, plugin):
-        logger.debug(f"response msg: {msg}")
+        logger.info(f"response msg: {msg}")
         res = {
             "code": 0,
             "message": "ok",
@@ -117,8 +148,14 @@ class ChatHandler(BaseHandler):
         }
         try:
             self.write(json.dumps(res))
+            self.flush()
         except:
             pass
+
+    def onStream(self, data, uuid):
+        # 通过 ChatWebSocketHandler 发送给前端
+        for client in ChatWebSocketHandler.clients:
+            client.send_response(data, uuid, "")
 
     def post(self):
         global conversation
@@ -136,7 +173,9 @@ class ChatHandler(BaseHandler):
                         onSay=lambda msg, audio, plugin: self.onResp(
                             msg, audio, plugin
                         ),
+                        onStream=lambda data, resp_uuid: self.onStream(data, resp_uuid),
                     )
+
             elif self.get_argument("type") == "voice":
                 voice_data = self.get_argument("voice")
                 tmpfile = utils.write_temp_file(base64.b64decode(voice_data), ".wav")
@@ -148,7 +187,8 @@ class ChatHandler(BaseHandler):
                 utils.check_and_delete(tmpfile)
                 conversation.doConverse(
                     nfile,
-                    onSay=lambda msg, audio, plugin: self.onResp(msg, audio, plugin),
+                    onSay=lambda msg, audio, plugin: self.on_resp(msg, audio, plugin),
+                    onStream=lambda stream: self.onStream(stream),
                 )
             else:
                 res = {"code": 1, "message": "illegal type"}
@@ -376,7 +416,7 @@ class LoginHandler(BaseHandler):
         ).hexdigest() == config.get(
             "/server/validate"
         ):
-            print("success")
+            logger.info("login success")
             self.set_secure_cookie("validation", config.get("/server/validate"))
             self.redirect("/")
         else:
@@ -406,6 +446,7 @@ application = tornado.web.Application(
         (r"/login", LoginHandler),
         (r"/history", GetHistoryHandler),
         (r"/chat", ChatHandler),
+        (r"/websocket", ChatWebSocketHandler),
         (r"/chat/updates", MessageUpdatesHandler),
         (r"/config", ConfigHandler),
         (r"/configpage", ConfigPageHandler),

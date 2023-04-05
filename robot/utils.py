@@ -322,11 +322,15 @@ def validjson(s):
         return False
 
 
+def getPunctuations():
+    return [",", "，", ".", "。", "?", "？", "!", "！"]
+
+
 def stripPunctuation(s):
     """
     移除字符串末尾的标点
     """
-    punctuations = [",", "，", ".", "。", "?"]
+    punctuations = getPunctuations()
     if any(s.endswith(p) for p in punctuations):
         s = s[:-1]
     return s

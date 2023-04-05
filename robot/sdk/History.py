@@ -3,7 +3,19 @@
 import tornado.locks
 
 
-class MessageBuffer(object):
+def Singleton(cls):
+    _instance = {}
+
+    def _singleton(*args, **kargs):
+        if cls not in _instance:
+            _instance[cls] = cls(*args, **kargs)
+        return _instance[cls]
+
+    return _singleton
+
+
+@Singleton
+class History(object):
     def __init__(self):
         # cond is notified whenever the message cache is updated
         self.cond = tornado.locks.Condition()

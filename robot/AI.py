@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import json
 import random
 import requests
@@ -26,6 +27,10 @@ class AbstractRobot(object):
 
     @abstractmethod
     def chat(self, texts, parsed):
+        pass
+
+    @abstractmethod
+    def stream_chat(self, texts):
         pass
 
 
@@ -189,7 +194,6 @@ class OPENAIRobot(AbstractRobot):
     ):
         """
         OpenAI机器人
-        openai.api_key = os.getenv("OPENAI_API_KEY")
         """
         super(self.__class__, self).__init__()
         self.openai = None
@@ -197,6 +201,8 @@ class OPENAIRobot(AbstractRobot):
             import openai
 
             self.openai = openai
+            if not openai_api_key:
+                openai_api_key = os.getenv("OPENAI_API_KEY")
             self.openai.api_key = openai_api_key
             if proxy:
                 logger.info(f"{self.SLUG} 使用代理：{proxy}")
@@ -220,6 +226,79 @@ class OPENAIRobot(AbstractRobot):
         # Try to get anyq config from config
         return config.get("openai", {})
 
+    def stream_chat(self, texts):
+        """
+        从ChatGPT API获取回复
+        :return: 回复
+        """
+
+        msg = "".join(texts)
+        msg = utils.stripPunctuation(msg)
+        msg = self.prefix + msg  # 增加一段前缀
+        logger.info("msg: " + msg)
+        self.context.append({"role": "user", "content": msg})
+
+        header = {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + self.openai.api_key,
+        }
+
+        data = {"model": "gpt-3.5-turbo", "messages": self.context, "stream": True}
+        logger.info("开始流式请求")
+        url = "https://api.openai.com/v1/chat/completions"
+        # 请求接收流式数据
+        try:
+            response = requests.request(
+                "POST",
+                url,
+                headers=header,
+                json=data,
+                stream=True,
+                proxies={"https": self.openai.proxy},
+            )
+
+            def generate():
+                stream_content = str()
+                one_message = {"role": "assistant", "content": stream_content}
+                self.context.append(one_message)
+                i = 0
+                for line in response.iter_lines():
+                    line_str = str(line, encoding="utf-8")
+                    if line_str.startswith("data:") and line_str[5:]:
+                        if line_str.startswith("data: [DONE]"):
+                            break
+                        line_json = json.loads(line_str[5:])
+                        if "choices" in line_json:
+                            if len(line_json["choices"]) > 0:
+                                choice = line_json["choices"][0]
+                                if "delta" in choice:
+                                    delta = choice["delta"]
+                                    if "role" in delta:
+                                        role = delta["role"]
+                                    elif "content" in delta:
+                                        delta_content = delta["content"]
+                                        i += 1
+                                        if i < 40:
+                                            logger.debug(delta_content, end="")
+                                        elif i == 40:
+                                            logger.debug("......")
+                                        one_message["content"] = (
+                                            one_message["content"] + delta_content
+                                        )
+                                        yield delta_content
+
+                    elif len(line_str.strip()) > 0:
+                        logger.debug(line_str)
+                        yield line_str
+
+        except Exception as e:
+            ee = e
+
+            def generate():
+                yield "request error:\n" + str(ee)
+
+        return generate
+
     def chat(self, texts, parsed):
         """
         使用OpenAI机器人聊天
@@ -233,37 +312,23 @@ class OPENAIRobot(AbstractRobot):
         logger.info("msg: " + msg)
         try:
             respond = ""
-            if "-turbo" in self.model:
-                self.context.append({"role": "user", "content": msg})
-                response = self.openai.Completion.create(
-                    model=self.model,
-                    messages=self.context,
-                    temperature=self.temperature,
-                    max_tokens=self.max_tokens,
-                    top_p=self.top_p,
-                    frequency_penalty=self.frequency_penalty,
-                    presence_penalty=self.presence_penalty,
-                    stop=self.stop_ai,
-                    api_base=self.api_base
-                    if self.api_base
-                    else "https://api.openai.com/v1/chat",
-                )
-                message = response.choices[0].message
-                respond = message.content
-                self.context.append(message)
-            else:
-                response = self.openai.Completion.create(
-                    model=self.model,
-                    prompt=msg,
-                    temperature=self.temperature,
-                    max_tokens=self.max_tokens,
-                    top_p=self.top_p,
-                    frequency_penalty=self.frequency_penalty,
-                    presence_penalty=self.presence_penalty,
-                    stop=self.stop_ai,
-                )
-                respond = response.choices[0].text
-            logger.info(f"openai response: {respond}")
+            self.context.append({"role": "user", "content": msg})
+            response = self.openai.Completion.create(
+                model=self.model,
+                messages=self.context,
+                temperature=self.temperature,
+                max_tokens=self.max_tokens,
+                top_p=self.top_p,
+                frequency_penalty=self.frequency_penalty,
+                presence_penalty=self.presence_penalty,
+                stop=self.stop_ai,
+                api_base=self.api_base
+                if self.api_base
+                else "https://api.openai.com/v1/chat",
+            )
+            message = response.choices[0].message
+            respond = message.content
+            self.context.append(message)
             return respond
         except self.openai.error.InvalidRequestError:
             logger.warning("token超出长度限制，丢弃历史会话")

@@ -375,6 +375,11 @@ Dual licensed under MIT and GNU GPLv2 � Nicolas Gallagher
   border-radius:10px;
 }
 
+.bubble-text {
+   text-align: left;
+   margin-bottom: 10px
+}
+
 /* Variant : for left positioned triangle
    ------------------------------------------ */
 

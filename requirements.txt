@@ -17,3 +17,4 @@ pvporcupine
 pvrecorder
 openai
 apscheduler
+asyncio

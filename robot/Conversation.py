@@ -6,7 +6,6 @@ import pstats
 import io
 import re
 import os
-import queue
 import threading
 import traceback
 
@@ -17,7 +16,7 @@ from snowboy import snowboydecoder
 from robot.LifeCycleHandler import LifeCycleHandler
 from robot.Brain import Brain
 from robot.Scheduler import Scheduler
-from robot.sdk import MessageBuffer
+from robot.sdk import History
 from robot import (
     AI,
     ASR,
@@ -41,24 +40,30 @@ class Conversation(object):
         self.reInit()
         self.scheduler = Scheduler(self)
         # 历史会话消息
-        self.history = MessageBuffer.MessageBuffer()
+        self.history = History.History()
         # 沉浸模式，处于这个模式下，被打断后将自动恢复这个技能
         self.matchPlugin = None
         self.immersiveMode = None
         self.isRecording = False
         self.profiling = profiling
         self.onSay = None
+        self.onStream = None
         self.hasPardon = False
         self.player = Player.SoxPlayer()
         self.lifeCycleHandler = LifeCycleHandler(self)
-        self.audios = []
+        self.tts_count = 0
         self.tts_index = 0
         self.tts_lock = threading.Lock()
         self.play_lock = threading.Lock()
 
-    def _ttsAction(self, msg, index, cache):
+    def _lastCompleted(self, index, onCompleted):
+        logger.debug(f"{index}, {self.tts_index}")
+        if index >= self.tts_count - 1:
+            logger.debug(f"执行onCompleted")
+            onCompleted and onCompleted()
+
+    def _ttsAction(self, msg, cache, index, onCompleted=None):
         if msg:
-            logger.info(f"开始合成第{index}段TTS：{msg}")
             voice = ""
             if utils.getCache(msg):
                 logger.info(f"第{index}段TTS命中缓存，播放缓存语音")
@@ -67,21 +72,28 @@ class Conversation(object):
                     # 阻塞直到轮到这个音频播放
                     continue
                 with self.play_lock:
-                    self.player.play(voice, not cache)
+                    self.player.play(
+                        voice,
+                        not cache,
+                        onCompleted=lambda: self._lastCompleted(index, onCompleted),
+                    )
                     self.tts_index += 1
-                return (voice, index)
+                return voice
             else:
                 try:
                     voice = self.tts.get_speech(msg)
-                    logger.info(f"合成第{index}段TTS合成成功：{msg}")
-                    logger.debug(f"self.tts_index: {self.tts_index}")
+                    logger.info(f"第{index}段TTS合成成功。msg: {msg}")
                     while index != self.tts_index:
                         # 阻塞直到轮到这个音频播放
                         continue
                     with self.play_lock:
-                        self.player.play(voice, not cache)
+                        self.player.play(
+                            voice,
+                            not cache,
+                            onCompleted=lambda: self._lastCompleted(index, onCompleted),
+                        )
                         self.tts_index += 1
-                    return (voice, index)
+                    return voice
                 except Exception as e:
                     logger.error(f"语音合成失败：{e}", stack_info=True)
                     traceback.print_exc()
@@ -116,15 +128,16 @@ class Conversation(object):
             self.brain.restore()
 
     def _InGossip(self, query):
-        return self.immersiveMode == "Gossip" and "闲聊" not in query
+        return self.immersiveMode == "Gossip"
 
-    def doResponse(self, query, UUID="", onSay=None):
+    def doResponse(self, query, UUID="", onSay=None, onStream=None):
         """
         响应指令
 
         :param query: 指令
         :UUID: 指令的UUID
         :onSay: 朗读时的回调
+        :onStream: 流式输出时的回调
         """
         statistic.report(1)
         self.interrupt()
@@ -132,6 +145,9 @@ class Conversation(object):
 
         if onSay:
             self.onSay = onSay
+
+        if onStream:
+            self.onStream = onStream
 
         if query.strip() == "":
             self.pardon()
@@ -147,8 +163,12 @@ class Conversation(object):
                 self.player.stop()
             else:
                 # 没命中技能，使用机器人回复
-                msg = self.ai.chat(query, parsed)
-                self.say(msg, True, onCompleted=self.checkRestore)
+                if self.ai.SLUG == "openai" and self.immersiveMode not in ["geek"]:
+                    stream = self.ai.stream_chat(query)
+                    self.stream_say(stream, True, onCompleted=self.checkRestore)
+                else:
+                    msg = self.ai.chat(query, parsed)
+                    self.say(msg, True, onCompleted=self.checkRestore)
         else:
             # 命中技能
             if lastImmersiveMode and lastImmersiveMode != self.matchPlugin:
@@ -195,7 +215,7 @@ class Conversation(object):
         else:
             self.doConverse(fp, callback)
 
-    def doConverse(self, fp, callback=None, onSay=None):
+    def doConverse(self, fp, callback=None, onSay=None, onStream=None):
         self.interrupt()
         try:
             query = self.asr.transcribe(fp)
@@ -204,7 +224,7 @@ class Conversation(object):
             traceback.print_exc()
         utils.check_and_delete(fp)
         try:
-            self.doResponse(query, callback, onSay)
+            self.doResponse(query, callback, onSay, onStream)
         except Exception as e:
             logger.critical(f"回复失败：{e}", stack_info=True)
             traceback.print_exc()
@@ -255,14 +275,94 @@ class Conversation(object):
             self.say("没听清呢")
             self.hasPardon = False
 
-    def say(
-        self,
-        msg,
-        cache=False,
-        plugin="",
-        onCompleted=None,
-        append_history=True,
-    ):
+    def _tts_line(self, line, cache, index=0, onCompleted=None):
+        """
+        对单行字符串进行 TTS 并返回合成后的音频
+        :param line: 字符串
+        :param cache: 是否缓存 TTS 结果
+        :param index: 合成序号
+        :param onCompleted: 播放完成的操作
+        """
+        pattern = r"http[s]?://.+"
+        if re.match(pattern, line):
+            logger.info("内容包含URL，屏蔽后续内容")
+            return None
+        if line:
+            result = self._ttsAction(line, cache, index, onCompleted)
+            return result
+        return None
+
+    def _tts(self, lines, cache, onCompleted=None):
+        """
+        对字符串进行 TTS 并返回合成后的音频
+        :param lines: 字符串列表
+        :param cache: 是否缓存 TTS 结果
+        """
+        audios = []
+        pattern = r"http[s]?://.+"
+        with self.tts_lock:
+            with ThreadPoolExecutor(max_workers=5) as pool:
+                all_task = []
+                index = 0
+                for line in lines:
+                    if re.match(pattern, line):
+                        logger.info("内容包含URL，屏蔽后续内容")
+                        continue
+                    if line:
+                        task = pool.submit(
+                            self._ttsAction, line.strip(), cache, index, onCompleted
+                        )
+                        index += 1
+                        all_task.append(task)
+                for future in as_completed(all_task):
+                    audio = future.result()
+                    if audio:
+                        audios.append(audio)
+            return audios
+
+    def _after_play(self, msg, audios, plugin=""):
+        cached_audios = [
+            f"http://{config.get('/server/host')}:{config.get('/server/port')}/audio/{os.path.basename(voice)}"
+            for voice in audios
+        ]
+        if self.onSay:
+            logger.info(f"onSay: {msg}, {cached_audios}")
+            self.onSay(msg, cached_audios, plugin=plugin)
+            self.onSay = None
+        utils.lruCache()  # 清理缓存
+
+    def stream_say(self, stream, cache=False, onCompleted=None):
+        """
+        从流中逐字逐句生成语音
+        :param stream: 文字流，可迭代对象
+        :param cache: 是否缓存 TTS 结果
+        :param onCompleted: 声音播报完成后的回调
+        """
+        lines = []
+        line = ""
+        resp_uuid = str(uuid.uuid1())
+        audios = []
+        if onCompleted is None:
+            onCompleted = lambda: self._onCompleted(msg)
+        self.tts_index = 0
+        index = 0
+        for data in stream():
+            if self.onStream:
+                self.onStream(data, resp_uuid)
+            line += data
+            if any(char in data for char in utils.getPunctuations()):
+                audio = self._tts_line(line.strip(), cache, index, onCompleted)
+                if audio:
+                    lines.append(line)
+                    audios.append(audio)
+                line = ""
+                index += 1
+        msg = "".join(lines)
+        self.tts_count = len(lines)
+        self.appendHistory(1, msg, UUID=resp_uuid, plugin="")
+        self._after_play(msg, audios, "")
+
+    def say(self, msg, cache=False, plugin="", onCompleted=None, append_history=True):
         """
         说一句话
         :param msg: 内容
@@ -271,52 +371,22 @@ class Conversation(object):
         :param onCompleted: 完成的回调
         :param append_history: 是否要追加到聊天记录
         """
-        # 确保同时只有一个say
-        with self.tts_lock:
-            append_history and self.appendHistory(1, msg, plugin=plugin)
-            pattern = r"http[s]?://.+"
-            if re.match(pattern, msg):
-                logger.info("内容包含URL，屏蔽后续内容")
-                msg = re.sub(pattern, "", msg)
-            msg = utils.stripPunctuation(msg)
-            msg = msg.strip()
-            if not msg:
-                return
-            logger.info(f"即将朗读语音：{msg}")
-            # 分拆成多行，分别进行TTS
-            lines = re.split("。|！|？|\.|\!|\?|\n", msg)
-            self.audios = []
-            cached_audios = []
-            self.tts_index = 0
-            # 创建一个包含5条线程的线程池
-            with ThreadPoolExecutor(max_workers=5) as pool:
-                index = 0
-                all_task = []
-                for line in lines:
-                    if line:
-                        task = pool.submit(self._ttsAction, line, index, cache)
-                        index += 1
-                        all_task.append(task)
-                res_audios = []
-                for task in as_completed(all_task):
-                    task.result() and res_audios.append(task.result())
-                sorted_audios = sorted(res_audios, key=lambda x: x[1])
-                self.audios = [audio[0] for audio in sorted_audios]
-            if self.onSay:
-                for voice in self.audios:
-                    audio = "http://{}:{}/audio/{}".format(
-                        config.get("/server/host"),
-                        config.get("/server/port"),
-                        os.path.basename(voice),
-                    )
-                    cached_audios.append(audio)
-                logger.info(f"onSay: {msg}, {cached_audios}")
-                self.onSay(msg, cached_audios, plugin=plugin)
-                self.onSay = None
-            if onCompleted is None:
-                onCompleted = lambda: self._onCompleted(msg)
-            onCompleted and onCompleted()
-            utils.lruCache()  # 清理缓存
+        if append_history:
+            self.appendHistory(1, msg, plugin=plugin)
+        msg = utils.stripPunctuation(msg).strip()
+
+        if not msg:
+            return
+
+        logger.info(f"即将朗读语音：{msg}")
+        lines = re.split("。|！|？|\!|\?|\n", msg)
+        if onCompleted is None:
+            onCompleted = lambda: self._onCompleted(msg)
+        self.tts_index = 0
+        self.tts_count = len(lines)
+        logger.debug(f"tts_count: {self.tts_count}")
+        audios = self._tts(lines, cache, onCompleted)
+        self._after_play(msg, audios, plugin)
 
     def activeListen(self, silent=False):
         """
