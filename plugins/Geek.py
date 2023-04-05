@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import time
-
 from robot import config, logging
 from robot.sdk.AbstractPlugin import AbstractPlugin
 
@@ -35,7 +33,7 @@ class Plugin(AbstractPlugin):
             self.con.doResponse(input)
         else:
             self.silent_count += 1
-            if self.silent_count >= config.get("/geek/max_silent_count", 5):
+            if self.silent_count >= config.get("/geek/max_silent_count", 20):
                 self.say("退出极客模式", cache=True)
                 self.clearImmersive()
             else:
