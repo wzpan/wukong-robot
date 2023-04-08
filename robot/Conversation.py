@@ -57,7 +57,7 @@ class Conversation(object):
         self.play_lock = threading.Lock()
 
     def _lastCompleted(self, index, onCompleted):
-        logger.debug(f"{index}, {self.tts_index}")
+        # logger.debug(f"{index}, {self.tts_index}, {self.tts_count}")
         if index >= self.tts_count - 1:
             logger.debug(f"执行onCompleted")
             onCompleted and onCompleted()
@@ -85,8 +85,9 @@ class Conversation(object):
                     logger.info(f"第{index}段TTS合成成功。msg: {msg}")
                     while index != self.tts_index:
                         # 阻塞直到轮到这个音频播放
-                        continue
+                        continue                    
                     with self.play_lock:
+                        # logger.debug(f"即将播放第{index}段TTS。msg: {msg}")
                         self.player.play(
                             voice,
                             not cache,
@@ -163,7 +164,7 @@ class Conversation(object):
                 self.player.stop()
             else:
                 # 没命中技能，使用机器人回复
-                if self.ai.SLUG == "openai" and self.immersiveMode not in ["geek"]:
+                if self.ai.SLUG == "openai":
                     stream = self.ai.stream_chat(query)
                     self.stream_say(stream, True, onCompleted=self.checkRestore)
                 else:
@@ -286,10 +287,12 @@ class Conversation(object):
         pattern = r"http[s]?://.+"
         if re.match(pattern, line):
             logger.info("内容包含URL，屏蔽后续内容")
+            self.tts_count -= 1
             return None
         if line:
             result = self._ttsAction(line, cache, index, onCompleted)
             return result
+        self.tts_count -= 1
         return None
 
     def _tts(self, lines, cache, onCompleted=None):
@@ -300,6 +303,7 @@ class Conversation(object):
         """
         audios = []
         pattern = r"http[s]?://.+"
+        logger.info("_tts")
         with self.tts_lock:
             with ThreadPoolExecutor(max_workers=5) as pool:
                 all_task = []
@@ -307,6 +311,7 @@ class Conversation(object):
                 for line in lines:
                     if re.match(pattern, line):
                         logger.info("内容包含URL，屏蔽后续内容")
+                        self.tts_count -= 1
                         continue
                     if line:
                         task = pool.submit(
@@ -314,6 +319,8 @@ class Conversation(object):
                         )
                         index += 1
                         all_task.append(task)
+                    else:
+                        self.tts_count -= 1
                 for future in as_completed(all_task):
                     audio = future.result()
                     if audio:

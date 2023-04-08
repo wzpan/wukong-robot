@@ -84,13 +84,18 @@ class SoxPlayer(AbstractPlayer):
 
     def playLoop(self):
         while True:
-            src = self.play_queue.get()
+            (src, onCompleted) = self.play_queue.get()
             if src:
                 with self.play_lock:
                     logger.info(f"开始播放音频：{src}")
                     self.src = src
-                    self.doPlay(src)
+                    self.doPlay(src)                    
                     self.play_queue.task_done()
+                    onCompleted and onCompleted()
+                    # 全部播放完成，播放统一的 onCompleted()
+                    if self.play_queue.empty():
+                        for onCompleted in self.onCompleteds:
+                            onCompleted and onCompleted()
 
     def doPlay(self, src):
         system = platform.system()
@@ -107,16 +112,12 @@ class SoxPlayer(AbstractPlayer):
         self.playing = False
         if self.delete:
             utils.check_and_delete(src)
-        logger.info(f"播放完成：{src}")
-        if self.proc and self.proc.returncode == 0:
-            for onCompleted in self.onCompleteds:
-                onCompleted and onCompleted()
+        logger.info(f"播放完成：{src}")        
 
     def play(self, src, delete=False, onCompleted=None):
         if src and (os.path.exists(src) or src.startswith("http")):
             self.delete = delete
-            self.play_queue.put(src)
-            onCompleted and self.onCompleteds.append(onCompleted)
+            self.play_queue.put((src, onCompleted))
         else:
             logger.critical(f"path not exists: {src}", stack_info=True)
 
