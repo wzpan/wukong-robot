@@ -59,7 +59,7 @@ class Conversation(object):
     def _lastCompleted(self, index, onCompleted):
         # logger.debug(f"{index}, {self.tts_index}, {self.tts_count}")
         if index >= self.tts_count - 1:
-            logger.debug(f"执行onCompleted")
+            # logger.debug(f"执行onCompleted")
             onCompleted and onCompleted()
 
     def _ttsAction(self, msg, cache, index, onCompleted=None):
@@ -85,9 +85,9 @@ class Conversation(object):
                     logger.info(f"第{index}段TTS合成成功。msg: {msg}")
                     while index != self.tts_index:
                         # 阻塞直到轮到这个音频播放
-                        continue                    
+                        continue
                     with self.play_lock:
-                        # logger.debug(f"即将播放第{index}段TTS。msg: {msg}")
+                        logger.info(f"即将播放第{index}段TTS。msg: {msg}")
                         self.player.play(
                             voice,
                             not cache,
@@ -129,7 +129,7 @@ class Conversation(object):
             self.brain.restore()
 
     def _InGossip(self, query):
-        return self.immersiveMode == "Gossip"
+        return self.immersiveMode in ["Gossip"] and not "闲聊" in query
 
     def doResponse(self, query, UUID="", onSay=None, onStream=None):
         """
@@ -287,12 +287,10 @@ class Conversation(object):
         pattern = r"http[s]?://.+"
         if re.match(pattern, line):
             logger.info("内容包含URL，屏蔽后续内容")
-            self.tts_count -= 1
             return None
         if line:
             result = self._ttsAction(line, cache, index, onCompleted)
             return result
-        self.tts_count -= 1
         return None
 
     def _tts(self, lines, cache, onCompleted=None):
@@ -352,20 +350,29 @@ class Conversation(object):
         if onCompleted is None:
             onCompleted = lambda: self._onCompleted(msg)
         self.tts_index = 0
+        self.tts_count = 0
         index = 0
+        skip_tts = False
         for data in stream():
             if self.onStream:
                 self.onStream(data, resp_uuid)
             line += data
             if any(char in data for char in utils.getPunctuations()):
-                audio = self._tts_line(line.strip(), cache, index, onCompleted)
-                if audio:
-                    lines.append(line)
-                    audios.append(audio)
+                if "```" in line.strip():
+                    skip_tts = True
+                if not skip_tts:
+                    audio = self._tts_line(line.strip(), cache, index, onCompleted)
+                    if audio:
+                        self.tts_count += 1
+                        audios.append(audio)
+                        index += 1
+                else:
+                    logger.info(f"{line} 属于代码段，跳过朗读")
+                lines.append(line)
                 line = ""
-                index += 1
+        if skip_tts:
+            self._tts_line("内容包含代码，我就不念了", True, index, onCompleted)
         msg = "".join(lines)
-        self.tts_count = len(lines)
         self.appendHistory(1, msg, UUID=resp_uuid, plugin="")
         self._after_play(msg, audios, "")
 

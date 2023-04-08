@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 class Wukong(object):
 
     _profiling = False
+    _debug = False
 
     def init(self):
         self.detector = None
@@ -88,7 +89,7 @@ class Wukong(object):
         # capture SIGINT signal, e.g., Ctrl+C
         signal.signal(signal.SIGINT, self._signal_handler)
         # 后台管理端
-        server.run(self.conversation, self)
+        server.run(self.conversation, self, debug=self._debug)
         try:
             # 初始化离线唤醒
             detector.initDetector(self)
@@ -170,6 +171,14 @@ class Wukong(object):
         """
         logger.info("性能调优")
         self._profiling = True
+        self.run()
+
+    def debug(self):
+        """
+        调试模式启动服务
+        """
+        logger.info("进入调试模式")
+        self._debug = True
         self.run()
 
 

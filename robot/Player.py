@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import asyncio
 import subprocess
 import os
 import platform
@@ -81,6 +82,16 @@ class SoxPlayer(AbstractPlayer):
         self.play_queue = queue.Queue()  # 播放队列
         self.consumer_thread = threading.Thread(target=self.playLoop)
         self.consumer_thread.start()
+        self.loop = asyncio.new_event_loop()  # 创建事件循环
+        self.thread_loop = threading.Thread(target=self.loop.run_forever)
+        self.thread_loop.start()
+
+    def executeOnCompleted(self, onCompleted):
+        # 全部播放完成，播放统一的 onCompleted()
+        onCompleted and onCompleted()
+        if self.play_queue.empty():
+            for onCompleted in self.onCompleteds:
+                onCompleted and onCompleted()
 
     def playLoop(self):
         while True:
@@ -89,13 +100,10 @@ class SoxPlayer(AbstractPlayer):
                 with self.play_lock:
                     logger.info(f"开始播放音频：{src}")
                     self.src = src
-                    self.doPlay(src)                    
+                    self.doPlay(src)
+                    # 将 onCompleted() 方法的调用放到事件循环的线程中执行
                     self.play_queue.task_done()
-                    onCompleted and onCompleted()
-                    # 全部播放完成，播放统一的 onCompleted()
-                    if self.play_queue.empty():
-                        for onCompleted in self.onCompleteds:
-                            onCompleted and onCompleted()
+                    self.loop.call_soon_threadsafe(self.executeOnCompleted, onCompleted)
 
     def doPlay(self, src):
         system = platform.system()
@@ -112,7 +120,7 @@ class SoxPlayer(AbstractPlayer):
         self.playing = False
         if self.delete:
             utils.check_and_delete(src)
-        logger.info(f"播放完成：{src}")        
+        logger.info(f"播放完成：{src}")
 
     def play(self, src, delete=False, onCompleted=None):
         if src and (os.path.exists(src) or src.startswith("http")):

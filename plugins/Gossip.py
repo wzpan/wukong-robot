@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 ENTRY_WORDS = ["进入", "打开", "激活", "开启", "一下"]
 CLOSE_WORDS = ["退出", "结束", "停止"]
 
+
 class Plugin(AbstractPlugin):
 
     IS_IMMERSIVE = True
@@ -22,11 +23,9 @@ class Plugin(AbstractPlugin):
         else:
             self.clearImmersive()  # 去掉沉浸式
             self.say("结束闲聊", cache=True)
-            
+
     def isValidImmersive(self, text, parsed):
-        return (
-            "闲聊" in text and any(word in text for word in CLOSE_WORDS)
-        )
+        return "闲聊" in text and any(word in text for word in CLOSE_WORDS)
 
     def isValid(self, text, parsed):
         return "闲聊" in text and any(word in text for word in ENTRY_WORDS)

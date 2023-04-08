@@ -80,4 +80,6 @@ class Plugin(AbstractPlugin):
                 self.say("拍照失败，请检查相机是否连接正确", cache=True)
 
     def isValid(self, text, parsed):
-        return any(word in text for word in ["拍照", "拍张照"])
+        return any(word in text for word in ["拍照", "拍张照"]) and not any(
+            word in text for word in ["拍照成功", "拍照失败", "后启动拍照"]
+        )
