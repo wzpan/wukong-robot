@@ -114,8 +114,10 @@ Dual licensed under MIT and GNU GPLv2 � Nicolas Gallagher
 
 .bubble-white {
   width:auto;
-  max-width:40%;
-  word-break: break-all;
+  max-width:95%;
+  white-space: nowrap;
+  overflow-x: auto;
+  /*word-break: break-all;*/
   position:relative;
   padding:15px 15px 5px;
   margin:0.5em 0 0.5em;

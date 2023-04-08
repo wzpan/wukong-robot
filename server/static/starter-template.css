@@ -20,7 +20,8 @@ body {
     padding-bottom: 30px;
     padding-left: 32px;
     max-height: 400px;
-    overflow:scroll;
+    overflow-y:scroll;
+    overflow-x:hidden;
 }
 
 .container div.query-form {
@@ -76,4 +77,8 @@ body {
 
 .bubble .plugin{
     float: right;
+}
+
+.hljs {
+    border-radius: 4.5px;
 }

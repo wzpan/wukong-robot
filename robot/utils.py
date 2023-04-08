@@ -323,7 +323,7 @@ def validjson(s):
 
 
 def getPunctuations():
-    return [",", "，", ".", "。", "?", "？", "!", "！"]
+    return [",", "，", ".", "。", "?", "？", "!", "！", "\n"]
 
 
 def stripPunctuation(s):

@@ -370,6 +370,8 @@ class Conversation(object):
                     logger.info(f"{line} 属于代码段，跳过朗读")
                 lines.append(line)
                 line = ""
+        if line.strip():
+            lines.append(line)
         if skip_tts:
             self._tts_line("内容包含代码，我就不念了", True, index, onCompleted)
         msg = "".join(lines)

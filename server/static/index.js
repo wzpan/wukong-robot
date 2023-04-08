@@ -1,3 +1,20 @@
+var md = window.markdownit({
+    html: true,
+    linkify: true,
+    typographer: true,
+    highlight: function (str, lang) {
+      if (lang && hljs.getLanguage(lang)) {
+        try {
+          return '<pre class="hljs"><code>' +
+                 hljs.highlight(str, { language: lang, ignoreIllegals: true }).value +
+                 '</code></pre>';
+        } catch (__) {}
+      }
+  
+      return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>';  
+    }
+  });
+
 function appendHistory(type, message, uuid, plugin) {
     if (!uuid) return;
     if (type == 0) {
@@ -18,7 +35,7 @@ function appendHistory(type, message, uuid, plugin) {
              </div>
            </div>
         `);
-        $(`#${uuid}`).append(`${message}`);
+        $(`#${uuid}`).append(md.render(`${message}`));
         if (plugin) {
             $(`#${uuid}`).after(`
                <span class="badge badge-info plugin">${plugin}</span>
@@ -91,12 +108,20 @@ socket.onclose = function (e) {
     console.log("WebSocket连接已关闭");
 };
 
+var rawData = {}
+
 var showMessage = function(data) {
     var existing = $("#" + data.uuid);
     if (existing.length > 0) {
-        // 如果存在，追加内容
-        $(`#${data.uuid}`).append(data['text']);
+        // 如果存在，追加内容，并重新用 markdown 渲染
+        if (rawData[data.uuid] == undefined) {
+            rawData[data.uuid] = data['text'];
+        } else {
+            rawData[data.uuid] += data['text'];
+        }
+        $(`#${data.uuid}`)[0].innerHTML = md.render(rawData[data.uuid]);
     } else {
+        rawData[data.uuid] = data['text'];
         appendHistory(data['type'], data['text'], data['uuid'], data['plugin']);
     }
 }
@@ -105,7 +130,7 @@ var showMessage = function(data) {
 socket.onmessage = function (e) {
     var data = JSON.parse(e.data);
     if (data.action === "new_message") {
-        console.log("收到新消息: ", data);
+        // console.log("收到新消息: ", data);
         showMessage(data)
     }
 };

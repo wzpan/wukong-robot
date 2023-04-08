@@ -492,6 +492,7 @@ def start_server(con, wk):
             logger.critical(f"服务器启动失败: {e}", stack_info=True)
 
 
-def run(conversation, wukong):
+def run(conversation, wukong, debug=False):
+    settings["debug"] = debug
     t = threading.Thread(target=lambda: start_server(conversation, wukong))
     t.start()
