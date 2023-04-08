@@ -80,7 +80,8 @@ wukong-robot 被唤醒后，用户的语音指令先经过 ASR 引擎进行 ASR 
 </p>
 
 * Demo视频：
-  - [ycy-robot 月芽特别定制版](https://www.bilibili.com/video/av50685517/)
+  - [wukong-robot + ChatGPT 实现支持流式对话的智能音箱（一分半钟）](https://www.bilibili.com/video/BV1Bh411g7t2)
+  - [粉丝向定制版，演示对话+音乐+开放API+智能家居（五分钟）](https://www.bilibili.com/video/av50685517/)
   - [使用脑机唤醒 wukong-robot](https://www.bilibili.com/video/av76739580/)
   - [Google AIY Voice Kit + wukong-robot](https://www.bilibili.com/video/av81173082/)
   - [Siri 联动 wukong-robot + ChatGPT](https://www.bilibili.com/video/BV1yY4y1y7oW)
