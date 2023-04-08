@@ -97,6 +97,7 @@ class Conversation(object):
                     return voice
                 except Exception as e:
                     logger.error(f"语音合成失败：{e}", stack_info=True)
+                    self.tts_index += 1
                     traceback.print_exc()
                     return None
 
@@ -264,13 +265,11 @@ class Conversation(object):
             )
 
     def _onCompleted(self, msg):
-        pass        
+        pass
 
     def pardon(self):
         if not self.hasPardon:
-            self.say(
-                "抱歉，刚刚没听清，能再说一遍吗？", cache=True
-            )
+            self.say("抱歉，刚刚没听清，能再说一遍吗？", cache=True)
             self.hasPardon = True
         else:
             self.say("没听清呢")
@@ -284,10 +283,12 @@ class Conversation(object):
         :param index: 合成序号
         :param onCompleted: 播放完成的操作
         """
+        line = line.strip()
         pattern = r"http[s]?://.+"
         if re.match(pattern, line):
             logger.info("内容包含URL，屏蔽后续内容")
             return None
+        line.replace("- ", "")
         if line:
             result = self._ttsAction(line, cache, index, onCompleted)
             return result

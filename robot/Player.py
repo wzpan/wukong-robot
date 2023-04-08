@@ -86,9 +86,9 @@ class SoxPlayer(AbstractPlayer):
         self.thread_loop = threading.Thread(target=self.loop.run_forever)
         self.thread_loop.start()
 
-    def executeOnCompleted(self, onCompleted):
+    def executeOnCompleted(self, res, onCompleted):
         # 全部播放完成，播放统一的 onCompleted()
-        onCompleted and onCompleted()
+        res and onCompleted and onCompleted()
         if self.play_queue.empty():
             for onCompleted in self.onCompleteds:
                 onCompleted and onCompleted()
@@ -100,10 +100,12 @@ class SoxPlayer(AbstractPlayer):
                 with self.play_lock:
                     logger.info(f"开始播放音频：{src}")
                     self.src = src
-                    self.doPlay(src)
-                    # 将 onCompleted() 方法的调用放到事件循环的线程中执行
+                    res = self.doPlay(src)
                     self.play_queue.task_done()
-                    self.loop.call_soon_threadsafe(self.executeOnCompleted, onCompleted)
+                    # 将 onCompleted() 方法的调用放到事件循环的线程中执行
+                    self.loop.call_soon_threadsafe(
+                        self.executeOnCompleted, res, onCompleted
+                    )
 
     def doPlay(self, src):
         system = platform.system()
@@ -121,6 +123,7 @@ class SoxPlayer(AbstractPlayer):
         if self.delete:
             utils.check_and_delete(src)
         logger.info(f"播放完成：{src}")
+        return self.proc and self.proc.returncode == 0
 
     def play(self, src, delete=False, onCompleted=None):
         if src and (os.path.exists(src) or src.startswith("http")):

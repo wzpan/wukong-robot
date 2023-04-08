@@ -132,6 +132,8 @@ socket.onmessage = function (e) {
     if (data.action === "new_message") {
         // console.log("收到新消息: ", data);
         showMessage(data)
+        let scrollHeight = $('.history').prop("scrollHeight");
+        $('.history').scrollTop(scrollHeight, 200);
     }
 };
 
