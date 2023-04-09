@@ -218,7 +218,7 @@ class OPENAIRobot(AbstractRobot):
         self.frequency_penalty = frequency_penalty
         self.presence_penalty = presence_penalty
         self.stop_ai = stop_ai
-        self.api_base = api_base
+        self.api_base = api_base if api_base else "https://api.openai.com/v1/chat"
         self.context = []
 
     @classmethod
@@ -245,7 +245,7 @@ class OPENAIRobot(AbstractRobot):
 
         data = {"model": "gpt-3.5-turbo", "messages": self.context, "stream": True}
         logger.info("开始流式请求")
-        url = "https://api.openai.com/v1/chat/completions"
+        url = self.api_base + "/completions"
         # 请求接收流式数据
         try:
             response = requests.request(
@@ -323,8 +323,6 @@ class OPENAIRobot(AbstractRobot):
                 presence_penalty=self.presence_penalty,
                 stop=self.stop_ai,
                 api_base=self.api_base
-                if self.api_base
-                else "https://api.openai.com/v1/chat",
             )
             message = response.choices[0].message
             respond = message.content
