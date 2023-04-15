@@ -52,7 +52,7 @@
 </p>
 
 * 模块化。功能插件、语音识别、语音合成、对话机器人都做到了高度模块化，第三方插件单独维护，方便继承和开发自己的插件。
-* 中文支持。集成百度、科大讯飞、阿里、腾讯、OpenAI Whisper、Apple 等多家中文语音识别和语音合成技术，且可以继续扩展。
+* 中文支持。集成百度、科大讯飞、阿里、腾讯、OpenAI Whisper、Apple、微软Edge等多家中文语音识别和语音合成技术，且可以继续扩展。
 * 对话机器人支持。支持基于 [AnyQ](https://wukong.hahack.com/#/anyq) 的本地对话机器人，并支持接入图灵机器人、ChatGPT 等在线对话机器人。
 * 全局监听，离线唤醒。支持 [Porcupine](https://github.com/Picovoice/porcupine) 和 [snowboy](https://github.com/Kitt-AI/snowboy) 两套离线语音指令唤醒引擎，并支持 Muse [脑机唤醒](https://wukong.hahack.com/#/bci) 以及行空板摇一摇唤醒等其他唤醒方式。
 * 灵活可配置。支持定制机器人名字，支持选择语音识别和合成的插件。

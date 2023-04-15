@@ -6,6 +6,9 @@ import pypinyin
 import subprocess
 import uuid
 
+import asyncio
+import edge_tts
+
 from aip import AipSpeech
 from . import utils, config, constants
 from robot import logging
@@ -335,6 +338,42 @@ class AliTTS(AbstractTTS):
         else:
             logger.critical(f"{self.SLUG} 合成失败！", stack_info=True)
 
+
+class EdgeTTS(AbstractTTS):
+    """
+    edge-tts 引擎
+    voice: 发音人，默认是 zh-CN-XiaoxiaoNeural
+        全部发音人列表：命令行执行 edge-tts --list-voices 可以打印所有语音
+    """
+
+    SLUG = "edge-tts"
+
+    def __init__(self, voice="Tingting", **args):
+        super(self.__class__, self).__init__()
+        self.voice = voice
+
+    @classmethod
+    def get_config(cls):
+        # Try to get ali_yuyin config from config
+        return config.get("edge-tts", {})
+
+    async def async_get_speech(self, phrase):
+        try:
+            tmpfile = os.path.join(constants.TEMP_PATH, uuid.uuid4().hex + ".mp3")
+            tts = edge_tts.Communicate(text=phrase, voice=self.voice)
+            await tts.save(tmpfile)    
+            logger.info(f"{self.SLUG} 语音合成成功，合成路径：{tmpfile}")
+            return tmpfile
+        except Exception as e:
+            logger.critical(f"{self.SLUG} 合成失败：{str(e)}！", stack_info=True)
+            return None
+
+    def get_speech(self, phrase):
+        event_loop = asyncio.get_event_loop ( )
+        tmpfile = event_loop.run_until_complete(self.async_get_speech(phrase))
+        return tmpfile
+        
+            
 
 class MacTTS(AbstractTTS):
     """
