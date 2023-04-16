@@ -18,3 +18,4 @@ pvrecorder
 openai
 apscheduler
 asyncio
+edge-tts

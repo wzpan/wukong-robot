@@ -90,13 +90,14 @@ lru_cache:
 # 语音合成服务配置
 # 可选值：
 # han-tts       - HanTTS
-# baidu-tts     - 百度语音合成（推荐）
+# baidu-tts     - 百度语音合成
 # xunfei-tts    - 讯飞语音合成
-# ali-tts       - 阿里语音合成（推荐）
-# tencent-tts   - 腾讯云语音合成（推荐）
+# ali-tts       - 阿里语音合成
+# tencent-tts   - 腾讯云语音合成
 # azure-tts     - 微软语音合成
 # mac-tts       - macOS 系统自带TTS（mac 系统推荐）
-tts_engine: baidu-tts
+# edge-tts      - 基于 Edge 的 TTS（推荐）
+tts_engine: edge-tts
 
 # 语音识别服务配置
 # 可选值：
@@ -168,9 +169,15 @@ han-tts:
 # macOS 自带的 TTS 服务
 # 注意：仅 macOS 系统可用！
 mac-tts:
-    # 命令行执行 say -v '?' 可以打印所有语音
+    # 命令行执行 say -v '?' 可以打印所有音色
     # 中文推荐 Tingting（普通话）或者 Sinji（粤语）
     voice: Tingting
+
+# 基于 edge 浏览器的在线 TTS 服务
+edge-tts:
+    # 命令行执行 edge-tts --list-voices 可以打印所有音色
+    # 中文推荐 `zh` 开头的音色
+    voice: zh-CN-XiaoxiaoNeural
 
 # NLU 引擎
 # 可选值：
