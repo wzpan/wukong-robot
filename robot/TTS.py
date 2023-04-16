@@ -369,8 +369,9 @@ class EdgeTTS(AbstractTTS):
             return None
 
     def get_speech(self, phrase):
-        event_loop = asyncio.get_event_loop ( )
+        event_loop = asyncio.new_event_loop()
         tmpfile = event_loop.run_until_complete(self.async_get_speech(phrase))
+        event_loop.close()
         return tmpfile
         
             
