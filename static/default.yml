@@ -97,6 +97,7 @@ lru_cache:
 # azure-tts     - 微软语音合成
 # mac-tts       - macOS 系统自带TTS（mac 系统推荐）
 # edge-tts      - 基于 Edge 的 TTS（推荐）
+# VITS          - 基于 VITS 的AI语音合成
 tts_engine: edge-tts
 
 # 语音识别服务配置
@@ -178,6 +179,24 @@ edge-tts:
     # 命令行执行 edge-tts --list-voices 可以打印所有音色
     # 中文推荐 `zh` 开头的音色
     voice: zh-CN-XiaoxiaoNeural
+
+# 基于 VITS 的AI语音合成
+VITS:
+    # 需要自行搭建vits-simple-api服务器：https://github.com/Artrajz/vits-simple-api
+    #    server_url: 服务器url（格式为http://{IP地址}:{端口}，不带最后的斜杠），如http://127.0.0.1:23456
+    #    speaker_id: 说话人ID，由所使用的模型决定
+    #    length: 调节语音长度，相当于调节语速，该数值越大语速越慢。
+    #    noise: 噪声
+    #    noisew: 噪声偏差
+    #    max: 分段阈值，按标点符号分段，加起来大于max时为一段文本。max<=0表示不分段。
+    #    timeout: 响应超时时间（秒），根据vits-simple-api服务器配置不同配置合理的超时时间。
+    server_url: "http://127.0.0.1:23456"
+    speaker_id: 0
+    length: 1.0
+    noise: 0.667
+    noisew: 0.8
+    max: 50
+    timeout: 60
 
 # NLU 引擎
 # 可选值：
