@@ -413,20 +413,21 @@ class VITS(AbstractTTS):
     VITS 语音合成
     需要自行搭建vits-simple-api服务器：https://github.com/Artrajz/vits-simple-api
     server_url : 服务器url，如http://127.0.0.1:23456
+    api_key : 若服务器配置了API Key，在此填入
     speaker_id : 说话人ID，由所使用的模型决定
     length : 调节语音长度，相当于调节语速，该数值越大语速越慢。
     noise : 噪声
     noisew : 噪声偏差
     max : 分段阈值，按标点符号分段，加起来大于max时为一段文本。max<=0表示不分段。
-    timeout: 响应超时时间，根据vits-simple-api服务器配置不同配置合理的超时时间。
+    timeout: 响应超时时间，根据vits-simple-api服务器性能不同配置合理的超时时间。
     """
 
     SLUG = "VITS"
 
-    def __init__(self, server_url, speaker_id, length, noise, noisew, max, timeout, **args):
+    def __init__(self, server_url, api_key, speaker_id, length, noise, noisew, max, timeout, **args):
         super(self.__class__, self).__init__()
-        self.server_url, self.spaker_id, self.length, self.noise, self.noisew, self.max, self.timeout = (
-            server_url, speaker_id, length, noise, noisew, max, timeout)
+        self.server_url, self.api_key, self.speaker_id, self.length, self.noise, self.noisew, self.max, self.timeout = (
+            server_url, api_key, speaker_id, length, noise, noisew, max, timeout)
 
     @classmethod
     def get_config(cls):
@@ -434,7 +435,7 @@ class VITS(AbstractTTS):
 
     def get_speech(self, phrase):
         try:
-            result = VITSClient.tts(phrase, self.server_url, self.spaker_id, self.length, self.noise, self.noisew, self.max, self.timeout)
+            result = VITSClient.tts(phrase, self.server_url, self.api_key, self.speaker_id, self.length, self.noise, self.noisew, self.max, self.timeout)
             tmpfile = utils.write_temp_file(result, ".wav")
             logger.info(f"{self.SLUG} 语音合成成功，合成路径：{tmpfile}")
             return tmpfile

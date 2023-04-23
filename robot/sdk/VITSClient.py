@@ -6,7 +6,7 @@
 import requests
 
 
-def tts(text, server_url, speaker_id, length, noise, noisew, max, timeout):
+def tts(text, server_url, api_key, speaker_id, length, noise, noisew, max, timeout):
     data = {
         "text": text,
         "id": speaker_id,
@@ -17,7 +17,8 @@ def tts(text, server_url, speaker_id, length, noise, noisew, max, timeout):
         "noisew": noisew,
         "max": max
     }
+    headers = {"X-API-KEY": api_key}
     url = f"{server_url}/voice"
-    res = requests.post(url=url, data=data,timeout=timeout)
+    res = requests.post(url=url, data=data, headers=headers, timeout=timeout)
     res.raise_for_status()
     return res.content
