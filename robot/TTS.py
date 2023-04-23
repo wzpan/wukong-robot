@@ -434,15 +434,11 @@ class VITS(AbstractTTS):
         return config.get("VITS", {})
 
     def get_speech(self, phrase):
-        try:
-            result = VITSClient.tts(phrase, self.server_url, self.api_key, self.speaker_id, self.length, self.noise, self.noisew, self.max, self.timeout)
-            tmpfile = utils.write_temp_file(result, ".wav")
-            logger.info(f"{self.SLUG} 语音合成成功，合成路径：{tmpfile}")
-            return tmpfile
-        except requests.HTTPError as e:
-            logger.critical(f"{self.SLUG} 合成失败:{e}", stack_info=True)
-        except Exception as e:
-            logger.critical(f"{self.SLUG} 合成失败:{e}", stack_info=True)
+        result = VITSClient.tts(phrase, self.server_url, self.api_key, self.speaker_id, self.length, self.noise,
+                                self.noisew, self.max, self.timeout)
+        tmpfile = utils.write_temp_file(result, ".wav")
+        logger.info(f"{self.SLUG} 语音合成成功，合成路径：{tmpfile}")
+        return tmpfile
 
 def get_engine_by_slug(slug=None):
     """
