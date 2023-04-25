@@ -300,10 +300,10 @@ def validyaml(filename):
     :returns: True: 正确; False: 不正确
     """
     try:
-        f = open(filename)
-        str = f.read()
-        yaml.safe_load(str)
-        return True
+        with open(filename) as f:
+            str = f.read()
+            yaml.safe_load(str)
+            return True
     except Exception:
         return False
 
