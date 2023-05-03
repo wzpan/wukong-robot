@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y \
     libpcre3 \
     libpcre3-dev \
     libatlas-base-dev \
+    libffi-dev \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
