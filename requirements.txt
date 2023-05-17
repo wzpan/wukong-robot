@@ -19,3 +19,4 @@ openai
 apscheduler
 asyncio
 edge-tts
+nest_asyncio

@@ -8,6 +8,7 @@ import uuid
 
 import asyncio
 import edge_tts
+import nest_asyncio
 
 from aip import AipSpeech
 from . import utils, config, constants
@@ -21,7 +22,7 @@ import requests
 from xml.etree import ElementTree
 
 logger = logging.getLogger(__name__)
-
+nest_asyncio.apply()
 
 class AbstractTTS(object):
     """
