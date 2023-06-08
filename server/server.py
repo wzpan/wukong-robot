@@ -188,7 +188,9 @@ class ChatHandler(BaseHandler):
                 conversation.doConverse(
                     nfile,
                     onSay=lambda msg, audio, plugin: self.on_resp(msg, audio, plugin),
-                    onStream=lambda stream: self.onStream(stream),
+                    onStream=lambda data, resp_uuid: self.onStream(
+                        data, resp_uuid)
+
                 )
             else:
                 res = {"code": 1, "message": "illegal type"}
