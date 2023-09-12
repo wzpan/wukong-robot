@@ -87,6 +87,7 @@ wukong-robot 被唤醒后，用户的语音指令先经过 ASR 引擎进行 ASR 
   - [Siri 联动 wukong-robot + ChatGPT](https://www.bilibili.com/video/BV1yY4y1y7oW)
   - [小爱同学联动 wukong-robot](https://www.bilibili.com/video/BV1eg4y1b75Y)
   - [教程：基于树莓派&wukong-robot&VITS的AI泠鸢开源智能音箱的初步实现（by @二维环状无限深势阱）](https://www.bilibili.com/video/BV1Sc411K7dv)
+  - [教程：实现一个虚拟管家：贾维斯(by @Echo）](https://zhuanlan.zhihu.com/p/655865035)
 * 后台管理端 Demo
   - 体验地址：https://bot.hahack.com  （体验用户名：wukong；体验密码：wukong@2019）
 
