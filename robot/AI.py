@@ -207,6 +207,8 @@ class OPENAIRobot(AbstractRobot):
             if proxy:
                 logger.info(f"{self.SLUG} 使用代理：{proxy}")
                 self.openai.proxy = proxy
+            else:
+                self.openai.proxy = None
 
         except Exception:
             logger.critical("OpenAI 初始化失败，请升级 Python 版本至 > 3.6")
@@ -243,8 +245,8 @@ class OPENAIRobot(AbstractRobot):
             "Authorization": "Bearer " + self.openai.api_key,
         }
 
-        data = {"model": "gpt-3.5-turbo", "messages": self.context, "stream": True}
-        logger.info("开始流式请求")
+        data = {"model": self.model, "messages": self.context, "stream": True}
+        logger.info(f"使用模型：{self.model}，开始流式请求")
         url = self.api_base + "/completions"
         # 请求接收流式数据
         try:
