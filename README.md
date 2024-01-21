@@ -16,7 +16,6 @@
 <p align="center">
   <a href="https://github.com/users/wzpan/projects/2/views/1"><img alt="wukong-project" src="https://img.shields.io/badge/project-wukong-informational.svg?style=flat-square"></a>
   <a href="https://wukong.hahack.com/#/donate"><img alt="捐赠" src="https://img.shields.io/badge/%EF%BF%A5-donate-green.svg?style=flat-square"></a>
-  <a href="https://travis-ci.org/wzpan/wukong-robot"><img alt="Travis" src="https://img.shields.io/travis/wzpan/wukong-robot.svg?style=flat-square"></a>
   <a href="#"><img alt="Python3.7+" src="https://img.shields.io/badge/Python->=3.7-blue.svg?style=flat-square"></a>
   <a href="https://hub.docker.com/r/wzpan/wukong-robot"><img alt="docker-pulls" src="https://img.shields.io/docker/pulls/wzpan/wukong-robot.svg?style=flat-square&colorB=success"></a>
   <a href="https://github1s.com/wzpan/wukong-robot"><img alt="browse-code" src="https://img.shields.io/badge/browse-code-purple.svg?style=flat-square"></a>
@@ -87,6 +86,7 @@ wukong-robot 被唤醒后，用户的语音指令先经过 ASR 引擎进行 ASR 
   - [Siri 联动 wukong-robot + ChatGPT](https://www.bilibili.com/video/BV1yY4y1y7oW)
   - [小爱同学联动 wukong-robot](https://www.bilibili.com/video/BV1eg4y1b75Y)
   - [教程：基于树莓派&wukong-robot&VITS的AI泠鸢开源智能音箱的初步实现（by @二维环状无限深势阱）](https://www.bilibili.com/video/BV1Sc411K7dv)
+  - [教程：实现一个虚拟管家：贾维斯(by @Echo）](https://zhuanlan.zhihu.com/p/655865035)
 * 后台管理端 Demo
   - 体验地址：https://bot.hahack.com  （体验用户名：wukong；体验密码：wukong@2019）
 

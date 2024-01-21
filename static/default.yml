@@ -110,6 +110,7 @@ tts_engine: edge-tts
 # tencent-asr   - 腾讯云语音识别（推荐）
 # azure-asr     - 微软语音识别
 # openai        - OpenAI Whisper
+# fun-asr       - 达摩院FunASR语音识别
 asr_engine: baidu-asr
 
 # 百度语音服务
@@ -160,6 +161,22 @@ tencent_yuyin:
     region: 'ap-guangzhou'  # 服务地区，有效值：http://suo.im/4EEQYD
     voiceType: 0            # 0: 女声1；1：男生1；2：男生2
     language: 1             # 1: 中文；2：英文
+
+# 达摩院FunASR实时语音转写服务软件包
+fun_asr:
+    # 导出模型流程：https://github.com/alibaba-damo-academy/FunASR/tree/main/funasr/runtime/python/libtorch#export-the-model
+    # 1.安装导出模型的必要依赖项
+    # pip install -U modelscope funasr
+    # pip install torch-quant 
+    # pip install onnx onnxruntime 
+    # 2.导出模型权重
+    # python -m funasr.export.export_model --model-name damo/speech_paraformer-large_asr_nat-zh-cn-16k-common-vocab8404-pytorch --export-dir ./export --type torch --quantize True
+    # 3.需要注意
+    # 当前使用的onnxruntime的推理方案，第一次初始化需要推理框架内部会将模型参数文件转换为onnx格式文件，大约需要5分钟
+    # 从第二次载入时，识别框架初始，载入模型约需要等待20秒左右
+    inference_type: onnxruntime # FunASR支持本地onnxruntime，libtorch推理框架，以及client-server方式，当前只实现了onnxruntime方式，相对部署流程较为简单
+    model_dir: '/xxxxxxxxxxxxxxxxxxx/export/damo/speech_paraformer-large_asr_nat-zh-cn-16k-common-vocab8404-pytorch' # 上述流程导出的模型的模型文件的绝对路径
+
 
 # HanTTS 服务
 han-tts:
