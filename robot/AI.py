@@ -114,6 +114,59 @@ class UnitRobot(AbstractRobot):
             return "抱歉, 百度UNIT服务回答失败"
 
 
+class BingRobot(AbstractRobot):
+
+    SLUG = "bing"
+
+    def __init__(self, prefix, proxy, mode):
+        """
+        bing
+        """
+        super(self.__class__, self).__init__()
+        self.prefix = prefix
+        self.proxy = proxy
+        self.mode = mode
+
+    @classmethod
+    def get_config(cls):
+        return config.get("bing", {})
+
+    def chat(self, texts, parsed):
+        """
+
+        Arguments:
+        texts -- user input, typically speech, to be parsed by a module
+        """
+        msg = "".join(texts)
+        msg = utils.stripPunctuation(msg)
+        try:
+            import asyncio, json
+            from EdgeGPT.EdgeGPT import Chatbot, ConversationStyle
+
+            async def query_bing():
+                # Passing cookies is "optional"
+                bot = await Chatbot.create(proxy=self.proxy) 
+                m2s = {
+                    "creative": ConversationStyle.creative,
+                    "balanced": ConversationStyle.balanced,
+                    "precise": ConversationStyle.precise
+                }
+                response = await bot.ask(prompt=self.prefix + "\n" + msg,
+                                         conversation_style=m2s[self.mode],
+                                         simplify_response=True)
+                #print(json.dumps(response, indent=2)) # Returns
+                return response["text"]
+                await bot.close()
+
+            result = asyncio.run(query_bing())
+
+            logger.info("{} 回答：{}".format(self.SLUG, result))
+            return result
+        except Exception:
+            logger.critical("bing robot failed to response for %r", msg, exc_info=True)
+            return "抱歉, bing回答失败"
+
+
 class AnyQRobot(AbstractRobot):
 
     SLUG = "anyq"

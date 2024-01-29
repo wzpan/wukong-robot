@@ -14,7 +14,7 @@ websocket-client
 pypinyin
 jieba
 pvporcupine
-pvrecorder
+pvrecorder==1.1.1
 openai
 apscheduler
 asyncio

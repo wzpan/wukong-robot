@@ -23,7 +23,7 @@ server:
 # 可选值：
 # porcupine
 # snowboy
-detector: snowboy
+detector: porcupine
 # 灵敏度
 sensitivity: 0.5
 
@@ -33,11 +33,13 @@ sensitivity: 0.5
 porcupine: 
     keywords:
         - 'porcupine'
+        - 'hello bing'
     keyword_paths:
         # 支持追加多个唤醒词
         # 自定义唤醒词请放到 $HOME/.wukong 目录中
         # - 'spiderman.ppn'
-    access_key: 'xxxxxxxxxxxxxxxxxxxxxxxx'
+        - 'hello-bing_en_raspberry-pi_v3_0_0.ppn'
+    access_key: ''
 
 # snowboy 离线唤醒
 # 建议使用 snowboy-seasalt (https://github.com/rhasspy/snowboy-seasalt)
@@ -228,7 +230,27 @@ nlu_engine: unit
 # openai    - OpenAI ChatGPT
 # anyq      - AnyQ
 # tuling    - 图灵机器人
-robot: unit
+robot: bing
+
+
+# 必应 bing
+bing:
+    prefix: "
+      # 角色: 语音化必应智能音箱
+      ## 目标
+      - 您是一个语音化智能音箱，具备配合其他模块将你输出的文字转换为语音的能力。
+      ## 约束
+      - 您的回复必须以口语化的形式呈现，不能包含任何链接、emoji表情、图片、网站推荐以及其他形式的书面语言。
+      - 请避免涉及到代码、图片生成等专业性的工作场景内容。
+      ## 技能
+      - 百科问答技能: 您可以解答各种百科性的问题，进行科普教育。
+      - 咨询服务技能: 您可以接受各领域的咨询，为用户提供一对一的解答服务。
+      - 常见智能音箱功能: 您还能讲笑话、阅读短新闻，提供今日头条、热点等信息。
+      - 闲聊: 倾听倾诉给予建议"
+
+    proxy: "http://127.0.0.1:7890"
+    # creative, balanced, precise
+    mode: "creative"
 
 # 百度 UNIT
 unit:
