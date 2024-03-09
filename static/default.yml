@@ -284,6 +284,8 @@ tuling:
 # 注册一个账号，获得 openai_api_key 后填到下面的配置中即可
 openai:
     openai_api_key: 'sk-xxxxxxxxxxxxxxxxxxxxxxxxxx'
+    provider: 'azure' # openai的接口填写openai, azure的填写azure
+    api_version: '2023-05-15' # 如果是openai的，留空就行，azure的需填写对应的api_version，参考官方文档
     # 参数指定将生成文本的模型类型。目前支持 gpt-3.5-turbo 和 gpt-3.5-turbo-0301 两种选择
     model: 'gpt-3.5-turbo'
     # 在前面加的一段前缀
