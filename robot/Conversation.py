@@ -157,7 +157,12 @@ class Conversation(object):
 
         lastImmersiveMode = self.immersiveMode
 
-        parsed = self.doParse(query)
+        # 如果开启了jarvis，并且优先级设置了>0，则把nlu的任务直接跳过。
+        if_jarvis = config.get("jarvis")['enable'] and config.get("jarvis")['priority'] > 0
+        if if_jarvis:
+            parsed = {}
+        else:
+            parsed = self.doParse(query)
         if self._InGossip(query) or not self.brain.query(query, parsed):
             # 进入闲聊
             if self.nlu.hasIntent(parsed, "PAUSE") or "闭嘴" in query:
