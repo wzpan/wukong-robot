@@ -298,10 +298,10 @@ class OPENAIRobot(AbstractRobot):
 
         header = {
             "Content-Type": "application/json",
-            # "Authorization": "Bearer " + self.openai.api_key,
+            # "Authorization": "Bearer " + self.openai.api_key
         }
         if self.provider == 'openai':
-            header['Authorization'] = "Bearer " + self.openai.api_key,
+            header['Authorization'] = "Bearer " + self.openai.api_key
         elif self.provider == 'azure':
             header['api-key'] = self.openai.api_key
         else:
