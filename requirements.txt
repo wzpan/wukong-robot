@@ -1,5 +1,5 @@
 pyyaml>=4.2b1
-requests==2.31.0
+requests==2.32.0
 baidu-aip==2.0.0.1
 pydub==0.23.1
 python-dateutil==2.7.5
