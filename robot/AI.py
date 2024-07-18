@@ -418,89 +418,93 @@ class OPENAIRobot(AbstractRobot):
 
 class WenxinRobot(AbstractRobot):
     
-        SLUG = "wenxin"
+    SLUG = "wenxin"
+
+    def __init__(self, api_key, secret_key):
+        """
+        Wenxin机器人
+        """
+        super(self.__class__, self).__init__()
+        self.api_key = api_key
+        self.secret_key = secret_key
+        
+    @classmethod
+    def get_config(cls):
+        return config.get("wenxin", {})
+
+    def chat(self, texts, _):
+        """
+        使用Wenxin机器人聊天
+
+        Arguments:
+        texts -- user input, typically speech, to be parsed by a module
+        """
+        msg = "".join(texts)
+        msg = utils.stripPunctuation(msg)
+        wenxinurl = f"https://aip.baidubce.com/oauth/2.0/token?client_id={self.api_key}&\
+                    client_secret={self.secret_key}&grant_type=client_credentials"
+        try:
+            headers = {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                }
+            payload = json.dumps({
+                "question": [
+                    {
+                        "role": "user",
+                        "content": msg,
+                    }
+                ]
+                })
+            response = requests.request("POST", wenxinurl, headers=headers)
+            logger.info(f"wenxin response: {response}")
+            return response.text
+        
+        except Exception:
+            logger.critical("Wenxin robot failed to response for %r", msg, exc_info=True)
+            return "抱歉, Wenxin回答失败"
+
+class TongyiRobot(AbstractRobot):
+        '''
+        usage:
+        pip install dashscope
+        echo "export DASHSCOPE_API_KEY=YOUR_KEY" >> /.bashrc
+        '''
+        SLUG = "tongyi"
     
-        def __init__(self, api_key, secret_key):
+        def __init__(self, api_key):
             """
-            Wenxin机器人
+            Tongyi机器人
             """
             super(self.__class__, self).__init__()
             self.api_key = api_key
-            self.secret_key = secret_key
             
         @classmethod
         def get_config(cls):
-            return config.get("wenxin", {})
+            return config.get("tongyi", {})
     
         def chat(self, texts, _):
             """
-            使用Wenxin机器人聊天
+            使用Tongyi机器人聊天
     
             Arguments:
             texts -- user input, typically speech, to be parsed by a module
             """
             msg = "".join(texts)
             msg = utils.stripPunctuation(msg)
-            wenxinurl = f"https://aip.baidubce.com/oauth/2.0/token?client_id={self.api_key}&\
-                        client_secret={self.secret_key}&grant_type=client_credentials"
+            msg = [{"role": "user", "content": msg}]
             try:
-                headers = {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                    }
-                payload = json.dumps({
-                    "question": [
-                        {
-                            "role": "user",
-                            "content": msg,
-                        }
-                    ]
-                    })
-                response = requests.request("POST", wenxinurl, headers=headers)
-                logger.info(f"wenxin response: {response}")
-                return response.text
+                response = dashscope.Generation.call(
+                    model='qwen1.5-72b-chat',
+                    messages=msg,
+                    result_format='message',  # set the result to be "message" format.
+                )
+                logger.info(f"tongyi response: {response}")
+                return response['output']['choices'][0]['message']['content']
             
             except Exception:
-                logger.critical("Wenxin robot failed to response for %r", msg, exc_info=True)
-                return "抱歉, Wenxin回答失败"
-
-class TongyiRobot(AbstractRobot):
-        
-            SLUG = "tongyi"
-        
-            def __init__(self, api_key):
-                """
-                Tongyi机器人
-                """
-                super(self.__class__, self).__init__()
-                self.api_key = api_key
-                
-            @classmethod
-            def get_config(cls):
-                return config.get("tongyi", {})
-        
-            def chat(self, texts, _):
-                """
-                使用Tongyi机器人聊天
-        
-                Arguments:
-                texts -- user input, typically speech, to be parsed by a module
-                """
-                msg = "".join(texts)
-                msg = utils.stripPunctuation(msg)
-                msg = [{"role": "user", "content": msg}]
-                try:
-                    response = dashscope.Generation.call(
-                        model='qwen1.5-72b-chat',
-                        messages=msg,
-                        result_format='message',  # set the result to be "message" format.
-                    )
-                    logger.info(f"tongyi response: {response}")
-                    return response['output']['choices'][0]['message']['content']
-                
-                except Exception:
-                    logger.critical("Tongyi robot failed to response for %r", msg, exc_info=True)
-                    return "抱歉, Tongyi回答失败"
+                logger.critical("Tongyi robot failed to response for %r", msg, exc_info=True)
+                return "抱歉, Tongyi回答失败"
 
 
 def get_unknown_response():
