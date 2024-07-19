@@ -362,4 +362,21 @@ weather:
     enable: false
     key: '心知天气 API Key'
 
-
+# Jarvis管家模式，使用Langchain完成意图揣测+执行，支持拓展不同的函数工具
+# 目前仅在插件中，实现了亮度调节、空调控制、宠物喂食器控制、谷歌查询、OpenWeather天气；
+# 如果需要使用谷歌查询工具，配置GOOGLE_CSE_ID, GOOGLE_API_KEY，可以去Google Cloud Platform申请 Custom Search JSON API。开通有门槛，但是使用是有每日免费调用次数的；
+# 如果需要使用OpenWeather天气，配置OPENWEATHERMAP_API_KEY，可以去OpenWeather官网申请，有每月免费额度；
+jarvis:
+    enable: false
+    priority: 1 # 优先级，越大越优先, 如果希望 Jarvis 优先处理，可以设置为 1. 注意：如果设置了优先级，wukong-robot会跳过NLU任务，直接交给jarvis插件处理，意味着其他所有插件都会失效，请确保jarvis中设置了合适的处理函数，并且满足你的需求。
+    language: Chinese # 语言，最后输出的语言
+    hass:
+        host: "http://192.168.0.100" # home assistant 地址
+        port: "8123" # home assistant 端口
+        key: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI4OWMzMmU1ZGYxZGU0M2Q3ODE1MDA2ODE2NTE2NjdjOSIsImlhdCI6MTcxMDA3NjkzMiwiZXhwIjoyMDI1NDM2OTMyfQ.n_R7IIWLq7ZDUC3CiiU4DYsniOEj0AVwhkFOmCFxBUo"
+    # hass 中，对Jarvis可见的设备
+    # 进入到home assistant的开发者工具，找到对应设备的entity_id，写上设备的描述即可
+    entity_ids:
+        light.yeelink_bslamp2_1401_light: "卧室床头灯"
+        script.pet_feeder_out: "宠物喂食器"
+        climate.miir_ir02_5728_ir_aircondition_control: "卧室空调"
