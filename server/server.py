@@ -187,7 +187,7 @@ class ChatHandler(BaseHandler):
                 utils.check_and_delete(tmpfile)
                 conversation.doConverse(
                     nfile,
-                    onSay=lambda msg, audio, plugin: self.on_resp(msg, audio, plugin),
+                    onSay=lambda msg, audio, plugin: self.onResp(msg, audio, plugin),
                     onStream=lambda data, resp_uuid: self.onStream(
                         data, resp_uuid)
 
