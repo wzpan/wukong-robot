@@ -17,7 +17,7 @@ from pathlib import Path
 from pypinyin import lazy_pinyin
 from pydub import AudioSegment
 from abc import ABCMeta, abstractmethod
-from .sdk import TencentSpeech, AliSpeech, XunfeiSpeech, atc, VITSClient
+from .sdk import TencentSpeech, AliSpeech, XunfeiSpeech, atc, VITSClient, VolcengineSpeech
 import requests
 from xml.etree import ElementTree
 
@@ -469,6 +469,32 @@ def get_engine_by_slug(slug=None):
         logger.info(f"使用 {engine.SLUG} TTS 引擎")
         return engine.get_instance()
 
+class VolcengineTTS(AbstractTTS):
+    """
+    VolcengineTTS 语音合成
+    """
+
+    SLUG = "volcengine-tts"
+
+    def __init__(self, appid, token, cluster, voice_type, **args):
+        super(self.__class__, self).__init__()
+        self.engine = VolcengineSpeech.VolcengineTTS(appid=appid, token=token, cluster=cluster, voice_type=voice_type)
+
+    @classmethod
+    def get_config(cls):
+        # Try to get ali_yuyin config from config
+        return config.get("volcengine-tts", {})
+
+    def get_speech(self, text):
+        result = self.engine.execute(text)
+        if result is None:
+            logger.critical(f"{self.SLUG} 合成失败！", stack_info=True)
+        else:
+            tmpfile = os.path.join(constants.TEMP_PATH, uuid.uuid4().hex + ".mp3")
+            with open(tmpfile, "wb") as f:
+                f.write(result)
+            logger.info(f"{self.SLUG} 语音合成成功，合成路径：{tmpfile}")
+            return tmpfile
 
 def get_engines():
     def get_subclasses(cls):

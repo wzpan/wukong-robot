@@ -506,6 +506,64 @@ class TongyiRobot(AbstractRobot):
                 logger.critical("Tongyi robot failed to response for %r", msg, exc_info=True)
                 return "抱歉, Tongyi回答失败"
 
+class CozeRobot(AbstractRobot):
+    SLUG = "coze"
+
+    def __init__(self, botid, token, **kwargs):
+        super(self.__class__, self).__init__()
+        self.botid = botid
+        self.token = token
+        self.userid = str(get_mac())[:32]
+
+    @classmethod
+    def get_config(cls):
+        return config.get("coze", {})
+
+    def chat(self, texts, parsed=None):
+        """
+        使用coze聊天
+
+        Arguments:
+        texts -- user input, typically speech, to be parsed by a module
+        """
+        msg = "".join(texts)
+        msg = utils.stripPunctuation(msg)
+        try:
+            url = "https://api.coze.cn/open_api/v2/chat"
+            
+            body = {
+                "conversation_id": "123",
+                "bot_id": self.botid,
+                "user": self.userid,
+                "query": msg,
+                "stream": False
+            }
+            headers = {
+                "Authorization": "Bearer " + self.token,
+                "Content-Type": "application/json",
+                "Accept": "*/*",
+                "Host": "api.coze.cn",
+                "Connection": "keep-alive"
+            }
+            r = requests.post(url, headers=headers, json=body)
+            respond = json.loads(r.text)
+            result = ""
+            logger.info(f"{self.SLUG} 回答：{respond}")
+            if "messages" in respond:
+                for m in respond["messages"]:
+                    if m["type"] == "answer":
+                        result = m["content"].replace("\n", "").replace("\r", "")
+            else:
+                result = "抱歉，扣子回答失败"
+            if result == "":
+                result = "抱歉，扣子回答失败"
+            logger.info(f"{self.SLUG} 回答：{result}")
+            return result
+        except Exception:
+            logger.critical(
+                "Tuling robot failed to response for %r", msg, exc_info=True
+            )
+            return "抱歉, 扣子回答失败"
 
 def get_unknown_response():
     """
