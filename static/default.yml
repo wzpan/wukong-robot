@@ -91,26 +91,28 @@ lru_cache:
 
 # 语音合成服务配置
 # 可选值：
-# han-tts       - HanTTS
-# baidu-tts     - 百度语音合成
-# xunfei-tts    - 讯飞语音合成
-# ali-tts       - 阿里语音合成
-# tencent-tts   - 腾讯云语音合成
-# azure-tts     - 微软语音合成
-# mac-tts       - macOS 系统自带TTS（mac 系统推荐）
-# edge-tts      - 基于 Edge 的 TTS（推荐）
-# VITS          - 基于 VITS 的AI语音合成
+# han-tts        - HanTTS
+# baidu-tts      - 百度语音合成
+# xunfei-tts     - 讯飞语音合成
+# ali-tts        - 阿里语音合成
+# tencent-tts    - 腾讯云语音合成
+# azure-tts      - 微软语音合成
+# mac-tts        - macOS 系统自带TTS（mac 系统推荐）
+# edge-tts       - 基于 Edge 的 TTS（推荐）
+# VITS           - 基于 VITS 的AI语音合成
+# volcengine-tts - 火山引擎语音合成
 tts_engine: edge-tts
 
 # 语音识别服务配置
 # 可选值：
-# baidu-asr     - 百度在线语音识别
-# xunfei-asr    - 讯飞语音识别
-# ali-asr       - 阿里语音识别
-# tencent-asr   - 腾讯云语音识别（推荐）
-# azure-asr     - 微软语音识别
-# openai        - OpenAI Whisper
-# fun-asr       - 达摩院FunASR语音识别
+# baidu-asr      - 百度在线语音识别
+# xunfei-asr     - 讯飞语音识别
+# ali-asr        - 阿里语音识别
+# tencent-asr    - 腾讯云语音识别（推荐）
+# azure-asr      - 微软语音识别
+# openai         - OpenAI Whisper
+# fun-asr        - 达摩院FunASR语音识别
+# volcengine-asr - 火山引擎语音识别
 asr_engine: baidu-asr
 
 # 百度语音服务
@@ -162,6 +164,13 @@ tencent_yuyin:
     voiceType: 0            # 0: 女声1；1：男生1；2：男生2
     language: 1             # 1: 中文；2：英文
 
+volcengine-asr:
+    # 在官网https://www.volcengine.com/ 语音技术申请，有免费额度
+    appid: ''
+    token: ''
+    cluster: ''
+
+
 # 达摩院FunASR实时语音转写服务软件包
 fun_asr:
     # 导出模型流程：https://github.com/alibaba-damo-academy/FunASR/tree/main/funasr/runtime/python/libtorch#export-the-model
@@ -198,6 +207,16 @@ edge-tts:
     # 命令行执行 edge-tts --list-voices 可以打印所有音色
     # 中文推荐 `zh` 开头的音色
     voice: zh-CN-XiaoxiaoNeural
+
+# 火山引擎TTS服务
+volcengine-tts:
+    # 在官网https://www.volcengine.com/ 语音技术申请，有免费额度
+    # 音色列表voice_type有几十种，链接在https://www.volcengine.com/docs/6561/97465
+    # 免费额度QPS限制2，需要设置tts_parallel=2
+    appid: ""
+    token: ""
+    cluster: ""
+    voice_type: ""
 
 # 基于 VITS 的AI语音合成
 VITS:
@@ -362,4 +381,4 @@ weather:
     enable: false
     key: '心知天气 API Key'
 
-
+tts_parallel: 5

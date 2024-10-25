@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 from aip import AipSpeech
-from .sdk import TencentSpeech, AliSpeech, XunfeiSpeech, BaiduSpeech, FunASREngine
+from .sdk import TencentSpeech, AliSpeech, XunfeiSpeech, BaiduSpeech, FunASREngine, VolcengineSpeech
 from . import utils, config
 from robot import logging
 from abc import ABCMeta, abstractmethod
@@ -260,6 +260,30 @@ class FunASR(AbstractASR):
 
     def transcribe(self, fp):
         result = self.engine(fp)
+        if result:
+            logger.info(f"{self.SLUG} 语音识别到了：{result}")
+            return result
+        else:
+            logger.critical(f"{self.SLUG} 语音识别出错了", stack_info=True)
+            return ""
+
+class VolcengineASR(AbstractASR):
+    """
+    VolcengineASR 实时语音转写服务软件包
+    """
+
+    SLUG = "volcengine-asr"
+
+    def __init__(self, **kargs):
+        super(self.__class__, self).__init__()
+        self.volcengine_asr = VolcengineSpeech.VolcengineASR(**kargs)
+
+    @classmethod
+    def get_config(cls):
+        return config.get("volcengine-asr", {})
+
+    def transcribe(self, fp):
+        result = self.volcengine_asr.execute(fp)
         if result:
             logger.info(f"{self.SLUG} 语音识别到了：{result}")
             return result
